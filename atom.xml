@@ -69,9 +69,9 @@
     <link href="https://www.bboyzj.cn/2023/03/01/iOS%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9ASwift/"/>
     <id>https://www.bboyzj.cn/2023/03/01/iOS%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9ASwift/</id>
     <published>2023-03-01T08:57:50.000Z</published>
-    <updated>2023-03-01T15:01:10.869Z</updated>
+    <updated>2023-03-01T17:19:07.358Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="swift-和-oc-的区别？"><a href="#swift-和-oc-的区别？" class="headerlink" title="swift 和 oc 的区别？"></a>swift 和 oc 的区别？</h1><ul><li><code>swift</code> 是静态语言，有类型判断。<code>OC</code> 是动态语言。</li><li>swift可以面向 <code>函数、协议、对象</code> 编程；oc以面向 <code>对象</code> 编程为主，可以引入 <code>Reactive Cocoa类库</code> 来进行函数式编程</li><li><code>Swift</code> 是类型安全的语言。<code>OC</code> 不是类型安全的语言。</li><li><code>Swift</code> 大部分都是 <code>值类型</code>。OC 有的是 <code>值类型</code>，有的是 <code>指针类型</code>。</li></ul><h1 id="swift类型？Swiift-值类型-和-引用类型的区别？特点？"><a href="#swift类型？Swiift-值类型-和-引用类型的区别？特点？" class="headerlink" title="swift类型？Swiift 值类型 和 引用类型的区别？特点？"></a>swift类型？Swiift 值类型 和 引用类型的区别？特点？</h1><ul><li><p>swift的类型分为 <code>值类型</code> 和 <code>引用类型</code>。</p><ul><li><p>值类型：在swift中定义的很多类型都是值类型：如struct、enum、Int、Bool、String、Array、Dictionary 都是值类型。</p></li><li><p><code>class</code> 为引用类型</p></li></ul></li><li><p>区别</p><ul><li><p>值类型：即每个实例只保存一份数据拷贝</p></li><li><p>引用类型：即每个实例共享一份数据拷贝</p></li></ul></li><li><p>特点</p><ul><li><p>值类型：传递和赋值时进行复制，即新对象和源对象独立，当改变新对象属性时，源对象不会受到影响</p></li><li><p>引用类型：新对象属性改变时，源对象也改变</p></li></ul></li></ul>]]></content>
+    <content type="html"><![CDATA[<h1 id="swift-和-oc-的区别？"><a href="#swift-和-oc-的区别？" class="headerlink" title="swift 和 oc 的区别？"></a>swift 和 oc 的区别？</h1><ul><li><code>swift</code> 是静态语言，有类型判断。<code>OC</code> 是动态语言。</li><li>swift可以面向 <code>函数、协议、对象</code> 编程；oc以面向 <code>对象</code> 编程为主，可以引入 <code>Reactive Cocoa类库</code> 来进行函数式编程</li><li><code>Swift</code> 是类型安全的语言。<code>OC</code> 不是类型安全的语言。</li><li><code>Swift</code> 大部分都是 <code>值类型</code>。OC 有的是 <code>值类型</code>，有的是 <code>指针类型</code>。</li></ul><h1 id="swift类型？Swiift-值类型-和-引用类型的区别？特点？"><a href="#swift类型？Swiift-值类型-和-引用类型的区别？特点？" class="headerlink" title="swift类型？Swiift 值类型 和 引用类型的区别？特点？"></a>swift类型？Swiift 值类型 和 引用类型的区别？特点？</h1><ul><li><p>swift的类型分为 <code>值类型</code> 和 <code>引用类型</code>。</p><ul><li><p>值类型：在swift中定义的很多类型都是值类型：如struct、enum、Int、Bool、String、Array、Dictionary、String等都是值类型。</p></li><li><p><code>class</code> 为引用类型</p></li></ul></li><li><p>区别</p><ul><li><p>值类型：即每个实例只保存一份数据拷贝</p></li><li><p>引用类型：即每个实例共享一份数据拷贝</p></li></ul></li><li><p>特点</p><ul><li><p>值类型：传递和赋值时进行复制，即新对象和源对象独立，当改变新对象属性时，源对象不会受到影响</p></li><li><p>引用类型：新对象属性改变时，源对象也改变</p></li></ul></li></ul>]]></content>
     
     
       
@@ -233,13 +233,115 @@
   </entry>
   
   <entry>
+    <title>Swift学习14：在Swift里如何处理算术结果溢出</title>
+    <link href="https://www.bboyzj.cn/2023/02/23/Swift%E5%AD%A6%E4%B9%A014%EF%BC%9A%E5%9C%A8Swift%E9%87%8C%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E7%AE%97%E6%9C%AF%E7%BB%93%E6%9E%9C%E6%BA%A2%E5%87%BA/"/>
+    <id>https://www.bboyzj.cn/2023/02/23/Swift%E5%AD%A6%E4%B9%A014%EF%BC%9A%E5%9C%A8Swift%E9%87%8C%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E7%AE%97%E6%9C%AF%E7%BB%93%E6%9E%9C%E6%BA%A2%E5%87%BA/</id>
+    <published>2023-02-22T17:31:22.000Z</published>
+    <updated>2023-03-01T17:30:15.039Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="溢出运算符"><a href="#溢出运算符" class="headerlink" title="溢出运算符"></a>溢出运算符</h1><ul><li><p>在默认情况下，当向一个整数赋超出它容量的值时，<code>swift</code> 会报错而不是生成一个无效的数，给我们操作过大或过小的数时提供了额外的安全性</p></li><li><p>同时提供三个算术溢出运算符来让系统支持整数溢出运算</p><ul><li>溢出加法 <code>&amp;+</code></li><li>溢出减法 <code>&amp;-</code></li><li>溢出乘法 <code>&amp;*</code></li></ul></li></ul><h1 id="值溢出"><a href="#值溢出" class="headerlink" title="值溢出"></a>值溢出</h1><ul><li>数值可以出现向上溢出或向下溢出</li></ul><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020128841.png"                                     ></p><ul><li><p>溢出也会发生在有符号整型数值上</p></li><li><p>对于无符号与有符号整型数值来说，当出现溢出时，它们会从数值所能容纳的最大数变成最小的数，同样的，当发生下溢时，它们会从所能容纳的最小数变成最大的数</p></li></ul><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020128708.png"                                     ></p><h1 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h1><ul><li>上溢出</li></ul><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020128353.png"                                     ></p><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020128449.png"                                     ></p><ul><li>下溢出</li></ul><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020129637.png"                                     ></p><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020129471.png"                                     ></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;溢出运算符&quot;&gt;&lt;a href=&quot;#溢出运算符&quot; class=&quot;headerlink&quot; title=&quot;溢出运算符&quot;&gt;&lt;/a&gt;溢出运算符&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;在默认情况下，当向一个整数赋超出它容量的值时，&lt;code&gt;swift&lt;/code&gt; 会报错而不是生</summary>
+      
+    
+    
+    
+    <category term="Swift" scheme="https://www.bboyzj.cn/categories/Swift/"/>
+    
+    
+    <category term="Swift-学习篇" scheme="https://www.bboyzj.cn/tags/Swift-%E5%AD%A6%E4%B9%A0%E7%AF%87/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Swift学习13：赋值和算术运算符</title>
+    <link href="https://www.bboyzj.cn/2023/02/23/Swift%E5%AD%A6%E4%B9%A013%EF%BC%9A%E8%B5%8B%E5%80%BC%E5%92%8C%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6/"/>
+    <id>https://www.bboyzj.cn/2023/02/23/Swift%E5%AD%A6%E4%B9%A013%EF%BC%9A%E8%B5%8B%E5%80%BC%E5%92%8C%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6/</id>
+    <published>2023-02-22T17:30:48.000Z</published>
+    <updated>2023-03-01T17:25:29.347Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><ul><li><p>一元运算符对一个目标进行操作。一元前缀运算符（如!b），一元后缀运算符（b!）</p></li><li><p>二元运算符对两个目标进行操作（a+b）同时因为它们出现在两个目标之间，所以是中缀</p></li><li><p>三元运算符操作三个目标，<code>swift</code> 语言也仅有一个 <code>三元运算符</code>，三元条件运算符（a?b:c）</p></li></ul><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020122710.png"                                     ></p><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020122158.png"                                     ></p><h1 id="swift-运算符的改进"><a href="#swift-运算符的改进" class="headerlink" title="swift 运算符的改进"></a>swift 运算符的改进</h1><ul><li><p>swift在支持 <code>c</code> 中的大多数标准运算符的同时也增加了一些排除常见代码错误的能力</p></li><li><p>赋值符号 <code>=</code> 不会返回值，以防止它被无用于等于符号 <code>==</code> </p></li><li><p>算术符号 <code>+、-、*、/、%</code> 以及其他可以监测并阻止值溢出，以避免你在操作比存储类型允许的范围更大或更小的数字时得到各种奇怪的结果</p></li></ul><h1 id="赋值运算符"><a href="#赋值运算符" class="headerlink" title="赋值运算符"></a>赋值运算符</h1><ul><li><p>赋值运算符将一个值赋值给另外一个值</p></li><li><p>如果赋值符号右侧是拥有多个值的元组，它的元素将会一次性地拆分成常量或者变量</p></li><li><p>Swift 的赋值符号自身不会返回值</p></li></ul><h1 id="算术运算符-标准运算符"><a href="#算术运算符-标准运算符" class="headerlink" title="算术运算符-标准运算符"></a>算术运算符-标准运算符</h1><ul><li><p>标准算术运算符 <code>+ - * /</code></p></li><li><p>算术运算符同时也支持 <code>String</code> 的拼接</p></li><li><p><code>swift</code> 算术运算符默认不允许值溢出</p></li></ul><h1 id="算术运算符-余数运算符"><a href="#算术运算符-余数运算符" class="headerlink" title="算术运算符 - 余数运算符"></a>算术运算符 - 余数运算符</h1><ul><li><p>余数运算符 <code>a%b</code> 可以求出多少个 <code>b</code> 的倍数能够刚好放进 <code>a</code> 中并且返回剩下的值（就是我们所谓的余数）</p></li><li><p>当 <code>a</code> 是负数时也适用相同的方法来进行计算</p></li><li><p>当 <code>b</code> 为负数时它的正负号被忽略掉。这意味着 <code>a%b</code> 与 <code>a%-b</code> 能够获得相同的答案</p></li></ul><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020123693.png"                                     ></p><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">let c = 9 % 4</span><br><span class="line">print(c)</span><br><span class="line"></span><br><span class="line">let d = 9 % -4</span><br><span class="line">print(d)</span><br><span class="line"></span><br><span class="line">let e = -9 % 4</span><br><span class="line">print(e)</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020124939.png"                                     ></p><h1 id="算术运算符-一元"><a href="#算术运算符-一元" class="headerlink" title="算术运算符 - 一元"></a>算术运算符 - 一元</h1><ul><li><p>数字值的正负号可以用前缀 <code>-</code> 来切换，我们称之为一元减号运算符</p></li><li><p>一元减号运算符 <code>-</code> 直接在要进行操作的值前边放置，不加任何空格</p></li><li><p>一元加号运算符 <code>+</code> 直接返回它操作的值，不会对其进行任何的修改</p></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;基本概念&quot;&gt;&lt;a href=&quot;#基本概念&quot; class=&quot;headerlink&quot; title=&quot;基本概念&quot;&gt;&lt;/a&gt;基本概念&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;一元运算符对一个目标进行操作。一元前缀运算符（如!b），一元后缀运算符（b!）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li</summary>
+      
+    
+    
+    
+    <category term="Swift" scheme="https://www.bboyzj.cn/categories/Swift/"/>
+    
+    
+    <category term="Swift-学习篇" scheme="https://www.bboyzj.cn/tags/Swift-%E5%AD%A6%E4%B9%A0%E7%AF%87/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Swift学习12：获取子串和字符串比较</title>
+    <link href="https://www.bboyzj.cn/2023/02/22/Swift%E5%AD%A6%E4%B9%A012%EF%BC%9A%E8%8E%B7%E5%8F%96%E5%AD%90%E4%B8%B2%E5%92%8C%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83/"/>
+    <id>https://www.bboyzj.cn/2023/02/22/Swift%E5%AD%A6%E4%B9%A012%EF%BC%9A%E8%8E%B7%E5%8F%96%E5%AD%90%E4%B8%B2%E5%92%8C%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83/</id>
+    <published>2023-02-21T18:59:39.000Z</published>
+    <updated>2023-03-01T17:25:21.832Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="子字符串"><a href="#子字符串" class="headerlink" title="子字符串"></a>子字符串</h1><ul><li><p>使用下标或者类似 <code>prefix(_:)</code> 的方法得到的子字符串是 <code>Substring</code> 类型</p></li><li><p><code>Substring</code> 拥有 <code>String</code> 的大部分方法</p></li><li><p><code>Substring</code> 可以转成 <code>String</code> 类型</p></li></ul><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let str = &quot;hello,world&quot;</span><br><span class="line">let index = str.firstIndex(of: &quot;,&quot;) ?? str.endIndex</span><br><span class="line">let begin = str[..&lt;index]</span><br><span class="line">let new = String(begin)</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020120015.png"                                     ></p><ul><li><p>子字符串重用一部分原字符串的内存</p></li><li><p>修改字符串或子字符串之前都不需要花费拷贝内存的代价</p></li><li><p><code>String</code> 和 <code>Substring</code> 都遵循 <code>StringProtocol</code> 协议，也就是说它基本上都能很方便的兼容所有接受 <code>StringProtocol</code> 值的字符串操作函数</p></li></ul><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020121376.png"                                     ></p><h1 id="字符串的比较"><a href="#字符串的比较" class="headerlink" title="字符串的比较"></a>字符串的比较</h1><ul><li><p>字符串和字符相等性 <code>==</code> 和 <code>!=</code></p></li><li><p>前缀相等性 <code>hasPrefis(_:)</code></p></li><li><p>后缀相等性 <code>hasSubffix(_:)</code></p></li></ul><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var str1 = &quot;1&quot;</span><br><span class="line">var str2 = &quot;2&quot;</span><br><span class="line">print(str1 == str2)</span><br><span class="line">print(str1.hasPrefix(&quot;1&quot;))</span><br><span class="line">print(str2.hasSuffix(&quot;2&quot;))</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020121878.png"                                     ></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;子字符串&quot;&gt;&lt;a href=&quot;#子字符串&quot; class=&quot;headerlink&quot; title=&quot;子字符串&quot;&gt;&lt;/a&gt;子字符串&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;使用下标或者类似 &lt;code&gt;prefix(_:)&lt;/code&gt; 的方法得到的子字符串是 &lt;code&gt;Su</summary>
+      
+    
+    
+    
+    <category term="Swift" scheme="https://www.bboyzj.cn/categories/Swift/"/>
+    
+    
+    <category term="Swift-学习篇" scheme="https://www.bboyzj.cn/tags/Swift-%E5%AD%A6%E4%B9%A0%E7%AF%87/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Swift学习11：索引访问和修改字符串</title>
+    <link href="https://www.bboyzj.cn/2023/02/22/Swift%E5%AD%A6%E4%B9%A011%EF%BC%9A%E7%B4%A2%E5%BC%95%E8%AE%BF%E9%97%AE%E5%92%8C%E4%BF%AE%E6%94%B9%E5%AD%97%E7%AC%A6%E4%B8%B2/"/>
+    <id>https://www.bboyzj.cn/2023/02/22/Swift%E5%AD%A6%E4%B9%A011%EF%BC%9A%E7%B4%A2%E5%BC%95%E8%AE%BF%E9%97%AE%E5%92%8C%E4%BF%AE%E6%94%B9%E5%AD%97%E7%AC%A6%E4%B8%B2/</id>
+    <published>2023-02-21T18:59:05.000Z</published>
+    <updated>2023-03-01T17:18:31.138Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="字符串索引"><a href="#字符串索引" class="headerlink" title="字符串索引"></a>字符串索引</h1><ul><li><p>每一个 <code>String</code> 值都有相关的索引类型，<code>String.Index</code>，他相当于每个 <code>Character</code> 在字符串中的位置</p></li><li><p><code>startIndex</code> 属性来访问 <code>String</code> 中第一个 <code>Character</code> 的位置。<code>endIndex</code> 属性就是 <code>String</code> 中最后一个字符串的位置</p></li><li><p><code>endIndex</code> 属性并不是字符串下标脚本的合法实际参数</p></li><li><p>如果 <code>String</code> 为空，则 <code>startIndex</code> 与 <code>endIndex</code> 相等</p></li><li><p>使用 <code>index(before:)</code> 和 <code>index(after:)</code> 方法来访问给定索引的前后</p></li><li><p>要访问给定索引更远的索引，你可以使用 <code>index(_:offetBy:)</code></p></li><li><p>使用 <code>indices</code> 属性来访问字符串中每个字符的索引</p></li></ul><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var greeting = &quot;Hello, playground&quot;</span><br><span class="line">greeting[greeting.startIndex]</span><br><span class="line">greeting[greeting.index(before: greeting.endIndex)]</span><br><span class="line">greeting[greeting.index(after: greeting.startIndex)]</span><br><span class="line">let index = greeting.index(greeting.startIndex, offsetBy: 7)</span><br><span class="line">greeting[index]</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020116804.png"                                     ></p><h1 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h1><ul><li><p>插入字符，使用 <code>insert(_:at:)</code> 方法</p></li><li><p>插入到另一个字符串的内容到特定的索引，使用 <code>insert(contentsOf:at:)</code> 方法</p></li></ul><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var str = &quot;hello&quot;</span><br><span class="line">str.insert(&quot;!&quot;, at: str.endIndex)</span><br><span class="line">str.insert(contentsOf: &quot; world&quot;, at: str.firstIndex(of: &quot;!&quot;)!)</span><br><span class="line">print(str)</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020117964.png"                                     ></p><h1 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h1><ul><li>移除字符，使用 <code>remove(at:)</code> 方法</li></ul><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var str = &quot;hello&quot;</span><br><span class="line">str.remove(at: str.index(before: str.endIndex))</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020117857.png"                                     ></p><ul><li>移除一小段特定范围的字符串，使用 <code>removeSubrange(_:)</code> 方法</li></ul><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var str = &quot;hello&quot;</span><br><span class="line">let range = str.index(str.endIndex, offsetBy: -str.count)..&lt;str.endIndex</span><br><span class="line">str.removeSubrange(range)</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020117645.png"                                     ></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;字符串索引&quot;&gt;&lt;a href=&quot;#字符串索引&quot; class=&quot;headerlink&quot; title=&quot;字符串索引&quot;&gt;&lt;/a&gt;字符串索引&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;每一个 &lt;code&gt;String&lt;/code&gt; 值都有相关的索引类型，&lt;code&gt;String.I</summary>
+      
+    
+    
+    
+    <category term="Swift" scheme="https://www.bboyzj.cn/categories/Swift/"/>
+    
+    
+    <category term="Swift-学习篇" scheme="https://www.bboyzj.cn/tags/Swift-%E5%AD%A6%E4%B9%A0%E7%AF%87/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Swift学习10：字符串常见操作</title>
     <link href="https://www.bboyzj.cn/2023/02/22/Swift%E5%AD%A6%E4%B9%A010%EF%BC%9A%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C/"/>
     <id>https://www.bboyzj.cn/2023/02/22/Swift%E5%AD%A6%E4%B9%A010%EF%BC%9A%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C/</id>
     <published>2023-02-21T18:58:45.000Z</published>
-    <updated>2023-03-01T17:10:58.528Z</updated>
+    <updated>2023-03-01T17:15:30.150Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="字符串的可变性"><a href="#字符串的可变性" class="headerlink" title="字符串的可变性"></a>字符串的可变性</h1><ul><li><code>var</code> 指定的可以修改</li></ul><p><img                       lazyload                     src="/images/loading.svg"                     data-src="/BboyZJ.github.io/assets/16776903909563.jpg"                                     ></p><ul><li><code>let</code> 指定的不可修改</li></ul><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020106762.png"                                     ></p><ul><li>对比 Object-C (NSString 和 NSMutableString)</li></ul><h1 id="字符串是-值类型"><a href="#字符串是-值类型" class="headerlink" title="字符串是 值类型"></a>字符串是 值类型</h1><ul><li><p><code>String</code> 值在传递给方法或函数的时候会被复制过去</p></li><li><p>赋值给常量或变量的时候也是一样</p></li><li><p>Swift 编译器优化了字符串使用的资源，实际上拷贝只会在确实需要的时候才进行</p></li></ul><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var str1 = &quot;hello&quot;</span><br><span class="line">var str2 = str1</span><br><span class="line">print(str1 == str2)</span><br><span class="line">str1.append(&quot;,world&quot;)</span><br><span class="line">print(str1)</span><br><span class="line">print(str2)</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020109392.png"                                     ></p><h1 id="操作字符"><a href="#操作字符" class="headerlink" title="操作字符"></a>操作字符</h1><ul><li><p><code>for in</code> 循环遍历 <code>String</code> 中的每一个独立的 <code>Character</code></p></li><li><p><code>Character</code> 类型</p></li><li><p><code>String</code> 值可以通过传入 <code>Character</code> 数组来构造</p></li></ul><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var str = &quot;hello&quot;</span><br><span class="line">for c in str&#123;</span><br><span class="line">    print(c)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020109024.png"                                     ></p><h1 id="字符串的拼接"><a href="#字符串的拼接" class="headerlink" title="字符串的拼接"></a>字符串的拼接</h1><ul><li><p>使用加运算符 <code>+</code> 创建新字符串</p></li><li><p>使用 <code>+</code> 赋值符号 <code>+=</code> 在已经存在的 <code>String</code> 值末尾追加一个 <code>String</code> 值</p></li><li><p>使用 <code>String</code> 类型的 <code>append()</code> 方法来可以给一个 <code>String</code> 变量的末尾追加 <code>Character</code> 值</p></li></ul><h1 id="字符串插值"><a href="#字符串插值" class="headerlink" title="字符串插值"></a>字符串插值</h1><ul><li><p>字符串插值是一种从混合常量、变量、字面量和表达式的字符串字面量构造新 <code>String</code> 值的方法</p></li><li><p>每一个你插入到字符串字面量的元素都要被一对圆括号包裹，然后使用反斜杠前缀 <code>\()</code></p></li><li><p>类似于 <code>NSString</code> 的 <code>stringWithFormat</code> 方法，但是更加简便，更强大</p></li><li><p>可以在扩展字符串分割符中创建一个包含在其他情况下会被当做字符串插值的字符</p></li><li><p>要在使用扩展分隔符的字符串中使用字符串插值，在反斜杠后使用匹配首尾井号数量的井号</p></li></ul><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let str = &quot;6 * 7 = \(6 * 7)&quot;</span><br><span class="line">print(str)</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020110881.png"                                     ></p><p><img                       lazyload                     src="/images/loading.svg"                     data-src="/BboyZJ.github.io/assets/16776906521337.jpg"                                     ></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="字符串的可变性"><a href="#字符串的可变性" class="headerlink" title="字符串的可变性"></a>字符串的可变性</h1><ul><li><code>var</code> 指定的可以修改</li></ul><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020114183.png"                                     ></p><ul><li><code>let</code> 指定的不可修改</li></ul><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020106762.png"                                     ></p><ul><li>对比 Object-C (NSString 和 NSMutableString)</li></ul><h1 id="字符串是-值类型"><a href="#字符串是-值类型" class="headerlink" title="字符串是 值类型"></a>字符串是 值类型</h1><ul><li><p><code>String</code> 值在传递给方法或函数的时候会被复制过去</p></li><li><p>赋值给常量或变量的时候也是一样</p></li><li><p>Swift 编译器优化了字符串使用的资源，实际上拷贝只会在确实需要的时候才进行</p></li></ul><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var str1 = &quot;hello&quot;</span><br><span class="line">var str2 = str1</span><br><span class="line">print(str1 == str2)</span><br><span class="line">str1.append(&quot;,world&quot;)</span><br><span class="line">print(str1)</span><br><span class="line">print(str2)</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020109392.png"                                     ></p><h1 id="操作字符"><a href="#操作字符" class="headerlink" title="操作字符"></a>操作字符</h1><ul><li><p><code>for in</code> 循环遍历 <code>String</code> 中的每一个独立的 <code>Character</code></p></li><li><p><code>Character</code> 类型</p></li><li><p><code>String</code> 值可以通过传入 <code>Character</code> 数组来构造</p></li></ul><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var str = &quot;hello&quot;</span><br><span class="line">for c in str&#123;</span><br><span class="line">    print(c)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020109024.png"                                     ></p><h1 id="字符串的拼接"><a href="#字符串的拼接" class="headerlink" title="字符串的拼接"></a>字符串的拼接</h1><ul><li><p>使用加运算符 <code>+</code> 创建新字符串</p></li><li><p>使用 <code>+</code> 赋值符号 <code>+=</code> 在已经存在的 <code>String</code> 值末尾追加一个 <code>String</code> 值</p></li><li><p>使用 <code>String</code> 类型的 <code>append()</code> 方法来可以给一个 <code>String</code> 变量的末尾追加 <code>Character</code> 值</p></li></ul><h1 id="字符串插值"><a href="#字符串插值" class="headerlink" title="字符串插值"></a>字符串插值</h1><ul><li><p>字符串插值是一种从混合常量、变量、字面量和表达式的字符串字面量构造新 <code>String</code> 值的方法</p></li><li><p>每一个你插入到字符串字面量的元素都要被一对圆括号包裹，然后使用反斜杠前缀 <code>\()</code></p></li><li><p>类似于 <code>NSString</code> 的 <code>stringWithFormat</code> 方法，但是更加简便，更强大</p></li><li><p>可以在扩展字符串分割符中创建一个包含在其他情况下会被当做字符串插值的字符</p></li><li><p>要在使用扩展分隔符的字符串中使用字符串插值，在反斜杠后使用匹配首尾井号数量的井号</p></li></ul><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let str = &quot;6 * 7 = \(6 * 7)&quot;</span><br><span class="line">print(str)</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020110881.png"                                     ></p><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020115034.png"                                     ></p>]]></content>
     
     
       
@@ -407,108 +509,6 @@
 &lt;li&gt;使用关键字 &lt;code&gt;let&lt;/code&gt; 声明常量&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div </summary>
-      
-    
-    
-    
-    <category term="Swift" scheme="https://www.bboyzj.cn/categories/Swift/"/>
-    
-    
-    <category term="Swift-学习篇" scheme="https://www.bboyzj.cn/tags/Swift-%E5%AD%A6%E4%B9%A0%E7%AF%87/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Swift学习03：Playgorund使用</title>
-    <link href="https://www.bboyzj.cn/2023/02/22/Swift%E5%AD%A6%E4%B9%A003%EF%BC%9APlayground%E4%BD%BF%E7%94%A8/"/>
-    <id>https://www.bboyzj.cn/2023/02/22/Swift%E5%AD%A6%E4%B9%A003%EF%BC%9APlayground%E4%BD%BF%E7%94%A8/</id>
-    <published>2023-02-21T16:41:59.000Z</published>
-    <updated>2023-03-01T16:37:15.616Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><ul><li>Swift 的 <code>Playgorund</code> 是为了让人人都能愉快的学习 <code>swift</code> 编程</li><li>但发展至今，这个工具越来越强大</li></ul><h1 id="Playgorund-使用"><a href="#Playgorund-使用" class="headerlink" title="Playgorund 使用"></a>Playgorund 使用</h1><ul><li>创建一个 <code>Playgorund</code> 应用</li></ul><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020034182.png"                                     ></p><ul><li>Next，默认名 <code>MyPlayground</code></li></ul><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020035090.png"                                     ></p><ul><li>可以通过 New -&gt; Playground Page 创建多个 <code>Playground</code> 来学习</li></ul><p>注：快捷键</p><p>command + option + n 创建 Playground Page</p><p>command + shift + enter 快速运行程序</p><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020035896.png"                                     ></p><p><img                       lazyload                     src="/images/loading.svg"                     data-src="/BboyZJ.github.io/assets/16776886044720.jpg"                                     ></p><h1 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h1><ul><li>写一个求和的函数</li></ul><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 求和函数</span><br><span class="line">func sum(a:Int,b:Int) -&gt; Int &#123;</span><br><span class="line">    return a+b</span><br><span class="line">&#125;</span><br><span class="line">// 调用求和函数 赋值给 常量 c</span><br><span class="line">let c = sum(a: 1, b: 2)</span><br><span class="line">// 打印常量 c</span><br><span class="line">print(c)</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020037021.png"                                     ></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;Swift 的 &lt;code&gt;Playgorund&lt;/code&gt; 是为了让人人都能愉快的学习 &lt;code&gt;swift&lt;/code&gt;</summary>
-      
-    
-    
-    
-    <category term="Swift" scheme="https://www.bboyzj.cn/categories/Swift/"/>
-    
-    
-    <category term="Swift-学习篇" scheme="https://www.bboyzj.cn/tags/Swift-%E5%AD%A6%E4%B9%A0%E7%AF%87/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Swift学习02：REPL交互式解释器</title>
-    <link href="https://www.bboyzj.cn/2023/02/22/Swift%E5%AD%A6%E4%B9%A002%EF%BC%9AREPL%E4%BA%A4%E4%BA%92%E5%BC%8F%E8%A7%A3%E9%87%8A%E5%99%A8/"/>
-    <id>https://www.bboyzj.cn/2023/02/22/Swift%E5%AD%A6%E4%B9%A002%EF%BC%9AREPL%E4%BA%A4%E4%BA%92%E5%BC%8F%E8%A7%A3%E9%87%8A%E5%99%A8/</id>
-    <published>2023-02-21T16:41:38.000Z</published>
-    <updated>2023-03-01T16:34:05.335Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><ul><li>xcode 6.1 引进了另外一种以交互式的方式来体验 <code>Swift</code> 的方法</li><li>Read Eval PrintLoop，简称REPL</li></ul><h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p><code>REPL</code> 除了可以 <code>定义常量和变量</code> 外，还是可 <code>定义函数</code></p><ul><li>打开终端输入</li></ul><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % swift</span><br><span class="line">mac@bogon ~ % swift repl</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020033029.png"                                     ></p><h1 id="定义变量"><a href="#定义变量" class="headerlink" title="定义变量"></a>定义变量</h1><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020032935.png"                                     ></p><h1 id="定义函数"><a href="#定义函数" class="headerlink" title="定义函数"></a>定义函数</h1><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020031861.png"                                     ></p><h1 id="REPL-其他命令"><a href="#REPL-其他命令" class="headerlink" title="REPL 其他命令"></a>REPL 其他命令</h1><ul><li>退出：:quit</li><li>帮助：:help</li><li>将光标移动到当前行的开始处：Control + A</li><li>将光标移动到当前行的结束处：Control + E</li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;介绍&quot;&gt;&lt;a href=&quot;#介绍&quot; class=&quot;headerlink&quot; title=&quot;介绍&quot;&gt;&lt;/a&gt;介绍&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;xcode 6.1 引进了另外一种以交互式的方式来体验 &lt;code&gt;Swift&lt;/code&gt; 的方法&lt;/li&gt;
-&lt;li&gt;Read</summary>
-      
-    
-    
-    
-    <category term="Swift" scheme="https://www.bboyzj.cn/categories/Swift/"/>
-    
-    
-    <category term="Swift-学习篇" scheme="https://www.bboyzj.cn/tags/Swift-%E5%AD%A6%E4%B9%A0%E7%AF%87/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Swift学习01：Swift编译流程</title>
-    <link href="https://www.bboyzj.cn/2023/02/21/Swift%E5%AD%A6%E4%B9%A001%EF%BC%9ASwift%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B/"/>
-    <id>https://www.bboyzj.cn/2023/02/21/Swift%E5%AD%A6%E4%B9%A001%EF%BC%9ASwift%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B/</id>
-    <published>2023-02-21T15:49:55.000Z</published>
-    <updated>2023-03-01T16:30:28.349Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="编译器架构"><a href="#编译器架构" class="headerlink" title="编译器架构"></a>编译器架构</h1><p>Swift编译过程和OC基本类似，仅仅是前端编译器不一样。</p><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020024798.png"                                     ></p><ul><li><code>OC/C</code> 前端编译器是 <code>Clang</code></li><li><code>Swift</code> 先解析成 <code>Swift AST</code>（抽象语法树），通过 <code>swiftc</code> 这个命令行参数，编译成 <code>Swift IL</code></li><li><code>OC</code> 和 <code>Swift</code> 最后均编译成 <code>LLVM IR</code> 中间层表示</li><li><code>OC</code> 和 <code>Swift</code> 最终通过 后端编译器 <code>LLVM compiler</code> ，编译成最终的在具体地址上可以执行的二进制，包括x86、arm和other</li></ul><h1 id="详细编译流程"><a href="#详细编译流程" class="headerlink" title="详细编译流程"></a>详细编译流程</h1><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020025648.png"                                     ></p><ul><li>Swift 先解析成 <code>AST（抽象语法树）</code></li><li>经过一系列工具编程 <code>Swift</code> 的 <code>SIL(中间语言)</code></li><li>再经过 <code>分析、IR工具</code> 转成 <code>LLVM IR(中间表示层)</code>   </li><li>最终通过 后端编译器 LLVM compiler 编译成 .o 目标文件</li></ul><h1 id="命令行流程"><a href="#命令行流程" class="headerlink" title="命令行流程"></a>命令行流程</h1><p>使用终端创建一个简单的 <code>main.swift</code> 文件</p><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % cd Desktop</span><br><span class="line">mac@bogon Desktop % touch main.swift</span><br></pre></td></tr></table></figure></div><p>此时你可以在桌面看到一个 <code>main.swift</code> 文件</p><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020026247.png"                                     ></p><p>在该文件下写下两个数相加的一个函数</p><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">func sum(a:Int,b:Int) -&gt; Int &#123;</span><br><span class="line">    return a + b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let value = sum(a: 1, b: 2)</span><br><span class="line">print(value)</span><br></pre></td></tr></table></figure></div><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020027637.png"                                     ></p><ul><li>打开命令行工具</li></ul><p><code>mac@bogon ~ % cd Desktop</code></p><ul><li>生成 <code>AST</code> 抽象语法树</li></ul><p><code>mac@bogon ~ % swiftc main.swift -dump-ast</code></p><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020027831.png"                                     ></p><ul><li>生成 <code>SIL</code> 中间语言</li></ul><p><code>mac@bogon ~ % swiftc main.swift -emit-sil</code></p><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/20230302002831.png"                                     ></p><ul><li>生成 LLVM IR 中间表示层</li></ul><p><code>mac@bogon ~ % swiftc main.swift -emit-ir</code></p><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020029775.png"                                     ></p><ul><li>生成 Assembly Language 汇编语言</li></ul><p><code>mac@bogon ~ % swiftc main.swift -emit-assembly</code></p><p><img                       lazyload                     src="/images/loading.svg"                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020030034.png"                                     ></p><ul><li>生成二进制文件</li></ul><p><code>mac@bogon ~ % swiftc -o main.out main.swift</code></p><p>命令行输入：</p><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % cd /Users/mac/Desktop/01swift编译流程 </span><br><span class="line">mac@bogon 01swift编译流程 % swiftc -o main.out main.swift</span><br><span class="line">mac@bogon 01swift编译流程 % ./main.out</span><br><span class="line">3</span><br></pre></td></tr></table></figure></div>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;编译器架构&quot;&gt;&lt;a href=&quot;#编译器架构&quot; class=&quot;headerlink&quot; title=&quot;编译器架构&quot;&gt;&lt;/a&gt;编译器架构&lt;/h1&gt;&lt;p&gt;Swift编译过程和OC基本类似，仅仅是前端编译器不一样。&lt;/p&gt;
-&lt;p&gt;&lt;img  
-              </summary>
-      
-    
-    
-    
-    <category term="Swift" scheme="https://www.bboyzj.cn/categories/Swift/"/>
-    
-    
-    <category term="Swift-学习篇" scheme="https://www.bboyzj.cn/tags/Swift-%E5%AD%A6%E4%B9%A0%E7%AF%87/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Swift学习00：简介</title>
-    <link href="https://www.bboyzj.cn/2020/08/22/Swift%E5%AD%A6%E4%B9%A000%EF%BC%9A%E7%AE%80%E4%BB%8B/"/>
-    <id>https://www.bboyzj.cn/2020/08/22/Swift%E5%AD%A6%E4%B9%A000%EF%BC%9A%E7%AE%80%E4%BB%8B/</id>
-    <published>2020-08-22T13:17:43.000Z</published>
-    <updated>2023-03-01T16:24:09.919Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Swift介绍"><a href="#Swift介绍" class="headerlink" title="Swift介绍"></a>Swift介绍</h1><p>Swift是Apple在2014年6月WWDC发布的全新的编程语言。</p><p>Swift是一种高性能系统编程语言，提供了对现有C和OC代码框架的无缝访问，并且是内存安全的。</p><p>Swift语言更加简洁，是一门类型安全的语言。</p><h1 id="Swift和OC的区别"><a href="#Swift和OC的区别" class="headerlink" title="Swift和OC的区别"></a>Swift和OC的区别</h1><ol><li>编程范式</li></ol><ul><li>Swift可以 <code>面试协议编程、函数式编程和面向对象编程</code></li><li>OC以 <code>面向对象编程</code> 为主，当然你可以引入 <code>Reactive Cocoa</code> 的类库来进行函数式编程</li></ul><ol start="2"><li>类型安全</li></ol><ul><li>Swift是一门 <code>类型安全的语言</code>。鼓励程序员在代码中清楚明确值的类型。如果代码中使用一个字符串String，那么你不能错误地传递一个整型Int给它。因为Swift是类型安全的，它会在代码编译的时候做类型检查，并且把所有不匹配的类型作为一个错误标记出来。这样使得程序员在开发中尽可能早地发现和修正错误。</li><li>而OC则 <code>不是类型安全的语言</code>，你声明一个NSString变量，仍然可以传递一个NSNumber给它，尽管编译器会抱怨，但是你仍然可以作为NSNumber来使用它。</li></ul><ol start="3"><li>值类型的增强</li></ol><ul><li>在Swift中，典型的有 <code>struct、enum</code> 以及 <code>元祖tuple</code> 都是值类型。而平时使用的Int、Double、Float 、String 、Array 、Dictionary、Set其实都是用结构体实现的，也是 <code>值类型</code>。</li><li>OC中，NSNumber、NSString以及集合类对象都是指针类型。</li></ul><ol start="4"><li>枚举增强</li></ol><ul><li>Swift的枚举可以使用 <code>整型、浮点型、字符串等</code>，还能拥有 <code>属性和方法</code>，甚至支持 <code>泛型、协议、扩展等</code>。</li><li>OC里面的枚举则鸡肋很多。</li></ul><ol start="5"><li>泛型</li></ol><ul><li>Swift中 <code>支持泛型</code>，也支持泛型的类型约束等特性</li><li>苹果推出了Swift2.0版本，为了让开发者从OC更好的国度到Swift上，苹果也为OC带来了Gennerics泛型支持，不过OC的泛型约束也仅停留在编译器警告阶段。</li></ul><ol start="6"><li>协议和扩展</li></ol><ul><li>Swift对协议的支持更加丰富，配合扩展（extension）、泛型、关联类型等可以实现面向协议编程，从而大大提高代码的灵活性。同时swift中的protocol还可以用于值类型，如结构体和枚举</li><li>OC的协议却反强约束，提供optional特性往往成为很多问题得来源，而如果放弃optional又会让实现代价过大。</li></ul><ol start="7"><li>函数和闭包</li></ol><ul><li>Swift函数是一等公民，可以直接定义函数类型变量，可以作为其他函数参数传递，可以作为函数的返回值类型。</li><li>OC里面函数仍然是次等公民，需要selector封装或者使用block才能模拟Swift中类似的效果。</li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;Swift介绍&quot;&gt;&lt;a href=&quot;#Swift介绍&quot; class=&quot;headerlink&quot; title=&quot;Swift介绍&quot;&gt;&lt;/a&gt;Swift介绍&lt;/h1&gt;&lt;p&gt;Swift是Apple在2014年6月WWDC发布的全新的编程语言。&lt;/p&gt;
-&lt;p&gt;Swift是一种</summary>
       
     
     
