@@ -1,263 +1,191 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="keywords" content="Hexo Theme Redefine">
-    <meta name="description" content="我是小J，关注我">
-    <meta name="author" content="The Redefine Team">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
-    <!--- Seo Part-->
-    
-    <link rel="canonical" href="https://www.bboyzj.cn/2023/02/23/swift学习14：在swift里如何处理算术结果溢出/"/>
-    <meta name="robots" content="index,follow">
-    <meta name="googlebot" content="index,follow">
-    <meta name="revisit-after" content="1 days">
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Swift学习14：在Swift里如何处理算术结果溢出">
-    <meta property="og:description" content="我是小J，关注我">
-    <meta property="og:url" content="https://www.bboyzj.cn2023/02/23/Swift学习14：在Swift里如何处理算术结果溢出/">
-    <meta property="og:image" content="/images/redefine-logo.svg">
-    <meta property="og:site_name" content="Theme Redefine">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Swift学习14：在Swift里如何处理算术结果溢出">
-    <meta name="twitter:description" content="我是小J，关注我">
-    <meta name="twitter:image" content="/images/redefine-logo.svg">
-    <!--- Icon Part-->
-    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
-    <meta name="theme-color" content="#005080">
-    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
-    
-    <title>
-        
-            Swift学习14：在Swift里如何处理算术结果溢出 -
-        
-        Theme Redefine
-    </title>
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="张建的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.3.0">
+    <meta name="root" content="/BboyZJ.github.io/">
+    <link rel="dns-prefetch" href="https://www.bboyzj.cn">
+    <!--SEO-->
 
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
-
-    
-    
-    
-    
-    <script id="hexo-configurations">
-    let REDEFINE = window.REDEFINE || {};
-    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/redefine-avatar.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"Theme Redefine","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":false,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.3","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}}};
-    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
-  </script>
-    
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
-
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
-
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
-
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
-
-    
-    
-    
-<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
-</head>
+<meta name="keywords" content="Swift-学习篇" />
 
 
-<body>
-<div class="progress-bar-container">
+<meta name="description" content="溢出运算符
+在默认情况下，当向一个整数赋超出它容量的值时，swift 会报错而不是生成一个无效的数，给我们操作过大或过小的数时提供了额外的安全性
+
+同时提供三个算术溢出运算符来让系统支持整数溢出..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
     
-        <span class="scroll-progress-bar"></span>
+    Swift学习14：在Swift里如何处理算术结果溢出 |
     
+    张建的博客
+</title>
+
+<link rel="alternate" href="/atom.xml" title="张建的博客" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
 
     
-        <span class="pjax-progress-bar"></span>
-        <span class="pjax-progress-icon">
-            <i class="fa-solid fa-circle-notch fa-spin"></i>
-        </span>
+
+
+<link rel="stylesheet" href="/BboyZJ.github.io/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/BboyZJ.github.io/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css?rev=@@hash.css">
+
     
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
 </div>
 
 
-<main class="page-container">
+
 
     
 
-    <div class="page-main-content">
-
-        <div class="page-main-content-top">
-            <header class="menu-wrapper">
-    
-    <div class="menu-content">
-        <div class="left">
+<meta name="generator" content="Hexo 6.3.0"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  style="background-image:url(
+    https://hexo-theme-snippet-1251680922.cos.ap-beijing.myqcloud.com/img/banner.jpg)"
+     >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='小J'>
+            <img src="/BboyZJ.github.io/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
             
-            <a class="logo-title" href="/">
-                
-                Theme Redefine
-                
-            </a>
-        </div>
-
-        <div class="right">
-            <!-- PC -->
-            <div class="pc">
-                <ul class="menu-list">
-                    
-                        
-                            <li class="menu-item">
-                                <!-- Menu -->
-                                <a class="" 
-                                    href="/BboyZJ.github.io/"  >
-                                    
-                                        
-                                            <i class="fa-regular fa-house"></i>
-                                        
-                                        HOME
-                                    
-                                </a>
-                                <!-- Submenu -->
-                                
-                            </li>
-                    
-                    
-                </ul>
-            </div>
-            <!-- Mobile -->
-            <div class="mobile">
-                
-                <div class="icon-item menu-bar">
-                    <div class="menu-bar-middle"></div>
-                </div>
-            </div>
+            <img src="/BboyZJ.github.io/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
+            
         </div>
     </div>
-
-    <!-- Mobile drawer -->
-    <div class="menu-drawer">
-        <ul class="drawer-menu-list">
-            
-                
-                    <li class="drawer-menu-item flex-center">
-                        <a class="" 
-                        href="/BboyZJ.github.io/"  >
-                             
-                                
-                                    <i class="fa-regular fa-house"></i>
-                                
-                                HOME
-                            
-                        </a>
-                    </li>
-                    <!-- Submenu -->
-                    
-            
-
-        </ul>
-    </div>
-
-    <div class="window-mask"></div>
-
 </header>
-
-
-        </div>
-
-        <div class="page-main-content-middle">
-
-            <div class="main-content">
-
-                
-                    <div class="fade-in-down-animation">
-    <div class="post-page-container">
-        <div class="article-content-container">
-
-            
-            
-                <div class="article-title">
-                    <h1 class="article-title-regular">Swift学习14：在Swift里如何处理算术结果溢出</h1>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://www.bboyzj.cn">
+                        张建的博客</a>
                 </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                Home</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/OC/"><i class="fa "></i>
+                                OC</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/Swift/"><i class="fa "></i>
+                                Swift</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/Blog/"><i class="fa "></i>
+                                Blog</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/Flutter/"><i class="fa "></i>
+                                Flutter</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Swift学习14：在Swift里如何处理算术结果溢出">
             
-                
+            Swift学习14：在Swift里如何处理算术结果溢出
             
-
-            
-                <div class="article-header">
-                    <div class="avatar">
-                        <img src="/BboyZJ.github.io/images/redefine-avatar.svg">
-                    </div>
-                    <div class="info">
-                        <div class="author">
-                            <span class="name">The Redefine Team</span>
-                            
-                                <span class="author-label">lol</span>
-                            
-                        </div>
-                        <div class="meta-info">
-                            <div class="article-meta-info">
-    <span class="article-date article-meta-item">
-        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="pc">2023-02-23 01:31:22</span>
-        <span class="mobile">2023-02-23 01:31</span>
-        <span class="hover-info">Created</span>
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/BboyZJ.github.io/categories/Swift/">Swift</a>
     </span>
     
-        <span class="article-date article-meta-item">
-            <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-02 01:30:15</span>
-            <span class="mobile">2023-03-02 01:30</span>
-            <span class="hover-info">Updated</span>
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/BboyZJ.github.io/tags/Swift-%E5%AD%A6%E4%B9%A0%E7%AF%87/" rel="tag">Swift-学习篇</a>
+            
         </span>
-    
-
-    
-        <span class="article-categories article-meta-item">
-            <i class="fa-regular fa-folders"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
-    
-        <span class="article-tags article-meta-item">
-            <i class="fa-regular fa-tags"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/BboyZJ.github.io/tags/Swift-%E5%AD%A6%E4%B9%A0%E7%AF%87/">Swift-学习篇</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
-
+    </span>
     
     
     
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2023/02/23</span>
+    </span>
     
-        <span class="article-pv article-meta-item">
-            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
-        </span>
     
 </div>
-
-                        </div>
-                    </div>
-                </div>
-            
-
-            <div class="article-content markdown-body">
-                <h1 id="溢出运算符"><a href="#溢出运算符" class="headerlink" title="溢出运算符"></a>溢出运算符</h1><ul>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h1 id="溢出运算符"><a href="#溢出运算符" class="headerlink" title="溢出运算符"></a>溢出运算符</h1><ul>
 <li><p>在默认情况下，当向一个整数赋超出它容量的值时，<code>swift</code> 会报错而不是生成一个无效的数，给我们操作过大或过小的数时提供了额外的安全性</p>
 </li>
 <li><p>同时提供三个算术溢出运算符来让系统支持整数溢出运算</p>
@@ -271,381 +199,131 @@
 <h1 id="值溢出"><a href="#值溢出" class="headerlink" title="值溢出"></a>值溢出</h1><ul>
 <li>数值可以出现向上溢出或向下溢出</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020128841.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020128841.png"></p>
 <ul>
 <li><p>溢出也会发生在有符号整型数值上</p>
 </li>
 <li><p>对于无符号与有符号整型数值来说，当出现溢出时，它们会从数值所能容纳的最大数变成最小的数，同样的，当发生下溢时，它们会从所能容纳的最小数变成最大的数</p>
 </li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020128708.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020128708.png"></p>
 <h1 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h1><ul>
 <li>上溢出</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020128353.png"
-                     
-                ></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020128449.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020128353.png"></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020128449.png"></p>
 <ul>
 <li>下溢出</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020129637.png"
-                     
-                ></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020129471.png"
-                     
-                ></p>
-
-            </div>
-
-            
-                <div class="post-copyright-info">
-                    <div class="article-copyright-info-container">
-    <ul>
-        <li>Post title：Swift学习14：在Swift里如何处理算术结果溢出</li>
-        <li>Post author：The Redefine Team</li>
-        <li>Create time：2023-02-23 01:31:22</li>
-        <li>
-            Post link：https://redefine.ohevan.com/2023/02/23/Swift学习14：在Swift里如何处理算术结果溢出/
-        </li>
-        <li>
-            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
-        </li>
-    </ul>
-</div>
-
-                </div>
-            
-
-            
-                <ul class="post-tags-box">
-                    
-                        <li class="tag-item">
-                            <a href="/BboyZJ.github.io/tags/Swift-%E5%AD%A6%E4%B9%A0%E7%AF%87/">#Swift-学习篇</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            
-
-            
-
-            
-                <div class="article-nav">
-                    
-                        <div class="article-prev">
-                            <a class="prev"
-                            rel="prev"
-                            href="/BboyZJ.github.io/2023/03/01/Blog-01%EF%BC%9AHexo%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/"
-                            >
-                                <span class="left arrow-icon flex-center">
-                                    <i class="fa-solid fa-chevron-left"></i>
-                                </span>
-                                <span class="title flex-center">
-                                    <span class="post-nav-title-item">Blog-01：Hexo个人博客搭建</span>
-                                    <span class="post-nav-item">Prev posts</span>
-                                </span>
-                            </a>
-                        </div>
-                    
-                    
-                        <div class="article-next">
-                            <a class="next"
-                            rel="next"
-                            href="/BboyZJ.github.io/2023/02/23/Swift%E5%AD%A6%E4%B9%A013%EF%BC%9A%E8%B5%8B%E5%80%BC%E5%92%8C%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6/"
-                            >
-                                <span class="title flex-center">
-                                    <span class="post-nav-title-item">Swift学习13：赋值和算术运算符</span>
-                                    <span class="post-nav-item">Next posts</span>
-                                </span>
-                                <span class="right arrow-icon flex-center">
-                                    <i class="fa-solid fa-chevron-right"></i>
-                                </span>
-                            </a>
-                        </div>
-                    
-                </div>
-            
-
-
-            
-        </div>
-
-        
-            <div class="toc-content-container">
-                <div class="post-toc-wrap">
-    <div class="post-toc">
-        <div class="toc-title">On this page</div>
-        <div class="page-title">Swift学习14：在Swift里如何处理算术结果溢出</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%BA%A2%E5%87%BA%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-text">溢出运算符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%80%BC%E6%BA%A2%E5%87%BA"><span class="nav-text">值溢出</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-text">代码示例</span></a></li></ol>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020129637.png"></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020129471.png"></p>
 
     </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">Snippet</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/BboyZJ.github.io/2023/03/01/Blog-01%EF%BC%9AHexo%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" class="pre-post btn btn-default" title='Blog-01：Hexo个人博客搭建'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            Blog-01：Hexo个人博客搭建</span>
+    </a>
+    
+    
+    <a href="/BboyZJ.github.io/2023/02/23/Swift%E5%AD%A6%E4%B9%A013%EF%BC%9A%E8%B5%8B%E5%80%BC%E5%92%8C%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6/" class="next-post btn btn-default" title='Swift学习13：赋值和算术运算符'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            Swift学习13：赋值和算术运算符</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
 </div>
-            </div>
+
+<div id="comments">
+    
+    
+<div class="utteranc">
+  
+  <script
+    src='https://utteranc.es/client.js'
+    repo='shenliyang/snippet-comment'
+    issue-term='pathname'
+    issue-number=''
+    theme='github-light'
+    label=''
+    crossorigin='anonymous'
+    async
+  ></script>
+</div>
+
+
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            Table of Contents
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%BA%A2%E5%87%BA%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-text">溢出运算符</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%80%BC%E6%BA%A2%E5%87%BA"><span class="toc-text">值溢出</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="toc-text">代码示例</span></a></li></ol>
         
     </div>
-</div>
-
-
+</aside>
                 
-
             </div>
-
-
-
         </div>
-
-        <div class="page-main-content-bottom">
-            <footer class="footer">
-    <div class="info-container">
-        <div class="copyright-info">
-            &copy;
-            
-              <span>2022</span>
-              -
-            
-            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">The Redefine Team</a>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
         </div>
-        
-            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-            <div class="website-count info-item">
-                
-                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
-                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
-                    </span>
-                
-                
-                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
-                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
-                    </span>
-                
-            </div>
-        
-        <div class="theme-info info-item">
-            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
-                <br> 
-            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.3</a>
-        </div>
-        
-        
-        
-            <div id="start_time_div" style="display:none">
-                2022/8/17 11:45:14
-            </div>
-            <div>
-                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
-            </div>
-        
-        
-        
-            <script async data-pjax>
-                try {
-                    function odometer_init() {
-                    const elements = document.querySelectorAll('.odometer');
-                    elements.forEach(el => {
-                        new Odometer({
-                            el,
-                            format: '( ddd).dd',
-                            duration: 200
-                        });
-                    });
-                    }
-                    odometer_init();
-                } catch (error) {}
-            </script>
-        
-        
-        
-    </div>  
+    </div>
 </footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
         </div>
     </div>
-
-    
-        <div class="post-tools">
-            <div class="post-tools-container">
-    <ul class="tools-list">
-        <!-- TOC aside toggle -->
-        
-            <li class="right-bottom-tools page-aside-toggle">
-                <i class="fa-regular fa-outdent"></i>
-            </li>
-        
-
-        <!-- go comment -->
-        
-    </ul>
-</div>
-
-        </div>
-    
-
-    <div class="right-bottom-side-tools">
-        <div class="side-tools-container">
-    <ul class="unfolded-tools-list">
-        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
-            <i class="fa-regular fa-magnifying-glass-plus"></i>
-        </li>
-
-        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
-            <i class="fa-regular fa-magnifying-glass-minus"></i>
-        </li>
-
-        <li class="right-bottom-tools tool-expand-width flex-center">
-            <i class="fa-regular fa-expand"></i>
-        </li>
-
-        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
-            <i class="fa-regular fa-moon"></i>
-        </li>
-
-        <!-- rss -->
-        
-
-        
-            <li class="right-bottom-tools tool-scroll-to-top flex-center">
-                <i class="fa-regular fa-arrow-up"></i>
-            </li>
-        
-
-        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
-            <i class="fa-regular fa-arrow-down"></i>
-        </li>
-    </ul>
-
-    <ul class="folded-tools-list">
-        <li class="right-bottom-tools tool-toggle-show flex-center">
-            <i class="fa-regular fa-cog fa-spin"></i>
-        </li>
-        
-    </ul>
-</div>
-
-    </div>
-
-    <div class="image-viewer-container">
-    <img src="">
 </div>
 
 
-    
 
 
-</main>
-
-
-
-
-<script src="/BboyZJ.github.io/js/utils.js"></script>
-
-<script src="/BboyZJ.github.io/js/main.js"></script>
-
-<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
-
-<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
-
-<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
-
-
-
-
-
-    
-<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
-
-
-
-
-    
-<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
-
-
-
-
-    
-<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
-
-    
-<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
-
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
-
-
-
-<div class="post-scripts pjax">
-    
-        
-<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
-
-<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
-
-<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
-
-<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
-
-    
-    
-</div>
-
-
-    
-<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
-
-<script>
-    window.addEventListener('DOMContentLoaded', () => {
-        window.pjax = new Pjax({
-            selectors: [
-                'head title',
-                '.page-container',
-                '.pjax'
-            ],
-            history: true,
-            debug: false,
-            cacheBust: false,
-            timeout: 0,
-            analytics: false,
-            currentUrlFullReload: false,
-            scrollRestoration: false,
-            // scrollTo: true,
-        });
-
-        document.addEventListener('pjax:send', () => {
-            REDEFINE.utils.pjaxProgressBarStart();
-        });
-
-        document.addEventListener('pjax:complete', () => {
-            REDEFINE.utils.pjaxProgressBarEnd();
-            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
-            REDEFINE.refresh();
-        });
-    });
-</script>
-
-
+<script src="/BboyZJ.github.io/js/app.js?rev=@@hash.js"></script>
 
 </body>
 </html>
