@@ -9,18 +9,18 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/02/oc学习01：文件导入#include,#import,@class区别/"/>
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/02/oc学习02：文件导入#include,#import,@class区别/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="OC学习01：文件导入#include,#import,@class区别">
+    <meta property="og:title" content="OC学习02：文件导入#include,#import,@class区别">
     <meta property="og:description" content="我是小J，关注我">
-    <meta property="og:url" content="https://www.bboyzj.cn2023/03/02/OC学习01：文件导入#include,#import,@class区别/">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/03/02/OC学习02：文件导入#include,#import,@class区别/">
     <meta property="og:image" content="/images/redefine-logo.svg">
     <meta property="og:site_name" content="Theme Redefine">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="OC学习01：文件导入#include,#import,@class区别">
+    <meta name="twitter:title" content="OC学习02：文件导入#include,#import,@class区别">
     <meta name="twitter:description" content="我是小J，关注我">
     <meta name="twitter:image" content="/images/redefine-logo.svg">
     <!--- Icon Part-->
@@ -31,7 +31,7 @@
     
     <title>
         
-            OC学习01：文件导入#include,#import,@class区别 -
+            OC学习02：文件导入#include,#import,@class区别 -
         
         Theme Redefine
     </title>
@@ -181,7 +181,7 @@
             
             
                 <div class="article-title">
-                    <h1 class="article-title-regular">OC学习01：文件导入#include,#import,@class区别</h1>
+                    <h1 class="article-title-regular">OC学习02：文件导入#include,#import,@class区别</h1>
                 </div>
             
                 
@@ -210,13 +210,35 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-02 16:40:40</span>
-            <span class="mobile">2023-03-02 16:40</span>
+            <span class="pc">2023-03-02 18:13:48</span>
+            <span class="mobile">2023-03-02 18:13</span>
             <span class="hover-info">Updated</span>
         </span>
     
 
     
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
     
 
     
@@ -235,18 +257,76 @@
             
 
             <div class="article-content markdown-body">
-                
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><ul>
+<li><p><code>#include</code> 、 <code>#import</code> 和 <code>@class</code> 都是用来 <code>包含头文件</code></p>
+</li>
+<li><p><code>C/C++</code> 只能用 <code>#include</code> 包含头文件，没有 <code>#import</code> 和 <code>@class</code></p>
+</li>
+<li><p><code>OC</code> 中 <code>#include</code> 、 <code>#import</code> 和 <code>@class</code> 都可以用</p>
+</li>
+</ul>
+<p>那么问题来了，三种包含头文件方式在 <code>OC</code> 中有什么区别呢？</p>
+<h1 id="include、import"><a href="#include、import" class="headerlink" title="include、import"></a>include、import</h1><ul>
+<li><p>#include 会重复导入头文件，重复导入会报重复定义的错误；#import 不会重复导入头文件，允许交叉编译</p>
+</li>
+<li><p>#include &lt;xxx.h&gt; 或 #import &lt;xxx.h&gt; ：用于导入 <code>系统自带文件</code>，在 <code>系统文件目录下查找</code></p>
+</li>
+<li><p>#include “xxx.h” 或 #import “xxx.h” ：用于导入 <code>用户自定义的文件</code>，查找顺序：<code>用户文件目录 -&gt; 安装文件目录 -&gt; 系统文件目录</code>，所以 “xxx.h” 一般用来导入用户自定义的文件</p>
+</li>
+</ul>
+<h1 id="class"><a href="#class" class="headerlink" title="class"></a>class</h1><ul>
+<li>@class XXXClassName ： 用于声明一个类，用于解决互相引用的问题（A引用B，B引用A）</li>
+</ul>
+<h1 id="include-示例"><a href="#include-示例" class="headerlink" title="include 示例"></a>include 示例</h1><ul>
+<li><code>A文件导入两次B文件</code>：报重复定义错误</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line"></span><br><span class="line">// include 不允许重复导入两次</span><br><span class="line">#include &quot;VB.h&quot;</span><br><span class="line">#include &quot;VB.h&quot;</span><br><span class="line"></span><br><span class="line">NS_ASSUME_NONNULL_BEGIN</span><br><span class="line"></span><br><span class="line">@interface VA : UIView</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p>command + b 编译报错：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303021812383.png"
+                     
+                ></p>
+<ul>
+<li>A引用B，B引用C，A再引用C：同样 <code>报重复定义错误</code>，相当于A引用了两次C</li>
+</ul>
+<h1 id="import-示例"><a href="#import-示例" class="headerlink" title="import 示例"></a>import 示例</h1><ul>
+<li>导入两次A文件，不报错</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 导入两次A文件</span><br><span class="line">#import &quot;A.h&quot;</span><br><span class="line">#import &quot;A.h&quot;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="class-使用场景"><a href="#class-使用场景" class="headerlink" title="class 使用场景"></a>class 使用场景</h1><ul>
+<li>A类引用B类，B类引用A：互相引用报错</li>
+</ul>
+<p>A.h文件</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line">#import &quot;B.h&quot;</span><br><span class="line">@interface A : UIView</span><br><span class="line">@property (nonatomic,strong)B * b;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p>B.h文件</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line">#import &quot;A.h&quot;</span><br><span class="line">@interface B : UIView</span><br><span class="line">@property (nonatomic,strong)A * a;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303021813725.png"
+                     
+                ></p>
+<ul>
+<li>可以用 <code>@class</code> 方式进行引用，一个用@class或者两个都用 @class</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//#import &quot;A.h&quot;</span><br><span class="line"></span><br><span class="line">// class声明A</span><br><span class="line">@class A;</span><br></pre></td></tr></table></figure></div>
             </div>
 
             
                 <div class="post-copyright-info">
                     <div class="article-copyright-info-container">
     <ul>
-        <li>Post title：OC学习01：文件导入#include,#import,@class区别</li>
+        <li>Post title：OC学习02：文件导入#include,#import,@class区别</li>
         <li>Post author：The Redefine Team</li>
         <li>Create time：2023-03-02 16:39:08</li>
         <li>
-            Post link：https://redefine.ohevan.com/2023/03/02/OC学习01：文件导入#include,#import,@class区别/
+            Post link：https://redefine.ohevan.com/2023/03/02/OC学习02：文件导入#include,#import,@class区别/
         </li>
         <li>
             Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
@@ -258,11 +338,34 @@
             
 
             
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">#OC-学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
 
             
 
             
                 <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/03/02/OC%E5%AD%A6%E4%B9%A003%EF%BC%9A%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习03：内存管理</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
                     
                     
                         <div class="article-next">
@@ -292,8 +395,8 @@
                 <div class="post-toc-wrap">
     <div class="post-toc">
         <div class="toc-title">On this page</div>
-        <div class="page-title">OC学习01：文件导入#include,#import,@class区别</div>
-        
+        <div class="page-title">OC学习02：文件导入#include,#import,@class区别</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#include%E3%80%81import"><span class="nav-text">include、import</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#class"><span class="nav-text">class</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#include-%E7%A4%BA%E4%BE%8B"><span class="nav-text">include 示例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#import-%E7%A4%BA%E4%BE%8B"><span class="nav-text">import 示例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#class-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-text">class 使用场景</span></a></li></ol>
 
     </div>
 </div>
@@ -312,264 +415,68 @@
         </div>
 
         <div class="page-main-content-bottom">
-            @import "../../common/variables"
-
-.footer {
-  margin-top 20px !important
-  padding-top 20px !important
-  height auto    
-  min-height 100px
-  font-size 1rem
-  color var(--third-text-color)
-  background-color alpha($primary-color, 0.15)
-  border-radius 0 !important
-  redefine-container(0,0,0,0,false)
-  position relative
-
-  span {
-    vertical-align baseline !important
-  }
-
-  .odometer {
-    vertical-align baseline !important
-  }
-
-
-  a {
-    color var(--third-text-color)
-
-
-    &:hover {
-      color var(--primary-color)
-
-    }
-  }
-
-  .theme-info {
-    text-align left
-    position absolute
-    left 20px
-    top 45%
-    transform translateY(-50%)
-
-    .powered-by-container {
-      margin-bottom 10px
-      font-size 0.8rem
-
-      a {
-        font-size 1rem
-      }
-
-      svg {
-        position relative
-        top 2px
-      }
-    }
-
-    .theme-version-container {
-      font-size 0.8rem
-
-      a {
-        font-size 1rem
-      }
-
-    }
-
-    +redefine-tablet() {
-      position relative
-      text-align center
-      top 0 !important
-      left 0 !important
-      transform none !important
-    }
-
-    +redefine-mobile() {
-      position relative
-      text-align center
-      top 0 !important
-      left 0 !important
-      transform none !important
-    }
-  }
-
-  .copyright-info {
-    text-align center
-  }
-
-  .website-count {
-    text-align right
-    position absolute
-    right 20px
-    top 45%
-    transform translateY(-50%)
-
-    .busuanzi_container_site_pv {
-      display block !important
-      font-size 0.8rem
-
-
-    }
-
-    .busuanzi_value_site_uv {
-      font-size 1rem !important
-    }
-
-    .busuanzi_container_site_uv {
-      display block !important
-      font-size 0.8rem
-
-    }
-
-    .busuanzi_value_site_pv {
-      font-size 1rem !important
-    }
-
-    +redefine-tablet() {
-      position relative
-      text-align center
-      top 0 !important
-      right 0 !important
-      transform none !important
-
-      .busuanzi_container_site_pv {
-        display inline-block !important
-      }
-
-      .busuanzi_container_site_uv {
-        display inline-block !important
-      }
-    }
-
-    +redefine-mobile() {
-      position relative
-      text-align center
-      top 0 !important
-      right 0 !important
-      transform none !important
-
-      .busuanzi_container_site_pv {
-        display inline-block !important
-      }
-
-      .busuanzi_container_site_uv {
-        display inline-block !important
-      }
-    }
-  }
-
-
-  .info-container {
-    padding-bottom 10px
-    text-align center
-    margin-top 10px
-
-  }
-
-  .info-item {
-    margin 5px 0
-  }
-
-  .icon-animate {
-    animation icon-animate 1.2s ease-in-out infinite
-  }
-
-
-  .odometer.odometer-auto-theme, .odometer.odometer-theme-default {
-    display: inline-block;
-    vertical-align: middle;
-    *vertical-align: auto;
-    *zoom: 1;
-    *display: inline;
-    position: relative;
-  }
-  .odometer.odometer-auto-theme .odometer-digit, .odometer.odometer-theme-default .odometer-digit {
-    display: inline-block;
-    vertical-align: middle;
-    *vertical-align: auto;
-    *zoom: 1;
-    *display: inline;
-    position: relative;
-  }
-  .odometer.odometer-auto-theme .odometer-digit .odometer-digit-spacer, .odometer.odometer-theme-default .odometer-digit .odometer-digit-spacer {
-    display: inline-block;
-    vertical-align: middle;
-    *vertical-align: auto;
-    *zoom: 1;
-    *display: inline;
-    visibility: hidden;
-  }
-  .odometer.odometer-auto-theme .odometer-digit .odometer-digit-inner, .odometer.odometer-theme-default .odometer-digit .odometer-digit-inner {
-    text-align: left;
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: hidden;
-  }
-  .odometer.odometer-auto-theme .odometer-digit .odometer-ribbon, .odometer.odometer-theme-default .odometer-digit .odometer-ribbon {
-    display: block;
-  }
-  .odometer.odometer-auto-theme .odometer-digit .odometer-ribbon-inner, .odometer.odometer-theme-default .odometer-digit .odometer-ribbon-inner {
-    display: block;
-    -webkit-backface-visibility: hidden;
-  }
-  .odometer.odometer-auto-theme .odometer-digit .odometer-value, .odometer.odometer-theme-default .odometer-digit .odometer-value {
-    display: block;
-    -webkit-transform: translateZ(0);
-  }
-  .odometer.odometer-auto-theme .odometer-digit .odometer-value.odometer-last-value, .odometer.odometer-theme-default .odometer-digit .odometer-value.odometer-last-value {
-    position: absolute;
-  }
-  .odometer.odometer-auto-theme.odometer-animating-up .odometer-ribbon-inner, .odometer.odometer-theme-default.odometer-animating-up .odometer-ribbon-inner {
-    -webkit-transition: -webkit-transform 999ms;
-    -moz-transition: -moz-transform 999ms;
-    -ms-transition: -ms-transform 999ms;
-    -o-transition: -o-transform 999ms;
-    transition: transform 999ms;
-  }
-  .odometer.odometer-auto-theme.odometer-animating-up.odometer-animating .odometer-ribbon-inner, .odometer.odometer-theme-default.odometer-animating-up.odometer-animating .odometer-ribbon-inner {
-    -webkit-transform: translateY(-100%);
-    -moz-transform: translateY(-100%);
-    -ms-transform: translateY(-100%);
-    -o-transform: translateY(-100%);
-    transform: translateY(-100%);
-  }
-  .odometer.odometer-auto-theme.odometer-animating-down .odometer-ribbon-inner, .odometer.odometer-theme-default.odometer-animating-down .odometer-ribbon-inner {
-    -webkit-transform: translateY(-100%);
-    -moz-transform: translateY(-100%);
-    -ms-transform: translateY(-100%);
-    -o-transform: translateY(-100%);
-    transform: translateY(-100%);
-  }
-  .odometer.odometer-auto-theme.odometer-animating-down.odometer-animating .odometer-ribbon-inner, .odometer.odometer-theme-default.odometer-animating-down.odometer-animating .odometer-ribbon-inner {
-    -webkit-transition: -webkit-transform 999ms;
-    -moz-transition: -moz-transform 999ms;
-    -ms-transition: -ms-transform 999ms;
-    -o-transition: -o-transform 999ms;
-    transition: transform 999ms;
-    -webkit-transform: translateY(0);
-    -moz-transform: translateY(0);
-    -ms-transform: translateY(0);
-    -o-transform: translateY(0);
-    transform: translateY(0);
-  }
-
-  .odometer.odometer-auto-theme, .odometer.odometer-theme-default {
-    font-family: "Helvetica Neue", sans-serif;
-    line-height: 1.1em;
-  }
-  .odometer.odometer-auto-theme .odometer-value, .odometer.odometer-theme-default .odometer-value {
-    text-align: center;
-  }
-
-
-}
-
-
-
-
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">The Redefine Team</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.3</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2022/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
         </div>
     </div>
 
