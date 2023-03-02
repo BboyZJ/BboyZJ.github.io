@@ -210,8 +210,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-01 18:58:01</span>
-            <span class="mobile">2023-03-01 18:58</span>
+            <span class="pc">2023-03-02 14:47:20</span>
+            <span class="mobile">2023-03-02 14:47</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -298,7 +298,7 @@
 
 <h1 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h1><p><a href="http://www.bboyzj.cn/2020/08/09/OC%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%8401%EF%BC%9A%E9%93%BE%E8%A1%A8%E7%9A%84%E6%8E%A2%E7%B4%A2/">OC数据结构01：链表的探索</a></p>
 <h1 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h1><p><a href="http://www.bboyzj.cn/2020/08/26/OC%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%8402%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E6%8E%A2%E7%B4%A2/">OC数据结构02：二叉树探索</a></p>
-<h1 id="OC常见的面试题"><a href="#OC常见的面试题" class="headerlink" title="OC常见的面试题"></a>OC常见的面试题</h1><h2 id="什么是野指针？"><a href="#什么是野指针？" class="headerlink" title="什么是野指针？"></a>什么是野指针？</h2><p>是一个没有指向 <code>任何内存</code> 的指针，尝试使用它会导致 <code>应用程序崩溃</code></p>
+<h1 id="OC常见的面试题"><a href="#OC常见的面试题" class="headerlink" title="OC常见的面试题"></a>OC常见的面试题</h1><h2 id="什么是野指针？"><a href="#什么是野指针？" class="headerlink" title="什么是野指针？"></a>什么是野指针？</h2><p>是一个没有指向 <code>任何内存</code> 的 <code>指针</code>，尝试使用它会导致 <code>应用程序崩溃</code></p>
 <h2 id="什么是内存泄漏？"><a href="#什么是内存泄漏？" class="headerlink" title="什么是内存泄漏？"></a>什么是内存泄漏？</h2><p>一个 <code>对象</code> 没有被释放，会 <code>内存泄漏</code>，内存泄漏会导致应用程序占用的内存会越来越大，直到应用程序无内存可用时，会导致 <code>应用程序崩溃</code></p>
 <h2 id="iOS-关键词有哪些？各有什么作用？-重点"><a href="#iOS-关键词有哪些？各有什么作用？-重点" class="headerlink" title="iOS 关键词有哪些？各有什么作用？ 重点"></a>iOS 关键词有哪些？各有什么作用？ <strong>重点</strong></h2><ul>
 <li>readwrite</li>
@@ -336,7 +336,7 @@
 <li>strong</li>
 </ul>
 <p>强引用，<code>只修饰对象</code>，属性默认修饰符</p>
-<p><code>指向并持有该对象</code>，其修饰的对象引用计数会 +1，引用计数不为 <code>0</code> 则不会被销毁，需要将其置为 <code>nil</code> 可以销毁。否则会出现 <code>内存泄漏</code>。</p>
+<p><code>指向并持有该对象</code>，其修饰的对象引用计数会 <code>+1</code>，引用计数不为 <code>0</code> 则不会被销毁，需要将其置为 <code>nil</code> 可以销毁。否则会出现 <code>内存泄漏</code>。</p>
 <ul>
 <li>weak</li>
 </ul>
@@ -374,7 +374,7 @@
 <h2 id="单例的写法和作用？-重点"><a href="#单例的写法和作用？-重点" class="headerlink" title="单例的写法和作用？ 重点"></a>单例的写法和作用？ <strong>重点</strong></h2><p>单例模式的作用：可以保证程序运行过程中，一个类只返回一个实例，供外界访问；static保证类只分配一次内存；dispatch_once方法保证调用一次，并自动加锁，线程安全</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">static id _instance = nil; // 定义static全局变量，保证只分配一次内存</span><br><span class="line">+ (id)shareInstance&#123;</span><br><span class="line">    return [[self alloc] init];</span><br><span class="line">&#125;</span><br><span class="line">+ (id)copyWithZone:(struct _NSZone *)zone&#123;</span><br><span class="line">    static dispatch_once_t onceToken; // 声明一个静态的GcD单次任务</span><br><span class="line">    // 保证只执行一次</span><br><span class="line">    dispatch_once(&amp;onceToken,^&#123; // </span><br><span class="line">        _instance = [super allocWithZone:zone];</span><br><span class="line">    &#125;);</span><br><span class="line">    return p;</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">这么写可以保证下面两种方式返回同一个实例</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 <p>Single * p1 &#x3D; [Single shareInstance];<br>Single * p2 &#x3D; [[Single alloc] init];<br>NSLog(@”%d”,p1&#x3D;&#x3D;p2); &#x2F;&#x2F; 1</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## HTTPS和HTTP的区别？ **重点**</span><br><span class="line"></span><br><span class="line">* HTTP：超文本传输协议，信息明文传输；端口号80；响应速度快（使用TCP三次握手，客户端和服务端需要交换3个包）；</span><br><span class="line"></span><br><span class="line">* HTTPS：是由 HTTP+SSL/TLS 加密传输；端口号443；响应速度慢（除了使用TCP三个包，还要加上SSL握手的9个包）；需要到CA申请证书</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## TCP 和 UDP 区别? **重点**</span><br><span class="line"></span><br><span class="line">* 都是 `传输层` 协议</span><br><span class="line"></span><br><span class="line">* TCP协议是 `面向连接的可靠的传输层协议`。UDP协议是 `面向非连接的传输层协议`</span><br><span class="line"></span><br><span class="line">* TCP需要 `建立连接和断开连接`。UDP不需要连接。</span><br><span class="line"></span><br><span class="line">* TCP传 输数据没有大小限制。UDP 传输数据有大小限制。</span><br><span class="line"></span><br><span class="line">* TCP会 `处理数据丢包重发`。UDP不会处理。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># HTTP和socket区别？ **重点**</span><br><span class="line"></span><br><span class="line">* `HTTP` 应用层协议；`socket` 不属于协议范畴，而是一个接口（API），是对TCP/IP协议的封装</span><br><span class="line">* `HTTP` 是基于 `请求-响应` 形式 `短连接`，即客户端发送一次请求，服务端响应后立即 `断开连接`；socket 是基于TCP协议的 `长链接`，理论上 客户端和服务端一旦建立连接将不会主动断开</span><br><span class="line">* HTTP传输慢，数据量大，安全差；socket数据可自定义，数据量小，安全性高，适合信息实时交互（推送、聊天等）</span><br><span class="line"></span><br><span class="line">## staitc 和 const 的区别？ **重点**</span><br><span class="line"></span><br><span class="line">* const：表示 `只读` 的意思</span><br><span class="line"></span><br><span class="line">    * `const` 放在 `类型` 前：可以改变指针的指向，可以改变指针指向的内容</span><br><span class="line">    </span><br><span class="line">    * `const` 放在 `变量` 前：不可以改变指针的指向，不可以改变指针指向的内容</span><br><span class="line"></span><br><span class="line">* static： `静态变量`，可修饰 `局部变量和全局变量`，可修饰方法</span><br><span class="line"></span><br><span class="line">    * `static` 可修饰 `局部/全局变量`，称为 `局部静态变量和全局静态变量`，只初始化一次，只分配一次内存，生命周期被改变，不再是作用域内</span><br><span class="line"></span><br><span class="line">    * `static` 修饰的 `方法`，可以在不同文件下重名，互不影响运行</span><br><span class="line"></span><br><span class="line">## 通用链接（Universal Links）**重点**</span><br><span class="line"></span><br><span class="line">* 服务端配置 `HTTPS` 证书 和添加 `apple-app-site-association` 地址关联文件</span><br><span class="line"></span><br><span class="line">* 移动端在plist添加 `Associated Domains` 关联域权限</span><br><span class="line"></span><br><span class="line">## 简述GET和POST请求的区别？ **重点**</span><br><span class="line"></span><br><span class="line">* GET 传输数据 `有缓存`；POST 传输数据 `没有缓存`</span><br><span class="line"></span><br><span class="line">* GET的 `参数` 放在 `URL` 的后面，并且第一个参数用 `?` 号拼接，后面的从第二个参数开始，直到最后一个，用 `&amp;` 分割；POST的 `参数` 放在 `请求体` 里面，并且第一个参数用 `,` 号拼接，后面从第二开始，直到最后用 `&amp;` 分割;</span><br><span class="line"></span><br><span class="line">* GET一般用于 `获取数据`；POST一般用于 `向服务器提交数据`</span><br><span class="line"></span><br><span class="line">* `GET` 的参数是暴漏在 `地址栏` 的，不安全；`POST` 的参数隐藏在 `请求体` 里面，相对安全一点;</span><br><span class="line"></span><br><span class="line">* GET请求提交数据受浏览器限制 `1k`，POST请求理论上无限制。</span><br><span class="line"></span><br><span class="line">## iOS中几种常见的设计模式？  **重点**</span><br><span class="line"></span><br><span class="line">* `代理模式`</span><br><span class="line"></span><br><span class="line">一对一的依赖关系，当一个类的某些功能需要由别的类来实现，但是又不确定具体会是哪个类实现。</span><br><span class="line"></span><br><span class="line">* `观察者模式`</span><br><span class="line"></span><br><span class="line">KVO机制 和 Notification通知机制</span><br><span class="line"></span><br><span class="line">* `单例模式`</span><br><span class="line"></span><br><span class="line">保证程序运行过程中，一个类只返回一个实例，供外界访问</span><br><span class="line"></span><br><span class="line">* `工厂模式`</span><br><span class="line"></span><br><span class="line">通过一个类方法，`根据已有模板批量生产对象`。</span><br><span class="line"></span><br><span class="line">* `MVC模式`</span><br><span class="line"></span><br><span class="line">Model即数据模型</span><br><span class="line"></span><br><span class="line">view即视图</span><br><span class="line"></span><br><span class="line">controller即控制器</span><br><span class="line"></span><br><span class="line">## RunLoop是什么？ **重点**</span><br><span class="line"></span><br><span class="line">* 概念 </span><br><span class="line"></span><br><span class="line">`RunLoop` 又叫 `运行循环`，内部就是一个 `do-while循环`，在这个循环内部不断 `处理各种任务，保证程序持续运行`。</span><br><span class="line"></span><br><span class="line">* 目的</span><br><span class="line"></span><br><span class="line">RunLoop存在的目的： 就是当线程中有任务的时候，保证线程干活，当线程没有任务的时候，让线程睡眠，`提高程序性能，节省CPU资源`，该做事的时候做事，该休息的时候休息</span><br><span class="line"></span><br><span class="line">## RunLoop的作用？ **重点**</span><br><span class="line"></span><br><span class="line">* `保持程序持续运行`。</span><br><span class="line">   App一启动就会开启主线程，主线程在开启的时候就会开启主线程对应的RunLoop，RunLoop能保证线程不被销毁，主线程不销毁，程序就会持续运行。</span><br><span class="line"></span><br><span class="line">* `处理App中各类事件`。</span><br><span class="line">   事件响应、手势识别、界面刷新、AutoreleasePool自动释放池、NSTimer等事件处理。</span><br><span class="line"></span><br><span class="line">* `节省CPU资源，提高程序性能`。</span><br><span class="line">   如概述所述，当线程中有任务的时候，保证线程干活，当线程没有任务的时候，让线程睡眠，提高程序性能，节省资源，该做事的时候做事，该休息的时候休息。</span><br><span class="line"></span><br><span class="line">## 可以用Runloop实现什么功能？ **重点**</span><br><span class="line"></span><br><span class="line">* 线程保活</span><br><span class="line"></span><br><span class="line">往 `runloop` 中添加 `[[NSPort alloc] init]` 事件，</span><br><span class="line"></span><br><span class="line">* 解决NSTimer在滑动时停止工作的问题</span><br><span class="line"></span><br><span class="line">`default` 模式改为 `common` 模式</span><br><span class="line"></span><br><span class="line">* 检测卡顿</span><br><span class="line"></span><br><span class="line">如果我们要利用 `RunLoop` 原理来监控卡顿的话，就是要关注这两个阶段。RunLoop 在进入睡眠之前和唤醒后的两个 `loop` 状态定义的值，分别是 `kCFRunLoopBeforeWaiting` 和 `kCFRunLoopAfterWaiting` ，也就是要触发 `Source0` 回调和接收 `mach_port` 消息两个状态。</span><br><span class="line"></span><br><span class="line">## RunLoop接收几种输入源，系统默认定义了几种模式？ **重点**</span><br><span class="line"></span><br><span class="line">* 输入源有两种</span><br><span class="line">基于 `端口` 的输入源（port）</span><br><span class="line">`自定义` 的输入源（custom）</span><br><span class="line"></span><br><span class="line">* 系统定义的RunLoop模式有五种，最常用的有三种，如下所示：</span><br><span class="line">NSDefaultRunLoopMode</span><br><span class="line">默认模式，主线程中默认是NSDefaultRunLoopMode</span><br><span class="line">UITrackingRunLoopMode</span><br><span class="line">视图滚动模式，RunLoop会处于该模式下</span><br><span class="line">NSRunLoopCommonModes</span><br><span class="line">并不是真正意义上的Mode，是一个占位用的“Mode”，默认包含了NSDefaultRunLoopMode和UITrackingRunLoopMode两种模式</span><br><span class="line"></span><br><span class="line">## RunLoop和线程有什么关系？Runloop的mode? Runloop的作用？ **重点**</span><br><span class="line"></span><br><span class="line">* 每一个线程都有一个runloop，主线程的runloop默认启动。子线程的runloop默认不启动</span><br><span class="line">* mode：主要用来指定事件在运行时循环的优先级</span><br><span class="line">* 作用：保持程序的持续运行、随时处理各种事件、节省cpu资源(没事件休息释放资源)，提高程序的性能。</span><br><span class="line"></span><br><span class="line">## 怎么理解Objective-C是动态运行时语言。 **重点**</span><br><span class="line"></span><br><span class="line">主要是 `将数据类型的确定和函数的调用由编译时推迟到了运行时`。这个问题其实浅涉及到两个概念，`运行时和多态`。</span><br><span class="line"></span><br><span class="line">* 运行时：简单来说，运行时机制使我们 `直到运行时才去确定数据类型和要调用的函数`。</span><br><span class="line"></span><br><span class="line">* 多态：`不同对象以自己的方式响应相同的消息的能力` 叫做多态。</span><br><span class="line"></span><br><span class="line">## runtime项目中具体应用？ **重点**</span><br><span class="line"></span><br><span class="line">* `方法交换`。</span><br><span class="line">* 给 `分类添加属性`。 </span><br><span class="line">* 动态添加方法。</span><br><span class="line">* 字典转模型。</span><br><span class="line">* 数组越界。</span><br><span class="line">* 动态获取成员属性、成员变量、实例方法</span><br><span class="line"></span><br><span class="line">## KVC是什么？**重点**</span><br><span class="line"></span><br><span class="line">`KVC` 全程 `Key Value Coding`，中文 `键值编码`，是由 `NSKeyValueCoding` 非正式协议启动的一种机制，`对象` 采用该协议来 `间接访问对象的属性`。</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## HTTPS和HTTP的区别？ **重点**</span><br><span class="line"></span><br><span class="line">* HTTP：超文本传输协议，信息明文传输；端口号80；响应速度快（使用TCP三次握手，客户端和服务端需要交换3个包）；</span><br><span class="line"></span><br><span class="line">* HTTPS：是由 HTTP+SSL/TLS 加密传输；端口号443；响应速度慢（除了使用TCP三个包，还要加上SSL握手的9个包）；需要到CA申请证书</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## TCP 和 UDP 区别? **重点**</span><br><span class="line"></span><br><span class="line">* 都是 `传输层` 协议</span><br><span class="line"></span><br><span class="line">* TCP协议是 `面向连接的可靠的传输层协议`。UDP协议是 `面向非连接的传输层协议`</span><br><span class="line"></span><br><span class="line">* TCP需要 `建立连接和断开连接`。UDP不需要连接。</span><br><span class="line"></span><br><span class="line">* TCP传 `输数据没有大小限制`。UDP `传输数据有大小限制`。</span><br><span class="line"></span><br><span class="line">* TCP会 `处理数据丢包重发`。UDP不会处理。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># HTTP和socket区别？ **重点**</span><br><span class="line"></span><br><span class="line">* `HTTP` 应用层协议；`socket` 不属于协议范畴，而是一个接口（API），是对TCP/IP协议的封装</span><br><span class="line">* `HTTP` 是基于 `请求-响应` 形式 `短连接`，即客户端发送一次请求，服务端响应后立即 `断开连接`；socket 是基于TCP协议的 `长链接`，理论上 客户端和服务端一旦建立连接将不会主动断开</span><br><span class="line">* HTTP 传输慢，数据量大，安全差；socket 数据可自定义，数据量小，安全性高，适合信息实时交互（推送、聊天等）</span><br><span class="line"></span><br><span class="line">## staitc 和 const 的区别？ **重点**</span><br><span class="line"></span><br><span class="line">* const：表示 `只读` 的意思</span><br><span class="line"></span><br><span class="line">    * `const` 放在 `类型` 前：可以改变指针的指向，可以改变指针指向的内容</span><br><span class="line">    </span><br><span class="line">    * `const` 放在 `变量` 前：不可以改变指针的指向，不可以改变指针指向的内容</span><br><span class="line"></span><br><span class="line">* static： `静态变量`，可修饰 `局部变量和全局变量`，可修饰方法</span><br><span class="line"></span><br><span class="line">    * `static` 可修饰 `局部/全局变量`，称为 `局部静态变量和全局静态变量`，只初始化一次，只分配一次内存，生命周期被改变，不再是作用域内</span><br><span class="line"></span><br><span class="line">    * `static` 修饰的 `方法`，可以在不同文件下重名，互不影响运行</span><br><span class="line"></span><br><span class="line">## 通用链接（Universal Links）**重点**</span><br><span class="line"></span><br><span class="line">* 服务端配置 `HTTPS` 证书 和添加 `apple-app-site-association` 地址关联文件</span><br><span class="line"></span><br><span class="line">* 移动端在plist添加 `Associated Domains` 关联域权限</span><br><span class="line"></span><br><span class="line">## 简述GET和POST请求的区别？ **重点**</span><br><span class="line"></span><br><span class="line">* GET 传输数据 `有缓存`；POST 传输数据 `没有缓存`</span><br><span class="line"></span><br><span class="line">* GET的 `参数` 放在 `URL` 的后面，并且第一个参数用 `?` 号拼接，后面的从第二个参数开始，直到最后一个，用 `&amp;` 分割；POST的 `参数` 放在 `请求体` 里面，并且第一个参数用 `,` 号拼接，后面从第二开始，直到最后用 `&amp;` 分割;</span><br><span class="line"></span><br><span class="line">* GET一般用于 `获取数据`；POST一般用于 `向服务器提交数据`</span><br><span class="line"></span><br><span class="line">* `GET` 的参数是暴漏在 `地址栏` 的，不安全；`POST` 的参数隐藏在 `请求体` 里面，相对安全一点;</span><br><span class="line"></span><br><span class="line">* GET请求提交数据受浏览器限制 `1k`，POST请求理论上无限制。</span><br><span class="line"></span><br><span class="line">## iOS中几种常见的设计模式？  **重点**</span><br><span class="line"></span><br><span class="line">* `代理模式`</span><br><span class="line"></span><br><span class="line">一对一的依赖关系，当一个类的某些功能需要由别的类来实现，但是又不确定具体会是哪个类实现。</span><br><span class="line"></span><br><span class="line">* `观察者模式`</span><br><span class="line"></span><br><span class="line">KVO机制 和 Notification通知机制</span><br><span class="line"></span><br><span class="line">* `单例模式`</span><br><span class="line"></span><br><span class="line">保证程序运行过程中，一个类只返回一个实例，供外界访问</span><br><span class="line"></span><br><span class="line">* `工厂模式`</span><br><span class="line"></span><br><span class="line">通过一个类方法，`根据已有模板批量生产对象`。</span><br><span class="line"></span><br><span class="line">* `MVC模式`</span><br><span class="line"></span><br><span class="line">Model即数据模型</span><br><span class="line"></span><br><span class="line">view即视图</span><br><span class="line"></span><br><span class="line">controller即控制器</span><br><span class="line"></span><br><span class="line">## RunLoop是什么？ **重点**</span><br><span class="line"></span><br><span class="line">* 概念 </span><br><span class="line"></span><br><span class="line">`RunLoop` 又叫 `运行循环`，内部就是一个 `do-while循环`，在这个循环内部不断 `处理各种任务，保证程序持续运行`。</span><br><span class="line"></span><br><span class="line">* 目的</span><br><span class="line"></span><br><span class="line">RunLoop存在的目的： 就是当线程中有任务的时候，保证线程干活，当线程没有任务的时候，让线程睡眠，`提高程序性能，节省CPU资源`，该做事的时候做事，该休息的时候休息</span><br><span class="line"></span><br><span class="line">## RunLoop的作用？ **重点**</span><br><span class="line"></span><br><span class="line">* `保持程序持续运行`。</span><br><span class="line">   App一启动就会开启主线程，主线程在开启的时候就会开启主线程对应的RunLoop，RunLoop能保证线程不被销毁，主线程不销毁，程序就会持续运行。</span><br><span class="line"></span><br><span class="line">* `处理App中各类事件`。</span><br><span class="line">   事件响应、手势识别、界面刷新、AutoreleasePool自动释放池、NSTimer等事件处理。</span><br><span class="line"></span><br><span class="line">* `节省CPU资源，提高程序性能`。</span><br><span class="line">   如概述所述，当线程中有任务的时候，保证线程干活，当线程没有任务的时候，让线程睡眠，提高程序性能，节省资源，该做事的时候做事，该休息的时候休息。</span><br><span class="line"></span><br><span class="line">## 可以用Runloop实现什么功能？ **重点**</span><br><span class="line"></span><br><span class="line">* 线程保活</span><br><span class="line"></span><br><span class="line">往 `runloop` 中添加 `[[NSPort alloc] init]` 事件，</span><br><span class="line"></span><br><span class="line">* 解决NSTimer在滑动时停止工作的问题</span><br><span class="line"></span><br><span class="line">`default` 模式改为 `common` 模式</span><br><span class="line"></span><br><span class="line">* 检测卡顿</span><br><span class="line"></span><br><span class="line">如果我们要利用 `RunLoop` 原理来监控卡顿的话，就是要关注这两个阶段。RunLoop 在进入睡眠之前和唤醒后的两个 `loop` 状态定义的值，分别是 `kCFRunLoopBeforeWaiting` 和 `kCFRunLoopAfterWaiting` ，也就是要触发 `Source0` 回调和接收 `mach_port` 消息两个状态。</span><br><span class="line"></span><br><span class="line">## RunLoop接收几种输入源，系统默认定义了几种模式？ **重点**</span><br><span class="line"></span><br><span class="line">* 输入源有两种</span><br><span class="line">基于 `端口` 的输入源（port）</span><br><span class="line">`自定义` 的输入源（custom）</span><br><span class="line"></span><br><span class="line">* 系统定义的RunLoop模式有五种，最常用的有三种，如下所示：</span><br><span class="line">NSDefaultRunLoopMode</span><br><span class="line">默认模式，主线程中默认是NSDefaultRunLoopMode</span><br><span class="line">UITrackingRunLoopMode</span><br><span class="line">视图滚动模式，RunLoop会处于该模式下</span><br><span class="line">NSRunLoopCommonModes</span><br><span class="line">并不是真正意义上的Mode，是一个占位用的“Mode”，默认包含了NSDefaultRunLoopMode和UITrackingRunLoopMode两种模式</span><br><span class="line"></span><br><span class="line">## RunLoop和线程有什么关系？Runloop的mode? Runloop的作用？ **重点**</span><br><span class="line"></span><br><span class="line">* 每一个线程都有一个runloop，主线程的runloop默认启动。子线程的runloop默认不启动</span><br><span class="line">* mode：主要用来指定事件在运行时循环的优先级</span><br><span class="line">* 作用：保持程序的持续运行、随时处理各种事件、节省cpu资源(没事件休息释放资源)，提高程序的性能。</span><br><span class="line"></span><br><span class="line">## 怎么理解Objective-C是动态运行时语言。 **重点**</span><br><span class="line"></span><br><span class="line">主要是 `将数据类型的确定和函数的调用由编译时推迟到了运行时`。这个问题其实浅涉及到两个概念，`运行时和多态`。</span><br><span class="line"></span><br><span class="line">* 运行时：简单来说，运行时机制使我们 `直到运行时才去确定数据类型和要调用的函数`。</span><br><span class="line"></span><br><span class="line">* 多态：`不同对象以自己的方式响应相同的消息的能力` 叫做多态。</span><br><span class="line"></span><br><span class="line">## runtime项目中具体应用？ **重点**</span><br><span class="line"></span><br><span class="line">* `方法交换`。</span><br><span class="line">* 给 `分类添加属性`。 </span><br><span class="line">* 动态添加方法。</span><br><span class="line">* 字典转模型。</span><br><span class="line">* 数组越界。</span><br><span class="line">* 动态获取成员属性、成员变量、实例方法</span><br><span class="line"></span><br><span class="line">## KVC是什么？**重点**</span><br><span class="line"></span><br><span class="line">`KVC` 全程 `Key Value Coding`，中文 `键值编码`，是由 `NSKeyValueCoding` 非正式协议启动的一种机制，`对象` 采用该协议来 `间接访问对象的属性`。</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 <ul>
 <li><p>(nullable id)valueForKey:(NSString *)key;     </p>
 </li>
@@ -528,68 +528,264 @@
         </div>
 
         <div class="page-main-content-bottom">
-            <footer class="footer">
-    <div class="info-container">
-        <div class="copyright-info">
-            &copy;
-            
-              <span>2022</span>
-              -
-            
-            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">The Redefine Team</a>
-        </div>
-        
-            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-            <div class="website-count info-item">
-                
-                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
-                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
-                    </span>
-                
-                
-                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
-                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
-                    </span>
-                
-            </div>
-        
-        <div class="theme-info info-item">
-            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
-                <br> 
-            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.3</a>
-        </div>
-        
-        
-        
-            <div id="start_time_div" style="display:none">
-                2022/8/17 11:45:14
-            </div>
-            <div>
-                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
-            </div>
-        
-        
-        
-            <script async data-pjax>
-                try {
-                    function odometer_init() {
-                    const elements = document.querySelectorAll('.odometer');
-                    elements.forEach(el => {
-                        new Odometer({
-                            el,
-                            format: '( ddd).dd',
-                            duration: 200
-                        });
-                    });
-                    }
-                    odometer_init();
-                } catch (error) {}
-            </script>
-        
-        
-        
-    </div>  
-</footer>
+            @import "../../common/variables"
+
+.footer {
+  margin-top 20px !important
+  padding-top 20px !important
+  height auto    
+  min-height 100px
+  font-size 1rem
+  color var(--third-text-color)
+  background-color alpha($primary-color, 0.15)
+  border-radius 0 !important
+  redefine-container(0,0,0,0,false)
+  position relative
+
+  span {
+    vertical-align baseline !important
+  }
+
+  .odometer {
+    vertical-align baseline !important
+  }
+
+
+  a {
+    color var(--third-text-color)
+
+
+    &:hover {
+      color var(--primary-color)
+
+    }
+  }
+
+  .theme-info {
+    text-align left
+    position absolute
+    left 20px
+    top 45%
+    transform translateY(-50%)
+
+    .powered-by-container {
+      margin-bottom 10px
+      font-size 0.8rem
+
+      a {
+        font-size 1rem
+      }
+
+      svg {
+        position relative
+        top 2px
+      }
+    }
+
+    .theme-version-container {
+      font-size 0.8rem
+
+      a {
+        font-size 1rem
+      }
+
+    }
+
+    +redefine-tablet() {
+      position relative
+      text-align center
+      top 0 !important
+      left 0 !important
+      transform none !important
+    }
+
+    +redefine-mobile() {
+      position relative
+      text-align center
+      top 0 !important
+      left 0 !important
+      transform none !important
+    }
+  }
+
+  .copyright-info {
+    text-align center
+  }
+
+  .website-count {
+    text-align right
+    position absolute
+    right 20px
+    top 45%
+    transform translateY(-50%)
+
+    .busuanzi_container_site_pv {
+      display block !important
+      font-size 0.8rem
+
+
+    }
+
+    .busuanzi_value_site_uv {
+      font-size 1rem !important
+    }
+
+    .busuanzi_container_site_uv {
+      display block !important
+      font-size 0.8rem
+
+    }
+
+    .busuanzi_value_site_pv {
+      font-size 1rem !important
+    }
+
+    +redefine-tablet() {
+      position relative
+      text-align center
+      top 0 !important
+      right 0 !important
+      transform none !important
+
+      .busuanzi_container_site_pv {
+        display inline-block !important
+      }
+
+      .busuanzi_container_site_uv {
+        display inline-block !important
+      }
+    }
+
+    +redefine-mobile() {
+      position relative
+      text-align center
+      top 0 !important
+      right 0 !important
+      transform none !important
+
+      .busuanzi_container_site_pv {
+        display inline-block !important
+      }
+
+      .busuanzi_container_site_uv {
+        display inline-block !important
+      }
+    }
+  }
+
+
+  .info-container {
+    padding-bottom 10px
+    text-align center
+    margin-top 10px
+
+  }
+
+  .info-item {
+    margin 5px 0
+  }
+
+  .icon-animate {
+    animation icon-animate 1.2s ease-in-out infinite
+  }
+
+
+  .odometer.odometer-auto-theme, .odometer.odometer-theme-default {
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    *zoom: 1;
+    *display: inline;
+    position: relative;
+  }
+  .odometer.odometer-auto-theme .odometer-digit, .odometer.odometer-theme-default .odometer-digit {
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    *zoom: 1;
+    *display: inline;
+    position: relative;
+  }
+  .odometer.odometer-auto-theme .odometer-digit .odometer-digit-spacer, .odometer.odometer-theme-default .odometer-digit .odometer-digit-spacer {
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    *zoom: 1;
+    *display: inline;
+    visibility: hidden;
+  }
+  .odometer.odometer-auto-theme .odometer-digit .odometer-digit-inner, .odometer.odometer-theme-default .odometer-digit .odometer-digit-inner {
+    text-align: left;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+  }
+  .odometer.odometer-auto-theme .odometer-digit .odometer-ribbon, .odometer.odometer-theme-default .odometer-digit .odometer-ribbon {
+    display: block;
+  }
+  .odometer.odometer-auto-theme .odometer-digit .odometer-ribbon-inner, .odometer.odometer-theme-default .odometer-digit .odometer-ribbon-inner {
+    display: block;
+    -webkit-backface-visibility: hidden;
+  }
+  .odometer.odometer-auto-theme .odometer-digit .odometer-value, .odometer.odometer-theme-default .odometer-digit .odometer-value {
+    display: block;
+    -webkit-transform: translateZ(0);
+  }
+  .odometer.odometer-auto-theme .odometer-digit .odometer-value.odometer-last-value, .odometer.odometer-theme-default .odometer-digit .odometer-value.odometer-last-value {
+    position: absolute;
+  }
+  .odometer.odometer-auto-theme.odometer-animating-up .odometer-ribbon-inner, .odometer.odometer-theme-default.odometer-animating-up .odometer-ribbon-inner {
+    -webkit-transition: -webkit-transform 999ms;
+    -moz-transition: -moz-transform 999ms;
+    -ms-transition: -ms-transform 999ms;
+    -o-transition: -o-transform 999ms;
+    transition: transform 999ms;
+  }
+  .odometer.odometer-auto-theme.odometer-animating-up.odometer-animating .odometer-ribbon-inner, .odometer.odometer-theme-default.odometer-animating-up.odometer-animating .odometer-ribbon-inner {
+    -webkit-transform: translateY(-100%);
+    -moz-transform: translateY(-100%);
+    -ms-transform: translateY(-100%);
+    -o-transform: translateY(-100%);
+    transform: translateY(-100%);
+  }
+  .odometer.odometer-auto-theme.odometer-animating-down .odometer-ribbon-inner, .odometer.odometer-theme-default.odometer-animating-down .odometer-ribbon-inner {
+    -webkit-transform: translateY(-100%);
+    -moz-transform: translateY(-100%);
+    -ms-transform: translateY(-100%);
+    -o-transform: translateY(-100%);
+    transform: translateY(-100%);
+  }
+  .odometer.odometer-auto-theme.odometer-animating-down.odometer-animating .odometer-ribbon-inner, .odometer.odometer-theme-default.odometer-animating-down.odometer-animating .odometer-ribbon-inner {
+    -webkit-transition: -webkit-transform 999ms;
+    -moz-transition: -moz-transform 999ms;
+    -ms-transition: -ms-transform 999ms;
+    -o-transition: -o-transform 999ms;
+    transition: transform 999ms;
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  .odometer.odometer-auto-theme, .odometer.odometer-theme-default {
+    font-family: "Helvetica Neue", sans-serif;
+    line-height: 1.1em;
+  }
+  .odometer.odometer-auto-theme .odometer-value, .odometer.odometer-theme-default .odometer-value {
+    text-align: center;
+  }
+
+
+}
+
+
+
+
         </div>
     </div>
 
