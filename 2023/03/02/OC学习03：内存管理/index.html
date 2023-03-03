@@ -210,8 +210,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-02 22:38:06</span>
-            <span class="mobile">2023-03-02 22:38</span>
+            <span class="pc">2023-03-03 16:09:37</span>
+            <span class="mobile">2023-03-03 16:09</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -789,18 +789,18 @@
 
 <p>结合RunLoop监听的事件类型，分析主线程上自动释放池的使用过程如下：</p>
 <ul>
-<li><p>App启动后，苹果在主线程RunLoop里注册了两个Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler();</p>
+<li><p>App启动后，苹果在主线程RunLoop里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler();</p>
 </li>
 <li><p>第一个Observer监视的事件</p>
 <ul>
-<li><code>Entry(即将进入Loop)</code>，其回调内会调用 _objc_autoreleasePoolPush()创建自动释放池。</li>
+<li><code>Entry(即将进入Loop)</code>，其回调内会调用 <code>_objc_autoreleasePoolPush()</code> 创建自动释放池。</li>
 </ul>
 </li>
 <li><p>第二个Observer监视了两个事件 :</p>
 <ul>
-<li><p><code>BeforeWaiting(准备进入休眠)</code> 时调用_objc_autoreleasePoolPop()和_objc_autoreleasePoolPush()释放旧的池并创建新池；</p>
+<li><p><code>BeforeWaiting(准备进入休眠)</code> 时调用 <code>_objc_autoreleasePoolPop()</code> 和<code>_objc_autoreleasePoolPush()</code> 释放旧的池并创建新池；</p>
 </li>
-<li><p>Exit(即将退出Loop) 时调用 _objc_autoreleasePoolPop()来释放自动释放池。</p>
+<li><p>Exit(即将退出Loop) 时调用 <code>_objc_autoreleasePoolPop()</code> 来释放自动释放池。</p>
 </li>
 </ul>
 </li>
