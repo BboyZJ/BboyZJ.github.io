@@ -210,8 +210,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-04 16:19:35</span>
-            <span class="mobile">2023-03-04 16:19</span>
+            <span class="pc">2023-03-04 23:26:25</span>
+            <span class="mobile">2023-03-04 23:26</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -258,12 +258,101 @@
 
             <div class="article-content markdown-body">
                 <h1 id="什么组件化"><a href="#什么组件化" class="headerlink" title="什么组件化"></a>什么组件化</h1><ul>
+<li><p>组件化其实就是 <code>将模块单独抽离、分层</code>，并指定模块间的 <code>通讯</code> 方式，从而实现 <code>解耦</code> 的一种方式，主要运用与团队开发</p>
+</li>
 <li><p>组件化开发就是将一个臃肿的、单一的项目，根据 <code>功能/业务/技术</code> 等进行拆分，形成一个个独立的功能组件，然后借助 <code>Cocoapods</code> 管理工具将其任意组合，集成一个完整的项目。</p>
 </li>
 <li><p>你可以将 <code>AFNetworking、SDWebImage、Bugly、MLeaksFinder</code> 等三方库理解为工程的一部分，属于 <code>基础组件模块</code>，我们要做的就是将项目划分多个独立功能模块，再集成一个完整的项目。</p>
 </li>
 </ul>
-<h1 id="组件化"><a href="#组件化" class="headerlink" title="组件化"></a>组件化</h1><p>组件化能够帮助我们将大部分项目拆解成数个小组件，开发者只需要关注组件所依赖的其他组件，而无需关心完整项目的其他部分，每个组件可以自己采取所习惯的架构模式：MVC、MVVM等，就行开发一款个人独立的App那样自由</p>
+<h1 id="为什么要组件化？"><a href="#为什么要组件化？" class="headerlink" title="为什么要组件化？"></a>为什么要组件化？</h1><p>主要有以下四个原因</p>
+<ul>
+<li><p>模块间解耦</p>
+</li>
+<li><p>模块重用</p>
+</li>
+<li><p>提高团队协作开发效率</p>
+</li>
+<li><p>单元测试</p>
+</li>
+</ul>
+<p>当项目因为各种需求，模块越来越多时，如果此时的各个模块之间是互相调用的，即 <code>你中有我，我中有你</code> 这种情况时，会造成 <code>高耦合</code> 的情况，一旦我们需要对某一模块代码进行 <code>修改</code> 时，就会 <code>牵一发而动全身</code>，导致项目难以维护</p>
+<p><strong>其问题主要体现在以下几个方面：</strong></p>
+<ul>
+<li><p>修改某个功能时，同时需要修改其他模块的代码，因为在其他模块中有该模块的引用，可以理解为 <code>高耦合导致代码修改困难</code></p>
+</li>
+<li><p>模块对外接口不明确，甚至暴露了本不该暴露的私有接口，修改时费时费力。可以理解为 <code>接口不固定导致的接口混乱</code></p>
+</li>
+<li><p>高耦合代码产生的后果就是会影响团队其他成员的开发，产生 <code>代码冲突</code></p>
+</li>
+<li><p>当模块需要重用到其他项目时，<code>难以单独抽离</code></p>
+</li>
+<li><p>模块间耦合的忌口导致接口和依赖关系混乱，<code>无法进行单元测试</code></p>
+</li>
+</ul>
+<p>所以为了解决以上问题，我们需要采用更规范的方式来 <code>降低模块</code> 间的 <code>耦合度</code>，这就是 <code>组件化</code>，也可以理解为 <code>模块化</code></p>
+<p>但是，这里还需要说明一点，因为组件化也是需要一定成本的，需要花费时间设计接口、分离代码等，所以并不是所有的项目都需要组件化。如果你的项目有以下这些特征就 <code>不需要组件化</code>：</p>
+<ul>
+<li><p>项目较小，模块间交互简单，耦合少</p>
+</li>
+<li><p>项目没有被多个外部模块引用，只是一个单独的小模块</p>
+</li>
+<li><p>模块不需要重用，代码也很少被修改</p>
+</li>
+<li><p>团队规模很小</p>
+</li>
+<li><p>不需要编写单元测试</p>
+</li>
+</ul>
+<p>如果你的有以下特性，说明你就必须要 <code>考虑进行组件化</code> 了：</p>
+<ul>
+<li><p>模块逻辑复杂，多个模块之间频繁互相引用</p>
+</li>
+<li><p>项目规模逐渐变大，修改代码变的越来越困难（这里可以理解为：修改一处代码，需要同时修改其他多个地方）</p>
+</li>
+<li><p>团队人数变多，提交代码经常和其他成员冲突</p>
+</li>
+<li><p>项目编译耗时较大</p>
+</li>
+<li><p>模块的单元测试经常由于其他模块的修改而失败</p>
+</li>
+</ul>
+<h1 id="组件化方案"><a href="#组件化方案" class="headerlink" title="组件化方案"></a>组件化方案</h1><p>组件化方案的8条指标：</p>
+<p>一个项目经过组件化后如何来评判，主要有以下几个 <code>标准</code>：</p>
+<ul>
+<li><p>模块之间没有耦合，模块内部的修改不会影响其他模块</p>
+</li>
+<li><p>模块可以单独编译</p>
+</li>
+<li><p>模块间数据传递明确</p>
+</li>
+<li><p>模块对外接口清晰且易维护</p>
+</li>
+<li><p>当模块接口改变时，此模块的外部代码能够被高效重构</p>
+</li>
+<li><p>尽量用最少的修改和代码，让现有项目实现模块化</p>
+</li>
+<li><p>支持OC和Swift，以及混编</p>
+</li>
+</ul>
+<p>前4条主要用于 <code>衡量一个模块是否真正解耦</code>，后4条主要用于衡量在项目中 <code>实践中的易用程序</code></p>
+<p><strong>组件化原则</strong></p>
+<p>一个项目主要分为3层：<code>业务层、通用层</code> 以及 <code>基础层</code>，在进行组件化时，有以下几点说明</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/20230304232513.png"
+                     
+                ></p>
+<ul>
+<li><p>只能上层对下层依赖，不能下层对上层依赖，因为下层是对上层的抽象</p>
+</li>
+<li><p>项目公共代码资源下沉</p>
+</li>
+<li><p>横向的依赖尽量减少，最好下层至通用模块，或者基础模块</p>
+</li>
+</ul>
+<h1 id="组件化和非组件化区别"><a href="#组件化和非组件化区别" class="headerlink" title="组件化和非组件化区别"></a>组件化和非组件化区别</h1><p>组件化能够帮助我们将大部分项目拆解成数个小组件，开发者只需要关注组件所依赖的其他组件，而无需关心完整项目的其他部分，每个组件可以自己采取所习惯的架构模式：MVC、MVVM等，就行开发一款个人独立的App那样自由</p>
 <p>非组件化：</p>
 <ul>
 <li>代码高耦合度、高依赖</li>
@@ -308,8 +397,7 @@
 <h1 id="面向接口-Protocol-Class"><a href="#面向接口-Protocol-Class" class="headerlink" title="面向接口 Protocol - Class"></a>面向接口 <code>Protocol - Class</code></h1><ul>
 <li><code>Protocol - Class</code></li>
 </ul>
-<p>面向接口的方案通常由两部分组成，一个是用来管理接口协议的类（ModuleManager），一个是具体的接口协议（ComponentProtocol）。</p>
-<p>ModuleManager 负责消息的调用和转发，ComponentProtocol 文件定义了业务组件可以提供的功能服务。</p>
+<p>面向接口的方案通常由两部分组成，一个是用来管理接口协议的类（ProtocolManager），一个是具体的接口协议（ComponentProtocol）</p>
 <h1 id="组件化的核心工具"><a href="#组件化的核心工具" class="headerlink" title="组件化的核心工具"></a>组件化的核心工具</h1><ul>
 <li><p>组件化工程，需要一个宿主工程，负责集成所有的组件。每个组件都是一个单独的工程，通过 <code>Git</code> 私有仓库来管理。</p>
 </li>
@@ -399,7 +487,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC组件化01：组件化介绍</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E7%BB%84%E4%BB%B6%E5%8C%96"><span class="nav-text">什么组件化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E5%8C%96"><span class="nav-text">组件化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E5%8C%96%E5%88%86%E5%B1%82"><span class="nav-text">组件化分层</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%AD%E9%97%B4%E5%B1%82%E5%87%A0%E7%A7%8D%E6%96%B9%E6%A1%88"><span class="nav-text">中间层几种方案</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E-URL-Scheme-%E7%9A%84%E4%B8%89%E6%96%B9%E5%BA%93"><span class="nav-text">基于 URL Scheme 的三方库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E-Runtime-%E7%9A%84-target-action"><span class="nav-text">基于 Runtime 的 target-action</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E6%8E%A5%E5%8F%A3-Protocol-Class"><span class="nav-text">面向接口 Protocol - Class</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E5%8C%96%E7%9A%84%E6%A0%B8%E5%BF%83%E5%B7%A5%E5%85%B7"><span class="nav-text">组件化的核心工具</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E7%BB%84%E4%BB%B6%E5%8C%96"><span class="nav-text">什么组件化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%BB%84%E4%BB%B6%E5%8C%96%EF%BC%9F"><span class="nav-text">为什么要组件化？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E5%8C%96%E6%96%B9%E6%A1%88"><span class="nav-text">组件化方案</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E5%8C%96%E5%92%8C%E9%9D%9E%E7%BB%84%E4%BB%B6%E5%8C%96%E5%8C%BA%E5%88%AB"><span class="nav-text">组件化和非组件化区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E5%8C%96%E5%88%86%E5%B1%82"><span class="nav-text">组件化分层</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%AD%E9%97%B4%E5%B1%82%E5%87%A0%E7%A7%8D%E6%96%B9%E6%A1%88"><span class="nav-text">中间层几种方案</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E-URL-Scheme-%E7%9A%84%E4%B8%89%E6%96%B9%E5%BA%93"><span class="nav-text">基于 URL Scheme 的三方库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E-Runtime-%E7%9A%84-target-action"><span class="nav-text">基于 Runtime 的 target-action</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E6%8E%A5%E5%8F%A3-Protocol-Class"><span class="nav-text">面向接口 Protocol - Class</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E5%8C%96%E7%9A%84%E6%A0%B8%E5%BF%83%E5%B7%A5%E5%85%B7"><span class="nav-text">组件化的核心工具</span></a></li></ol>
 
     </div>
 </div>

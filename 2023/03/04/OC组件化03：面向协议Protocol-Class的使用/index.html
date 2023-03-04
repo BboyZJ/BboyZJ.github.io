@@ -210,8 +210,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-04 21:10:48</span>
-            <span class="mobile">2023-03-04 21:10</span>
+            <span class="pc">2023-03-04 22:56:27</span>
+            <span class="mobile">2023-03-04 22:56</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -257,7 +257,7 @@
             
 
             <div class="article-content markdown-body">
-                <h1 id="面向接口-Protocol-Class"><a href="#面向接口-Protocol-Class" class="headerlink" title="面向接口 Protocol Class"></a>面向接口 Protocol Class</h1><ul>
+                <h1 id="面向协议-Protocol-Class"><a href="#面向协议-Protocol-Class" class="headerlink" title="面向协议 Protocol Class"></a>面向协议 Protocol Class</h1><ul>
 <li><p>在 <code>URL Scheme路由</code> 和 <code>target-action</code> 方案中，都存在 硬编码、参数不明确问题：URL 、Target_ 、 Action_ 的硬编码，参数都是通过字典的形式传递，类型不明确。</p>
 </li>
 <li><p><code>面向接口</code> 的方式能够很好的解决这两个问题。</p>
@@ -268,13 +268,20 @@
 </li>
 <li><p>中间件返回 <code>Protocol</code> 对应的 <code>Class</code>，然后动态创建实例</p>
 </li>
-<li><p>解决硬编码问题</p>
-</li>
+</ul>
+<h1 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h1><ul>
+<li>面向协议编程</li>
+<li>安全性高</li>
+<li>模块解耦</li>
+</ul>
+<h1 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h1><ul>
+<li>无法多端通用</li>
+<li>需要进行协议的注册</li>
 </ul>
 <h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><ul>
 <li>创建 <code>ZJProtocol.h</code> 协议类文件</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 将各个模块的协议统一放在一个文件中 ，在各个模块中依赖这个文件，实现其协议</span><br><span class="line">@protocol OneMoudleProtocol &lt;NSObject&gt;</span><br><span class="line">@required // 返回模块one</span><br><span class="line">+ (UIViewController *)oneMoudleVC;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@protocol OneDetailMoudleProtocol &lt;NSObject&gt;</span><br><span class="line">@required</span><br><span class="line">+ (UIViewController *)oneDetailMoudleVC;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 将各个模块的协议统一放在一个文件中 ，在各个模块中依赖这个文件，实现其协议</span><br><span class="line">@protocol OneMoudleProtocol &lt;NSObject&gt;</span><br><span class="line">@required // 返回模块one</span><br><span class="line">+ (UIViewController *)oneMoudleVC;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@protocol OneDetailMoudleProtocol &lt;NSObject&gt;</span><br><span class="line">@required</span><br><span class="line">+ (UIViewController *)oneDetailMoudleVCWithParas:(NSDictionary *)paras;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>创建 <code>ZJMediator</code> 协议管理类</li>
@@ -288,12 +295,12 @@
 <ul>
 <li>创建 <code>OneDetailMoudleEntry</code> 模块</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;OneDetailMoudleEntry.h&quot;</span><br><span class="line">#import &quot;ZJOneDetailViewController.h&quot;</span><br><span class="line"></span><br><span class="line">@interface OneDetailMoudleEntry ()&lt;OneDetailMoudleProtocol&gt;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line">@implementation OneDetailMoudleEntry</span><br><span class="line">+ (void)load&#123;</span><br><span class="line">    [[ZJMediator shareManager] registerProtocol:@protocol(OneDetailMoudleProtocol) class:[self class]];</span><br><span class="line">&#125;</span><br><span class="line">// 继承</span><br><span class="line">+ (UIViewController *)oneDetailMoudleVC&#123;</span><br><span class="line">    ZJOneDetailViewController * detailVC = [[ZJOneDetailViewController alloc] init];</span><br><span class="line">    return detailVC;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;OneDetailMoudleEntry.h&quot;</span><br><span class="line">#import &quot;ZJOneDetailViewController.h&quot;</span><br><span class="line"></span><br><span class="line">@interface OneDetailMoudleEntry ()&lt;OneDetailMoudleProtocol&gt;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line">@implementation OneDetailMoudleEntry</span><br><span class="line">+ (void)load&#123;</span><br><span class="line">    [[ZJMediator shareManager] registerProtocol:@protocol(OneDetailMoudleProtocol) class:[self class]];</span><br><span class="line">&#125;</span><br><span class="line">// 继承</span><br><span class="line">+ (UIViewController *)WithParas:(NSDictionary *)paras&#123;</span><br><span class="line">    ZJOneDetailViewController * detailVC = [[ZJOneDetailViewController alloc] init];</span><br><span class="line">    detailVC.name = paras[@&quot;name&quot;];</span><br><span class="line">    detailVC.age = params[@&quot;age&quot;];</span><br><span class="line">    return detailVC;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>在任何地方调用</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//下一页的点击事件</span><br><span class="line">- (void)next:(UIButton *)sender&#123;</span><br><span class="line">    </span><br><span class="line">    Class cls = [[ZJMediator shareManager] classFromProtocol:@protocol(OneDetailMoudleProtocol)];</span><br><span class="line">    UIViewController * detailVC = [cls oneDetailMoudleVC];</span><br><span class="line">    [self.navigationController pushViewController:detailVC animated:YES];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//下一页的点击事件</span><br><span class="line">- (void)next:(UIButton *)sender&#123;</span><br><span class="line">    </span><br><span class="line">    Class cls = [[ZJMediator shareManager] classFromProtocol:@protocol(OneDetailMoudleProtocol)];</span><br><span class="line">    UIViewController * detailVC = [cls oneDetailMoudleVCWithParas:@&#123;@&quot;name&quot;:@&quot;ZJ&quot;,@&quot;age&quot;:30&#125;];</span><br><span class="line">    [self.navigationController pushViewController:detailVC animated:YES];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 
             </div>
@@ -332,6 +339,21 @@
             
                 <div class="article-nav">
                     
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/03/04/OC%E7%BB%84%E4%BB%B6%E5%8C%9604%EF%BC%9A%E3%80%90%E6%96%B9%E6%A1%88%E4%B8%80%E3%80%91%E6%9C%AC%E5%9C%B0%E7%BB%84%E4%BB%B6%E5%8C%96/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC组件化04：【方案一】本地组件化</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
                     
                         <div class="article-next">
                             <a class="next"
@@ -361,7 +383,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC组件化03：面向协议Protocol Class的使用</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E6%8E%A5%E5%8F%A3-Protocol-Class"><span class="nav-text">面向接口 Protocol Class</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="nav-text">实现方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-text">示例</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E5%8D%8F%E8%AE%AE-Protocol-Class"><span class="nav-text">面向协议 Protocol Class</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="nav-text">实现方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-text">优点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9"><span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-text">示例</span></a></li></ol>
 
     </div>
 </div>
