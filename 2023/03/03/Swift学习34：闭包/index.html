@@ -210,8 +210,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-04 00:29:27</span>
-            <span class="mobile">2023-03-04 00:29</span>
+            <span class="pc">2023-03-05 14:23:33</span>
+            <span class="mobile">2023-03-05 14:23</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -257,7 +257,140 @@
             
 
             <div class="article-content markdown-body">
-                
+                <h1 id="闭包和闭包表达式"><a href="#闭包和闭包表达式" class="headerlink" title="闭包和闭包表达式"></a>闭包和闭包表达式</h1><h2 id="闭包的概念"><a href="#闭包的概念" class="headerlink" title="闭包的概念"></a>闭包的概念</h2><ul>
+<li><p>闭包是可以在你的代码中被 <code>传递和引用</code> 的功能性独立代码块</p>
+</li>
+<li><p>闭包能够 <code>补获和存储</code> 定义上下文的任何 <code>常量和变量</code>，这就是所谓的闭合并包裹哪些常量和变量，因此成为 <code>闭包</code>，Swift能够为你处理所有关于补获的内存管理操作</p>
+</li>
+<li><p><code>全局和内嵌函数</code>，实际上是 <code>特殊的闭包</code>。闭包符合以下三种形式的一种</p>
+<ul>
+<li><p>全局函数时一个有名字但不会补获任何值的闭包</p>
+</li>
+<li><p>内嵌函数时一个有名字且能从其上下层函数补获值的闭包</p>
+</li>
+<li><p>闭包表达式是一个轻量级语法所写的可 <code>以补获其上下文中常量和变量值</code> 的没有名字的闭包</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="闭包表达式"><a href="#闭包表达式" class="headerlink" title="闭包表达式"></a>闭包表达式</h2><ul>
+<li>闭包表达式是一种在简短行内就能写完闭包的语法</li>
+</ul>
+<h2 id="闭包表达式从-sorted-函数说起"><a href="#闭包表达式从-sorted-函数说起" class="headerlink" title="闭包表达式从 sorted 函数说起"></a>闭包表达式从 sorted 函数说起</h2><ul>
+<li>swift标准库提供了一个叫做 <code>sorted(by:)</code> 的方法，会根据你提供的 排序闭包 将已经数组排序，返回一个已排好序的新数组，原数组不会被 <code>sorted(by:)</code> 方法修改</li>
+</ul>
+<p><strong>正序排列</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var newname = name.sorted()</span><br></pre></td></tr></table></figure></div>
+
+
+<p><strong>逆序排列</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">let name = [&quot;a&quot;,&quot;bb&quot;,&quot;c&quot;,&quot;ddd&quot;]</span><br><span class="line">func backward(_ s1:String,_ s2:String) -&gt; Bool &#123;</span><br><span class="line">    return s1 &gt; s2</span><br><span class="line">&#125;</span><br><span class="line">var newname = name.sorted(by: backward)</span><br><span class="line">print(&quot;\(name) , \(newname)&quot;)</span><br><span class="line"></span><br><span class="line">======</span><br><span class="line">[&quot;a&quot;, &quot;bb&quot;, &quot;c&quot;, &quot;ddd&quot;] , [&quot;ddd&quot;, &quot;c&quot;, &quot;bb&quot;, &quot;a&quot;]</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="闭包表达式语法"><a href="#闭包表达式语法" class="headerlink" title="闭包表达式语法"></a>闭包表达式语法</h2><ul>
+<li><p>闭包表达式语法能够使用 <code>常量形式参数、变量形式参数和输入输出形式参数</code>，但不能提供默认值。</p>
+</li>
+<li><p>可变形式参数也能使用，需要在形式参数列表的最后面使用</p>
+</li>
+<li><p>元组也可被用来作为形式参数和返回类型</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123; (parameters) -&gt; (return type) in</span><br><span class="line">    statements</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>将之前 <code>backward(::)</code> 函数改为闭包表达式</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">let name = [&quot;a&quot;,&quot;bb&quot;,&quot;c&quot;,&quot;ddd&quot;]</span><br><span class="line">var newname = name.sorted(by: &#123; (s1: String,s2: String) -&gt; Bool in</span><br><span class="line">    return s1 &gt; s2</span><br><span class="line">&#125;)</span><br><span class="line">print(&quot;\(name) , \(newname)&quot;)</span><br><span class="line"></span><br><span class="line">===========</span><br><span class="line">[&quot;a&quot;, &quot;bb&quot;, &quot;c&quot;, &quot;ddd&quot;] , [&quot;ddd&quot;, &quot;c&quot;, &quot;bb&quot;, &quot;a&quot;]</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="从语境中推断类型"><a href="#从语境中推断类型" class="headerlink" title="从语境中推断类型"></a>从语境中推断类型</h2><ul>
+<li><p>排序闭包为实际参数来传递给函数，swift能推断它的形式参数类型和返回类型</p>
+</li>
+<li><p>可以省略 形式参数、括号、返回箭头</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">let name = [&quot;a&quot;,&quot;bb&quot;,&quot;c&quot;,&quot;ddd&quot;]</span><br><span class="line">var newname = name.sorted(by: &#123; s1,s2 in return s1 &gt; s2 &#125;)</span><br><span class="line">print(&quot;\(newname)&quot;)</span><br><span class="line"></span><br><span class="line">========</span><br><span class="line">[&quot;ddd&quot;, &quot;c&quot;, &quot;bb&quot;, &quot;a&quot;]</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="但表达式闭包隐士返回"><a href="#但表达式闭包隐士返回" class="headerlink" title="但表达式闭包隐士返回"></a>但表达式闭包隐士返回</h2><ul>
+<li>但表达式闭包能够通过从它们声明中删掉 <code>return</code> 关键字来隐士返回它们单个表达式的结果</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">let name = [&quot;a&quot;,&quot;bb&quot;,&quot;c&quot;,&quot;ddd&quot;]</span><br><span class="line">var newname = name.sorted(by: &#123; s1,s2 in s1 &gt; s2 &#125;)</span><br><span class="line">print(&quot;\(newname)&quot;)</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">[&quot;ddd&quot;, &quot;c&quot;, &quot;bb&quot;, &quot;a&quot;]</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="简写实际参数名"><a href="#简写实际参数名" class="headerlink" title="简写实际参数名"></a>简写实际参数名</h2><ul>
+<li><code>swift</code> 自动对行内闭包提供简写实际参数，可以通过 <code>$0,$1,$2</code> 等名字来引用闭包的 <code>实际参数</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">let name = [&quot;a&quot;,&quot;bb&quot;,&quot;c&quot;,&quot;ddd&quot;]</span><br><span class="line">var newname = name.sorted(by: &#123; $0 &gt; $1 &#125;)</span><br><span class="line">print(&quot;\(newname)&quot;)</span><br><span class="line"></span><br><span class="line">==========</span><br><span class="line">[&quot;ddd&quot;, &quot;c&quot;, &quot;bb&quot;, &quot;a&quot;]</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="运算符函数"><a href="#运算符函数" class="headerlink" title="运算符函数"></a>运算符函数</h2><ul>
+<li>swift 的 <code>string</code> 类型定义了关于大于号 <code>&gt;</code> 的特定类型字符串实现，让其作为一个有两个 <code>string</code> 类型形式参数的函数并返回一个 <code>bool</code> 类型的值。正好 <code>soreted(by:)</code> 方法的形式参数需要的函数相匹配。因此你可以简单的传入一个 <code>&gt;</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">let name = [&quot;a&quot;,&quot;bb&quot;,&quot;c&quot;,&quot;ddd&quot;]</span><br><span class="line">var newname = name.sorted(by: &gt;)</span><br><span class="line">print(&quot;\(newname)&quot;)</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">[&quot;ddd&quot;, &quot;c&quot;, &quot;bb&quot;, &quot;a&quot;]</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="尾随闭包"><a href="#尾随闭包" class="headerlink" title="尾随闭包"></a>尾随闭包</h2><ul>
+<li><p>如果你需要一个 <code>很长的闭包表达式</code> 作为 <code>函数最后一个实际参数</code> 传递给函数，使用尾随闭包将增强函数的可读性。</p>
+</li>
+<li><p><code>尾随闭包</code> 是一个被 <code>写在函数形式参数的括号后面</code> 的闭包表达式</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">let name = [&quot;a&quot;,&quot;bb&quot;,&quot;c&quot;,&quot;ddd&quot;]</span><br><span class="line">var newname = name.sorted&#123; $0 &gt; $1&#125;</span><br><span class="line">print(&quot;\(newname)&quot;)</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">[&quot;ddd&quot;, &quot;c&quot;, &quot;bb&quot;, &quot;a&quot;]</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="闭包捕获值"><a href="#闭包捕获值" class="headerlink" title="闭包捕获值"></a>闭包捕获值</h1><h2 id="捕获值"><a href="#捕获值" class="headerlink" title="捕获值"></a>捕获值</h2><ul>
+<li>一个闭包能够 <code>从上下文捕获已被定义的常量和变量</code>。即使定义这些常量和变量的原作用域已经不存在，闭包仍能在其函数体内引用和修改这些值</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">func makeIncrementor(forIncrement amount: Int) -&gt; () -&gt; Int &#123;</span><br><span class="line">    var runningTotal = 0</span><br><span class="line">    func incrementor() -&gt; Int &#123;</span><br><span class="line">        runningTotal += amount</span><br><span class="line">        return runningTotal</span><br><span class="line">    &#125;</span><br><span class="line">    return incrementor</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>作为一种优化，如果一个值没有改变或在闭包外面，swift可能会使用这个值的 <code>拷贝</code> 而 <code>不是捕获</code></li>
+</ul>
+<p>如果 <code>runningTotal</code> 没有在闭包里使用或改变，则是 拷贝</p>
+<ul>
+<li>swift也处理了变量的内存管理操作，当变量不再需要时会被释放</li>
+</ul>
+<h2 id="闭包是引用类型"><a href="#闭包是引用类型" class="headerlink" title="闭包是引用类型"></a>闭包是引用类型</h2><ul>
+<li><p>在swift中，<code>函数和闭包都是引用类型</code></p>
+</li>
+<li><p>无论是什么时候赋值给 <code>函数或闭包</code> 一个 <code>常量或变量</code>，实际上都是将常量和变量设置为对函数和闭包的 <code>引用</code></p>
+</li>
+<li><p>如果你分配了一个闭包给类实例的属性，并且闭包通过引用该实例或者它的成员来捕获实例，你将在闭包和实例间会产生 <code>循环引用</code></p>
+</li>
+</ul>
+<h2 id="逃逸闭包"><a href="#逃逸闭包" class="headerlink" title="逃逸闭包"></a>逃逸闭包</h2><ul>
+<li><p>当闭包作为一个实际参数传递给一个函数时，它会在 <code>函数返回之后调用</code>，我们就说这个 <code>闭包逃逸了</code>。当你声明一个接收闭包作为形式参数的函数时， 你可以在形式参数前加 <code>@escaping</code> 来明确闭包是允许逃逸的</p>
+</li>
+<li><p>闭包可以逃逸的一种方法是 <code>被存储在定义函数外的变量里</code>。比如说，很多函数接收闭包实际参数来作为启动异步任务的回调。函数在启动任务后返回，但是闭包要直到任务完成—闭包需要逃逸，以便稍后调用。一般是网络请求成功或失败使用 <code>逃逸闭包</code></p>
+</li>
+<li><p>让闭包 <code>@escaping</code> 你必须在闭包中显示的使用 <code>self</code></p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303051414381.png"
+                     
+                ></p>
+<h2 id="自动闭包"><a href="#自动闭包" class="headerlink" title="自动闭包"></a>自动闭包</h2><ul>
+<li><p>通过 <code>@autoclosure</code> 标志标记它的形式是使用了自动闭包。现在你调用函数就像它接受了一个 <code>String</code> 类型的实际参数而不是闭包。实际参数自动地转换为闭包。</p>
+</li>
+<li><p>可以将一个 <code>表达式 </code>直接传递给 <code>@autoclosure自动闭包</code></p>
+</li>
+<li><p>自动闭包是一种自动创建的用来把作为实际参数传递给函数的表达式的闭包。它不接受任何实际参数，并且当它被调用时，它会返回内部打包的表达式的值。这个语法的好处在于通过写普通表达式代替显示闭包而使你 <code>省略</code> 包围 <code>函数形式参数</code> 的括号<code>()</code></p>
+</li>
+<li><p>自动闭包允许你 <code>延迟执行</code>，因此闭包内部的代码直到你调用时才会运行。对于有副作用或者占用资源的代码来说很有用，因为它可以允许你控制代码何时才进行求值</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// 自动闭包</span><br><span class="line">var custom = [&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;d&quot;];</span><br><span class="line">print(custom.count)</span><br><span class="line"></span><br><span class="line">let customPro = &#123; custom.remove(at: 0)&#125;</span><br><span class="line">print(custom.count)</span><br><span class="line"></span><br><span class="line">// 调用才求值</span><br><span class="line">print(&quot;new \(customPro())&quot;)</span><br><span class="line">print(custom.count)</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">4</span><br><span class="line">4</span><br><span class="line">new a</span><br><span class="line">3</span><br></pre></td></tr></table></figure></div>
+
+
+<h2 id="自动-逃逸"><a href="#自动-逃逸" class="headerlink" title="自动 + 逃逸"></a>自动 + 逃逸</h2><ul>
+<li>如果你想要自动闭包允许逃逸，就同时使用 <code>@autoclosure</code> 和 <code>@escaping</code> 标志</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 自动+逃逸</span><br><span class="line">var names = [&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;]</span><br><span class="line">var providers:[() -&gt; String] = []</span><br><span class="line">func collectCustomsProviders(provider: @escaping () -&gt; String) &#123;</span><br><span class="line">    providers.append(provider )</span><br><span class="line">&#125;</span><br><span class="line">// 表达式 name.remove(at:0) String</span><br><span class="line">collectCustomsProviders(provider:names.remove(at: 0))</span><br><span class="line"></span><br><span class="line">=========</span><br><span class="line">报错</span><br></pre></td></tr></table></figure></div>
+
+<p>不能直接给 <code>闭包</code> 传递表达式，需要添加 <code>@autoclosure</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303051423190.png"
+                     
+                ></p>
+<p>正确的写法</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// 自动+逃逸</span><br><span class="line">var names = [&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;]</span><br><span class="line">var providers:[() -&gt; String] = []</span><br><span class="line">func collectCustomsProviders(provider: @autoclosure @escaping () -&gt; String) &#123;</span><br><span class="line">    providers.append(provider )</span><br><span class="line">&#125;</span><br><span class="line">// 表达式 name.remove(at:0) String</span><br><span class="line">collectCustomsProviders(provider:names.remove(at: 0))</span><br><span class="line">collectCustomsProviders(provider:names.remove(at: 0))</span><br><span class="line">// 实际上逃逸闭包</span><br><span class="line">print(names.count)</span><br><span class="line"></span><br><span class="line">for provide in providers &#123;</span><br><span class="line">    print(provide())</span><br><span class="line">&#125;</span><br><span class="line">print(names.count)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">========</span><br><span class="line">4</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">2</span><br></pre></td></tr></table></figure></div>
             </div>
 
             
@@ -338,7 +471,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">Swift学习34：闭包</div>
-        
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E5%92%8C%E9%97%AD%E5%8C%85%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-text">闭包和闭包表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-text">闭包的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-text">闭包表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BB%8E-sorted-%E5%87%BD%E6%95%B0%E8%AF%B4%E8%B5%B7"><span class="nav-text">闭包表达式从 sorted 函数说起</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%AD%E6%B3%95"><span class="nav-text">闭包表达式语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E8%AF%AD%E5%A2%83%E4%B8%AD%E6%8E%A8%E6%96%AD%E7%B1%BB%E5%9E%8B"><span class="nav-text">从语境中推断类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%86%E8%A1%A8%E8%BE%BE%E5%BC%8F%E9%97%AD%E5%8C%85%E9%9A%90%E5%A3%AB%E8%BF%94%E5%9B%9E"><span class="nav-text">但表达式闭包隐士返回</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%86%99%E5%AE%9E%E9%99%85%E5%8F%82%E6%95%B0%E5%90%8D"><span class="nav-text">简写实际参数名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E5%87%BD%E6%95%B0"><span class="nav-text">运算符函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%BE%E9%9A%8F%E9%97%AD%E5%8C%85"><span class="nav-text">尾随闭包</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E6%8D%95%E8%8E%B7%E5%80%BC"><span class="nav-text">闭包捕获值</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8D%95%E8%8E%B7%E5%80%BC"><span class="nav-text">捕获值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E6%98%AF%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B"><span class="nav-text">闭包是引用类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%83%E9%80%B8%E9%97%AD%E5%8C%85"><span class="nav-text">逃逸闭包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E9%97%AD%E5%8C%85"><span class="nav-text">自动闭包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8-%E9%80%83%E9%80%B8"><span class="nav-text">自动 + 逃逸</span></a></li></ol></li></ol>
 
     </div>
 </div>
