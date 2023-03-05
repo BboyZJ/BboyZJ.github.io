@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="The Redefine Team">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/02/23/swift学习18：运算符应用举例/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Swift学习18：运算符应用举例">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/02/23/Swift学习18：运算符应用举例/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="Theme Redefine">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Swift学习18：运算符应用举例">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            Swift学习18：运算符应用举例 -
+        
+        Theme Redefine
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/redefine-avatar.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"Theme Redefine","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":false,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Theme Redefine
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">Swift学习18：运算符应用举例</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/redefine-avatar.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">The Redefine Team</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-02-23 01:32:43</span>
+        <span class="mobile">2023-02-23 01:32</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-03 18:51:44</span>
+            <span class="mobile">2023-03-03 18:51</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/Swift-%E5%AD%A6%E4%B9%A0%E7%AF%87/">Swift-学习篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="两个数字交换"><a href="#两个数字交换" class="headerlink" title="两个数字交换"></a>两个数字交换</h1><ul>
+<li>不借助临时变量，交换两个变量的值</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var a  = 1</span><br><span class="line">var b = 2</span><br><span class="line">a = a ^ b</span><br><span class="line">b = a ^ b</span><br><span class="line">a = a ^ b</span><br><span class="line">print(a)</span><br><span class="line">print(b)</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031839972.png"
+                     
+                ></p>
+<h1 id="求无符号整数二进制中-1-的个数"><a href="#求无符号整数二进制中-1-的个数" class="headerlink" title="求无符号整数二进制中 1 的个数"></a>求无符号整数二进制中 1 的个数</h1><ul>
+<li>给定一个无符号整型 <code>UInt</code> 变量，求其二进制表中 <code>1</code> 的个数，要求算法执行效率尽可能的高</li>
+</ul>
+<p>思路：看一个八位整数 <code>10 100 001</code> ，先判断最后一位是否为 <code>1</code> ，而 <code>与</code> 操作可以达到目前。可以把这个 <code>八位数字</code> 与 <code>00 0000 01</code> 进行 <code>与</code> 操作，如果结果为 <code>1</code>，则表示当前八位数的最后一位为 <code>1</code>，否则为 <code>0 </code>。怎么判断第 <code>二</code> 位呢？向右移位，再延续前面的判断即可</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 有几个 1</span><br><span class="line">func countsOfOnes(num:UInt) -&gt; UInt &#123;</span><br><span class="line">    var count:UInt = 0</span><br><span class="line">    var temp = num</span><br><span class="line">    while temp != 0 &#123;</span><br><span class="line">        // 如果都是位 1 才累加</span><br><span class="line">        count += temp &amp; 1</span><br><span class="line">        // 右移</span><br><span class="line">        temp = temp &gt;&gt; 1</span><br><span class="line">    &#125;</span><br><span class="line">    return count</span><br><span class="line">&#125;</span><br><span class="line">countsOfOnes(num: 8)</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031841462.png"
+                     
+                ></p>
+<ul>
+<li>如果整数的二进制中有较多的 <code>0</code>，那么我们每一次右移做判断会很浪费，怎么改进前面的算法呢？有没有办法让算法的复杂度只有与 <code>1</code> 的个数有关？</li>
+</ul>
+<p>思路：为了简化这个问题，我们考虑只有高位 <code>1</code> 的情况。例如：11 000 000，如何跳过前面低位的 <code>6</code> 个 <code>0</code> ，而直接判断第 <code>七</code> 位的 <code>1？</code>我们可以设计 <code>11 000 000</code> 和 <code>10 111 111</code>（也就是 11 000 000 - 1）做 <code>与</code> 操作，消去最低位的 <code>1</code>。如果得到的结果为 <code>0</code>，说明我们已经找到或消去里面最后一个 <code>1</code>，如果不为 <code>0</code>，那么说明我们消去了最低位的 <code>1</code>，但是二进制中还有其他的 <code>1</code>，我们的计数器需要加 <code>1</code>，然后继续上面的操作</p>
+<p>计数器 count &#x3D; 0</p>
+<p>步骤一：整数不为0，说明二进制里面肯定有1，count &#x3D; 1</p>
+<p>11 000 000 &amp; 10 111 111 &#x3D; 10 000 000 (消去第7位的1)</p>
+<p>步骤二：结果不为 0，说明二进制里还有 1，count &#x3D; 2</p>
+<p>10 000 000 &amp; 01 111 111 &#x3D; 0（消去第8位的1）</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func countsOfOnes2(num:UInt) -&gt; UInt &#123;</span><br><span class="line">    var count:UInt = 0</span><br><span class="line">    var temp = num</span><br><span class="line">    while temp != 0 &#123;</span><br><span class="line">        count += 1</span><br><span class="line">        temp = temp &amp; (temp - 1)</span><br><span class="line">    &#125;</span><br><span class="line">    return count</span><br><span class="line">&#125;</span><br><span class="line">countsOfOnes2(num: 3)</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031844480.png"
+                     
+                ></p>
+<h1 id="引申：如果判断一个征收为2的整数次幂"><a href="#引申：如果判断一个征收为2的整数次幂" class="headerlink" title="引申：如果判断一个征收为2的整数次幂"></a>引申：如果判断一个征收为2的整数次幂</h1><ul>
+<li><p>给定一个无符号整型 <code>UInt</code> 变量，判断是否为 <code>2</code> 的整数次幂</p>
+</li>
+<li><p>思路：一个整数如果是 <code>2</code> 的整数次方，那么它的二进制表示中有且只有一位是1，而其他所有位都是 <code>0</code>，根据前面的分析，把这个整数减去 <code>1</code> 后再和它自己做 <code>&amp;</code> 运算，这个整数中唯一的 <code>1</code> 就变成 <code>0</code> 了，也就是得到的结果是 <code>0</code></p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 2的整数次幂</span><br><span class="line">func isPowerTwo(num:UInt) -&gt; Bool &#123;</span><br><span class="line">    return (num &amp; (num - 1)) == 0</span><br><span class="line">&#125;</span><br><span class="line">isPowerTwo(num: 18)</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031845987.png"
+                     
+                ></p>
+<h1 id="缺失的数字"><a href="#缺失的数字" class="headerlink" title="缺失的数字"></a>缺失的数字</h1><ul>
+<li>很多成对出现的正整数保存在磁盘文件中，注意成对数字不一定是相邻的，如果 <code>2、3、4、3、4、2、..</code>，由于意外有一个数字消失了，如何尽快找到是哪个数字消失了？</li>
+</ul>
+<p>思路：考虑 <code>^</code> 异或操作的定义，当两个操作的数对应位不相同时，改数的对应位就为1。也就是说如果是相等的两个数 <code>^异或</code>，得到的结果就是 <code>0</code>，而 <code>0</code> 与任何数字 <code>^异或</code>，得到的是那个数字本身。所以我们考虑将所有的数字做 <code>^异或操作</code>，因为只有一个数字消失，那么其他俩俩出现的数字 <code>^异或后为0</code>，0与仅有的一个的数字做 <code>^异或</code>，我们就得到了消失的数字是哪个？</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 缺失的数字</span><br><span class="line">func findLostNum(nums:[UInt]) -&gt; UInt &#123;</span><br><span class="line">    var lostNum:UInt = 0</span><br><span class="line">    for num in nums &#123;</span><br><span class="line">        lostNum = lostNum ^ num</span><br><span class="line">    &#125;</span><br><span class="line">    return lostNum</span><br><span class="line">&#125;</span><br><span class="line">findLostNum(nums: [1,3,2,4,2,1,3])</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031851072.png"
+                     
+                ></p>
+<ul>
+<li>如果有两个数字意外丢失了（丢失的不是相等的数字），改如何找到丢失的两个数字？</li>
+</ul>
+<p>思路：<br>假设题目中这两个只出现1次的数字分别是A和B，如果能将A，B分开到二个数组中，那显然符合 异或 解法的关键点了，因此这个题目的关键点事将A和B分开到二个数组中。<br>由于A，B肯定是不相等的，因此在二进制上肯定有一位是不同的。根据这一位是 0 还是 1 可以将A和B分开到A组合B组。<br>而这个数组中其它数字那么就属于A组，要么就属于B组。再对A组 和 B组 分别执行 异或 解法，就可以得到A,B了。<br>而要判断A，B在哪一位上不相同，只要根据 A ^ B 的结果就可以知道了，这个结果在二进制上为 1 的位都说明 A，B在这一位上是不同的</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">// 丢失的两个不同数</span><br><span class="line">func findTwoLostNum(nums:[UInt]) -&gt; (UInt,UInt) &#123;</span><br><span class="line">    var lostNum1:UInt = 0</span><br><span class="line">    var lostNum2:UInt = 0</span><br><span class="line">    var temp:UInt = 0</span><br><span class="line">    // 计算两个数的异或结果</span><br><span class="line">    for num in nums &#123;</span><br><span class="line">        temp = temp ^ num</span><br><span class="line">    &#125;</span><br><span class="line">    // 找到第一个为 1 的位</span><br><span class="line">    var flag:UInt = 1</span><br><span class="line">    while ((flag &amp; temp) == 0) &#123;</span><br><span class="line">        flag = flag &lt;&lt; 1</span><br><span class="line">    &#125;</span><br><span class="line">    // 找到两个丢失的数字</span><br><span class="line">    for num in nums &#123;</span><br><span class="line">        if (num &amp; flag) == 0 &#123;</span><br><span class="line">            lostNum1 = lostNum1 ^ num</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            lostNum2 = lostNum2 ^ num</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return (lostNum1,lostNum2)</span><br><span class="line">&#125;</span><br><span class="line">findTwoLostNum(nums: [1,2,3,4,2,1])</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031851154.png"
+                     
+                ></p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：Swift学习18：运算符应用举例</li>
+        <li>Post author：The Redefine Team</li>
+        <li>Create time：2023-02-23 01:32:43</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/02/23/Swift学习18：运算符应用举例/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/Swift-%E5%AD%A6%E4%B9%A0%E7%AF%87/">#Swift-学习篇</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/02/23/Swift%E5%AD%A6%E4%B9%A019%EF%BC%9A%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7%E5%92%8C%E7%BB%93%E5%90%88%E6%80%A7/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习19：运算符优先级和结合性</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/02/23/Swift%E5%AD%A6%E4%B9%A017%EF%BC%9A%E4%BD%8D%E8%BF%90%E7%AE%97%E7%AC%A6/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习17：位运算符</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">Swift学习18：运算符应用举例</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%A4%E4%B8%AA%E6%95%B0%E5%AD%97%E4%BA%A4%E6%8D%A2"><span class="nav-text">两个数字交换</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B1%82%E6%97%A0%E7%AC%A6%E5%8F%B7%E6%95%B4%E6%95%B0%E4%BA%8C%E8%BF%9B%E5%88%B6%E4%B8%AD-1-%E7%9A%84%E4%B8%AA%E6%95%B0"><span class="nav-text">求无符号整数二进制中 1 的个数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E7%94%B3%EF%BC%9A%E5%A6%82%E6%9E%9C%E5%88%A4%E6%96%AD%E4%B8%80%E4%B8%AA%E5%BE%81%E6%94%B6%E4%B8%BA2%E7%9A%84%E6%95%B4%E6%95%B0%E6%AC%A1%E5%B9%82"><span class="nav-text">引申：如果判断一个征收为2的整数次幂</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%BA%E5%A4%B1%E7%9A%84%E6%95%B0%E5%AD%97"><span class="nav-text">缺失的数字</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">The Redefine Team</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2022/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+</body>
+</html>
