@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="The Redefine Team">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2020/08/07/数据结构和算法/oc算法02：插入排序探索/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC算法02：插入排序探索">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2020/08/07/数据结构和算法/OC算法02：插入排序探索/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="Theme Redefine">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC算法02：插入排序探索">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC算法02：插入排序探索 -
+        
+        Theme Redefine
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/redefine-avatar.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"Theme Redefine","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":false,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Theme Redefine
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC算法02：插入排序探索</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/redefine-avatar.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">The Redefine Team</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2020-08-07 19:28:01</span>
+        <span class="mobile">2020-08-07 19:28</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-06 18:39:36</span>
+            <span class="mobile">2023-03-06 18:39</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E7%AE%97%E6%B3%95%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-算法探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h1><p>每步将一个待排序的对象，按其关键码大小，插入到前面已经排好序的一组对象的适当位置上，直到全部对象都插入为止。即边插入边排序，保证子序列中随时都是排好序的。</p>
+<h1 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h1><p>有序插入</p>
+<ul>
+<li><p>在有序列序列中插入一个元素，保持序列有序，有序长度不断增加。</p>
+</li>
+<li><p>可以插入在中间、最前面和最后面</p>
+</li>
+</ul>
+<h1 id="插入排序种类"><a href="#插入排序种类" class="headerlink" title="插入排序种类"></a>插入排序种类</h1><ol>
+<li><p>顺序法定位插入位置 – <code>直接插入排序</code></p>
+</li>
+<li><p>缩小增量多遍插入排序 – <code>希尔排序</code></p>
+</li>
+</ol>
+<h2 id="直接插入排序"><a href="#直接插入排序" class="headerlink" title="直接插入排序"></a>直接插入排序</h2><ol>
+<li><p>基本思路：每轮排序把数组分为2部分，一部分为已排序好的数组，一部分为还未排序好的数组。每次取出还未排序好的数组中首元素与已排序好的数组从右往左比较。如果发现从未排序中取出的元素比从已排序中取出的元素大，就把该未排序的元素插入到从已排序中取出元素的后面。这样每一轮就能确定一个未排序元素在已排序数组中的准确位置</p>
+</li>
+<li><p>算法思想</p>
+</li>
+</ol>
+<ul>
+<li><p>从第一个元素开始，该元素可以认为已经被排序</p>
+</li>
+<li><p>取出下一个元素，在已经排序的元素序列中从后向前扫描</p>
+</li>
+<li><p>如果该元素（已排序）大于新元素，将该元素移到下一位置</p>
+</li>
+<li><p>重复步骤3，直到找到已排序的元素小于或者等于新元素的位置</p>
+</li>
+<li><p>将新元素插入到下一位置中</p>
+</li>
+<li><p>重复步骤2~5</p>
+</li>
+</ul>
+<ol start="3">
+<li>直接插入排序的流程演示</li>
+</ol>
+<p>流程举例: 红色的为已排序部分，蓝色的为未排序部分</p>
+<p>1）原始数据：首先把原数组从下坐标1开始拆分为2部分， 已排序部分(红色)，未排序部分(蓝色)。默认原数组首元素为已排序元素。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061833441.png"
+                     
+                ></p>
+<p>2）第一轮：接着用后面未排序部分的第一个元素与已排序部分的最后一个元素进行比较，这里发现已排序最末尾元素5小于未排序元素第一个元素9.且元素5余元素9的位置是相邻的。不发生插入。把元素9列入已排序数组中。此时已排序好的元素多了一个。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061833527.png"
+                     
+                ></p>
+<p>3）第二轮：然后接着用后面未排序部分的第一个元素与已排序部分的最后一个元素进行比较，这里发现已排序最末尾元素9大于未排序元素第一个元素2。并且9不是已排序元素最前面一个元素，所以忽略本次操作，让元素2与已排序元素从右往左的下一个元素进行比较，此时发现已排序元素5大于元素2，但发现元素5是已排序元素中首个元素。则直接把元素2插入到元素5前面。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061833540.png"
+                     
+                ></p>
+<p>4）第三轮排序：用后面未排序部分的第一个元素与已排序部分的最后一个元素进行比较，这里发现已排序最末尾元素9小于未排序元素第一个元素15。且两个元素相邻。不发生插入，把元素15加入已排序部分。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061833930.png"
+                     
+                ></p>
+<p>5）第四轮排序：用后面未排序部分的第一个元素与已排序部分的最后一个元素进行比较，这里发现已排序最末尾元素15小于未排序元素第一个元素46。且两个元素相邻。不发生插入，把元素46加入已排序部分。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061835372.png"
+                     
+                ></p>
+<p>6）最后：依次按照上面的方式递归排序。直到所有元素排序完成。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061834433.png"
+                     
+                ></p>
+<ol start="4">
+<li>列子:</li>
+</ol>
+<p>代码实现：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    NSMutableArray * arr = [NSMutableArray arrayWithArray:@[@15,@2,@5,@10,@20]];</span><br><span class="line">    </span><br><span class="line">    // 插入排序的原理：始终定义第一个元素为有序的，将元素逐个插入到有序的排列中</span><br><span class="line">    // 其特点是：不断的移动数据，空出一个适当的位置，把待插入的元素放到里面去</span><br><span class="line">    for (int i = 0 ; i &lt; arr.count; i ++) &#123;</span><br><span class="line">        // temp为待排元素i为其位置</span><br><span class="line">        NSNumber * temp = arr[i];</span><br><span class="line">        // j为已排元素最后一个元素的位置</span><br><span class="line">        int j = i - 1;</span><br><span class="line">        // 当j&gt;=0时，i为第一个待排元素，取已排元素和待排元素比较，在已经排好序中从后向前扫描</span><br><span class="line">        while (j &gt;= 0 &amp;&amp; [arr[j] integerValue] &gt; [temp integerValue]) &#123;</span><br><span class="line">            // 如果已经排好序的序列中元素大于新元素，则将该元素往右移动一个位置</span><br><span class="line">            [arr replaceObjectAtIndex:j+1 withObject:arr[j]];</span><br><span class="line">            j --;</span><br><span class="line">        &#125;</span><br><span class="line">        // 跳出循环时，j已排元素小于或等于i的元素（待排元素）。插入新元素a[j+1] = temp，即空出来的位置插入待排序的值</span><br><span class="line">        [arr replaceObjectAtIndex:j+1 withObject:temp];</span><br><span class="line">        NSLog(@&quot;插入排序排序中:%@&quot;,[self getArrayStr:arr]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 将数组中的元素拼接成字符串 - 方便打印</span><br><span class="line">- (NSString *)getArrayStr:(NSArray *)array &#123;</span><br><span class="line">    NSMutableString *strM = [NSMutableString string];</span><br><span class="line">    for (NSNumber *num in array) &#123;</span><br><span class="line">        [strM appendString:[NSString stringWithFormat:@&quot;%@,&quot;,num]];</span><br><span class="line">    &#125;</span><br><span class="line">    return strM.copy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2020-08-07 21:30:38.316438+0800 C-直接插入排序算法[3671:1382925] 插入排序排序中:15,2,5,10,20,</span><br><span class="line">2020-08-07 21:30:38.316483+0800 C-直接插入排序算法[3671:1382925] 插入排序排序中:2,15,5,10,20,</span><br><span class="line">2020-08-07 21:30:38.316502+0800 C-直接插入排序算法[3671:1382925] 插入排序排序中:2,5,15,10,20,</span><br><span class="line">2020-08-07 21:30:38.316519+0800 C-直接插入排序算法[3671:1382925] 插入排序排序中:2,5,10,15,20,</span><br><span class="line">2020-08-07 21:30:38.316535+0800 C-直接插入排序算法[3671:1382925] 插入排序排序中:2,5,10,15,20,</span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>算法分析</li>
+</ol>
+<ul>
+<li>直接插入排序的算法性能</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/89651355-62d67e00-d8f6-11ea-8a41-5245460356d6.png"
+                     
+                ></p>
+<ul>
+<li>时间复杂度</li>
+</ul>
+<p><strong>最好的情况（关键字在记录中<em>顺序有序</em>）：</strong></p>
+<ol>
+<li>当元素的初始序列为正序时，仅外循环要进行n-1趟排序且每一趟只进行一次比较，没有进入if语句不存在元素之间的交换(移动)。此时比较次数(Cmin)和移动次数(Mmin)达到最小值。 此时时间复杂度为O(n)。</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">比较次数：Cmin = n-1;</span><br><span class="line">移动次数：Mmin = 0;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>举例：</li>
+</ol>
+<p>如：1 2 3 4 5<br>比较：                         次数      移动<br>第2个元素和第一个元素比较          1        0<br>第3个元素和第二个元素比较          1        0<br>…<br>第n个元素和第n-1个元素比较         1       0<br>比较的次数：n-1<br>移动的次数：0</p>
+<p><strong>最坏的情况（关键字在记录序列中<em>逆序有序</em>）：</strong></p>
+<ol>
+<li>最差就是逆序。每趟排序中待插入的元素都要和[0,i-1]中的i个元素进行比较且要将这i个元素后移，i个元素后移移动次数当然也就为i了，再加上temp &#x3D; arr[i]与arr[j+1] &#x3D; temp的两次移动，每趟移动的次数为i+2,此时比较次数(Cmin)和移动次数(Mmin)达到最小值。 此时时间复杂度为O(n2)。</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cmax = 1+2+...+(n-1) = n*(n-1)/2 = O(n2)</span><br><span class="line">Mmax = (1+2)+(2+2)+...+(n-1+2) = (n-1)*(n+4)/2 = O(n2)  (i取值范围1~n-1)</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>例子：</li>
+</ol>
+<p>如：5 4 3 2 1<br>比较：                                 次数       移动<br>第2个元素和第1个元素比较                   1        1+2<br>第3个元素和前2个元素比较                   2        2+2<br>…<br>第n个元素和前n-1个比较                    n-1      n-1+2<br>最后： 把1+2+…+n-1加起来求平均值<br>比较的次数：1+2+…+n-1 &#x3D; (n+2)(n-1)&#x2F;2<br>移动的次数：(1+2)+(2+2)+…+(n-1+2) &#x3D; (n-1)*(n+4)&#x2F;2 &#x3D; O(n2)  (i取值范围1~n-1)</p>
+<p><strong>事件复杂度结论：原始数据越接近有序，排序速度越快</strong></p>
+<p>1）最好的情况下（顺序有序）：O(n)<br>2）最坏的情况下（逆序有序）：O(n^2)<br>3）平均情况下，耗时差不多是最坏情况的一般：O(n^2)<br>4）要提高查找速度</p>
+<p>减少元素的比较次数<br>减少元素的移动次数</p>
+<ul>
+<li>空间复杂度</li>
+</ul>
+<p>由直接插入排序算法可知，我们在排序过程中，需要一个临时变量存储要插入的值，所以空间复杂度为 O(1) 。</p>
+<ul>
+<li>算法稳定性</li>
+</ul>
+<p>直接插入排序的过程中，不需要改变相等数值元素的位置，所以它是稳定的算法。</p>
+<ul>
+<li>插入排序和选择排序的区别</li>
+</ul>
+<ol>
+<li><p>插入排序和选择排序都有两层循环，外循环遍历整个数组</p>
+</li>
+<li><p>内循环稍有区别：</p>
+<ul>
+<li>选择排序的内循环是遍历一组未排过序的数组。</li>
+<li>插入排序的内循环是遍历一组已排过序的数组。</li>
+</ul>
+</li>
+</ol>
+<h2 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a>希尔排序</h2><ol>
+<li><p>简介</p>
+<p>希尔排序(Shell Sort)，一听这名字就知道是一个叫希尔的外国人发明的排序。没错，他就是唐纳德 <code>希尔</code>（Donald Shell），一位美国的计算机科学家，他于1959年发明的希尔排序算法。</p>
+</li>
+<li><p>希尔排序思路</p>
+</li>
+</ol>
+<ul>
+<li><p>希尔排序相当于 <code>直接插入排序的加强版</code>，在直接插入排序的概念之上加入了 <code>增量</code> 这个概念。</p>
+</li>
+<li><p>什么是增量？<br>  插入排序只能与相邻的元素进行比较，而希尔排序则是进行 <code>跳跃</code> 比较，而 <code>增量</code> 就是 跳跃的 <code>间隔数</code>。<br>  所谓增量即是把数组按照一定间隔数分组成不同的数组。例如:@{1,2,3,4,5,6,7},一共有6个元素，假设把数组按照增量3进行分组，那么就是@{1,4,7},@{2,5},@{3,6}各分为一组。因为增量是3，所以每间隔3个下坐标为一组。</p>
+</li>
+<li><p>按照增量分组后，把每一组的元素按照插入排序进行排序。当按照一个增量分组完成并每组数据按照插入排序完成后，将增量设为原本的二分之一，然后重复上面的步骤进行插入排序。直到增量为1，按照增量为1的最后一次进行分组插入排序。即完成了排序。</p>
+</li>
+</ul>
+<ol start="3">
+<li>希尔排序的流程演示</li>
+</ol>
+<ul>
+<li>原始数据：@[@(11),@(10),@(9),@(8),@(7),@(6),@(5),@(4),@(3),@(2),@(1)]</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061837614.png"
+                     
+                ></p>
+<ol>
+<li>第一次分组：</li>
+</ol>
+<p>第一步，数组中有11个元素，把数组除以二，得到5(11&#x2F;2实际是等于5余1，由于取正所以为5，由于有余数，所以按照增量取出来的数组的 <code>组数</code> 有 <code>增量+1</code> 即 <code>5 + 1 = 6组</code>。如果没有余数则组数就是增量数。)，以5为增量，从数组第一个元素开始，每间隔5个数取出来的所有元素分为一组，分为6组，分别是：<br>@{11,7}、@{10,4}、@{9,3}、@{8,2}、@{5,1}、@{6}</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061837549.png"
+                     
+                ></p>
+<p>第一次排序：每种颜色为一组。接着对每组进行插入排序(具体比较过程就不说了，看过上面插入排序的应该懂)，排序结果为下图(共交换5次):<br>@{7,11}、@{4,10}、@{3,9}、@{2,8}、@{1,5}、@{6}</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061838511.png"
+                     
+                ></p>
+<p>2)第二次分组：将增量5再次除以2，得到2(实际5&#x2F;2是等于2余1，有余数所以组数为3)。分为3组分别是:<br>@{7,2,11,8}、@{4,1,10,5}、@{3,6,9}</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16780991255622.jpg"
+                     
+                ></p>
+<p>第二次排序：每种颜色为一组，对每组元素进行插入排序。排序结果为(共交换4次)<br>@{2,7,8,11}、@{1,4,5,10}、@{3,6,9}</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16780991388627.jpg"
+                     
+                ></p>
+<p>3)第三次分组：将增量2再次除以1，得到1(实际2&#x2F;2等1，没有余数，所以分为1组)。分组后是<br>@{2,1,3,7,4,6,8,5,9,11,10}</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16780991560782.jpg"
+                     
+                ></p>
+<p>第三次排序：最后对整组数组进行插入排序，排序结果为(共交换7次)：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16780991704280.jpg"
+                     
+                ></p>
+<ol start="4">
+<li>希尔排序的特点</li>
+</ol>
+<p>1）一次移动，移动位置比较大，跳跃式地接近排序后的最终位置<br>2）最后一次只需要少量移动<br>3）增量序列必须是递减的，最后一个必须是1<br>4）增量序列应该是互质的</p>
+<ol start="5">
+<li>实例</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    NSMutableArray * arr = [NSMutableArray arrayWithArray:@[@(9),@(3),@(8),@(5),@(2),@(4),@(7),@(6),@(1)]];</span><br><span class="line">    [self shellSort:arr];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)shellSort:(NSMutableArray *)list&#123;</span><br><span class="line">    // 起始间隔值gap设置为总数的一半</span><br><span class="line">    int gap = (int)list.count / 2;</span><br><span class="line">    // 直到gap==1结束</span><br><span class="line">    while (gap &gt;= 1) &#123;</span><br><span class="line">        //i为待排元素，以步距gap从后向前扫描</span><br><span class="line">        for(int i = gap ; i &lt; [list count]; i++)&#123;</span><br><span class="line">            //temp为待排元素i为其位置</span><br><span class="line">            NSInteger temp = [[list objectAtIndex:i] intValue];</span><br><span class="line">            //获取当前位置</span><br><span class="line">            int j = i;</span><br><span class="line">            //然后将此位置之前的元素，按照增量进行跳跃式比较</span><br><span class="line">            while (j &gt;= gap &amp;&amp; temp &lt; [[list objectAtIndex:(j - gap)] intValue]) &#123;</span><br><span class="line">                [list replaceObjectAtIndex:j withObject:[list objectAtIndex:j-gap]];</span><br><span class="line">                j -= gap;</span><br><span class="line">            &#125;</span><br><span class="line">            //跳出循环时，j元素小于i的元素（待排元素）。插入新元素a[j] = temp，即空出来的位置插入待排序的值</span><br><span class="line">            [list replaceObjectAtIndex:j withObject:[NSNumber numberWithInteger:temp]];</span><br><span class="line">        &#125;</span><br><span class="line">        NSLog(@&quot;步长：%d --- 希尔排序:%@&quot;,gap,[self getArrayStr:list]);</span><br><span class="line">        //步长</span><br><span class="line">        gap = gap / 2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 将数组中的元素拼接成字符串 - 方便打印</span><br><span class="line">- (NSString *)getArrayStr:(NSArray *)array &#123;</span><br><span class="line">    NSMutableString *strM = [NSMutableString string];</span><br><span class="line">    for (NSNumber *num in array) &#123;</span><br><span class="line">        [strM appendString:[NSString stringWithFormat:@&quot;%@,&quot;,num]];</span><br><span class="line">    &#125;</span><br><span class="line">    return strM.copy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2020-08-09 22:02:14.160098+0800 OC-哈希排序[23997:1116332] 步长：4 --- 希尔排序:1,3,7,5,2,4,8,6,9,</span><br><span class="line">2020-08-09 22:02:14.160373+0800 OC-哈希排序[23997:1116332] 步长：2 --- 希尔排序:1,3,2,4,7,5,8,6,9,</span><br><span class="line">2020-08-09 22:02:14.160620+0800 OC-哈希排序[23997:1116332] 步长：1 --- 希尔排序:1,2,3,4,5,6,7,8,9,</span><br></pre></td></tr></table></figure></div>
+
+<ol start="6">
+<li>希尔排序算法分析：</li>
+</ol>
+<p>1）希尔排序的时间复杂度与增量的选取有关。例如，当增量为1时，希尔排序退化成了直接插入排序，此时的时间复杂度为O(N²)，而Hibbard增量的希尔排序的时间复杂度为O(N3&#x2F;2)。<br>2）空间复杂度：<br>O(1)<br>3）是一种不稳定的排序算法：</p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC算法02：插入排序探索</li>
+        <li>Post author：The Redefine Team</li>
+        <li>Create time：2020-08-07 19:28:01</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2020/08/07/数据结构和算法/OC算法02：插入排序探索/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E7%AE%97%E6%B3%95%E6%8E%A2%E7%B4%A2%E7%AF%87/">#OC-算法探索篇</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2020/08/09/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/OC%E7%AE%97%E6%B3%9503%EF%BC%9A%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC算法03：斐波那契数列探索</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC算法02：插入排序探索</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="nav-text">基本思想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-text">基本操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F%E7%A7%8D%E7%B1%BB"><span class="nav-text">插入排序种类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F"><span class="nav-text">直接插入排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F"><span class="nav-text">希尔排序</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">The Redefine Team</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2022/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+</body>
+</html>

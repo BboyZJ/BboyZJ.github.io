@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="The Redefine Team">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2020/08/09/数据结构和算法/oc数据结构01：链表的探索/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC数据结构01：链表的探索">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2020/08/09/数据结构和算法/OC数据结构01：链表的探索/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="Theme Redefine">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC数据结构01：链表的探索">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC数据结构01：链表的探索 -
+        
+        Theme Redefine
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/redefine-avatar.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"Theme Redefine","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":false,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Theme Redefine
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC数据结构01：链表的探索</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/redefine-avatar.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">The Redefine Team</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2020-08-09 22:39:22</span>
+        <span class="mobile">2020-08-09 22:39</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-06 18:15</span>
+            <span class="mobile">2023-03-06 18:15</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-数据结构探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h1><h2 id="顺序存储结构"><a href="#顺序存储结构" class="headerlink" title="顺序存储结构"></a>顺序存储结构</h2><ul>
+<li>举个例子，数组：1-2-3-4-5-6-7-8-9-10，这个就是一个顺序存储结构，存储是按顺序的。</li>
+<li>比如 <code>栈，先进后出</code>，比如 <code>hello world</code> 在栈里面是从 <code>栈底到栈顶的逻辑</code>，依次是 <code>h-e-l-l-o-w-o-r-l-d</code> 这个顺序存储</li>
+<li>再比如 <code>队列，先进先出</code>，从头到尾 <code>h-e-l-l-o-w-o-r-l-d</code> 这个顺序排序</li>
+</ul>
+<h2 id="链式存储结构-链表"><a href="#链式存储结构-链表" class="headerlink" title="链式存储结构-链表"></a>链式存储结构-链表</h2><p>链表是一种 <code>物里存储单元上非连续、非顺序的存储结构</code>，数据元素的顺序是通过链表中的 <code>指针</code> 链接次序实现的。链表由 <code>一系列节点组成</code>，在 <code>运行时动态生成</code>。每个节点包括两部分：一个是 <code>数据域</code>，一个是 <code>指针域</code>。</p>
+<h1 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h1><h2 id="链表的组成"><a href="#链表的组成" class="headerlink" title="链表的组成"></a>链表的组成</h2><ol>
+<li>链表的数据元素的组成部分：<code>指针域</code> 和 <code>数据域</code></li>
+<li><code>指针域</code> 用来存放指示数据元素之间的逻辑关系的指针。</li>
+<li><code>数据域</code> 用来存放数据信息。</li>
+<li>数据元素这种特殊的存储方式称之为 <code>结点（Node）</code>。</li>
+</ol>
+<h2 id="链表的分类"><a href="#链表的分类" class="headerlink" title="链表的分类"></a>链表的分类</h2><p><strong>链表分为4类：</strong></p>
+<ul>
+<li><p>单链表：一个数据域data、一个后继指针域next。也即：上一个节点指向下一个节点，尾节点next指向nil，首节点pre指向nil。</p>
+</li>
+<li><p>双向链表：一个数据域data、一个前驱指针域previous、一个后继指针域next。也即：上一个节点和下一个节点互相指向，尾节点next指向nil，首节点pre指向nil。</p>
+</li>
+<li><p>循环链表：一个数据域data、一个后继指针域next。也即：上一个节点指向下一个节点，尾节点next指向首节点。</p>
+</li>
+<li><p>双向循环链表：一个数据域data、一个前驱指针域previous、一个后继指针域next。也即：上一个节点和下一个节点互相指向，尾节点和首节点也互相指向。</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061814176.png"
+                     
+                ></p>
+<h2 id="链表的优缺点"><a href="#链表的优缺点" class="headerlink" title="链表的优缺点"></a>链表的优缺点</h2><ol>
+<li>数组：</li>
+</ol>
+<p>我们知道，用数组存放数据时，必须事先定义固定的长度（即元素个数）。如果事先难以确定元素个数，则必须把数组定义的足够大，以便存放，显然这样会浪费内存。</p>
+<ol start="2">
+<li>而链表可根据需要开辟内存单元，不会浪费内存。</li>
+</ol>
+<h1 id="数组-和-链表-的区别？"><a href="#数组-和-链表-的区别？" class="headerlink" title="数组 和 链表 的区别？"></a>数组 和 链表 的区别？</h1><ul>
+<li><p>数组：数组 <code>静态分配</code> 内存；数组元素在内存上是连续的，可以通过下标查找元素；插入、删除需要移动大量元素，比较使用元素很少变化的情况；数组插入删除操作时间复杂度是 O(n)，数组查询操作时间复杂度是 O(1)</p>
+</li>
+<li><p>链表：链表 <code>动态分配</code> 内存；链表元素在内存中不是顺序存储的，查找慢；插入、删除只需要对元素指针重新赋值，效率高；链表插入删除操作时间复杂度是 O(1)，链表查询操作时间复杂度是 O(n)</p>
+</li>
+</ul>
+<h1 id="如何检测单链表中是否有环？"><a href="#如何检测单链表中是否有环？" class="headerlink" title="如何检测单链表中是否有环？"></a>如何检测单链表中是否有环？</h1><ul>
+<li>穷举遍历</li>
+</ul>
+<p>首先从头节点开始，依次遍历每个节点，每遍历到一个新节点，就从头节点重新遍历新节点之前的所有节点，当 <code>新节点的ID</code> 和 <code>此节点之前的所有节点ID</code> 依次比较，如果发现 <code>ID相同</code>，则证明链表有环。</p>
+<ul>
+<li>哈希表缓存</li>
+</ul>
+<p>首先创建一个以 <code>节点ID为键</code> 的HashSet集合，用来存储曾经遍历过的节点。然后同样是从头节点开始，依次遍历每一个节点，当新节点和HashSet集合当中存储的节点ID相同，则说明链表右环。</p>
+<ul>
+<li>快慢指针</li>
+</ul>
+<p>首先创建两个指针，指针1和指针2，同时指向这个头节点，指针1每次向下移动一个节点，指针2向下移动2个节点，比较节点是否相同，如果相同则说明链表有环。如果不同执行下一次循环。</p>
+<h1 id="单向链表代码实现"><a href="#单向链表代码实现" class="headerlink" title="单向链表代码实现"></a>单向链表代码实现</h1><ol>
+<li>定义节点</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// 单链表节点</span><br><span class="line">@interface SingleLinkNode : NSObject</span><br><span class="line">@property (nonatomic,strong)id data; // 数据域</span><br><span class="line">@property (nonatomic,strong,nullable)SingleLinkNode * next; // 后继指针域</span><br><span class="line">+ (instancetype)constructNodeWithData:(id)data;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface SingleLinkNode ()</span><br><span class="line">@end</span><br><span class="line">@implementation SingleLinkNode</span><br><span class="line">+ (instancetype)constructNodeWithData:(id)data&#123;</span><br><span class="line">    SingleLinkNode * node = [[SingleLinkNode alloc] init];</span><br><span class="line">    node.data = data;</span><br><span class="line">    node.next = nil;</span><br><span class="line">    return node;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>构建链表</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 构建一个单链表</span><br><span class="line">SingleLinkNode * headNode = [[SingleLinkNode alloc] init];</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>对外接口类</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">@interface LinkInterface : NSObject</span><br><span class="line">// 单链表：在头部插入节点</span><br><span class="line">+ (void)insertNewNodeToHead:(SingleLinkNode *)newNode headNode:(SingleLinkNode *)headNode;</span><br><span class="line">// 单链表：在尾部插入节点</span><br><span class="line">+ (void)insertNewNodeToTail:(SingleLinkNode *)newNode headNode:(SingleLinkNode *)headNode;</span><br><span class="line">// 单链表：在指定位置插入节点</span><br><span class="line">+ (void)insertNodeAtIndex:(int)index node:(SingleLinkNode *)newNode headNode:(SingleLinkNode *)headNode;</span><br><span class="line">// 单链表：删除指定位置节点</span><br><span class="line">+ (void)deleteNodeAtIndex:(int)index headNode:(SingleLinkNode *)headNode;</span><br><span class="line">// 单链表：查询指定位置节点</span><br><span class="line">+ (SingleLinkNode *)queryNodeAtIndex:(int)index headNode:(SingleLinkNode *)headNode;</span><br><span class="line">// 单链表：正序遍历链表</span><br><span class="line">+ (NSArray *)printFromHeadWithNode:(SingleLinkNode *)headNode printPrefixText:(NSString *)text;</span><br><span class="line">// 单链表：倒叙遍历链表</span><br><span class="line">+ (NSMutableArray *)printFromTailWithNode:(SingleLinkNode *)headNode;</span><br><span class="line">// 单链表：反转链表</span><br><span class="line">+ (SingleLinkNode *)reverseWithNode:(SingleLinkNode *)headNode;</span><br><span class="line">// 单链表：两个有序链表合并成一个新的有序链表</span><br><span class="line">+ (SingleLinkNode *)combineWithNode:(SingleLinkNode *)headNode otherNode:(SingleLinkNode *)otherNode;</span><br><span class="line">// 单链表：判断两个链表是否相交</span><br><span class="line">+ (BOOL)intersectWithNode:(SingleLinkNode *)headNode otherNode:(SingleLinkNode *)otherNode;</span><br><span class="line">// 单链表：判断链表是否构成环，如果成环，求出环的入口节点</span><br><span class="line">+ (SingleLinkNode *)circleWithNode:(SingleLinkNode *)headNode;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<ol start="4">
+<li>插入节点</li>
+</ol>
+<ul>
+<li>在头部插入节点</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// 在头部插入节点</span><br><span class="line">+ (void)insertNewNodeToHead:(SingleLinkNode *)newNode headNode:(SingleLinkNode *)headNode&#123;</span><br><span class="line">    // 判空处理</span><br><span class="line">    if (!headNode)&#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    // 先把新节点指向头节点的下一个节点，再让头结点指向新节点（比较常用）</span><br><span class="line">    if (headNode.next == nil) &#123;</span><br><span class="line">        headNode.next = newNode;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        // 将下一个节点赋值给新节点</span><br><span class="line">        newNode.next = headNode.next;</span><br><span class="line">        // 再将头节点指向新节点</span><br><span class="line">        headNode.next = newNode;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>vc实现：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 插入节点到头部</span><br><span class="line">SingleLinkNode * newHeadNode = [SingleLinkNode constructNodeWithData:@1];</span><br><span class="line">[LinkInterface insertNewNodeToHead:newHeadNode headNode:headNode];</span><br><span class="line">// 正序打印节点</span><br><span class="line">[LinkInterface printFromHeadWithNode:headNode printPrefixText:@&quot;构造单链表为：&quot;];</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2022-11-23 16:44:46.140163+0800 单链表[39792:20769651] 单链表为:1</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>在尾部插入节点</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 在尾部插入节点</span><br><span class="line">+ (void)insertNewNodeToTail:(SingleLinkNode *)newNode headNode:(SingleLinkNode *)headNode&#123;</span><br><span class="line">    // 判空处理</span><br><span class="line">    if(!headNode)&#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    // 如果头节点就是尾节点</span><br><span class="line">    if(headNode.next == nil) &#123;</span><br><span class="line">        headNode.next = newNode;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        // 设置中间变量</span><br><span class="line">        SingleLinkNode * pNode = headNode;</span><br><span class="line">        while (pNode.next != nil) &#123; // 未遍历到尾节点</span><br><span class="line">            pNode = pNode.next;</span><br><span class="line">        &#125;</span><br><span class="line">        pNode.next = newNode;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>vc实现：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 插入节点到尾部</span><br><span class="line">SingleLinkNode * newTailNode = [SingleLinkNode constructNodeWithData:@2];</span><br><span class="line">SingleLinkNode * newTailNode1 = [SingleLinkNode constructNodeWithData:@3];</span><br><span class="line">SingleLinkNode * newTailNode2 = [SingleLinkNode constructNodeWithData:@5];</span><br><span class="line">[LinkInterface insertNewNodeToTail:newTailNode headNode:headNode];</span><br><span class="line">[LinkInterface insertNewNodeToTail:newTailNode1 headNode:headNode];</span><br><span class="line">[LinkInterface insertNewNodeToTail:newTailNode2 headNode:headNode];</span><br><span class="line">// 正序打印节点</span><br><span class="line">[LinkInterface printFromHeadWithNode:headNode printPrefixText:@&quot;单链表为&quot;];</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2022-11-23 16:46:42.287876+0800 单链表[39960:20772937] 单链表为:1-&gt;2-&gt;3-&gt;5</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>在指定位置插入</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// 单链表：在指定位置插入节点</span><br><span class="line">+ (void)insertNodeAtIndex:(int)index node:(SingleLinkNode *)newNode headNode:(SingleLinkNode *)headNode&#123;</span><br><span class="line">    // 判空处理</span><br><span class="line">    if(!headNode)&#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    // 如果头节点即尾节点</span><br><span class="line">    if (headNode.next == nil)&#123;</span><br><span class="line">        headNode.next = newNode;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        SingleLinkNode * pNode = headNode;</span><br><span class="line">        int i = 1;</span><br><span class="line">        while (i &lt; index &amp;&amp; pNode.next != nil) &#123;</span><br><span class="line">            pNode = pNode.next;</span><br><span class="line">            i ++;</span><br><span class="line">        &#125;</span><br><span class="line">        newNode.next = pNode.next;</span><br><span class="line">        pNode.next = newNode;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>vc实现：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 插入指定位置节点</span><br><span class="line">SingleLinkNode * newIndexNode = [SingleLinkNode constructNodeWithData:@4];</span><br><span class="line">[LinkInterface insertNodeAtIndex:4 node:newIndexNode headNode:headNode];</span><br><span class="line">// 正序打印节点</span><br><span class="line">[LinkInterface printFromHeadWithNode:headNode printPrefixText:@&quot;单链表为&quot;];</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2022-11-23 16:47:38.507939+0800 单链表[40048:20774861] 构造单链表为：:1-&gt;2-&gt;3-&gt;4-&gt;5</span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>删除节点</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// 单链表：删除指定位置节点</span><br><span class="line">+ (void)deleteNodeAtIndex:(int)index headNode:(SingleLinkNode *)headNode&#123;</span><br><span class="line">    // 判空处理</span><br><span class="line">    if(headNode == nil || !headNode.next || index &lt;= 0)&#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,[NSString stringWithFormat:@&quot;没有要删除的第%d个节点&quot;,index]);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    SingleLinkNode * pNode = headNode;</span><br><span class="line">    SingleLinkNode * p = pNode; // 移动指针</span><br><span class="line">    int i = 0;</span><br><span class="line">    while (i &lt; index &amp;&amp; pNode.next != nil) &#123;</span><br><span class="line">        p = pNode;</span><br><span class="line">        pNode = pNode.next;</span><br><span class="line">        i ++;</span><br><span class="line">    &#125;</span><br><span class="line">    if(pNode != nil)&#123;</span><br><span class="line">        p.next = p.next.next;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    NSLog(@&quot;%@&quot;,[NSString stringWithFormat:@&quot;没有要删除的第%d个节点&quot;,index]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>vc实现：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 删除指定位置的节点</span><br><span class="line">[LinkInterface deleteNodeAtIndex:1 headNode:headNode];</span><br><span class="line">// 正序打印节点</span><br><span class="line">[LinkInterface printFromHeadWithNode:headNode printPrefixText:@&quot;单链表为&quot;];</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2022-11-23 16:50:48.638460+0800 单链表[40345:20779532] 单链表为:2-&gt;3-&gt;4-&gt;5</span><br></pre></td></tr></table></figure></div>
+
+<ol start="6">
+<li>查询节点</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 单链表：查询指定位置节点</span><br><span class="line">+ (SingleLinkNode *)queryNodeAtIndex:(int)index headNode:(SingleLinkNode *)headNode&#123;</span><br><span class="line">    // 判空处理</span><br><span class="line">    if (!headNode || !headNode.next) &#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,[NSString stringWithFormat:@&quot;没有查询到的第%d个节点&quot;,index]);</span><br><span class="line">        return nil;</span><br><span class="line">    &#125;</span><br><span class="line">    SingleLinkNode * pNode = headNode.next;</span><br><span class="line">    int i = 1;</span><br><span class="line">    while (i &lt; index &amp;&amp; pNode != nil) &#123;</span><br><span class="line">        pNode = pNode.next;</span><br><span class="line">        i ++;</span><br><span class="line">    &#125;</span><br><span class="line">    if(pNode != nil)&#123;</span><br><span class="line">        return pNode;</span><br><span class="line">    &#125;</span><br><span class="line">    NSLog(@&quot;%@&quot;,[NSString stringWithFormat:@&quot;没有查询到的第%d个节点&quot;,index]);</span><br><span class="line">    return nil;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>vc实现：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 查询指定位置的节点</span><br><span class="line">[LinkInterface queryNodeAtIndex:3 headNode:headNode];</span><br><span class="line">// 正序打印节点</span><br><span class="line">[LinkInterface printFromHeadWithNode:headNode printPrefixText:@&quot;单链表为&quot;];</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2022-11-23 16:55:10.563221+0800 单链表[40694:20785389] 单链表为:2-&gt;3-&gt;4-&gt;5</span><br></pre></td></tr></table></figure></div>
+
+<ol start="7">
+<li>遍历链表</li>
+</ol>
+<ul>
+<li>正向遍历</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 正序遍历链表</span><br><span class="line">+ (NSArray *)printFromHeadWithNode:(SingleLinkNode *)headNode printPrefixText:(NSString *)text&#123;</span><br><span class="line">    // 判空处理</span><br><span class="line">    if (!headNode || !headNode.next) &#123;</span><br><span class="line">        return nil;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 设置偏移指针</span><br><span class="line">    SingleLinkNode * pNode = headNode.next;</span><br><span class="line">    NSMutableArray * dataArr = [NSMutableArray array];</span><br><span class="line">    while (pNode != nil) &#123;</span><br><span class="line">        [dataArr addObject:pNode.data];</span><br><span class="line">        pNode = pNode.next; // 指向下一个节点</span><br><span class="line">    &#125;</span><br><span class="line">    NSLog(@&quot;%@:%@&quot;,text,[dataArr componentsJoinedByString:@&quot;-&gt;&quot;]);</span><br><span class="line">    return dataArr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>vc实现：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 正序打印节点</span><br><span class="line">[LinkInterface printFromHeadWithNode:headNode printPrefixText:@&quot;单链表为&quot;];</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2022-11-23 16:55:10.563221+0800 单链表[40694:20785389] 单链表为:2-&gt;3-&gt;4-&gt;5</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>反向遍历</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// 单链表：倒叙遍历链表</span><br><span class="line">+ (NSMutableArray *)printFromTailWithNode:(SingleLinkNode *)headNode&#123;</span><br><span class="line">    // 判空处理</span><br><span class="line">    if(!headNode || !headNode.next)&#123;</span><br><span class="line">        return nil;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 遍历指针偏移，每次遍历完一次后，要记录最后一个节点，然后将遍历指针移动到开头重新开始，与记录的最后一个节点作比较</span><br><span class="line">    NSMutableArray * items = [NSMutableArray array];</span><br><span class="line">    SingleLinkNode * pNode = headNode;</span><br><span class="line">    SingleLinkNode * lastNode = nil;</span><br><span class="line">    while (pNode != nil &amp;&amp; lastNode != pNode) &#123;</span><br><span class="line">        pNode = pNode.next;</span><br><span class="line">        if (pNode.next == nil || pNode.next == lastNode) &#123;</span><br><span class="line">            lastNode = pNode;</span><br><span class="line">            pNode = headNode;</span><br><span class="line">            [items addObject:lastNode.data];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return items;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>vc实现：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 倒叙打印节点</span><br><span class="line">NSMutableArray * tailArr = [LinkInterface printFromTailWithNode:headNode];</span><br><span class="line">NSLog(@&quot;tail:%@&quot;,tailArr);</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">2022-11-23 17:00:09.521947+0800 单链表[41100:20791055] tail:(</span><br><span class="line">    5,</span><br><span class="line">    4,</span><br><span class="line">    3,</span><br><span class="line">    2</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+
+<ol start="8">
+<li>反转链表</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// 单链表：反转链表</span><br><span class="line">+ (SingleLinkNode *)reverseWithNode:(SingleLinkNode *)headNode&#123;</span><br><span class="line">    // 判空处理</span><br><span class="line">    if(!headNode|| !headNode.next)&#123;</span><br><span class="line">        return nil;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 采用头节点插入的方式反转</span><br><span class="line">    // 定义遍历指针</span><br><span class="line">    SingleLinkNode * p = headNode.next;</span><br><span class="line">    // 定义反转后头节点</span><br><span class="line">    SingleLinkNode * newHead = [[SingleLinkNode alloc] init];</span><br><span class="line">    while (p != nil) &#123;</span><br><span class="line">        // 记录下一个节点用来往下循环</span><br><span class="line">        SingleLinkNode * temp = p.next;</span><br><span class="line">        </span><br><span class="line">        // 替换当前节点的next为新头next</span><br><span class="line">        p.next = newHead.next;</span><br><span class="line">        // 更新新头节点指向当前节点即可反转</span><br><span class="line">        newHead.next = p;</span><br><span class="line">        </span><br><span class="line">        // 移动p指针</span><br><span class="line">        p = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    return newHead;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>vc实现：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 反转链表</span><br><span class="line">SingleLinkNode * reverseNode = [LinkInterface reverseWithNode:headNode];</span><br></pre></td></tr></table></figure></div>
+
+<ol start="9">
+<li>合并有序链表（有问题，排序不对）</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">// 两个有序链表合并成一个新的有序链表</span><br><span class="line">+ (SingleLinkNode *)combineWithNode:(SingleLinkNode *)headNode otherNode:(SingleLinkNode *)otherNode&#123;</span><br><span class="line">    // 判空处理</span><br><span class="line">    if(!headNode || !headNode.next)&#123;</span><br><span class="line">        return otherNode;</span><br><span class="line">    &#125;</span><br><span class="line">    if(!otherNode || !otherNode.next)&#123;</span><br><span class="line">        return headNode;</span><br><span class="line">    &#125;</span><br><span class="line">    // 一起遍历</span><br><span class="line">    SingleLinkNode * p1 = headNode.next;</span><br><span class="line">    SingleLinkNode * p2 = otherNode.next;</span><br><span class="line">    // 定义一个新头节点</span><br><span class="line">    SingleLinkNode * newHead = [[SingleLinkNode alloc] init];</span><br><span class="line">    while (p1 != nil &amp;&amp; p2 != nil) &#123;</span><br><span class="line">        if([p1.data integerValue] &gt; [p2.data integerValue])&#123;</span><br><span class="line">            // 移动otherNode节点指向otherNode当前节点的下一个节点</span><br><span class="line">            otherNode.next = p2.next;</span><br><span class="line">            // 将当前otherNode节点链表断掉</span><br><span class="line">            p2.next = nil;</span><br><span class="line">            // 将当前otherNode节点插入到新节点newHead链表的尾部</span><br><span class="line">            [self insertNewNodeToTail:p2 headNode:newHead];</span><br><span class="line">            // 获取otherNode链表的下一个节点</span><br><span class="line">            p2 = otherNode.next;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            headNode.next = p1.next;</span><br><span class="line">            p1.next = nil;</span><br><span class="line">            [self insertNewNodeToTail:p1 headNode:newHead];</span><br><span class="line">            p1 = headNode.next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 处理没扫描结束的链表</span><br><span class="line">    while (p1 != nil) &#123;</span><br><span class="line">        headNode.next = p1.next;</span><br><span class="line">        p1.next = nil;</span><br><span class="line">        [self insertNewNodeToTail:p1 headNode:newHead];</span><br><span class="line">        p1 = headNode.next;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    while (p2 != nil) &#123;</span><br><span class="line">        otherNode.next = p2.next;</span><br><span class="line">        p2.next = nil;</span><br><span class="line">        [self insertNewNodeToTail:p2 headNode:newHead];</span><br><span class="line">        p2 = otherNode.next;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return newHead;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="10">
+<li>判断两个链表是否相交</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">// 单链表：判断两个链表是否相交</span><br><span class="line">+ (BOOL)intersectWithNode:(SingleLinkNode *)headNode otherNode:(SingleLinkNode *)otherNode&#123;</span><br><span class="line">    // 判空处理</span><br><span class="line">    if(!headNode || !headNode.next || !otherNode || !otherNode.next)&#123;</span><br><span class="line">        return NO;</span><br><span class="line">    &#125;</span><br><span class="line">    // 思路：分别获取两个链表的长度，判断谁的链表更长，链表更长的先走完相差的步数，然后再齐步走</span><br><span class="line">    SingleLinkNode * p1 = headNode.next;</span><br><span class="line">    SingleLinkNode * p2 = otherNode.next;</span><br><span class="line">    </span><br><span class="line">    int L1 = 1;</span><br><span class="line">    int L2 = 1;</span><br><span class="line">    while (p1 != nil) &#123;</span><br><span class="line">        L1 ++;</span><br><span class="line">        p1 = p1.next;</span><br><span class="line">    &#125;</span><br><span class="line">    while (p2 != nil) &#123;</span><br><span class="line">        L2 ++;</span><br><span class="line">        p2 = p2.next;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    p1 = headNode.next; // 将p1遍历指针移动到首节点</span><br><span class="line">    p2 = headNode.next; // 将p2遍历指针移动到首节点</span><br><span class="line">    </span><br><span class="line">    int i = 0;</span><br><span class="line">    if (L1 &gt; L2) &#123;</span><br><span class="line">        while (i &lt; L1 - L2 &amp;&amp; p1 != nil) &#123; // p1先走</span><br><span class="line">            p1 = p1.next;</span><br><span class="line">            i ++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        while (i &lt; L2 - L1 &amp;&amp; p2 != nil) &#123; // p2先走</span><br><span class="line">            p2 = p2.next;</span><br><span class="line">            i ++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // p1、p2齐步走</span><br><span class="line">    if(i == ABS(L1 - L2))&#123;</span><br><span class="line">        while (p1 != nil &amp;&amp; p2 != nil) &#123;</span><br><span class="line">            if(p1.next == p2.next) return YES;</span><br><span class="line">            p1 = p1.next;</span><br><span class="line">            p2 = p2.next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return NO;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="11">
+<li>判断链表是否头程还，如果成环，求出环的入口节点</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// 单链表：判断链表是否构成环，如果成环，求出环的入口节点</span><br><span class="line">+ (SingleLinkNode *)circleWithNode:(SingleLinkNode *)headNode&#123;</span><br><span class="line">    // 判空处理</span><br><span class="line">    if(!headNode || !headNode.next)&#123;</span><br><span class="line">        return nil;</span><br><span class="line">    &#125;</span><br><span class="line">    // 思路：采用快慢指针</span><br><span class="line">    // 快指针先走两步，满指针走一步，如果成环，必然重合。</span><br><span class="line">    // 走到第一次重合的地点后，重新设置一个指针p指向头节点，并与慢节点同步伐齐步走</span><br><span class="line">    // 走到第二次相遇的地方，即为构成环的节点</span><br><span class="line">    SingleLinkNode * quick = headNode.next;</span><br><span class="line">    SingleLinkNode * slow = headNode.next;</span><br><span class="line">    SingleLinkNode * p = headNode.next;</span><br><span class="line">    while (quick != nil &amp;&amp; slow != nil) &#123;</span><br><span class="line">        quick = quick.next.next;</span><br><span class="line">        slow = slow.next;</span><br><span class="line">        if (quick == slow) &#123; // 第一次重合，结束循环</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    while (p != nil &amp;&amp; slow != nil) &#123;</span><br><span class="line">        p = p.next;</span><br><span class="line">        slow = slow.next;</span><br><span class="line">        if (p == slow) &#123; // 第二次重合，找到成环的入口节点</span><br><span class="line">            return p;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return nil;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="双向链表"><a href="#双向链表" class="headerlink" title="双向链表"></a>双向链表</h1><p>双向链表：每一个节点前后指针域都和他的上一个节点互相指向，尾节点的next指向nil，首节点的pre指向nil</p>
+<ol>
+<li>定义节点</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@interface DoubleLinkNode : NSObject</span><br><span class="line">@property (nonatomic,strong)id data; // 数据域</span><br><span class="line">@property (nonatomic,weak,nullable)DoubleLinkNode * pre; // 前驱指针域（防止循环引用）</span><br><span class="line">@property (nonatomic,strong,nullable)DoubleLinkNode * next; // 后继指针域</span><br><span class="line">+ (instancetype)constructNodeWithData:(id)data;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation DoubleLinkNode</span><br><span class="line">+ (instancetype)constructNodeWithData:(id)data&#123;</span><br><span class="line">    DoubleLinkNode * node = [[DoubleLinkNode alloc] init];</span><br><span class="line">    node.data = data;</span><br><span class="line">    node.pre = nil;</span><br><span class="line">    node.next = nil;</span><br><span class="line">    return node;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>构建一个双向链表</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 构造一个双向链表</span><br><span class="line">DoubleLinkNode * head = [[DoubleLinkNode alloc] init];</span><br><span class="line">DoubleLinkNode * node1 = [DoubleLinkNode constructNodeWithData:@1];</span><br><span class="line">DoubleLinkNode * node2 = [DoubleLinkNode constructNodeWithData:@2];</span><br><span class="line">head.next = node1;</span><br><span class="line">node1.pre = head;</span><br><span class="line">node1.next = node2;</span><br><span class="line">node2.pre = node1;</span><br><span class="line">[LinkInterface printDoubleFromHeadWithNode:head printPrefixText:@&quot;双链表为&quot;];</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2022-11-24 13:38:50.045234+0800 单链表[50291:20937675] 双链表为:1⇄2</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>在头部插入节点</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 双向链表：向头部插入节点</span><br><span class="line">+ (void)insertDoubleNewNodeToHead:(DoubleLinkNode *)newNode headNode:(DoubleLinkNode *)headNode&#123;</span><br><span class="line">    // 判空处理</span><br><span class="line">    if(!headNode)&#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    // 如果只有一个头节点</span><br><span class="line">    if(headNode.next == nil)&#123;</span><br><span class="line">        headNode.next = newNode;</span><br><span class="line">        newNode.pre = headNode;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        newNode.next = headNode.next; // 当前节点的后继指向头节点的后继</span><br><span class="line">        headNode.next.pre = newNode; // 头结点后继的前驱指向当前节点</span><br><span class="line">        </span><br><span class="line">        newNode.pre = headNode; // 当前节点的前驱指向头结点</span><br><span class="line">        headNode.next = newNode; // 头结点的后继指向当前节点</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>vc实现</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 在头部插入节点</span><br><span class="line">DoubleLinkNode * node0 = [DoubleLinkNode constructNodeWithData:@0];</span><br><span class="line">[LinkInterface insertDoubleNewNodeToHead:node0 headNode:head];</span><br><span class="line">[LinkInterface printDoubleFromHeadWithNode:head printPrefixText:@&quot;双链表为&quot;];</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2022-11-24 13:53:01.240605+0800 单链表[51484:20953802] 双链表为:0⇄1⇄2</span><br></pre></td></tr></table></figure></div>
+
+<ol start="4">
+<li>在尾部插入节点</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// 双向链表：向尾部插入节点</span><br><span class="line">+ (void)insertDoubleNewNodeToTail:(DoubleLinkNode *)newNode headNode:(DoubleLinkNode *)headNode&#123;</span><br><span class="line">    // 判空处理</span><br><span class="line">    if(!headNode)&#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    // 设置偏移指针</span><br><span class="line">    DoubleLinkNode * pNode = headNode.next;</span><br><span class="line">    while (pNode.next != nil) &#123;</span><br><span class="line">        pNode = pNode.next;</span><br><span class="line">    &#125;</span><br><span class="line">    pNode.next = newNode;</span><br><span class="line">    newNode.pre = pNode;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>vc实现</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 在尾部插入节点</span><br><span class="line">DoubleLinkNode * node4 = [DoubleLinkNode constructNodeWithData:@4];</span><br><span class="line">[LinkInterface insertDoubleNewNodeToTail:node4 headNode:head];</span><br><span class="line">[LinkInterface printDoubleFromHeadWithNode:head printPrefixText:@&quot;双向链表为&quot;];</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2022-11-24 13:59:04.853558+0800 单链表[52038:20962187] 双向链表为:0⇄1⇄2⇄4</span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>在指定位置插入节点</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// 双向链表：在指定位置插入节点</span><br><span class="line">+(void)insertDoubleNewNodeToIndex:(int)index newNode:(DoubleLinkNode *)newNode headNode:(DoubleLinkNode *)headNode&#123;</span><br><span class="line">    if(!headNode)&#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    // 如果头结点即尾节点</span><br><span class="line">    if (headNode.next == nil)&#123;</span><br><span class="line">        headNode.next = newNode;</span><br><span class="line">        newNode.pre = headNode;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    // 如果头节点即尾节点</span><br><span class="line">    if (headNode.next == nil)&#123;</span><br><span class="line">        headNode.next = newNode;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        // 设置偏移指针</span><br><span class="line">        DoubleLinkNode * pNode = headNode.next;</span><br><span class="line">        int i = 1;</span><br><span class="line">        while (i &lt; index &amp;&amp; pNode.next != nil) &#123;</span><br><span class="line">            pNode = pNode.next;</span><br><span class="line">            i ++;</span><br><span class="line">        &#125;</span><br><span class="line">        newNode.next = pNode.next;</span><br><span class="line">        pNode.next.pre = newNode;</span><br><span class="line">        newNode.pre = pNode;</span><br><span class="line">        pNode.next = newNode;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>vc实现</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 在指定位置插入节点</span><br><span class="line">DoubleLinkNode * node3 = [DoubleLinkNode constructNodeWithData:@3];</span><br><span class="line">[LinkInterface insertDoubleNewNodeToIndex:3 newNode:node3 headNode:head];</span><br><span class="line">[LinkInterface printDoubleFromHeadWithNode:head printPrefixText:@&quot;双向链表为&quot;];</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2022-11-24 14:08:41.539116+0800 单链表[52850:20973592] 双向链表为:0⇄1⇄2⇄3⇄4</span><br></pre></td></tr></table></figure></div>
+
+<ol start="6">
+<li>删除指定位置节点</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// 双向链表：删除指定位置节点</span><br><span class="line">+ (DoubleLinkNode *)deleteDoubleNodeAtIndex:(int)index headNode:(DoubleLinkNode *)headNode&#123;</span><br><span class="line">    // 判空处理</span><br><span class="line">    if(!headNode)&#123;</span><br><span class="line">        return nil;</span><br><span class="line">    &#125;</span><br><span class="line">    // 设置偏移指针</span><br><span class="line">    DoubleLinkNode * pNode = headNode.next;</span><br><span class="line">    int i = 1;</span><br><span class="line">    while (i &lt; index &amp;&amp; pNode.next != nil) &#123;</span><br><span class="line">        pNode = pNode.next;</span><br><span class="line">        i ++;</span><br><span class="line">    &#125;</span><br><span class="line">    if(i == index)&#123;</span><br><span class="line">        pNode.pre.next = pNode.next;</span><br><span class="line">        pNode.next.pre = pNode.pre;</span><br><span class="line">        return pNode;</span><br><span class="line">    &#125;</span><br><span class="line">    return nil;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>vc实现</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 删除指定位置节点</span><br><span class="line">[LinkInterface deleteDoubleNodeAtIndex:1 headNode:head];</span><br><span class="line">[LinkInterface printDoubleFromHeadWithNode:head printPrefixText:@&quot;双向链表为&quot;];</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2022-11-24 14:15:01.766124+0800 单链表[53365:20980542] 双向链表为:1⇄2⇄3⇄4</span><br></pre></td></tr></table></figure></div>
+
+<ol start="7">
+<li>遍历并打印链表</li>
+</ol>
+<pre><code>// 双向链表：遍历并打印链表
++ (void)printDoubleFromHeadWithNode:(DoubleLinkNode *)headNode printPrefixText:(NSString *)text&#123;
+    if(!headNode)&#123;
+        return;
+    &#125;
+    DoubleLinkNode * pNode = headNode.next;
+    NSMutableArray * items = [NSMutableArray array];
+    while (pNode != nil) &#123;
+        [items addObject:pNode.data];
+        pNode = pNode.next;
+    &#125;
+    NSLog(@&quot;%@:%@&quot;,text,[items componentsJoinedByString:@&quot;⇄&quot;]);
+&#125;
+</code></pre>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC数据结构01：链表的探索</li>
+        <li>Post author：The Redefine Team</li>
+        <li>Create time：2020-08-09 22:39:22</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2020/08/09/数据结构和算法/OC数据结构01：链表的探索/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%8E%A2%E7%B4%A2%E7%AF%87/">#OC-数据结构探索篇</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2020/08/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/OC%E7%AE%97%E6%B3%9501%EF%BC%9A%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC算法01：冒泡排序探索</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2020/08/09/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/OC%E7%AE%97%E6%B3%9503%EF%BC%9A%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC算法03：斐波那契数列探索</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC数据结构01：链表的探索</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%BA%E5%BA%8F%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="nav-text">顺序存储结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E5%BC%8F%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84-%E9%93%BE%E8%A1%A8"><span class="nav-text">链式存储结构-链表</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8"><span class="nav-text">链表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8%E7%9A%84%E7%BB%84%E6%88%90"><span class="nav-text">链表的组成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-text">链表的分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-text">链表的优缺点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E7%BB%84-%E5%92%8C-%E9%93%BE%E8%A1%A8-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">数组 和 链表 的区别？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%A3%80%E6%B5%8B%E5%8D%95%E9%93%BE%E8%A1%A8%E4%B8%AD%E6%98%AF%E5%90%A6%E6%9C%89%E7%8E%AF%EF%BC%9F"><span class="nav-text">如何检测单链表中是否有环？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%95%E5%90%91%E9%93%BE%E8%A1%A8%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-text">单向链表代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8"><span class="nav-text">双向链表</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">The Redefine Team</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2022/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="The Redefine Team">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/06/oc学习/oc学习04：json和xml数据解析/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC学习04：JSON和XML数据解析">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/03/06/OC学习/OC学习04：JSON和XML数据解析/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="Theme Redefine">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC学习04：JSON和XML数据解析">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC学习04：JSON和XML数据解析 -
+        
+        Theme Redefine
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/redefine-avatar.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"Theme Redefine","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":false,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Theme Redefine
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC学习04：JSON和XML数据解析</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/redefine-avatar.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">The Redefine Team</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-03-06 14:09:53</span>
+        <span class="mobile">2023-03-06 14:09</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-06 18:31:26</span>
+            <span class="mobile">2023-03-06 18:31</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><ul>
+<li><p>在 <code>iOS</code> 开发中，常见的数据传输格式有两种：<code>JSON和XML</code>。</p>
+</li>
+<li><p>服务器返回客户端的数据，一般都是 <code>JSON格式或XML格式（文件下载除外）</code></p>
+</li>
+<li><p><code>JSON</code> 由于体积小、传输快速等优点，逐渐成为了 <code>主流的数据传输格式</code>。</p>
+</li>
+</ul>
+<h1 id="JSON"><a href="#JSON" class="headerlink" title="JSON"></a>JSON</h1><p>在 iOS 中，常见解析方案有以下几种：</p>
+<ul>
+<li><p>第三方框架：JSONKit、SBJson、TouchJSON（性能从左到右，越来越差）</p>
+</li>
+<li><p>性能最好的是使用苹果原生的框架： <code>NSJSONSerialization</code></p>
+</li>
+<li><p>JSON格式很想OC中的数组和字典，key必须用双引号</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;name&quot;:&quot;张三&quot;,&quot;age&quot;:22&#125;、[&#123;&quot;name&quot;:&quot;张三&quot;,&quot;age&quot;:22&#125;,&#123;&quot;name&quot;:&quot;李四&quot;,&quot;age&quot;:22&#125;]</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="JSON格式"><a href="#JSON格式" class="headerlink" title="JSON格式"></a>JSON格式</h2><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061810849.png"
+                     
+                ></p>
+<h2 id="JSON-转-OC"><a href="#JSON-转-OC" class="headerlink" title="JSON 转 OC"></a>JSON 转 OC</h2><ul>
+<li>第一个参数：要解析的JSON数据，是NSData类型也就是二进制数据</li>
+<li>第二个参数：解析JSON的可选配置参数<ul>
+<li>NSJSONReadingMutableContainers 解析出来的字典和数组是可变的</li>
+<li>NSJSONReadingFragmentsAllowed 解析出来的对象中的字符串是可变的</li>
+<li>NSJSONReadingMutableLeaves 被解析的数据如果既不是字典也不是数组，那么就使用这个</li>
+</ul>
+</li>
+<li>第三个参数：错误信息</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSDictionary * dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&amp;error];</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="OC-转-JSON"><a href="#OC-转-JSON" class="headerlink" title="OC 转 JSON"></a>OC 转 JSON</h2><ul>
+<li>第一个参数：要转换成JSON数据的OC对象，这里是一个字典</li>
+<li>第二个参数：NSJSONWritingPrettyPrinted 对转换之后的JSON对象进行排版，无意义</li>
+<li>第三个参数：错误信息</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&amp;error];</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="XML"><a href="#XML" class="headerlink" title="XML"></a>XML</h1><ul>
+<li>XML 可扩展标记语言，是一种数据交互格式，也叫XML文档</li>
+<li>XML 被设计用来传输和存储数据</li>
+</ul>
+<h2 id="构成"><a href="#构成" class="headerlink" title="构成"></a>构成</h2><p>常见的XML文档由三部分组成</p>
+<ul>
+<li>文档声明</li>
+</ul>
+<p>在XML文档最前面，必须编写一个文档声明，用来声明XML文档的类型</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 最简单的声明</span><br><span class="line">&lt;?xml version=&quot;1.0&quot; ?&gt;</span><br><span class="line"></span><br><span class="line">// 用encoding属性说明文档的字符编码</span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>元素</p>
+<ul>
+<li>一个元素包括了 <code>开始标签和结束标签</code>，</li>
+<li>有内容的元素 <code>&lt;name&gt;Tom&lt;/name&gt;</code>；没内容的元素 <code>&lt;from&gt;&lt;/from&gt;</code>，可简写成 <code>&lt;from/&gt;</code></li>
+<li>元素可嵌套其他元素，不可出现交叉嵌套</li>
+</ul>
+</li>
+<li><p>属性</p>
+</li>
+</ul>
+<p>一个元素最多可以拥有多个属性，属性值必须用双引号 <code>&quot; &quot;</code> 或 单引号 <code>&#39; &#39;</code> 括住</p>
+<ul>
+<li>示例</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;root&gt;</span><br><span class="line">    &lt;person id=&quot;p1&quot;&gt;</span><br><span class="line">        &lt;name&gt;Tom&lt;/name&gt;</span><br><span class="line">        &lt;age&gt;24&lt;/age&gt;</span><br><span class="line">    &lt;/person&gt;</span><br><span class="line">&lt;/root&gt;</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="XML-解析的方法"><a href="#XML-解析的方法" class="headerlink" title="XML 解析的方法"></a>XML 解析的方法</h2><p>要想从XML中提取信息，就得解析XML，目前针对XML的解析有两种方式：</p>
+<ul>
+<li>SAX：从根元素开始，按照顺序一个元素一个元素的往下解析，可用于解析大、小文件</li>
+<li>DOM：一次性将整个XML文档加载到内存中，适合较小的文件</li>
+</ul>
+<p><code>iOS</code> 中解析 <code>XML</code> 有两种：</p>
+<ul>
+<li><p>苹果原生：使用 <code>NSXMLParse</code>，SAX方式解析，使用简答</p>
+</li>
+<li><p>第三方框架：<code>libxml2、GDataXML</code></p>
+<ul>
+<li><code>libxml2</code> 纯 c 语音，默认包含在iOS SDK中，同时支持DOM和SAX方式解析</li>
+<li><code>GDataXMLDOM</code> 解析，由 <code>google</code> 基于 <code>libxml2</code> 开发</li>
+</ul>
+</li>
+</ul>
+<p>解析XML大文件建议用：<code>NSXMLParse、libxml2</code><br>解析XML小文件上述三种都可以</p>
+<h2 id="NSXMLParse-使用"><a href="#NSXMLParse-使用" class="headerlink" title="NSXMLParse 使用"></a>NSXMLParse 使用</h2><ul>
+<li><p>添加NSXMLParserDelegate协议</p>
+</li>
+<li><p>获取XML文件，初始化NSXMLParser，并开启解析</p>
+</li>
+<li><p>实现协议中的方法</p>
+</li>
+</ul>
+<p><strong>XMLElement 文件</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">@interface XMLElement : NSObject</span><br><span class="line">// 元素名称</span><br><span class="line">@property (nonatomic,strong)NSString *name;</span><br><span class="line">//元素节点文本</span><br><span class="line">@property (nonatomic,strong)NSMutableString *text;</span><br><span class="line">@property (nonatomic,strong)NSDictionary *attribute;</span><br><span class="line">@property (nonatomic,strong)XMLElement *parent;</span><br><span class="line">@property (nonatomic,strong)NSMutableArray&lt;XMLElement *&gt; *childElement;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">🔽</span><br><span class="line"></span><br><span class="line">#import &quot;XMLElement.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation XMLElement</span><br><span class="line">- (instancetype)init&#123;</span><br><span class="line">    self = [super init];</span><br><span class="line">    if (self) &#123;</span><br><span class="line">        _text=[[NSMutableString alloc]init];</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line">- (NSMutableArray&lt;XMLElement *&gt; *)childElement&#123;</span><br><span class="line">    if (!_childElement) &#123;</span><br><span class="line">        _childElement = [[NSMutableArray alloc]init];</span><br><span class="line">    &#125;</span><br><span class="line">    return _childElement;</span><br><span class="line">&#125;</span><br><span class="line">- (NSString *)description&#123;</span><br><span class="line">    NSDictionary *dic = [self convertToDic];</span><br><span class="line">    if ([NSJSONSerialization isValidJSONObject:dic]) &#123;</span><br><span class="line">        NSError *error;</span><br><span class="line">        NSData *jsonData=[NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&amp;error];</span><br><span class="line">        if (error) &#123;</span><br><span class="line">            return @&quot;&#123;&#125;&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        if (jsonData) &#123;</span><br><span class="line">            @try &#123;</span><br><span class="line">                NSString *jsonStr = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];</span><br><span class="line">                return jsonStr;</span><br><span class="line">            &#125; @catch (NSException *exception) &#123;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return @&quot;&#123;&#125;&quot;;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">- (NSDictionary *)convertToDic&#123;</span><br><span class="line">    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];</span><br><span class="line">    if (self.name) &#123;</span><br><span class="line">        dic[self.name]=self.text;</span><br><span class="line">    &#125;</span><br><span class="line">    if (self.attribute &amp;&amp; self.attribute.count &gt; 0) &#123;</span><br><span class="line">        [dic addEntriesFromDictionary:self.attribute];</span><br><span class="line">    &#125;</span><br><span class="line">    if (self.childElement &amp;&amp; self.childElement.count &gt; 0) &#123;</span><br><span class="line">        NSMutableArray *child=[[NSMutableArray alloc]init];</span><br><span class="line">        for (XMLElement *element in self.childElement) &#123;</span><br><span class="line">            NSDictionary *childDic = [element convertToDic];</span><br><span class="line">            if (element.childElement &amp;&amp; element.childElement.count &gt; 0) &#123;</span><br><span class="line">                [child addObject:childDic];</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                [dic addEntriesFromDictionary:childDic];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (child.count &gt; 0) &#123;</span><br><span class="line">            dic[@&quot;child&quot;]=child;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return dic;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>XMLParserManager 文件</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line">#import &quot;XMLElement.h&quot;</span><br><span class="line"></span><br><span class="line">NS_ASSUME_NONNULL_BEGIN</span><br><span class="line"></span><br><span class="line">typedef void(^ParserXMLCompletion) (BOOL success, XMLElement * _Nullable data,NSError * _Nullable error);</span><br><span class="line">@interface XMLParserManager : NSObject</span><br><span class="line">@property(nonatomic,copy)ParserXMLCompletion completion;</span><br><span class="line">- (void)parserXMLWithUrl:(NSURL *)url completion:(ParserXMLCompletion)completion;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">🔽</span><br><span class="line"></span><br><span class="line">#import &quot;XMLParserManager.h&quot;</span><br><span class="line"></span><br><span class="line">@interface XMLParserManager()&lt;NSXMLParserDelegate&gt;</span><br><span class="line">@property (nonatomic,strong)NSXMLParser *parser;</span><br><span class="line">@property (nonatomic,strong)XMLElement *rootElement;</span><br><span class="line">@property (nonatomic,strong)XMLElement *currentElement;</span><br><span class="line">@end</span><br><span class="line">@implementation XMLParserManager</span><br><span class="line">- (void)parserXMLWithUrl:(NSURL *)url completion:(ParserXMLCompletion)completion&#123;</span><br><span class="line">    if (url) &#123;</span><br><span class="line">        self.completion = completion;</span><br><span class="line">        __weak typeof(self) weakSelf = self;</span><br><span class="line">        NSInputStream *fileInput=[[NSInputStream alloc] initWithURL:url];</span><br><span class="line">        // 创建一个解析器</span><br><span class="line">        _parser = [[NSXMLParser alloc] initWithStream:fileInput];</span><br><span class="line">        // 设置代理</span><br><span class="line">        _parser.delegate = self;</span><br><span class="line">        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^&#123;</span><br><span class="line">            __strong typeof(weakSelf) strongSelf = weakSelf;</span><br><span class="line">            // 开始解析</span><br><span class="line">            [strongSelf.parser parse];</span><br><span class="line">            // 解析错误</span><br><span class="line">            if (weakSelf.parser.parserError) &#123;</span><br><span class="line">                dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">                    if (completion) &#123;</span><br><span class="line">                        completion(NO,nil,strongSelf.parser.parserError);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 文档开始</span><br><span class="line">-(void)parserDidStartDocument:(NSXMLParser *)parser&#123;</span><br><span class="line">    self.rootElement = nil;</span><br><span class="line">    self.currentElement = nil;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line"> 开始解析某个节点</span><br><span class="line"> parser xml对象</span><br><span class="line"> elementName 标签</span><br><span class="line"> namespaceURI 命名控件指向的链接</span><br><span class="line"> qName 命名控件名称</span><br><span class="line"> attributeDict 节点的所有属性</span><br><span class="line"> */</span><br><span class="line">-(void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary&lt;NSString *,NSString *&gt; *)attributeDict&#123;</span><br><span class="line"></span><br><span class="line">    if (!self.rootElement) &#123;</span><br><span class="line">        self.rootElement = [[XMLElement alloc]init];</span><br><span class="line">        self.currentElement = self.rootElement;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        XMLElement *element = [[XMLElement alloc]init];</span><br><span class="line">        // 父节点</span><br><span class="line">        element.parent = self.currentElement;</span><br><span class="line">        // 当前元素的子节点</span><br><span class="line">        [self.currentElement.childElement addObject:element];</span><br><span class="line">        element.name = elementName;</span><br><span class="line">        // 更换当前元素</span><br><span class="line">        self.currentElement = element;</span><br><span class="line">    &#125;</span><br><span class="line">    // 元素名和属性</span><br><span class="line">    self.currentElement.name = elementName;</span><br><span class="line">    self.currentElement.attribute = attributeDict;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 当解析器找到开始标记和结束标记之间的字符时，调用这个方法解析当前节点的所有字符</span><br><span class="line">- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string&#123;</span><br><span class="line">    // 获取当前元素的内容</span><br><span class="line">    [self.currentElement.text appendString:string];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 结束解析</span><br><span class="line">-(void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName&#123;</span><br><span class="line">    self.currentElement = self.currentElement.parent;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 文档结束</span><br><span class="line">-(void)parserDidEndDocument:(NSXMLParser *)parser&#123;</span><br><span class="line">    __weak typeof(self) weakSelf = self;</span><br><span class="line">    if (self &amp;&amp; self.completion) &#123;</span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">            __strong typeof(weakSelf) strongSelf = weakSelf;</span><br><span class="line">            strongSelf.completion(YES, strongSelf.rootElement, nil);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 解析失败</span><br><span class="line">- (void)parser:(NSXMLParser *)parser validationErrorOccurred:(NSError *)validationError&#123;</span><br><span class="line">    if (self.completion) &#123;</span><br><span class="line">        __weak typeof(self) weakSelf = self;</span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">            __strong typeof(weakSelf) strongSelf = weakSelf;</span><br><span class="line">            strongSelf.completion(NO, nil,validationError);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>VC 调用</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ViewController.h&quot;</span><br><span class="line">#import &quot;XMLParserManager.h&quot;</span><br><span class="line"></span><br><span class="line">@interface ViewController ()</span><br><span class="line">@property (nonatomic,strong)XMLParserManager *manager;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">-(void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event&#123;</span><br><span class="line">    [self parserXML];</span><br><span class="line">&#125;</span><br><span class="line">-(void)parserXML&#123;</span><br><span class="line">    NSString *path = [[NSBundle mainBundle]pathForResource:@&quot;xmlText&quot; ofType:@&quot;xml&quot;];</span><br><span class="line">    NSURL *url = [NSURL fileURLWithPath:path];</span><br><span class="line">    _manager=[[XMLParserManager alloc]init];</span><br><span class="line">    [_manager parserXMLWithUrl:url completion:^(BOOL success, XMLElement * _Nullable data, NSError * _Nullable error) &#123;</span><br><span class="line">            if (success) &#123;</span><br><span class="line">                NSLog(@&quot;%@&quot;,data);</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                NSLog(@&quot;error = %@&quot;,error);</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">    NSLog(@&quot;start == &quot;);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="GDataXML-使用"><a href="#GDataXML-使用" class="headerlink" title="GDataXML 使用"></a>GDataXML 使用</h2><ul>
+<li>GDataXMLDocument：xml解析入口</li>
+<li>GdataXMLElement：保存查找的数据</li>
+<li>GdataXMLNode：保存解析的数据</li>
+</ul>
+<p><strong>第一步：集成 GDataXML-HTML</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">target &#x27;XML文件解析&#x27; do</span><br><span class="line">  # Comment the next line if you don&#x27;t want to use dynamic frameworks</span><br><span class="line">  use_frameworks!</span><br><span class="line"></span><br><span class="line">  pod &#x27;GDataXML-HTML&#x27;, &#x27;~&gt; 1.4.1&#x27;</span><br><span class="line"></span><br><span class="line">  # Pods for XML文件解析</span><br><span class="line"></span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+
+<p><strong>第二步：项目中配置</strong></p>
+<ul>
+<li><p>pod 安装 GDataXML</p>
+</li>
+<li><p>选中target -&gt; Build Settings -&gt; Link Binary With Libraried，搜索添加 <code>libxml2</code></p>
+</li>
+<li><p>Header Search Paths 添加 <code>/usr/include/libxml2</code> </p>
+</li>
+<li><p>Other Linker Flags 添加 <code>-lxml2</code></p>
+</li>
+<li><p>引入头文件使用</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure></div>
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC学习04：JSON和XML数据解析</li>
+        <li>Post author：The Redefine Team</li>
+        <li>Create time：2023-03-06 14:09:53</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/03/06/OC学习/OC学习04：JSON和XML数据解析/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">#OC-学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A040%EF%BC%9A%E7%B1%BB-%E7%BB%93%E6%9E%84%E4%BD%93-%E6%9E%9A%E4%B8%BE%EF%BC%9A%E4%B8%8B%E6%A0%87%E5%92%8C%E4%B8%8B%E6%A0%87%E9%87%8D%E8%BD%BD/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习40：类&amp;结构体&amp;枚举：下标和下标重载</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC学习04：JSON和XML数据解析</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JSON"><span class="nav-text">JSON</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON%E6%A0%BC%E5%BC%8F"><span class="nav-text">JSON格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON-%E8%BD%AC-OC"><span class="nav-text">JSON 转 OC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OC-%E8%BD%AC-JSON"><span class="nav-text">OC 转 JSON</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XML"><span class="nav-text">XML</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E6%88%90"><span class="nav-text">构成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XML-%E8%A7%A3%E6%9E%90%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-text">XML 解析的方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NSXMLParse-%E4%BD%BF%E7%94%A8"><span class="nav-text">NSXMLParse 使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GDataXML-%E4%BD%BF%E7%94%A8"><span class="nav-text">GDataXML 使用</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">The Redefine Team</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2022/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+</body>
+</html>
