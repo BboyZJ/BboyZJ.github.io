@@ -1,300 +1,205 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="keywords" content="Hexo Theme Redefine">
-    <meta name="description" content="我是小J，关注我">
-    <meta name="author" content="The Redefine Team">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
-    <!--- Seo Part-->
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>iOS面试题：OC | 张建的博客</title><meta name="author" content="小J,13718004742@163.com"><meta name="copyright" content="小J"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="OC算法1. 冒泡排序1）依次比较相邻两个元素，顺序错误则交换位置；需要两层循环，外层循环控制趟数，内层循环控制比较次数 2）例子： 123456789101112NSMutableArray * arr &#x3D; [NSMutableArray arrayWithArray:@[@&quot;1&quot;,@&quot;3&quot;,@&quot;2&quot;,@&quot;5&quot;,@&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS面试题：OC">
+<meta property="og:url" content="https://www.bboyzj.cn/2023/03/01/%E9%9D%A2%E8%AF%95%E9%A2%98/iOS%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9AOC/index.html">
+<meta property="og:site_name" content="张建的博客">
+<meta property="og:description" content="OC算法1. 冒泡排序1）依次比较相邻两个元素，顺序错误则交换位置；需要两层循环，外层循环控制趟数，内层循环控制比较次数 2）例子： 123456789101112NSMutableArray * arr &#x3D; [NSMutableArray arrayWithArray:@[@&quot;1&quot;,@&quot;3&quot;,@&quot;2&quot;,@&quot;5&quot;,@&amp;">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/25925248/89294514-33bfd280-d692-11ea-9151-7808205ed301.jpg">
+<meta property="article:published_time" content="2023-03-01T08:57:33.000Z">
+<meta property="article:modified_time" content="2023-03-03T06:58:57.000Z">
+<meta property="article:author" content="小J">
+<meta property="article:tag" content="OC-面试题">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/25925248/89294514-33bfd280-d692-11ea-9151-7808205ed301.jpg"><link rel="shortcut icon" href="/BboyZJ.github.io/img/favicon.png"><link rel="canonical" href="https://www.bboyzj.cn/2023/03/01/%E9%9D%A2%E8%AF%95%E9%A2%98/iOS%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9AOC/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/BboyZJ.github.io/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/BboyZJ.github.io/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'iOS面试题：OC',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-03-03 14:58:57'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
     
-    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/01/面试题/ios面试题：oc/"/>
-    <meta name="robots" content="index,follow">
-    <meta name="googlebot" content="index,follow">
-    <meta name="revisit-after" content="1 days">
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="iOS面试题：OC">
-    <meta property="og:description" content="我是小J，关注我">
-    <meta property="og:url" content="https://www.bboyzj.cn2023/03/01/面试题/iOS面试题：OC/">
-    <meta property="og:image" content="/images/redefine-logo.svg">
-    <meta property="og:site_name" content="Theme Redefine">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="iOS面试题：OC">
-    <meta name="twitter:description" content="我是小J，关注我">
-    <meta name="twitter:image" content="/images/redefine-logo.svg">
-    <!--- Icon Part-->
-    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
-    <meta name="theme-color" content="#005080">
-    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
-    
-    <title>
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
         
-            iOS面试题：OC -
-        
-        Theme Redefine
-    </title>
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
     
-<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
-
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
-
-    
-    
-    
-    
-    <script id="hexo-configurations">
-    let REDEFINE = window.REDEFINE || {};
-    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/redefine-avatar.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"Theme Redefine","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":false,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
-    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
-  </script>
-    
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
-
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
-
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
-
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
-
-    
-    
-    
-<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
-</head>
-
-
-<body>
-<div class="progress-bar-container">
-    
-        <span class="scroll-progress-bar"></span>
-    
-
-    
-        <span class="pjax-progress-bar"></span>
-        <span class="pjax-progress-icon">
-            <i class="fa-solid fa-circle-notch fa-spin"></i>
-        </span>
-    
-</div>
-
-
-<main class="page-container">
-
-    
-
-    <div class="page-main-content">
-
-        <div class="page-main-content-top">
-            <header class="menu-wrapper">
-    
-    <div class="menu-content">
-        <div class="left">
-            
-            <a class="logo-title" href="/">
-                
-                Theme Redefine
-                
-            </a>
-        </div>
-
-        <div class="right">
-            <!-- PC -->
-            <div class="pc">
-                <ul class="menu-list">
-                    
-                        
-                            <li class="menu-item">
-                                <!-- Menu -->
-                                <a class="" 
-                                    href="/BboyZJ.github.io/"  >
-                                    
-                                        
-                                            <i class="fa-regular fa-house"></i>
-                                        
-                                        HOME
-                                    
-                                </a>
-                                <!-- Submenu -->
-                                
-                            </li>
-                    
-                    
-                </ul>
-            </div>
-            <!-- Mobile -->
-            <div class="mobile">
-                
-                <div class="icon-item menu-bar">
-                    <div class="menu-bar-middle"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Mobile drawer -->
-    <div class="menu-drawer">
-        <ul class="drawer-menu-list">
-            
-                
-                    <li class="drawer-menu-item flex-center">
-                        <a class="" 
-                        href="/BboyZJ.github.io/"  >
-                             
-                                
-                                    <i class="fa-regular fa-house"></i>
-                                
-                                HOME
-                            
-                        </a>
-                    </li>
-                    <!-- Submenu -->
-                    
-            
-
-        </ul>
-    </div>
-
-    <div class="window-mask"></div>
-
-</header>
-
-
-        </div>
-
-        <div class="page-main-content-middle">
-
-            <div class="main-content">
-
-                
-                    <div class="fade-in-down-animation">
-    <div class="post-page-container">
-        <div class="article-content-container">
-
-            
-            
-                <div class="article-title">
-                    <h1 class="article-title-regular">iOS面试题：OC</h1>
-                </div>
-            
-                
-            
-
-            
-                <div class="article-header">
-                    <div class="avatar">
-                        <img src="/BboyZJ.github.io/images/redefine-avatar.svg">
-                    </div>
-                    <div class="info">
-                        <div class="author">
-                            <span class="name">The Redefine Team</span>
-                            
-                                <span class="author-label">lol</span>
-                            
-                        </div>
-                        <div class="meta-info">
-                            <div class="article-meta-info">
-    <span class="article-date article-meta-item">
-        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="pc">2023-03-01 16:57:33</span>
-        <span class="mobile">2023-03-01 16:57</span>
-        <span class="hover-info">Created</span>
-    </span>
-    
-        <span class="article-date article-meta-item">
-            <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-03 14:58:57</span>
-            <span class="mobile">2023-03-03 14:58</span>
-            <span class="hover-info">Updated</span>
-        </span>
-    
-
-    
-        <span class="article-categories article-meta-item">
-            <i class="fa-regular fa-folders"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
-    
-        <span class="article-tags article-meta-item">
-            <i class="fa-regular fa-tags"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/BboyZJ.github.io/tags/OC-%E9%9D%A2%E8%AF%95%E9%A2%98/">OC-面试题</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
-
-    
-    
-    
-    
-        <span class="article-pv article-meta-item">
-            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
-        </span>
-    
-</div>
-
-                        </div>
-                    </div>
-                </div>
-            
-
-            <div class="article-content markdown-body">
-                <h1 id="OC算法"><a href="#OC算法" class="headerlink" title="OC算法"></a>OC算法</h1><h2 id="1-冒泡排序"><a href="#1-冒泡排序" class="headerlink" title="1. 冒泡排序"></a>1. 冒泡排序</h2><p>1）依次比较相邻两个元素，顺序错误则交换位置；需要两层循环，外层循环控制趟数，内层循环控制比较次数</p>
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/BboyZJ.github.io/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/BboyZJ.github.io/archives/"><div class="headline">Articles</div><div class="length-num">76</div></a><a href="/BboyZJ.github.io/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a><a href="/BboyZJ.github.io/categories/"><div class="headline">Categories</div><div class="length-num">8</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/BboyZJ.github.io/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/BboyZJ.github.io/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/link/"><i class="fa-fw fa fa-users"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/BboyZJ.github.io/" title="张建的博客"><span class="site-name">张建的博客</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/BboyZJ.github.io/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/BboyZJ.github.io/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/link/"><i class="fa-fw fa fa-users"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">iOS面试题：OC</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-03-01T08:57:33.000Z" title="Created 2023-03-01 16:57:33">2023-03-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-03-03T06:58:57.000Z" title="Updated 2023-03-03 14:58:57">2023-03-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/BboyZJ.github.io/categories/OC/">OC</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="iOS面试题：OC"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><h1 id="OC算法"><a href="#OC算法" class="headerlink" title="OC算法"></a>OC算法</h1><h2 id="1-冒泡排序"><a href="#1-冒泡排序" class="headerlink" title="1. 冒泡排序"></a>1. 冒泡排序</h2><p>1）依次比较相邻两个元素，顺序错误则交换位置；需要两层循环，外层循环控制趟数，内层循环控制比较次数</p>
 <p>2）例子：</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">NSMutableArray * arr = [NSMutableArray arrayWithArray:@[@&quot;1&quot;,@&quot;3&quot;,@&quot;2&quot;,@&quot;5&quot;,@&quot;4&quot;]];</span><br><span class="line">    // 外循环控制排序趟数,进行 array.count-1 趟</span><br><span class="line">    for (int i = 0; i &lt; arr.count; i ++) &#123;</span><br><span class="line">        // 记录是否进行了交换，如果没有交换，数组顺序为顺序，则直接跳出外层循环结束排序</span><br><span class="line">        for (int j = 0; j &lt; arr.count - i - 1; j++) &#123;</span><br><span class="line">            // 相邻元素比较，若逆序则交换</span><br><span class="line">            if ([arr[j] intValue] &gt; [arr[j + 1] intValue]) &#123;</span><br><span class="line">                [arr exchangeObjectAtIndex:j withObjectAtIndex:j + 1];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">NSMutableArray * arr = [NSMutableArray arrayWithArray:@[@&quot;1&quot;,@&quot;3&quot;,@&quot;2&quot;,@&quot;5&quot;,@&quot;4&quot;]];</span><br><span class="line">    // 外循环控制排序趟数,进行 array.count-1 趟</span><br><span class="line">    for (int i = 0; i &lt; arr.count; i ++) &#123;</span><br><span class="line">        // 记录是否进行了交换，如果没有交换，数组顺序为顺序，则直接跳出外层循环结束排序</span><br><span class="line">        for (int j = 0; j &lt; arr.count - i - 1; j++) &#123;</span><br><span class="line">            // 相邻元素比较，若逆序则交换</span><br><span class="line">            if ([arr[j] intValue] &gt; [arr[j + 1] intValue]) &#123;</span><br><span class="line">                [arr exchangeObjectAtIndex:j withObjectAtIndex:j + 1];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h2 id="2-选择排序"><a href="#2-选择排序" class="headerlink" title="2. 选择排序"></a>2. 选择排序</h2><p>1）从第一个元素与其他元素比较找到最小值，重复操作，直到最后一位结束；需要两层循环，外层循环趟数，里层循环比较次数</p>
 <p>2）例子</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">NSMutableArray * arr = [NSMutableArray arrayWithObjects:@&quot;2&quot;,@&quot;1&quot;,@&quot;5&quot;,@&quot;3&quot;, nil];</span><br><span class="line">// 外循环控制排序趟数,进行 array.count-1 趟</span><br><span class="line">for (int i = 0; i &lt; arr.count; i ++) &#123;</span><br><span class="line">    // 里循环获比较换位</span><br><span class="line">    for (int j = i + 1; j &lt; arr.count; j ++) &#123;</span><br><span class="line">        if ([arr[i] intValue] &gt; [arr[j] intValue]) &#123;</span><br><span class="line">            [arr exchangeObjectAtIndex:i withObjectAtIndex:j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">NSLog(@&quot;arr:%@&quot;,arr);</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">NSMutableArray * arr = [NSMutableArray arrayWithObjects:@&quot;2&quot;,@&quot;1&quot;,@&quot;5&quot;,@&quot;3&quot;, nil];</span><br><span class="line">// 外循环控制排序趟数,进行 array.count-1 趟</span><br><span class="line">for (int i = 0; i &lt; arr.count; i ++) &#123;</span><br><span class="line">    // 里循环获比较换位</span><br><span class="line">    for (int j = i + 1; j &lt; arr.count; j ++) &#123;</span><br><span class="line">        if ([arr[i] intValue] &gt; [arr[j] intValue]) &#123;</span><br><span class="line">            [arr exchangeObjectAtIndex:i withObjectAtIndex:j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">NSLog(@&quot;arr:%@&quot;,arr);</span><br></pre></td></tr></table></figure>
 
 <h2 id="3-直接插入排序"><a href="#3-直接插入排序" class="headerlink" title="3. 直接插入排序"></a>3. 直接插入排序</h2><p>1） 始终定义第一个元素为 <code>已排序</code> 的，将剩余元素定义为 <code>未排序</code> 逐个插入到 <code>已排序</code> 的排列中；不断的移动数据，空出一个适当的位置，把待插入的元素放到里面去</p>
 <p>2）例子</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">NSMutableArray * arr = @[@2,@1,@3,@5,@4].mutableCopy;</span><br><span class="line">// 插入排序的原理：始终定义第一个元素为有序的，将元素逐个插入到有序的排列中</span><br><span class="line">// 其特点是：不断的移动数据，空出一个适当的位置，把待插入的元素放到里面去</span><br><span class="line">for(int i = 0;i &lt; arr.count;i++)&#123;</span><br><span class="line">    // 待排序值</span><br><span class="line">    NSNumber * temp = arr[i];</span><br><span class="line">    // 已排序下标</span><br><span class="line">    int j = i - 1;</span><br><span class="line">    // 待排序与已排序比较，从后向前比较</span><br><span class="line">    while (j &gt;= 0 &amp;&amp; [arr[j] integerValue] &gt; [temp integerValue]) &#123;</span><br><span class="line">        // 如果已排序的 &gt; 待排序的 往后移动一个位置</span><br><span class="line">        [arr replaceObjectAtIndex:(j + 1) withObject:arr[j]];</span><br><span class="line">        j --;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 空出来的位置插入新元素</span><br><span class="line">    [arr replaceObjectAtIndex:(j + 1) withObject:temp];</span><br><span class="line">    NSLog(@&quot;arr:%@&quot;,arr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">NSMutableArray * arr = @[@2,@1,@3,@5,@4].mutableCopy;</span><br><span class="line">// 插入排序的原理：始终定义第一个元素为有序的，将元素逐个插入到有序的排列中</span><br><span class="line">// 其特点是：不断的移动数据，空出一个适当的位置，把待插入的元素放到里面去</span><br><span class="line">for(int i = 0;i &lt; arr.count;i++)&#123;</span><br><span class="line">    // 待排序值</span><br><span class="line">    NSNumber * temp = arr[i];</span><br><span class="line">    // 已排序下标</span><br><span class="line">    int j = i - 1;</span><br><span class="line">    // 待排序与已排序比较，从后向前比较</span><br><span class="line">    while (j &gt;= 0 &amp;&amp; [arr[j] integerValue] &gt; [temp integerValue]) &#123;</span><br><span class="line">        // 如果已排序的 &gt; 待排序的 往后移动一个位置</span><br><span class="line">        [arr replaceObjectAtIndex:(j + 1) withObject:arr[j]];</span><br><span class="line">        j --;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 空出来的位置插入新元素</span><br><span class="line">    [arr replaceObjectAtIndex:(j + 1) withObject:temp];</span><br><span class="line">    NSLog(@&quot;arr:%@&quot;,arr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>打印结果：</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">2022-12-13 10:26:19.242271+0800 插入排序[4184:77845] arr:(</span><br><span class="line">    1,</span><br><span class="line">    2,</span><br><span class="line">    3,</span><br><span class="line">    4,</span><br><span class="line">    5</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">2022-12-13 10:26:19.242271+0800 插入排序[4184:77845] arr:(</span><br><span class="line">    1,</span><br><span class="line">    2,</span><br><span class="line">    3,</span><br><span class="line">    4,</span><br><span class="line">    5</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 <h2 id="4-希尔排序"><a href="#4-希尔排序" class="headerlink" title="4. 希尔排序"></a>4. 希尔排序</h2><p>1）希尔排序相当于 <code>直接插入排序加强版</code>，引入了 <code>增量</code> 的概念；直到增量为 <code>1</code> 时，再进行直接插入排序</p>
 <p>2）例子</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">NSMutableArray * arr = @[@7,@3,@8,@5,@2,@6,@1,@4].mutableCopy;</span><br><span class="line">// 其实间隔值设值为总数的一半</span><br><span class="line">int gap = arr.count/2;</span><br><span class="line">// 直到间隔小于1时结束</span><br><span class="line">while (gap &gt;= 1) &#123;</span><br><span class="line">    // i 待排元素，以 步距 gap 从后向前扫描</span><br><span class="line">    for(int i = 0;i &lt; arr.count;i++)&#123;</span><br><span class="line">        // 待排元素</span><br><span class="line">        NSNumber * temp = arr[i];</span><br><span class="line">        // 当前位置</span><br><span class="line">        int j = i;</span><br><span class="line">        // 跳跃式比较</span><br><span class="line">        while (j &gt;= gap &amp;&amp; [arr[j - gap] integerValue] &gt; [temp integerValue] ) &#123;</span><br><span class="line">            [arr replaceObjectAtIndex:j withObject:arr[j - gap]];</span><br><span class="line">            j -= gap;</span><br><span class="line">        &#125;</span><br><span class="line">        // 空出来位置，插入待排序</span><br><span class="line">        [arr replaceObjectAtIndex:j withObject:temp];</span><br><span class="line">    &#125;</span><br><span class="line">    // 改变步长</span><br><span class="line">    gap = gap/2;</span><br><span class="line">&#125;</span><br><span class="line">NSLog(@&quot;arr:%@&quot;,arr);</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">NSMutableArray * arr = @[@7,@3,@8,@5,@2,@6,@1,@4].mutableCopy;</span><br><span class="line">// 其实间隔值设值为总数的一半</span><br><span class="line">int gap = arr.count/2;</span><br><span class="line">// 直到间隔小于1时结束</span><br><span class="line">while (gap &gt;= 1) &#123;</span><br><span class="line">    // i 待排元素，以 步距 gap 从后向前扫描</span><br><span class="line">    for(int i = 0;i &lt; arr.count;i++)&#123;</span><br><span class="line">        // 待排元素</span><br><span class="line">        NSNumber * temp = arr[i];</span><br><span class="line">        // 当前位置</span><br><span class="line">        int j = i;</span><br><span class="line">        // 跳跃式比较</span><br><span class="line">        while (j &gt;= gap &amp;&amp; [arr[j - gap] integerValue] &gt; [temp integerValue] ) &#123;</span><br><span class="line">            [arr replaceObjectAtIndex:j withObject:arr[j - gap]];</span><br><span class="line">            j -= gap;</span><br><span class="line">        &#125;</span><br><span class="line">        // 空出来位置，插入待排序</span><br><span class="line">        [arr replaceObjectAtIndex:j withObject:temp];</span><br><span class="line">    &#125;</span><br><span class="line">    // 改变步长</span><br><span class="line">    gap = gap/2;</span><br><span class="line">&#125;</span><br><span class="line">NSLog(@&quot;arr:%@&quot;,arr);</span><br></pre></td></tr></table></figure>
 
 <p>打印结果：</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">2022-12-13 10:22:41.910840+0800 插入排序[4124:74568] arr:(</span><br><span class="line">    1,</span><br><span class="line">    2,</span><br><span class="line">    3,</span><br><span class="line">    4,</span><br><span class="line">    5,</span><br><span class="line">    6,</span><br><span class="line">    7,</span><br><span class="line">    8</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">2022-12-13 10:22:41.910840+0800 插入排序[4124:74568] arr:(</span><br><span class="line">    1,</span><br><span class="line">    2,</span><br><span class="line">    3,</span><br><span class="line">    4,</span><br><span class="line">    5,</span><br><span class="line">    6,</span><br><span class="line">    7,</span><br><span class="line">    8</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 <h2 id="5-斐波那契数列"><a href="#5-斐波那契数列" class="headerlink" title="5. 斐波那契数列"></a>5. 斐波那契数列</h2><p>1）也就是 <code>兔子数列</code>，当前数是前两个数列之和</p>
 <p>2）例子</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line"></span><br><span class="line">    NSInteger num = 10;</span><br><span class="line">    NSInteger total = [self getTotalNum:num];</span><br><span class="line">    NSLog(@&quot;total:%ld&quot;,total);</span><br><span class="line">&#125;</span><br><span class="line">- (NSInteger)getTotalNum:(NSInteger)num&#123;</span><br><span class="line">    if(num == 0)&#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">    if(num == 1)&#123;</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    return [self getTotalNum:num-2] + [self getTotalNum:num-1];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line"></span><br><span class="line">    NSInteger num = 10;</span><br><span class="line">    NSInteger total = [self getTotalNum:num];</span><br><span class="line">    NSLog(@&quot;total:%ld&quot;,total);</span><br><span class="line">&#125;</span><br><span class="line">- (NSInteger)getTotalNum:(NSInteger)num&#123;</span><br><span class="line">    if(num == 0)&#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">    if(num == 1)&#123;</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    return [self getTotalNum:num-2] + [self getTotalNum:num-1];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>打印结果：</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2022-12-13 10:28:32.672554+0800 斐波那契数列[4285:80606] total:89</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2022-12-13 10:28:32.672554+0800 斐波那契数列[4285:80606] total:89</span><br></pre></td></tr></table></figure>
 
 <h2 id="6-二分查找"><a href="#6-二分查找" class="headerlink" title="6. 二分查找"></a>6. 二分查找</h2><p>1）<code>有序的数组</code>，将数组分割成两份，利用查找的值跟中间值进行比较，如果查找的值大于中间值，就在数组的右边进行查找；如果查找的值小于中间值，就在数组的左边进行查找。如此循环的执行下去，最终找到符合的值。</p>
 <p>2）例子</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">NSArray * arr = @[@(1),@(3),@(5),@(6),@(8),@(10)];</span><br><span class="line">int key = [@(5) intValue];</span><br><span class="line">int min = 0;</span><br><span class="line">int max = arr.count - 1;</span><br><span class="line">int mid;</span><br><span class="line">while (min &lt;= max) &#123;</span><br><span class="line">    // 计算中间下标</span><br><span class="line">    mid = (min + max) / 2;</span><br><span class="line">    // 如果目标值 &gt; 中间下标的中间值</span><br><span class="line">    if (key &gt; [arr[mid] intValue]) &#123;</span><br><span class="line">        //最小变为中间下标+1</span><br><span class="line">        min = mid + 1;</span><br><span class="line">    &#125;</span><br><span class="line">    // 如果目标值 &lt; 中间下标的中间值</span><br><span class="line">    else if (key &lt; [arr[mid] intValue])&#123;</span><br><span class="line">        //最大变为中间下标-1</span><br><span class="line">        max = max - 1;</span><br><span class="line">    &#125;</span><br><span class="line">    // 否则，正好</span><br><span class="line">    else &#123;</span><br><span class="line">        NSLog(@&quot;key:%d&quot;,mid);</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">NSArray * arr = @[@(1),@(3),@(5),@(6),@(8),@(10)];</span><br><span class="line">int key = [@(5) intValue];</span><br><span class="line">int min = 0;</span><br><span class="line">int max = arr.count - 1;</span><br><span class="line">int mid;</span><br><span class="line">while (min &lt;= max) &#123;</span><br><span class="line">    // 计算中间下标</span><br><span class="line">    mid = (min + max) / 2;</span><br><span class="line">    // 如果目标值 &gt; 中间下标的中间值</span><br><span class="line">    if (key &gt; [arr[mid] intValue]) &#123;</span><br><span class="line">        //最小变为中间下标+1</span><br><span class="line">        min = mid + 1;</span><br><span class="line">    &#125;</span><br><span class="line">    // 如果目标值 &lt; 中间下标的中间值</span><br><span class="line">    else if (key &lt; [arr[mid] intValue])&#123;</span><br><span class="line">        //最大变为中间下标-1</span><br><span class="line">        max = max - 1;</span><br><span class="line">    &#125;</span><br><span class="line">    // 否则，正好</span><br><span class="line">    else &#123;</span><br><span class="line">        NSLog(@&quot;key:%d&quot;,mid);</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>打印结果：</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2022-12-13 10:33:18.661324+0800 二分查找[4607:86953] key:2</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2022-12-13 10:33:18.661324+0800 二分查找[4607:86953] key:2</span><br></pre></td></tr></table></figure>
 
 <h2 id="7-递归算法"><a href="#7-递归算法" class="headerlink" title="7. 递归算法"></a>7. 递归算法</h2><p>递归求和1+2+..+n?</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    int sum = [self sum:4];</span><br><span class="line">    NSLog(@&quot;sum:%d&quot;,sum);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (int)sum:(int)n&#123;</span><br><span class="line">    if (n == 1) &#123;</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        return [self sum:n-1] + n;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    int sum = [self sum:4];</span><br><span class="line">    NSLog(@&quot;sum:%d&quot;,sum);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (int)sum:(int)n&#123;</span><br><span class="line">    if (n == 1) &#123;</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        return [self sum:n-1] + n;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h1 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h1><p><a href="http://www.bboyzj.cn/2020/08/09/OC%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%8401%EF%BC%9A%E9%93%BE%E8%A1%A8%E7%9A%84%E6%8E%A2%E7%B4%A2/">OC数据结构01：链表的探索</a></p>
 <h1 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h1><p><a href="http://www.bboyzj.cn/2020/08/26/OC%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%8402%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E6%8E%A2%E7%B4%A2/">OC数据结构02：二叉树探索</a></p>
@@ -372,10 +277,10 @@
 </ul>
 <h2 id="一个APP是如何唤醒另一个APP的？-重点"><a href="#一个APP是如何唤醒另一个APP的？-重点" class="headerlink" title="一个APP是如何唤醒另一个APP的？ 重点"></a>一个APP是如何唤醒另一个APP的？ <strong>重点</strong></h2><p>URL Scheme：iOS有一个特性就是将 <code>自身绑定</code> 到一个自定义的 <code>URL Scheme</code> 上，该 <code>scheme</code> 用于从 <code>浏览器或其他应用中启动本应用</code>。</p>
 <h2 id="单例的写法和作用？-重点"><a href="#单例的写法和作用？-重点" class="headerlink" title="单例的写法和作用？ 重点"></a>单例的写法和作用？ <strong>重点</strong></h2><p>单例模式的作用：可以保证程序运行过程中，一个类只返回一个实例，供外界访问；static保证类只分配一次内存；dispatch_once方法保证调用一次，并自动加锁，线程安全</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">static id _instance = nil; // 定义static全局变量，保证只分配一次内存</span><br><span class="line">+ (id)shareInstance&#123;</span><br><span class="line">    return [[self alloc] init];</span><br><span class="line">&#125;</span><br><span class="line">+ (id)copyWithZone:(struct _NSZone *)zone&#123;</span><br><span class="line">    static dispatch_once_t onceToken; // 声明一个静态的GcD单次任务</span><br><span class="line">    // 保证只执行一次</span><br><span class="line">    dispatch_once(&amp;onceToken,^&#123; // </span><br><span class="line">        _instance = [super allocWithZone:zone];</span><br><span class="line">    &#125;);</span><br><span class="line">    return p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">static id _instance = nil; // 定义static全局变量，保证只分配一次内存</span><br><span class="line">+ (id)shareInstance&#123;</span><br><span class="line">    return [[self alloc] init];</span><br><span class="line">&#125;</span><br><span class="line">+ (id)copyWithZone:(struct _NSZone *)zone&#123;</span><br><span class="line">    static dispatch_once_t onceToken; // 声明一个静态的GcD单次任务</span><br><span class="line">    // 保证只执行一次</span><br><span class="line">    dispatch_once(&amp;onceToken,^&#123; // </span><br><span class="line">        _instance = [super allocWithZone:zone];</span><br><span class="line">    &#125;);</span><br><span class="line">    return p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这么写可以保证下面两种方式返回同一个实例：</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Single * p1 = [Single shareInstance];</span><br><span class="line">Single * p2 = [[Single alloc] init];</span><br><span class="line">NSLog(@&quot;%d&quot;,p1==p2); // 1</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Single * p1 = [Single shareInstance];</span><br><span class="line">Single * p2 = [[Single alloc] init];</span><br><span class="line">NSLog(@&quot;%d&quot;,p1==p2); // 1</span><br></pre></td></tr></table></figure>
 
 
 <h2 id="HTTPS和HTTP的区别？-重点"><a href="#HTTPS和HTTP的区别？-重点" class="headerlink" title="HTTPS和HTTP的区别？ 重点"></a>HTTPS和HTTP的区别？ <strong>重点</strong></h2><ul>
@@ -518,7 +423,7 @@
 <li>动态获取成员属性、成员变量、实例方法</li>
 </ul>
 <h2 id="KVC是什么？重点"><a href="#KVC是什么？重点" class="headerlink" title="KVC是什么？重点"></a>KVC是什么？<strong>重点</strong></h2><p><code>KVC</code> 全程 <code>Key Value Coding</code>，中文 <code>键值编码</code>，是由 <code>NSKeyValueCoding</code> 非正式协议启动的一种机制，<code>对象</code> 采用该协议来 <code>间接访问对象的属性</code>。</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (nullable id)valueForKey:(NSString *)key;     </span><br><span class="line">- (nullable id)valueForKeyPath:(NSString *)keyPath; </span><br><span class="line"></span><br><span class="line">- (void)setValue:(nullable id)value forKey:(NSString *)key;</span><br><span class="line">- (void)setValue:(nullable id)value forKeyPath:(NSString *)keyPath; </span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (nullable id)valueForKey:(NSString *)key;     </span><br><span class="line">- (nullable id)valueForKeyPath:(NSString *)keyPath; </span><br><span class="line"></span><br><span class="line">- (void)setValue:(nullable id)value forKey:(NSString *)key;</span><br><span class="line">- (void)setValue:(nullable id)value forKeyPath:(NSString *)keyPath; </span><br></pre></td></tr></table></figure>
 
 <p><a href="http://www.bboyzj.cn/2021/01/17/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8622%EF%BC%9AKVC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">KVC底层原理：</a></p>
 <h2 id="KVO是什么？重点"><a href="#KVO是什么？重点" class="headerlink" title="KVO是什么？重点"></a>KVO是什么？<strong>重点</strong></h2><p><code>KVO</code> 全程 <code>Key Value Observing</code>，中文 <code>键值观察</code>，它 <code>用于监听实例对象属性的变化</code>。</p>
@@ -538,7 +443,7 @@
 </li>
 </ul>
 <p>类扩展中：</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@interface Person ()&#123;</span><br><span class="line">    int age; //实例变量</span><br><span class="line">&#125;</span><br><span class="line">@property (nonatomic,copy)NSString * name;//属性</span><br><span class="line">- (void)run;//方法</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@interface Person ()&#123;</span><br><span class="line">    int age; //实例变量</span><br><span class="line">&#125;</span><br><span class="line">@property (nonatomic,copy)NSString * name;//属性</span><br><span class="line">- (void)run;//方法</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
 
 <h2 id="iOS开发中有多少类型的线程？-重点"><a href="#iOS开发中有多少类型的线程？-重点" class="headerlink" title="iOS开发中有多少类型的线程？  重点"></a>iOS开发中有多少类型的线程？  <strong>重点</strong></h2><ul>
 <li>pthread</li>
@@ -592,7 +497,7 @@
 <li>NSTimer</li>
 </ul>
 <p>原因：self → timer → self(target) 的循环持有链<br>解决：在适当的时机销毁 </p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[_timer invalidate];</span><br><span class="line">_timer = nil;</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[_timer invalidate];</span><br><span class="line">_timer = nil;</span><br></pre></td></tr></table></figure>
 
 <h1 id="OC-如何进行内存管理的？-重点"><a href="#OC-如何进行内存管理的？-重点" class="headerlink" title="OC 如何进行内存管理的？ 重点"></a>OC 如何进行内存管理的？ <strong>重点</strong></h1><ul>
 <li><p>手动内存管理 MRC</p>
@@ -723,16 +628,16 @@
 <li><p>响应链：由离用户最近的view向系统传递。<br>顺序： superViews –&gt; ViewController –&gt; UIWindow –&gt; UIApplication –&gt; AppDelegate</p>
 </li>
 </ul>
-<h1 id="事件传递的两个核心方法？-重点"><a href="#事件传递的两个核心方法？-重点" class="headerlink" title="事件传递的两个核心方法？ 重点"></a>事件传递的两个核心方法？ <strong>重点</strong></h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 返回最适合处理事件的视图</span><br><span class="line">- (nullable UIView *)hitTest:(CGPoint)point withEvent:(nullable UIEvent *)event;  </span><br><span class="line">// 判断点是否在这个View内部</span><br><span class="line">- (BOOL)pointInside:(CGPoint)point withEvent:(nullable UIEvent *)event;</span><br></pre></td></tr></table></figure></div>
+<h1 id="事件传递的两个核心方法？-重点"><a href="#事件传递的两个核心方法？-重点" class="headerlink" title="事件传递的两个核心方法？ 重点"></a>事件传递的两个核心方法？ <strong>重点</strong></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 返回最适合处理事件的视图</span><br><span class="line">- (nullable UIView *)hitTest:(CGPoint)point withEvent:(nullable UIEvent *)event;  </span><br><span class="line">// 判断点是否在这个View内部</span><br><span class="line">- (BOOL)pointInside:(CGPoint)point withEvent:(nullable UIEvent *)event;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>第一个方法返回的是一个 <code>UIView</code>，是用来寻找最终哪一个视图来响应这个事件</li>
 <li>第二个方法是用来判断某一个点击的位置是否在视图范围内，如果在就返回YES</li>
 </ul>
 <h1 id="实现一个按钮的点击范围扩大效果-重点"><a href="#实现一个按钮的点击范围扩大效果-重点" class="headerlink" title="实现一个按钮的点击范围扩大效果 重点"></a>实现一个按钮的点击范围扩大效果 <strong>重点</strong></h1><p>自定义一个按钮，继承UIButton，重写 <code>pointInside:withEvent:</code> 方法，</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event&#123;</span><br><span class="line">    // 当前btn大小</span><br><span class="line">    CGRect btnBounds = self.bounds;</span><br><span class="line">    // 扩大按钮的点击范围，增大内边距</span><br><span class="line">    btnBounds = CGRectInset(btnBounds, -10, -10);</span><br><span class="line">    // 若点击的点在新的bounds里，返回YES</span><br><span class="line">    return CGRectContainsPoint(btnBounds, point);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event&#123;</span><br><span class="line">    // 当前btn大小</span><br><span class="line">    CGRect btnBounds = self.bounds;</span><br><span class="line">    // 扩大按钮的点击范围，增大内边距</span><br><span class="line">    btnBounds = CGRectInset(btnBounds, -10, -10);</span><br><span class="line">    // 若点击的点在新的bounds里，返回YES</span><br><span class="line">    return CGRectContainsPoint(btnBounds, point);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h1 id="子视图超过父视图部分仍然能响应-重点"><a href="#子视图超过父视图部分仍然能响应-重点" class="headerlink" title="子视图超过父视图部分仍然能响应 重点"></a>子视图超过父视图部分仍然能响应 <strong>重点</strong></h1><p>重写 <code>hitTest:withEvent</code> 方法，让 <code>子视图</code> 去相应事件</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event&#123;</span><br><span class="line">    // 判断btn能否接收事件</span><br><span class="line">    if (self.btn.userInteractionEnabled == NO || self.btn.hidden == YES || self.btn.alpha &lt;= 0.01) &#123;</span><br><span class="line">        return nil;</span><br><span class="line">    &#125;</span><br><span class="line">    // 把当前点转换成btn坐标系上的点</span><br><span class="line">    CGPoint btnP = [self convertPoint:point toView:self.btn];</span><br><span class="line">    // 当触摸点在btn上时，才让按钮相应事件</span><br><span class="line">    if ([self.btn pointInside:btnP withEvent:event]) &#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,NSStringFromCGPoint(btnP));</span><br><span class="line">        return self.btn;</span><br><span class="line">    &#125;</span><br><span class="line">    NSLog(@&quot;父视图相应&quot;);</span><br><span class="line">    return [super hitTest:point withEvent:event];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event&#123;</span><br><span class="line">    // 判断btn能否接收事件</span><br><span class="line">    if (self.btn.userInteractionEnabled == NO || self.btn.hidden == YES || self.btn.alpha &lt;= 0.01) &#123;</span><br><span class="line">        return nil;</span><br><span class="line">    &#125;</span><br><span class="line">    // 把当前点转换成btn坐标系上的点</span><br><span class="line">    CGPoint btnP = [self convertPoint:point toView:self.btn];</span><br><span class="line">    // 当触摸点在btn上时，才让按钮相应事件</span><br><span class="line">    if ([self.btn pointInside:btnP withEvent:event]) &#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,NSStringFromCGPoint(btnP));</span><br><span class="line">        return self.btn;</span><br><span class="line">    &#125;</span><br><span class="line">    NSLog(@&quot;父视图相应&quot;);</span><br><span class="line">    return [super hitTest:point withEvent:event];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 <h1 id="面试官问还有什么想问的？-重点"><a href="#面试官问还有什么想问的？-重点" class="headerlink" title="面试官问还有什么想问的？ 重点"></a>面试官问还有什么想问的？ <strong>重点</strong></h1><p>技术面不问薪资待遇，人事面问薪资待遇</p>
@@ -761,336 +666,4 @@
 <li>员工的晋升机制是什么样的？我这个岗位的晋升机会如何？</li>
 <li>这个岗位所在的团队如何支持公司目标的实现？</li>
 </ol>
-
-            </div>
-
-            
-                <div class="post-copyright-info">
-                    <div class="article-copyright-info-container">
-    <ul>
-        <li>Post title：iOS面试题：OC</li>
-        <li>Post author：The Redefine Team</li>
-        <li>Create time：2023-03-01 16:57:33</li>
-        <li>
-            Post link：https://redefine.ohevan.com/2023/03/01/面试题/iOS面试题：OC/
-        </li>
-        <li>
-            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
-        </li>
-    </ul>
-</div>
-
-                </div>
-            
-
-            
-                <ul class="post-tags-box">
-                    
-                        <li class="tag-item">
-                            <a href="/BboyZJ.github.io/tags/OC-%E9%9D%A2%E8%AF%95%E9%A2%98/">#OC-面试题</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            
-
-            
-
-            
-                <div class="article-nav">
-                    
-                        <div class="article-prev">
-                            <a class="prev"
-                            rel="prev"
-                            href="/BboyZJ.github.io/2023/03/01/%E9%9D%A2%E8%AF%95%E9%A2%98/iOS%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9ASwift/"
-                            >
-                                <span class="left arrow-icon flex-center">
-                                    <i class="fa-solid fa-chevron-left"></i>
-                                </span>
-                                <span class="title flex-center">
-                                    <span class="post-nav-title-item">iOS面试题：Swift</span>
-                                    <span class="post-nav-item">Prev posts</span>
-                                </span>
-                            </a>
-                        </div>
-                    
-                    
-                        <div class="article-next">
-                            <a class="next"
-                            rel="next"
-                            href="/BboyZJ.github.io/2023/03/01/Blog%E6%90%AD%E5%BB%BA/Blog-04%EF%BC%9A%E4%B8%BB%E9%A2%98%E5%AE%8C%E5%96%84/"
-                            >
-                                <span class="title flex-center">
-                                    <span class="post-nav-title-item">Blog-04：主题完善</span>
-                                    <span class="post-nav-item">Next posts</span>
-                                </span>
-                                <span class="right arrow-icon flex-center">
-                                    <i class="fa-solid fa-chevron-right"></i>
-                                </span>
-                            </a>
-                        </div>
-                    
-                </div>
-            
-
-
-            
-        </div>
-
-        
-            <div class="toc-content-container">
-                <div class="post-toc-wrap">
-    <div class="post-toc">
-        <div class="toc-title">On this page</div>
-        <div class="page-title">iOS面试题：OC</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OC%E7%AE%97%E6%B3%95"><span class="nav-text">OC算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F"><span class="nav-text">1. 冒泡排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F"><span class="nav-text">2. 选择排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%9B%B4%E6%8E%A5%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F"><span class="nav-text">3. 直接插入排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F"><span class="nav-text">4. 希尔排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97"><span class="nav-text">5. 斐波那契数列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="nav-text">6. 二分查找</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E9%80%92%E5%BD%92%E7%AE%97%E6%B3%95"><span class="nav-text">7. 递归算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8"><span class="nav-text">链表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-text">二叉树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OC%E5%B8%B8%E8%A7%81%E7%9A%84%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-text">OC常见的面试题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%87%8E%E6%8C%87%E9%92%88%EF%BC%9F"><span class="nav-text">什么是野指针？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%EF%BC%9F"><span class="nav-text">什么是内存泄漏？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS-%E5%85%B3%E9%94%AE%E8%AF%8D%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F%E5%90%84%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">iOS 关键词有哪些？各有什么作用？ 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%85%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B7%B1%E6%8B%B7%E8%B4%9D-%E9%87%8D%E7%82%B9"><span class="nav-text">浅拷贝和深拷贝 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NSString-x2F-NSArray-x2F-NSDictionary%E5%92%8CNSMutableString-x2F-NSMutableArray-x2F-NSMutableDictionary-%E8%BF%9B%E8%A1%8Ccopy%E5%92%8CmutableCopy%E5%8C%BA%E5%88%AB%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">NSString&#x2F;NSArray&#x2F;NSDictionary和NSMutableString&#x2F;NSMutableArray&#x2F;NSMutableDictionary 进行copy和mutableCopy区别？重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AF%B9%E8%B1%A1%E7%9A%84copy%E5%92%8CmutableCopy%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">自定义对象的copy和mutableCopy？ 重点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E7%94%A8copy%E8%BF%98%E6%98%AFstrong%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">属性用copy还是strong？ 重点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%B8%AAAPP%E6%98%AF%E5%A6%82%E4%BD%95%E5%94%A4%E9%86%92%E5%8F%A6%E4%B8%80%E4%B8%AAAPP%E7%9A%84%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">一个APP是如何唤醒另一个APP的？ 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E4%BE%8B%E7%9A%84%E5%86%99%E6%B3%95%E5%92%8C%E4%BD%9C%E7%94%A8%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">单例的写法和作用？ 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS%E5%92%8CHTTP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">HTTPS和HTTP的区别？ 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-%E5%92%8C-UDP-%E5%8C%BA%E5%88%AB-%E9%87%8D%E7%82%B9"><span class="nav-text">TCP 和 UDP 区别? 重点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%E5%92%8Csocket%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">HTTP和socket区别？ 重点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#staitc-%E5%92%8C-const-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">staitc 和 const 的区别？ 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E9%93%BE%E6%8E%A5%EF%BC%88Universal-Links%EF%BC%89%E9%87%8D%E7%82%B9"><span class="nav-text">通用链接（Universal Links）重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E8%BF%B0GET%E5%92%8CPOST%E8%AF%B7%E6%B1%82%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">简述GET和POST请求的区别？ 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS%E4%B8%AD%E5%87%A0%E7%A7%8D%E5%B8%B8%E8%A7%81%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">iOS中几种常见的设计模式？  重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RunLoop%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">RunLoop是什么？ 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RunLoop%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">RunLoop的作用？ 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E4%BB%A5%E7%94%A8Runloop%E5%AE%9E%E7%8E%B0%E4%BB%80%E4%B9%88%E5%8A%9F%E8%83%BD%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">可以用Runloop实现什么功能？ 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RunLoop%E6%8E%A5%E6%94%B6%E5%87%A0%E7%A7%8D%E8%BE%93%E5%85%A5%E6%BA%90%EF%BC%8C%E7%B3%BB%E7%BB%9F%E9%BB%98%E8%AE%A4%E5%AE%9A%E4%B9%89%E4%BA%86%E5%87%A0%E7%A7%8D%E6%A8%A1%E5%BC%8F%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">RunLoop接收几种输入源，系统默认定义了几种模式？ 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RunLoop%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%9C%89%E4%BB%80%E4%B9%88%E5%85%B3%E7%B3%BB%EF%BC%9FRunloop%E7%9A%84mode-Runloop%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">RunLoop和线程有什么关系？Runloop的mode? Runloop的作用？ 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3Objective-C%E6%98%AF%E5%8A%A8%E6%80%81%E8%BF%90%E8%A1%8C%E6%97%B6%E8%AF%AD%E8%A8%80%E3%80%82-%E9%87%8D%E7%82%B9"><span class="nav-text">怎么理解Objective-C是动态运行时语言。 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#runtime%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%85%B7%E4%BD%93%E5%BA%94%E7%94%A8%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">runtime项目中具体应用？ 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KVC%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">KVC是什么？重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KVO%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">KVO是什么？重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KVO%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%EF%BC%9F-KVO%E7%9A%84%E6%9C%AC%E8%B4%A8%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">KVO的实现原理？(KVO的本质是什么？) 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KVO%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8-%E9%87%8D%E7%82%B9"><span class="nav-text">KVO实际应用 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#category%E5%92%8Cextension%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F%E5%88%86%E4%B8%A4%E7%B1%BB%E5%92%8C%E6%89%A9%E5%B1%95%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F%E5%88%86%E7%B1%BB%E7%9A%84%E7%BB%93%E6%9E%84%E4%BD%93%E9%87%8C%E9%9D%A2%E6%9C%89%E4%BB%80%E4%B9%88%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">category和extension的作用？分两类和扩展的区别？分类的结构体里面有什么？重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS%E5%BC%80%E5%8F%91%E4%B8%AD%E6%9C%89%E5%A4%9A%E5%B0%91%E7%B1%BB%E5%9E%8B%E7%9A%84%E7%BA%BF%E7%A8%8B%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">iOS开发中有多少类型的线程？  重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E8%8B%A5%E2%BC%B2%E4%B8%AAurl%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD%E5%A4%9A%E5%BC%A0%E5%9B%BE%E2%BD%9A%EF%BC%8C%E7%84%B6%E5%90%8E%E5%9C%A8%E9%83%BD%E4%B8%8B%E8%BD%BD%E5%AE%8C%E6%88%90%E5%90%8E%E5%90%88%E6%88%90%E2%BC%80%E5%BC%A0%E6%95%B4%E5%9B%BE%EF%BC%9FGCD%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">根据若⼲个url异步加载多张图⽚，然后在都下载完成后合成⼀张整图？GCD如何实现？  重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10%E4%B8%AA%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E9%A1%BA%E5%BA%8F%E5%9B%9E%E8%B0%83-GCD%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">10个网络请求顺序回调? GCD如何实现？重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GCD%E5%92%8CNSOperation%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">GCD和NSOperation的区别？ 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFBlock%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">什么是Block？ 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Block%E7%9A%84%E6%9C%AC%E8%B4%A8-%E9%87%8D%E7%82%B9"><span class="nav-text">Block的本质 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Block%E7%9A%84%E5%88%86%E7%B1%BB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">Block的分类？ 重点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E7%9A%84%E5%87%A0%E7%A7%8D%E6%83%85%E5%86%B5%E5%92%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E5%BC%8F%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">循环引用的几种情况和解决方式？ 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OC-%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%9A%84%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">OC 如何进行内存管理的？ 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0%E5%8E%9F%E7%90%86-%E9%87%8D%E7%82%B9"><span class="nav-text">自动释放池原理 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96-%E9%87%8D%E7%82%B9"><span class="nav-text">内存优化 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E4%BC%98%E5%8C%96-%E9%87%8D%E7%82%B9"><span class="nav-text">启动优化 重点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%A1%E9%A1%BF%E7%9B%91%E5%90%AC-%E9%87%8D%E7%82%B9"><span class="nav-text">卡顿监听 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tableView%E5%8D%A1%E9%A1%BF%E4%BC%98%E5%8C%96-%E9%87%8D%E7%82%B9"><span class="nav-text">tableView卡顿优化 重点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BC%98%E5%8C%96-%E9%87%8D%E7%82%B9"><span class="nav-text">网络优化 重点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E8%BF%87%E7%A8%8B%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">TCP三次握手，四次挥手过程？重点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E9%93%BE-%E9%87%8D%E7%82%B9"><span class="nav-text">事件链 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E7%9A%84%E4%B8%A4%E4%B8%AA%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">事件传递的两个核心方法？ 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%8C%89%E9%92%AE%E7%9A%84%E7%82%B9%E5%87%BB%E8%8C%83%E5%9B%B4%E6%89%A9%E5%A4%A7%E6%95%88%E6%9E%9C-%E9%87%8D%E7%82%B9"><span class="nav-text">实现一个按钮的点击范围扩大效果 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%90%E8%A7%86%E5%9B%BE%E8%B6%85%E8%BF%87%E7%88%B6%E8%A7%86%E5%9B%BE%E9%83%A8%E5%88%86%E4%BB%8D%E7%84%B6%E8%83%BD%E5%93%8D%E5%BA%94-%E9%87%8D%E7%82%B9"><span class="nav-text">子视图超过父视图部分仍然能响应 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E8%BF%98%E6%9C%89%E4%BB%80%E4%B9%88%E6%83%B3%E9%97%AE%E7%9A%84%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">面试官问还有什么想问的？ 重点</span></a></li></ol>
-
-    </div>
-</div>
-            </div>
-        
-    </div>
-</div>
-
-
-                
-
-            </div>
-
-
-
-        </div>
-
-        <div class="page-main-content-bottom">
-            <footer class="footer">
-    <div class="info-container">
-        <div class="copyright-info">
-            &copy;
-            
-              <span>2022</span>
-              -
-            
-            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">The Redefine Team</a>
-        </div>
-        
-            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-            <div class="website-count info-item">
-                
-                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
-                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
-                    </span>
-                
-                
-                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
-                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
-                    </span>
-                
-            </div>
-        
-        <div class="theme-info info-item">
-            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
-                <br> 
-            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
-        </div>
-        
-        
-        
-            <div id="start_time_div" style="display:none">
-                2022/8/17 11:45:14
-            </div>
-            <div>
-                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
-            </div>
-        
-        
-        
-            <script async data-pjax>
-                try {
-                    function odometer_init() {
-                    const elements = document.querySelectorAll('.odometer');
-                    elements.forEach(el => {
-                        new Odometer({
-                            el,
-                            format: '( ddd).dd',
-                            duration: 200
-                        });
-                    });
-                    }
-                    odometer_init();
-                } catch (error) {}
-            </script>
-        
-        
-        
-    </div>  
-</footer>
-        </div>
-    </div>
-
-    
-        <div class="post-tools">
-            <div class="post-tools-container">
-    <ul class="tools-list">
-        <!-- TOC aside toggle -->
-        
-            <li class="right-bottom-tools page-aside-toggle">
-                <i class="fa-regular fa-outdent"></i>
-            </li>
-        
-
-        <!-- go comment -->
-        
-    </ul>
-</div>
-
-        </div>
-    
-
-    <div class="right-bottom-side-tools">
-        <div class="side-tools-container">
-    <ul class="unfolded-tools-list">
-        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
-            <i class="fa-regular fa-magnifying-glass-plus"></i>
-        </li>
-
-        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
-            <i class="fa-regular fa-magnifying-glass-minus"></i>
-        </li>
-
-        <li class="right-bottom-tools tool-expand-width flex-center">
-            <i class="fa-regular fa-expand"></i>
-        </li>
-
-        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
-            <i class="fa-regular fa-moon"></i>
-        </li>
-
-        <!-- rss -->
-        
-
-        
-            <li class="right-bottom-tools tool-scroll-to-top flex-center">
-                <i class="fa-regular fa-arrow-up"></i>
-            </li>
-        
-
-        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
-            <i class="fa-regular fa-arrow-down"></i>
-        </li>
-    </ul>
-
-    <ul class="folded-tools-list">
-        <li class="right-bottom-tools tool-toggle-show flex-center">
-            <i class="fa-regular fa-cog fa-spin"></i>
-        </li>
-        
-    </ul>
-</div>
-
-    </div>
-
-    <div class="image-viewer-container">
-    <img src="">
-</div>
-
-
-    
-
-
-</main>
-
-
-
-
-<script src="/BboyZJ.github.io/js/utils.js"></script>
-
-<script src="/BboyZJ.github.io/js/main.js"></script>
-
-<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
-
-<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
-
-<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
-
-
-
-
-
-    
-<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
-
-
-
-
-    
-<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
-
-
-
-
-    
-<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
-
-    
-<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
-
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
-
-
-
-
-
-<div class="post-scripts pjax">
-    
-        
-<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
-
-<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
-
-<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
-
-<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
-
-    
-    
-</div>
-
-
-    
-<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
-
-<script>
-    window.addEventListener('DOMContentLoaded', () => {
-        window.pjax = new Pjax({
-            selectors: [
-                'head title',
-                '.page-container',
-                '.pjax'
-            ],
-            history: true,
-            debug: false,
-            cacheBust: false,
-            timeout: 0,
-            analytics: false,
-            currentUrlFullReload: false,
-            scrollRestoration: false,
-            // scrollTo: true,
-        });
-
-        document.addEventListener('pjax:send', () => {
-            REDEFINE.utils.pjaxProgressBarStart();
-        });
-
-        document.addEventListener('pjax:complete', () => {
-            REDEFINE.utils.pjaxProgressBarEnd();
-            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
-            REDEFINE.refresh();
-        });
-    });
-</script>
-
-
-
-
-</body>
-</html>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://www.bboyzj.cn">小J</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://www.bboyzj.cn/2023/03/01/%E9%9D%A2%E8%AF%95%E9%A2%98/iOS%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9AOC/">https://www.bboyzj.cn/2023/03/01/%E9%9D%A2%E8%AF%95%E9%A2%98/iOS%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9AOC/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/BboyZJ.github.io/tags/OC-%E9%9D%A2%E8%AF%95%E9%A2%98/">OC-面试题</a></div><div class="post_share"><div class="social-share" data-image="https://user-images.githubusercontent.com/25925248/89294514-33bfd280-d692-11ea-9151-7808205ed301.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/BboyZJ.github.io/2023/03/01/%E9%9D%A2%E8%AF%95%E9%A2%98/iOS%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9ASwift/" title="iOS面试题：Swift"><img class="cover" src="https://user-images.githubusercontent.com/25925248/96366405-0c997d00-117a-11eb-9a6a-69378ace519b.jpg" onerror="onerror=null;src='/BboyZJ.github.io/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">iOS面试题：Swift</div></div></a></div><div class="next-post pull-right"><a href="/BboyZJ.github.io/2023/03/01/Blog%E6%90%AD%E5%BB%BA/Blog-04%EF%BC%9A%E4%B8%BB%E9%A2%98%E5%AE%8C%E5%96%84/" title="Blog-04：主题完善"><img class="cover" src="https://user-images.githubusercontent.com/25925248/89219510-7cc84600-d602-11ea-9110-6b415b3c39bf.jpg" onerror="onerror=null;src='/BboyZJ.github.io/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Blog-04：主题完善</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/BboyZJ.github.io/img/avatar.png" onerror="this.onerror=null;this.src='/BboyZJ.github.io/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">小J</div><div class="author-info__description">我是小J，关注我</div></div><div class="card-info-data site-data is-center"><a href="/BboyZJ.github.io/archives/"><div class="headline">Articles</div><div class="length-num">76</div></a><a href="/BboyZJ.github.io/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a><a href="/BboyZJ.github.io/categories/"><div class="headline">Categories</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#OC%E7%AE%97%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">OC算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F"><span class="toc-number">1.1.</span> <span class="toc-text">1. 冒泡排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F"><span class="toc-number">1.2.</span> <span class="toc-text">2. 选择排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%9B%B4%E6%8E%A5%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F"><span class="toc-number">1.3.</span> <span class="toc-text">3. 直接插入排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F"><span class="toc-number">1.4.</span> <span class="toc-text">4. 希尔排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97"><span class="toc-number">1.5.</span> <span class="toc-text">5. 斐波那契数列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="toc-number">1.6.</span> <span class="toc-text">6. 二分查找</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E9%80%92%E5%BD%92%E7%AE%97%E6%B3%95"><span class="toc-number">1.7.</span> <span class="toc-text">7. 递归算法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%93%BE%E8%A1%A8"><span class="toc-number">2.</span> <span class="toc-text">链表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="toc-number">3.</span> <span class="toc-text">二叉树</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OC%E5%B8%B8%E8%A7%81%E7%9A%84%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">OC常见的面试题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%87%8E%E6%8C%87%E9%92%88%EF%BC%9F"><span class="toc-number">4.1.</span> <span class="toc-text">什么是野指针？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%EF%BC%9F"><span class="toc-number">4.2.</span> <span class="toc-text">什么是内存泄漏？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#iOS-%E5%85%B3%E9%94%AE%E8%AF%8D%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F%E5%90%84%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">4.3.</span> <span class="toc-text">iOS 关键词有哪些？各有什么作用？ 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%85%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B7%B1%E6%8B%B7%E8%B4%9D-%E9%87%8D%E7%82%B9"><span class="toc-number">4.4.</span> <span class="toc-text">浅拷贝和深拷贝 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NSString-x2F-NSArray-x2F-NSDictionary%E5%92%8CNSMutableString-x2F-NSMutableArray-x2F-NSMutableDictionary-%E8%BF%9B%E8%A1%8Ccopy%E5%92%8CmutableCopy%E5%8C%BA%E5%88%AB%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="toc-number">4.5.</span> <span class="toc-text">NSString&#x2F;NSArray&#x2F;NSDictionary和NSMutableString&#x2F;NSMutableArray&#x2F;NSMutableDictionary 进行copy和mutableCopy区别？重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AF%B9%E8%B1%A1%E7%9A%84copy%E5%92%8CmutableCopy%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">4.6.</span> <span class="toc-text">自定义对象的copy和mutableCopy？ 重点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%E7%94%A8copy%E8%BF%98%E6%98%AFstrong%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">5.</span> <span class="toc-text">属性用copy还是strong？ 重点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%B8%AAAPP%E6%98%AF%E5%A6%82%E4%BD%95%E5%94%A4%E9%86%92%E5%8F%A6%E4%B8%80%E4%B8%AAAPP%E7%9A%84%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">5.1.</span> <span class="toc-text">一个APP是如何唤醒另一个APP的？ 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E4%BE%8B%E7%9A%84%E5%86%99%E6%B3%95%E5%92%8C%E4%BD%9C%E7%94%A8%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">5.2.</span> <span class="toc-text">单例的写法和作用？ 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTPS%E5%92%8CHTTP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">5.3.</span> <span class="toc-text">HTTPS和HTTP的区别？ 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP-%E5%92%8C-UDP-%E5%8C%BA%E5%88%AB-%E9%87%8D%E7%82%B9"><span class="toc-number">5.4.</span> <span class="toc-text">TCP 和 UDP 区别? 重点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HTTP%E5%92%8Csocket%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.</span> <span class="toc-text">HTTP和socket区别？ 重点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#staitc-%E5%92%8C-const-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.1.</span> <span class="toc-text">staitc 和 const 的区别？ 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E9%93%BE%E6%8E%A5%EF%BC%88Universal-Links%EF%BC%89%E9%87%8D%E7%82%B9"><span class="toc-number">6.2.</span> <span class="toc-text">通用链接（Universal Links）重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E8%BF%B0GET%E5%92%8CPOST%E8%AF%B7%E6%B1%82%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.3.</span> <span class="toc-text">简述GET和POST请求的区别？ 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#iOS%E4%B8%AD%E5%87%A0%E7%A7%8D%E5%B8%B8%E8%A7%81%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.4.</span> <span class="toc-text">iOS中几种常见的设计模式？  重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RunLoop%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.5.</span> <span class="toc-text">RunLoop是什么？ 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RunLoop%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.6.</span> <span class="toc-text">RunLoop的作用？ 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E4%BB%A5%E7%94%A8Runloop%E5%AE%9E%E7%8E%B0%E4%BB%80%E4%B9%88%E5%8A%9F%E8%83%BD%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.7.</span> <span class="toc-text">可以用Runloop实现什么功能？ 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RunLoop%E6%8E%A5%E6%94%B6%E5%87%A0%E7%A7%8D%E8%BE%93%E5%85%A5%E6%BA%90%EF%BC%8C%E7%B3%BB%E7%BB%9F%E9%BB%98%E8%AE%A4%E5%AE%9A%E4%B9%89%E4%BA%86%E5%87%A0%E7%A7%8D%E6%A8%A1%E5%BC%8F%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.8.</span> <span class="toc-text">RunLoop接收几种输入源，系统默认定义了几种模式？ 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RunLoop%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%9C%89%E4%BB%80%E4%B9%88%E5%85%B3%E7%B3%BB%EF%BC%9FRunloop%E7%9A%84mode-Runloop%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.9.</span> <span class="toc-text">RunLoop和线程有什么关系？Runloop的mode? Runloop的作用？ 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3Objective-C%E6%98%AF%E5%8A%A8%E6%80%81%E8%BF%90%E8%A1%8C%E6%97%B6%E8%AF%AD%E8%A8%80%E3%80%82-%E9%87%8D%E7%82%B9"><span class="toc-number">6.10.</span> <span class="toc-text">怎么理解Objective-C是动态运行时语言。 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#runtime%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%85%B7%E4%BD%93%E5%BA%94%E7%94%A8%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.11.</span> <span class="toc-text">runtime项目中具体应用？ 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KVC%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="toc-number">6.12.</span> <span class="toc-text">KVC是什么？重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KVO%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="toc-number">6.13.</span> <span class="toc-text">KVO是什么？重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KVO%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%EF%BC%9F-KVO%E7%9A%84%E6%9C%AC%E8%B4%A8%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.14.</span> <span class="toc-text">KVO的实现原理？(KVO的本质是什么？) 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KVO%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8-%E9%87%8D%E7%82%B9"><span class="toc-number">6.15.</span> <span class="toc-text">KVO实际应用 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#category%E5%92%8Cextension%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F%E5%88%86%E4%B8%A4%E7%B1%BB%E5%92%8C%E6%89%A9%E5%B1%95%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F%E5%88%86%E7%B1%BB%E7%9A%84%E7%BB%93%E6%9E%84%E4%BD%93%E9%87%8C%E9%9D%A2%E6%9C%89%E4%BB%80%E4%B9%88%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="toc-number">6.16.</span> <span class="toc-text">category和extension的作用？分两类和扩展的区别？分类的结构体里面有什么？重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#iOS%E5%BC%80%E5%8F%91%E4%B8%AD%E6%9C%89%E5%A4%9A%E5%B0%91%E7%B1%BB%E5%9E%8B%E7%9A%84%E7%BA%BF%E7%A8%8B%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.17.</span> <span class="toc-text">iOS开发中有多少类型的线程？  重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E8%8B%A5%E2%BC%B2%E4%B8%AAurl%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD%E5%A4%9A%E5%BC%A0%E5%9B%BE%E2%BD%9A%EF%BC%8C%E7%84%B6%E5%90%8E%E5%9C%A8%E9%83%BD%E4%B8%8B%E8%BD%BD%E5%AE%8C%E6%88%90%E5%90%8E%E5%90%88%E6%88%90%E2%BC%80%E5%BC%A0%E6%95%B4%E5%9B%BE%EF%BC%9FGCD%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.18.</span> <span class="toc-text">根据若⼲个url异步加载多张图⽚，然后在都下载完成后合成⼀张整图？GCD如何实现？  重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10%E4%B8%AA%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E9%A1%BA%E5%BA%8F%E5%9B%9E%E8%B0%83-GCD%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="toc-number">6.19.</span> <span class="toc-text">10个网络请求顺序回调? GCD如何实现？重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GCD%E5%92%8CNSOperation%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.20.</span> <span class="toc-text">GCD和NSOperation的区别？ 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFBlock%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.21.</span> <span class="toc-text">什么是Block？ 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Block%E7%9A%84%E6%9C%AC%E8%B4%A8-%E9%87%8D%E7%82%B9"><span class="toc-number">6.22.</span> <span class="toc-text">Block的本质 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Block%E7%9A%84%E5%88%86%E7%B1%BB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">6.23.</span> <span class="toc-text">Block的分类？ 重点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E7%9A%84%E5%87%A0%E7%A7%8D%E6%83%85%E5%86%B5%E5%92%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E5%BC%8F%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">7.</span> <span class="toc-text">循环引用的几种情况和解决方式？ 重点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OC-%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%9A%84%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">8.</span> <span class="toc-text">OC 如何进行内存管理的？ 重点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E6%B1%A0%E5%8E%9F%E7%90%86-%E9%87%8D%E7%82%B9"><span class="toc-number">9.</span> <span class="toc-text">自动释放池原理 重点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96-%E9%87%8D%E7%82%B9"><span class="toc-number">10.</span> <span class="toc-text">内存优化 重点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E4%BC%98%E5%8C%96-%E9%87%8D%E7%82%B9"><span class="toc-number">11.</span> <span class="toc-text">启动优化 重点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%A1%E9%A1%BF%E7%9B%91%E5%90%AC-%E9%87%8D%E7%82%B9"><span class="toc-number">11.1.</span> <span class="toc-text">卡顿监听 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tableView%E5%8D%A1%E9%A1%BF%E4%BC%98%E5%8C%96-%E9%87%8D%E7%82%B9"><span class="toc-number">11.2.</span> <span class="toc-text">tableView卡顿优化 重点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E4%BC%98%E5%8C%96-%E9%87%8D%E7%82%B9"><span class="toc-number">12.</span> <span class="toc-text">网络优化 重点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E8%BF%87%E7%A8%8B%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="toc-number">12.1.</span> <span class="toc-text">TCP三次握手，四次挥手过程？重点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E9%93%BE-%E9%87%8D%E7%82%B9"><span class="toc-number">13.</span> <span class="toc-text">事件链 重点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E7%9A%84%E4%B8%A4%E4%B8%AA%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">14.</span> <span class="toc-text">事件传递的两个核心方法？ 重点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%8C%89%E9%92%AE%E7%9A%84%E7%82%B9%E5%87%BB%E8%8C%83%E5%9B%B4%E6%89%A9%E5%A4%A7%E6%95%88%E6%9E%9C-%E9%87%8D%E7%82%B9"><span class="toc-number">15.</span> <span class="toc-text">实现一个按钮的点击范围扩大效果 重点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%90%E8%A7%86%E5%9B%BE%E8%B6%85%E8%BF%87%E7%88%B6%E8%A7%86%E5%9B%BE%E9%83%A8%E5%88%86%E4%BB%8D%E7%84%B6%E8%83%BD%E5%93%8D%E5%BA%94-%E9%87%8D%E7%82%B9"><span class="toc-number">16.</span> <span class="toc-text">子视图超过父视图部分仍然能响应 重点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E8%BF%98%E6%9C%89%E4%BB%80%E4%B9%88%E6%83%B3%E9%97%AE%E7%9A%84%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="toc-number">17.</span> <span class="toc-text">面试官问还有什么想问的？ 重点</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/BboyZJ.github.io/2023/03/06/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A004%EF%BC%9AJSON%E5%92%8CXML%E6%95%B0%E6%8D%AE%E8%A7%A3%E6%9E%90/" title="OC学习04：JSON和XML数据解析"><img src="https://user-images.githubusercontent.com/25925248/96335834-ef977800-10ad-11eb-900b-54900bdb8a3c.jpg" onerror="this.onerror=null;this.src='/BboyZJ.github.io/img/404.jpg'" alt="OC学习04：JSON和XML数据解析"/></a><div class="content"><a class="title" href="/BboyZJ.github.io/2023/03/06/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A004%EF%BC%9AJSON%E5%92%8CXML%E6%95%B0%E6%8D%AE%E8%A7%A3%E6%9E%90/" title="OC学习04：JSON和XML数据解析">OC学习04：JSON和XML数据解析</a><time datetime="2023-03-06T06:09:53.000Z" title="Created 2023-03-06 14:09:53">2023-03-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A040%EF%BC%9A%E7%B1%BB-%E7%BB%93%E6%9E%84%E4%BD%93-%E6%9E%9A%E4%B8%BE%EF%BC%9A%E4%B8%8B%E6%A0%87%E5%92%8C%E4%B8%8B%E6%A0%87%E9%87%8D%E8%BD%BD/" title="Swift学习40：类&amp;结构体&amp;枚举：下标和下标重载"><img src="https://user-images.githubusercontent.com/25925248/96366399-073c3280-117a-11eb-936a-069163ad58dc.jpg" onerror="this.onerror=null;this.src='/BboyZJ.github.io/img/404.jpg'" alt="Swift学习40：类&amp;结构体&amp;枚举：下标和下标重载"/></a><div class="content"><a class="title" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A040%EF%BC%9A%E7%B1%BB-%E7%BB%93%E6%9E%84%E4%BD%93-%E6%9E%9A%E4%B8%BE%EF%BC%9A%E4%B8%8B%E6%A0%87%E5%92%8C%E4%B8%8B%E6%A0%87%E9%87%8D%E8%BD%BD/" title="Swift学习40：类&amp;结构体&amp;枚举：下标和下标重载">Swift学习40：类&amp;结构体&amp;枚举：下标和下标重载</a><time datetime="2023-03-05T12:28:10.000Z" title="Created 2023-03-05 20:28:10">2023-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A039%EF%BC%9A%E4%B8%BA%E7%B1%BB-%E7%BB%93%E6%9E%84%E4%BD%93-%E6%9E%9A%E4%B8%BE%E6%B7%BB%E5%8A%A0%E5%B1%9E%E6%80%A7%E5%92%8C%E6%96%B9%E6%B3%95/" title="Swift学习39：为类&amp;结构体&amp;枚举添加属性和方法"><img src="https://user-images.githubusercontent.com/25925248/96366405-0c997d00-117a-11eb-9a6a-69378ace519b.jpg" onerror="this.onerror=null;this.src='/BboyZJ.github.io/img/404.jpg'" alt="Swift学习39：为类&amp;结构体&amp;枚举添加属性和方法"/></a><div class="content"><a class="title" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A039%EF%BC%9A%E4%B8%BA%E7%B1%BB-%E7%BB%93%E6%9E%84%E4%BD%93-%E6%9E%9A%E4%B8%BE%E6%B7%BB%E5%8A%A0%E5%B1%9E%E6%80%A7%E5%92%8C%E6%96%B9%E6%B3%95/" title="Swift学习39：为类&amp;结构体&amp;枚举添加属性和方法">Swift学习39：为类&amp;结构体&amp;枚举添加属性和方法</a><time datetime="2023-03-05T10:25:21.000Z" title="Created 2023-03-05 18:25:21">2023-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A042%EF%BC%9A%E6%89%A9%E5%B1%95/" title="Swift学习37：扩展"><img src="https://user-images.githubusercontent.com/25925248/96366404-0c00e680-117a-11eb-8537-da55459381bc.jpg" onerror="this.onerror=null;this.src='/BboyZJ.github.io/img/404.jpg'" alt="Swift学习37：扩展"/></a><div class="content"><a class="title" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A042%EF%BC%9A%E6%89%A9%E5%B1%95/" title="Swift学习37：扩展">Swift学习37：扩展</a><time datetime="2023-03-05T09:05:03.000Z" title="Created 2023-03-05 17:05:03">2023-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A041%EF%BC%9A%E5%8D%8F%E8%AE%AE/" title="Swift学习37：协议"><img src="https://user-images.githubusercontent.com/25925248/89221104-4b04ae80-d605-11ea-88bc-368e5a27708f.png" onerror="this.onerror=null;this.src='/BboyZJ.github.io/img/404.jpg'" alt="Swift学习37：协议"/></a><div class="content"><a class="title" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A041%EF%BC%9A%E5%8D%8F%E8%AE%AE/" title="Swift学习37：协议">Swift学习37：协议</a><time datetime="2023-03-05T09:04:54.000Z" title="Created 2023-03-05 17:04:54">2023-03-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By 小J</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/BboyZJ.github.io/js/utils.js"></script><script src="/BboyZJ.github.io/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>

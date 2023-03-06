@@ -1,263 +1,168 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="keywords" content="Hexo Theme Redefine">
-    <meta name="description" content="我是小J，关注我">
-    <meta name="author" content="The Redefine Team">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
-    <!--- Seo Part-->
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>OC组件化05：【方案二】cocoapods组件化 | 张建的博客</title><meta name="author" content="小J,13718004742@163.com"><meta name="copyright" content="小J"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="背景 随着公司业务的不断发展，应用的代码体积将会越来越大，业务代码耦合也越来越多，代码量也是急剧增加 如果仅仅完成代码拆分还不足以解决业务之间的代码耦合，而组件化是一种能够解决代码耦合、业务工程能够独立运行的技术 这篇文章主要介绍远程私有库的创建和管理以及本地索引库的使用  本文以创建 公有库 为例 查看本地索引库 我们用 cocoaPods 的时候，默认使用的是cocoaPods自带的索引库终端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OC组件化05：【方案二】cocoapods组件化">
+<meta property="og:url" content="https://www.bboyzj.cn/2023/03/04/OC%E7%BB%84%E4%BB%B6%E5%8C%96/OC%E7%BB%84%E4%BB%B6%E5%8C%9605%EF%BC%9A%E3%80%90%E6%96%B9%E6%A1%88%E4%BA%8C%E3%80%91cocoapods%E7%BB%84%E4%BB%B6%E5%8C%96/index.html">
+<meta property="og:site_name" content="张建的博客">
+<meta property="og:description" content="背景 随着公司业务的不断发展，应用的代码体积将会越来越大，业务代码耦合也越来越多，代码量也是急剧增加 如果仅仅完成代码拆分还不足以解决业务之间的代码耦合，而组件化是一种能够解决代码耦合、业务工程能够独立运行的技术 这篇文章主要介绍远程私有库的创建和管理以及本地索引库的使用  本文以创建 公有库 为例 查看本地索引库 我们用 cocoaPods 的时候，默认使用的是cocoaPods自带的索引库终端">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://user-images.githubusercontent.com/25925248/96336894-448abc80-10b5-11eb-9bbd-806faec1fa43.jpg">
+<meta property="article:published_time" content="2023-03-04T15:30:55.000Z">
+<meta property="article:modified_time" content="2023-03-04T15:45:45.042Z">
+<meta property="article:author" content="小J">
+<meta property="article:tag" content="组件化开发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/25925248/96336894-448abc80-10b5-11eb-9bbd-806faec1fa43.jpg"><link rel="shortcut icon" href="/BboyZJ.github.io/img/favicon.png"><link rel="canonical" href="https://www.bboyzj.cn/2023/03/04/OC%E7%BB%84%E4%BB%B6%E5%8C%96/OC%E7%BB%84%E4%BB%B6%E5%8C%9605%EF%BC%9A%E3%80%90%E6%96%B9%E6%A1%88%E4%BA%8C%E3%80%91cocoapods%E7%BB%84%E4%BB%B6%E5%8C%96/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/BboyZJ.github.io/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/BboyZJ.github.io/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'OC组件化05：【方案二】cocoapods组件化',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-03-04 23:45:45'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
     
-    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/04/oc组件化/oc组件化05：【方案二】cocoapods组件化/"/>
-    <meta name="robots" content="index,follow">
-    <meta name="googlebot" content="index,follow">
-    <meta name="revisit-after" content="1 days">
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="OC组件化05：【方案二】cocoapods组件化">
-    <meta property="og:description" content="我是小J，关注我">
-    <meta property="og:url" content="https://www.bboyzj.cn2023/03/04/OC组件化/OC组件化05：【方案二】cocoapods组件化/">
-    <meta property="og:image" content="/images/redefine-logo.svg">
-    <meta property="og:site_name" content="Theme Redefine">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="OC组件化05：【方案二】cocoapods组件化">
-    <meta name="twitter:description" content="我是小J，关注我">
-    <meta name="twitter:image" content="/images/redefine-logo.svg">
-    <!--- Icon Part-->
-    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
-    <meta name="theme-color" content="#005080">
-    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
-    
-    <title>
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
         
-            OC组件化05：【方案二】cocoapods组件化 -
-        
-        Theme Redefine
-    </title>
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
     
-<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
-
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
-
-    
-    
-    
-    
-    <script id="hexo-configurations">
-    let REDEFINE = window.REDEFINE || {};
-    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/redefine-avatar.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"Theme Redefine","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":false,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
-    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
-  </script>
-    
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
-
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
-
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
-
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
-
-    
-    
-    
-<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
-</head>
-
-
-<body>
-<div class="progress-bar-container">
-    
-        <span class="scroll-progress-bar"></span>
-    
-
-    
-        <span class="pjax-progress-bar"></span>
-        <span class="pjax-progress-icon">
-            <i class="fa-solid fa-circle-notch fa-spin"></i>
-        </span>
-    
-</div>
-
-
-<main class="page-container">
-
-    
-
-    <div class="page-main-content">
-
-        <div class="page-main-content-top">
-            <header class="menu-wrapper">
-    
-    <div class="menu-content">
-        <div class="left">
-            
-            <a class="logo-title" href="/">
-                
-                Theme Redefine
-                
-            </a>
-        </div>
-
-        <div class="right">
-            <!-- PC -->
-            <div class="pc">
-                <ul class="menu-list">
-                    
-                        
-                            <li class="menu-item">
-                                <!-- Menu -->
-                                <a class="" 
-                                    href="/BboyZJ.github.io/"  >
-                                    
-                                        
-                                            <i class="fa-regular fa-house"></i>
-                                        
-                                        HOME
-                                    
-                                </a>
-                                <!-- Submenu -->
-                                
-                            </li>
-                    
-                    
-                </ul>
-            </div>
-            <!-- Mobile -->
-            <div class="mobile">
-                
-                <div class="icon-item menu-bar">
-                    <div class="menu-bar-middle"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Mobile drawer -->
-    <div class="menu-drawer">
-        <ul class="drawer-menu-list">
-            
-                
-                    <li class="drawer-menu-item flex-center">
-                        <a class="" 
-                        href="/BboyZJ.github.io/"  >
-                             
-                                
-                                    <i class="fa-regular fa-house"></i>
-                                
-                                HOME
-                            
-                        </a>
-                    </li>
-                    <!-- Submenu -->
-                    
-            
-
-        </ul>
-    </div>
-
-    <div class="window-mask"></div>
-
-</header>
-
-
-        </div>
-
-        <div class="page-main-content-middle">
-
-            <div class="main-content">
-
-                
-                    <div class="fade-in-down-animation">
-    <div class="post-page-container">
-        <div class="article-content-container">
-
-            
-            
-                <div class="article-title">
-                    <h1 class="article-title-regular">OC组件化05：【方案二】cocoapods组件化</h1>
-                </div>
-            
-                
-            
-
-            
-                <div class="article-header">
-                    <div class="avatar">
-                        <img src="/BboyZJ.github.io/images/redefine-avatar.svg">
-                    </div>
-                    <div class="info">
-                        <div class="author">
-                            <span class="name">The Redefine Team</span>
-                            
-                                <span class="author-label">lol</span>
-                            
-                        </div>
-                        <div class="meta-info">
-                            <div class="article-meta-info">
-    <span class="article-date article-meta-item">
-        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="pc">2023-03-04 23:30:55</span>
-        <span class="mobile">2023-03-04 23:30</span>
-        <span class="hover-info">Created</span>
-    </span>
-    
-        <span class="article-date article-meta-item">
-            <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-04 23:45:45</span>
-            <span class="mobile">2023-03-04 23:45</span>
-            <span class="hover-info">Updated</span>
-        </span>
-    
-
-    
-        <span class="article-categories article-meta-item">
-            <i class="fa-regular fa-folders"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/BboyZJ.github.io/categories/Component/">Component</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
-    
-        <span class="article-tags article-meta-item">
-            <i class="fa-regular fa-tags"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/BboyZJ.github.io/tags/%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91/">组件化开发</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
-
-    
-    
-    
-    
-        <span class="article-pv article-meta-item">
-            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
-        </span>
-    
-</div>
-
-                        </div>
-                    </div>
-                </div>
-            
-
-            <div class="article-content markdown-body">
-                <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><ul>
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/BboyZJ.github.io/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/BboyZJ.github.io/archives/"><div class="headline">Articles</div><div class="length-num">76</div></a><a href="/BboyZJ.github.io/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a><a href="/BboyZJ.github.io/categories/"><div class="headline">Categories</div><div class="length-num">8</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/BboyZJ.github.io/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/BboyZJ.github.io/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/link/"><i class="fa-fw fa fa-users"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/BboyZJ.github.io/" title="张建的博客"><span class="site-name">张建的博客</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/BboyZJ.github.io/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/BboyZJ.github.io/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/link/"><i class="fa-fw fa fa-users"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">OC组件化05：【方案二】cocoapods组件化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-03-04T15:30:55.000Z" title="Created 2023-03-04 23:30:55">2023-03-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-03-04T15:45:45.042Z" title="Updated 2023-03-04 23:45:45">2023-03-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/BboyZJ.github.io/categories/Component/">Component</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="OC组件化05：【方案二】cocoapods组件化"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><ul>
 <li>随着公司业务的不断发展，应用的代码体积将会越来越大，业务代码耦合也越来越多，代码量也是急剧增加</li>
 <li>如果仅仅完成代码拆分还不足以解决业务之间的代码耦合，而组件化是一种能够解决代码耦合、业务工程能够独立运行的技术</li>
 <li>这篇文章主要介绍远程私有库的创建和管理以及本地索引库的使用</li>
@@ -266,7 +171,7 @@
 <h1 id="查看本地索引库"><a href="#查看本地索引库" class="headerlink" title="查看本地索引库"></a>查看本地索引库</h1><ul>
 <li>我们用 <code>cocoaPods</code> 的时候，默认使用的是cocoaPods自带的索引库<br>终端中使用命令 <code>$ pod repo</code></li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cocoapods</span><br><span class="line">- Type: git (remotes/origin/master)</span><br><span class="line">- URL:  https://github.com/CocoaPods/Specs.git</span><br><span class="line">- Path: /Users/mac/.cocoapods/repos/cocoapods</span><br><span class="line"></span><br><span class="line">trunk</span><br><span class="line">- Type: CDN</span><br><span class="line">- URL:  https://cdn.cocoapods.org/</span><br><span class="line">- Path: /Users/mac/.cocoapods/repos/trunk</span><br><span class="line"></span><br><span class="line">2 repos</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cocoapods</span><br><span class="line">- Type: git (remotes/origin/master)</span><br><span class="line">- URL:  https://github.com/CocoaPods/Specs.git</span><br><span class="line">- Path: /Users/mac/.cocoapods/repos/cocoapods</span><br><span class="line"></span><br><span class="line">trunk</span><br><span class="line">- Type: CDN</span><br><span class="line">- URL:  https://cdn.cocoapods.org/</span><br><span class="line">- Path: /Users/mac/.cocoapods/repos/trunk</span><br><span class="line"></span><br><span class="line">2 repos</span><br></pre></td></tr></table></figure>
 
 <h1 id="组件化分类"><a href="#组件化分类" class="headerlink" title="组件化分类"></a>组件化分类</h1><ul>
 <li><p>公有库：所有人都能使用</p>
@@ -290,66 +195,51 @@
 <li>首先在 <code>Github</code> 创建一个新的 <code>Repository</code>，你的 <code>pods</code> 最终要托管在 <code>Github</code> 平台上的，所以在 <code>Github</code> 上创建一个空的 <code>Repository</code></li>
 </ul>
 <p>注意：<code>库名 = 项目前缀 + 组件名称 </code> ，如 ZJWeakProxy &#x3D; 解决循环引用组件库</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042335079.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042335079.png"></p>
 <ul>
 <li>创建完成后的信息如下：</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042335792.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042335792.png"></p>
 <h1 id="注册-cocoapods-账户"><a href="#注册-cocoapods-账户" class="headerlink" title="注册 cocoapods 账户"></a>注册 cocoapods 账户</h1><ul>
 <li><p>先安装 <code>cocoapods</code>，这个很简单，可以百度搜索自行安装</p>
 </li>
 <li><p>想要创建一个开源 <code>pod</code> 库，首先我们需要注册 <code>cocoapods账户</code>，基于 <code>cocoapods</code> 已经安装好的前提下，这里直接使用 <code>trunk</code> 去注册 <code>cocopods账户</code>，在终端执行：</p>
 </li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pod trunk register 邮箱地址 &#x27;用户名&#x27; --verbose</span><br><span class="line">mac@bogon ~ % pod trunk register 13718004742@163.com &#x27;BboyZJ&#x27; --verbose</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pod trunk register 邮箱地址 &#x27;用户名&#x27; --verbose</span><br><span class="line">mac@bogon ~ % pod trunk register 13718004742@163.com &#x27;BboyZJ&#x27; --verbose</span><br></pre></td></tr></table></figure>
 
 <p>邮箱地址：一般会使用 GitHub邮箱<br>用户名：随便</p>
 <ul>
 <li>注册之后，在邮箱会受到确认邮件</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042335229.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042335229.png"></p>
 <ul>
 <li>注册成功之后可以在终端 <code>验证是否注册成功</code>：</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 验证是否注册成功</span><br><span class="line">mac@bogon ~ % pod trunk me</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 验证是否注册成功</span><br><span class="line">mac@bogon ~ % pod trunk me</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>查看注册信息，以后可以使用该开源pod库发布工具，也可以通过此方式查看已经发布过的pods：</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % pod trunk me</span><br><span class="line">  - Name:     BboyZJ</span><br><span class="line">  - Email:    13718004742@163.com</span><br><span class="line">  - Since:    October 20th, 2021 19:20</span><br><span class="line">  - Pods:</span><br><span class="line">    - ZJSDKDemo</span><br><span class="line">    - ZJSDK_iOS</span><br><span class="line">  - Sessions:</span><br><span class="line">    - October 20th, 2021 19:20 - March 31st, 2022 04:01. IP: 114.253.15.66 </span><br><span class="line">    Description: imac</span><br><span class="line">    - February 27th, 02:33     -        July 5th, 02:37. IP:</span><br><span class="line">    114.252.233.188</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % pod trunk me</span><br><span class="line">  - Name:     BboyZJ</span><br><span class="line">  - Email:    13718004742@163.com</span><br><span class="line">  - Since:    October 20th, 2021 19:20</span><br><span class="line">  - Pods:</span><br><span class="line">    - ZJSDKDemo</span><br><span class="line">    - ZJSDK_iOS</span><br><span class="line">  - Sessions:</span><br><span class="line">    - October 20th, 2021 19:20 - March 31st, 2022 04:01. IP: 114.253.15.66 </span><br><span class="line">    Description: imac</span><br><span class="line">    - February 27th, 02:33     -        July 5th, 02:37. IP:</span><br><span class="line">    114.252.233.188</span><br></pre></td></tr></table></figure>
 
 <h1 id="在本地创建pod库"><a href="#在本地创建pod库" class="headerlink" title="在本地创建pod库"></a>在本地创建pod库</h1><ul>
 <li>利用pod命令创建名为 <code>ZJWeakProxy</code> 的 <code>pod</code> 库</li>
 </ul>
 <p>注：这个名字要和 <code>GitHub</code> 创建的 <code>Repository</code> 名一致</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># cd 到桌面文件夹(组件文件夹)ZJComponent目录下，这个不强制随意</span><br><span class="line">mac@bogon ~ % cd ZJComponent </span><br><span class="line"># 执行 pod lib create ZJWeakProxy</span><br><span class="line">mac@bogon ~ % pod lib create ZJWeakProxy</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># cd 到桌面文件夹(组件文件夹)ZJComponent目录下，这个不强制随意</span><br><span class="line">mac@bogon ~ % cd ZJComponent </span><br><span class="line"># 执行 pod lib create ZJWeakProxy</span><br><span class="line">mac@bogon ~ % pod lib create ZJWeakProxy</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>出现 fatal: unable to access ‘<a class="link"   target="_blank" rel="noopener" href="https://github.com/CocoaPods/pod-template.git/" >https://github.com/CocoaPods/pod-template.git/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>‘: HTTP&#x2F;2 stream 1 was not closed cleanly before end of the underlying stream 报错</li>
+<li>出现 fatal: unable to access ‘<a target="_blank" rel="noopener" href="https://github.com/CocoaPods/pod-template.git/">https://github.com/CocoaPods/pod-template.git/</a>‘: HTTP&#x2F;2 stream 1 was not closed cleanly before end of the underlying stream 报错</li>
 </ul>
 <p>原因分析：一般这是因为服务器的 <code>SSL</code> 证书没有经过第三方机构的签署，所以才报错</p>
 <p>解决办法：解除 <code>SSL</code> 验证，再次执行</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ZJComponent % git config --global http.sslVerify false</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ZJComponent % git config --global http.sslVerify false</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>执行完上述命令后，会问你几个问题，按需求填写即可</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 你想使用哪个平台？</span><br><span class="line">1、What platform do you want to use?? [ iOS / macOS ]</span><br><span class="line">iOS</span><br><span class="line"># 库语言选择？</span><br><span class="line">2、What language do you want to use?? [ Swift / ObjC ]</span><br><span class="line">ObjC</span><br><span class="line"># 是否需要一个demo工程，用于调试Pod？</span><br><span class="line">3、Would you like include a demo application with your library? [ Yes / No ]</span><br><span class="line">Yes</span><br><span class="line"># 你要使用哪个测试框架？</span><br><span class="line">4、Which testing frameworks will you use? [ Specta / Kiwi / None ]</span><br><span class="line">None</span><br><span class="line"># 是否要UI测试？</span><br><span class="line">5、Would you like to do view based testing? [ Yes / No ]</span><br><span class="line">NO</span><br><span class="line"># 类名前缀？</span><br><span class="line">6、What is your class prefix?</span><br><span class="line">ZJ</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 你想使用哪个平台？</span><br><span class="line">1、What platform do you want to use?? [ iOS / macOS ]</span><br><span class="line">iOS</span><br><span class="line"># 库语言选择？</span><br><span class="line">2、What language do you want to use?? [ Swift / ObjC ]</span><br><span class="line">ObjC</span><br><span class="line"># 是否需要一个demo工程，用于调试Pod？</span><br><span class="line">3、Would you like include a demo application with your library? [ Yes / No ]</span><br><span class="line">Yes</span><br><span class="line"># 你要使用哪个测试框架？</span><br><span class="line">4、Which testing frameworks will you use? [ Specta / Kiwi / None ]</span><br><span class="line">None</span><br><span class="line"># 是否要UI测试？</span><br><span class="line">5、Would you like to do view based testing? [ Yes / No ]</span><br><span class="line">NO</span><br><span class="line"># 类名前缀？</span><br><span class="line">6、What is your class prefix?</span><br><span class="line">ZJ</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>到这里 <code>pod</code> 库就创建完成了，它会自己打开刚才创建的pod库</li>
@@ -357,147 +247,87 @@
 <h1 id="工程目录介绍"><a href="#工程目录介绍" class="headerlink" title="工程目录介绍"></a>工程目录介绍</h1><ul>
 <li>目录结构如下：</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042336465.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042336465.png"></p>
 <p>【第1部分】：主要是用来编辑pod相关配置元数据区<br>【第2部分】：主要是用来验证pod效果区<br>【第3部分】：主要是用来 提供给别人使用暴露出来的pod，ReplaceMe空的可以删除，是提示我们可以添加自己的类</p>
 <ul>
 <li>配置 <code>podspec</code> 本地索引文件</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Pod::Spec.new do |s|</span><br><span class="line">  # 库名称</span><br><span class="line">  s.name             = &#x27;ZJWeakProxy&#x27;</span><br><span class="line">  # 版本号</span><br><span class="line">  s.version          = &#x27;0.1.0&#x27;</span><br><span class="line">  # 库简短介绍</span><br><span class="line">  s.summary          = &#x27;A short description of ZJWeakProxy.&#x27;</span><br><span class="line"></span><br><span class="line"># This description is used to generate tags and improve search results.</span><br><span class="line">#   * Think: What does it do? Why did you write it? What is the focus?</span><br><span class="line">#   * Try to keep it short, snappy and to the point.</span><br><span class="line">#   * Write the description between the DESC delimiters below.</span><br><span class="line">#   * Finally, don&#x27;t worry about the indent, CocoaPods strips it!</span><br><span class="line"></span><br><span class="line">  # 开源库描述</span><br><span class="line">  s.description      = &lt;&lt;-DESC</span><br><span class="line">TODO: Add long description of the pod here.</span><br><span class="line">                       DESC</span><br><span class="line">  # 开源库地址，或者是博客、社交地址等</span><br><span class="line">  s.homepage         = &#x27;https://github.com/BboyZJ/ZJWeakProxy&#x27;</span><br><span class="line">  # s.screenshots     = &#x27;www.example.com/screenshots_1&#x27;, &#x27;www.example.com/screenshots_2&#x27;</span><br><span class="line">  # 开源协议</span><br><span class="line">  s.license          = &#123; :type =&gt; &#x27;MIT&#x27;, :file =&gt; &#x27;LICENSE&#x27; &#125;</span><br><span class="line">  # 开源库作者</span><br><span class="line">  s.author           = &#123; &#x27;BboyZJ&#x27; =&gt; &#x27;13718004742@163.com&#x27; &#125;</span><br><span class="line">  # 开源库资源文件</span><br><span class="line">  s.source           = &#123; :git =&gt; &#x27;https://github.com/BBoyZJ/ZJWeakProxy.git&#x27;, :tag =&gt; s.version.to_s &#125;</span><br><span class="line">  # 社交网址</span><br><span class="line">  # s.social_media_url = &#x27;https://twitter.com/&lt;TWITTER_USERNAME&gt;&#x27;</span><br><span class="line">  # 开源库最低支持</span><br><span class="line">  s.ios.deployment_target = &#x27;10.0&#x27;</span><br><span class="line">  # 开源库源文件</span><br><span class="line">  s.source_files = &#x27;ZJWeakProxy/Classes/**/*&#x27;</span><br><span class="line">  # 添加图片等资源文件</span><br><span class="line">  # s.resource_bundles = &#123;</span><br><span class="line">  #   &#x27;ZJWeakProxy&#x27; =&gt; [&#x27;ZJWeakProxy/Assets/*.png&#x27;]</span><br><span class="line">  # &#125;</span><br><span class="line">  </span><br><span class="line">  # s.public_header_files = &#x27;Pod/Classes/**/*.h&#x27;</span><br><span class="line">  # 依赖系统库 多个用逗号隔开</span><br><span class="line">  # s.frameworks = &#x27;UIKit&#x27;, &#x27;MapKit&#x27;</span><br><span class="line">  # 引入第三方依赖库</span><br><span class="line">  # s.dependency &#x27;AFNetworking&#x27;, &#x27;~&gt; 2.3&#x27;</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Pod::Spec.new do |s|</span><br><span class="line">  # 库名称</span><br><span class="line">  s.name             = &#x27;ZJWeakProxy&#x27;</span><br><span class="line">  # 版本号</span><br><span class="line">  s.version          = &#x27;0.1.0&#x27;</span><br><span class="line">  # 库简短介绍</span><br><span class="line">  s.summary          = &#x27;A short description of ZJWeakProxy.&#x27;</span><br><span class="line"></span><br><span class="line"># This description is used to generate tags and improve search results.</span><br><span class="line">#   * Think: What does it do? Why did you write it? What is the focus?</span><br><span class="line">#   * Try to keep it short, snappy and to the point.</span><br><span class="line">#   * Write the description between the DESC delimiters below.</span><br><span class="line">#   * Finally, don&#x27;t worry about the indent, CocoaPods strips it!</span><br><span class="line"></span><br><span class="line">  # 开源库描述</span><br><span class="line">  s.description      = &lt;&lt;-DESC</span><br><span class="line">TODO: Add long description of the pod here.</span><br><span class="line">                       DESC</span><br><span class="line">  # 开源库地址，或者是博客、社交地址等</span><br><span class="line">  s.homepage         = &#x27;https://github.com/BboyZJ/ZJWeakProxy&#x27;</span><br><span class="line">  # s.screenshots     = &#x27;www.example.com/screenshots_1&#x27;, &#x27;www.example.com/screenshots_2&#x27;</span><br><span class="line">  # 开源协议</span><br><span class="line">  s.license          = &#123; :type =&gt; &#x27;MIT&#x27;, :file =&gt; &#x27;LICENSE&#x27; &#125;</span><br><span class="line">  # 开源库作者</span><br><span class="line">  s.author           = &#123; &#x27;BboyZJ&#x27; =&gt; &#x27;13718004742@163.com&#x27; &#125;</span><br><span class="line">  # 开源库资源文件</span><br><span class="line">  s.source           = &#123; :git =&gt; &#x27;https://github.com/BBoyZJ/ZJWeakProxy.git&#x27;, :tag =&gt; s.version.to_s &#125;</span><br><span class="line">  # 社交网址</span><br><span class="line">  # s.social_media_url = &#x27;https://twitter.com/&lt;TWITTER_USERNAME&gt;&#x27;</span><br><span class="line">  # 开源库最低支持</span><br><span class="line">  s.ios.deployment_target = &#x27;10.0&#x27;</span><br><span class="line">  # 开源库源文件</span><br><span class="line">  s.source_files = &#x27;ZJWeakProxy/Classes/**/*&#x27;</span><br><span class="line">  # 添加图片等资源文件</span><br><span class="line">  # s.resource_bundles = &#123;</span><br><span class="line">  #   &#x27;ZJWeakProxy&#x27; =&gt; [&#x27;ZJWeakProxy/Assets/*.png&#x27;]</span><br><span class="line">  # &#125;</span><br><span class="line">  </span><br><span class="line">  # s.public_header_files = &#x27;Pod/Classes/**/*.h&#x27;</span><br><span class="line">  # 依赖系统库 多个用逗号隔开</span><br><span class="line">  # s.frameworks = &#x27;UIKit&#x27;, &#x27;MapKit&#x27;</span><br><span class="line">  # 引入第三方依赖库</span><br><span class="line">  # s.dependency &#x27;AFNetworking&#x27;, &#x27;~&gt; 2.3&#x27;</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
 
 <p>【s.dependency】：设置依赖三方库或其他组件，多个库可以分开写多次</p>
 <ul>
 <li>需要注意如图：</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16779442070174.jpg"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16779442070174.jpg"></p>
 <ul>
 <li><code>Readme</code> 主要是介绍这个组件的用途和使用，可以随时编辑。目前就确认一下自己的名字和邮箱就可以了</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042336844.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042336844.png"></p>
 <ul>
 <li>协议文件，也是确认一下自己的名字和邮箱就可以了</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042337356.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042337356.png"></p>
 <h1 id="添加自己的类"><a href="#添加自己的类" class="headerlink" title="添加自己的类"></a>添加自己的类</h1><ul>
 <li>打开pod库目录，删除ReplaceMe</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042337055.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042337055.png"></p>
 <ul>
 <li>创建 <code>ZJWeakProxy</code> 简单类，声明一个打印函数，方便后续测试</li>
 </ul>
 <p><strong>注：创建类文件一定要放到 Classes 目录下</strong></p>
 <p>.h 文件下</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ZJWeakProxy.h&quot;</span><br><span class="line"></span><br><span class="line">@interface ZJWeakProxy : NSProxy</span><br><span class="line">- (void)printZJWeakProxy;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ZJWeakProxy.h&quot;</span><br><span class="line"></span><br><span class="line">@interface ZJWeakProxy : NSProxy</span><br><span class="line">- (void)printZJWeakProxy;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
 
 <p>.m 文件下</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ZJWeakProxy.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation ZJWeakProxy</span><br><span class="line">- (void)printZJWeakProxy&#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ZJWeakProxy.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation ZJWeakProxy</span><br><span class="line">- (void)printZJWeakProxy&#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
 
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042338285.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042338285.png"></p>
 <ul>
 <li>此时 <code>cd</code> 到 <code>Example</code> 路径下执行 <code>pod install</code> 命令，看看是否能将刚刚添加的库文件引入到工程中</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % cd /Users/mac/Desktop/ZJComponent/ZJWeakProxy/Example </span><br><span class="line">mac@bogon Example % pod install</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % cd /Users/mac/Desktop/ZJComponent/ZJWeakProxy/Example </span><br><span class="line">mac@bogon Example % pod install</span><br></pre></td></tr></table></figure>
 
 <p>如果成功会在Pods中看到：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042338860.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042338860.png"></p>
 <ul>
 <li>可以到项目中导入头文件简单使用一下</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042343398.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042343398.png"></p>
 <p>证明是可用的</p>
 <p>【注】：<code>CocoaPods</code> 工具的另外一个优点就是，多个组件依赖同一个组件时，它会自动帮你检测安装，而 <code>不会重复导入</code>。</p>
 <h1 id="项目上传与发布"><a href="#项目上传与发布" class="headerlink" title="项目上传与发布"></a>项目上传与发布</h1><ul>
 <li>cd到你的项目路径下，将项目上传到GitHub中（即刚刚创建的ZJWeakProxy公有库中），依次使用下列命令行，不要遗漏</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># cd 到 组件ZJWeakProxy路径下</span><br><span class="line">mac@bogon Example % cd /Users/mac/Desktop/ZJComponent/ZJWeakProxy</span><br><span class="line"># 添加github项目路径</span><br><span class="line">mac@bogon ZJWeakProxy % git remote add origin https://github.com/BboyZ/ZJWeakProxy.git</span><br><span class="line"># 添加文件</span><br><span class="line">mac@bogon ZJWeakProxy % git add .</span><br><span class="line"># 将暂存区里的改动提交到本地的版本库</span><br><span class="line">mac@bogon ZJWeakProxy % git commit -m &quot;first commit&quot;</span><br><span class="line"># 创建分支main</span><br><span class="line">mac@bogon ZJWeakProxy % git branch -M main</span><br><span class="line"># 提交版本号并push到main分支</span><br><span class="line">mac@bogon ZJWeakProxy % git push -u origin main</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># cd 到 组件ZJWeakProxy路径下</span><br><span class="line">mac@bogon Example % cd /Users/mac/Desktop/ZJComponent/ZJWeakProxy</span><br><span class="line"># 添加github项目路径</span><br><span class="line">mac@bogon ZJWeakProxy % git remote add origin https://github.com/BboyZ/ZJWeakProxy.git</span><br><span class="line"># 添加文件</span><br><span class="line">mac@bogon ZJWeakProxy % git add .</span><br><span class="line"># 将暂存区里的改动提交到本地的版本库</span><br><span class="line">mac@bogon ZJWeakProxy % git commit -m &quot;first commit&quot;</span><br><span class="line"># 创建分支main</span><br><span class="line">mac@bogon ZJWeakProxy % git branch -M main</span><br><span class="line"># 提交版本号并push到main分支</span><br><span class="line">mac@bogon ZJWeakProxy % git push -u origin main</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>在执行 <code>git push -u origin main</code> 时，如果遇到需要输入用户名和密码：</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Username for &#x27;https://github.com&#x27;: BboyZJ</span><br><span class="line">Password for &#x27;https://BboyZJ@github.com&#x27;:</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Username for &#x27;https://github.com&#x27;: BboyZJ</span><br><span class="line">Password for &#x27;https://BboyZJ@github.com&#x27;:</span><br></pre></td></tr></table></figure>
 
 <p><strong>【注意】</strong>：这个 <code>密码</code> 不是你 <code>GitHub</code> 的登录密码，而是需要生成一个 <code>access tokens</code></p>
 <ul>
 <li>生成 <code>access token</code></li>
 </ul>
 <p>需要在 <code>GitHub</code> 个人设置页 -&gt; Settings -&gt; Developer Settings -&gt; Personal access tokens 中创建一个 <code>token</code></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042343972.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042343972.png"></p>
 <ul>
 <li><p>Generate new token 生成新的 <code>token</code></p>
 <ul>
 <li>设置 <code>token</code> 的有效期 按需设置，访问权限等</li>
 </ul>
-<p>  <img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042344432.png"
-                     
-                ></p>
+<p>  <img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042344432.png"></p>
 <ul>
 <li><p>选择要授予令牌token的范围或权限</p>
 </li>
 <li><p>要使用token从命令行访问仓库，请选择repo</p>
 </li>
 </ul>
-<p>  <img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042344063.png"
-                     
-                ></p>
+<p>  <img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042344063.png"></p>
 <ul>
 <li>要使用token从命令行删除仓库，请选择delete_repo</li>
 </ul>
-<p> <img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042344513.png"
-                     
-                ></p>
+<p> <img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042344513.png"></p>
 <ul>
 <li>其他根据需要进行勾选</li>
 </ul>
@@ -510,91 +340,76 @@
 <ul>
 <li>在命令行输入完 <code>token</code> 密码</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Username for &#x27;https://github.com&#x27;: BboyZJ</span><br><span class="line">Password for &#x27;https://BboyZJ@github.com&#x27;: </span><br><span class="line">Enumerating objects: 91, done.</span><br><span class="line">Counting objects: 100% (91/91), done.</span><br><span class="line">Delta compression using up to 4 threads</span><br><span class="line">Compressing objects: 100% (83/83), done.</span><br><span class="line">Writing objects: 100% (91/91), 29.35 KiB | 2.45 MiB/s, done.</span><br><span class="line">Total 91 (delta 23), reused 0 (delta 0), pack-reused 0</span><br><span class="line">remote: Resolving deltas: 100% (23/23), done.</span><br><span class="line">To https://github.com/BboyZJ/ZJWeakProxy.git</span><br><span class="line"> * [new branch]      main -&gt; main</span><br><span class="line">branch &#x27;main&#x27; set up to track &#x27;origin/main&#x27;.</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Username for &#x27;https://github.com&#x27;: BboyZJ</span><br><span class="line">Password for &#x27;https://BboyZJ@github.com&#x27;: </span><br><span class="line">Enumerating objects: 91, done.</span><br><span class="line">Counting objects: 100% (91/91), done.</span><br><span class="line">Delta compression using up to 4 threads</span><br><span class="line">Compressing objects: 100% (83/83), done.</span><br><span class="line">Writing objects: 100% (91/91), 29.35 KiB | 2.45 MiB/s, done.</span><br><span class="line">Total 91 (delta 23), reused 0 (delta 0), pack-reused 0</span><br><span class="line">remote: Resolving deltas: 100% (23/23), done.</span><br><span class="line">To https://github.com/BboyZJ/ZJWeakProxy.git</span><br><span class="line"> * [new branch]      main -&gt; main</span><br><span class="line">branch &#x27;main&#x27; set up to track &#x27;origin/main&#x27;.</span><br></pre></td></tr></table></figure>
 
 <p>由上面看代表上传成功了</p>
 <ul>
-<li>打开浏览器 <a class="link"   target="_blank" rel="noopener" href="https://github.com/BboyZJ/ZJWeakProxy" >https://github.com/BboyZJ/ZJWeakProxy <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> ，就可以看到你的pod库已经push上去了</li>
+<li>打开浏览器 <a target="_blank" rel="noopener" href="https://github.com/BboyZJ/ZJWeakProxy">https://github.com/BboyZJ/ZJWeakProxy</a> ，就可以看到你的pod库已经push上去了</li>
 </ul>
 <h1 id="打-tag-并发布到-Cocoapods"><a href="#打-tag-并发布到-Cocoapods" class="headerlink" title="打 tag 并发布到 Cocoapods"></a>打 tag 并发布到 Cocoapods</h1><p>至此，我们已经成功将本地的仓库关联并推送到远程仓库，现在我们需要发布一个可用的组件</p>
 <ul>
 <li>首先我们要给当前项目打一个 tag 版本号，在 podspec 中：</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s.version           = &#x27;0.1.0&#x27;</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s.version           = &#x27;0.1.0&#x27;</span><br></pre></td></tr></table></figure>
 
 <p>指定的版本号是 0.1.0 ，那么我们就同样打个 0.1.0 的 tag</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 打 tag </span><br><span class="line">mac@bogon ZJWeakProxy % git tag 0.1.0</span><br><span class="line">// 推送到远程</span><br><span class="line">mac@bogon ZJWeakProxy % git push --tags</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 打 tag </span><br><span class="line">mac@bogon ZJWeakProxy % git tag 0.1.0</span><br><span class="line">// 推送到远程</span><br><span class="line">mac@bogon ZJWeakProxy % git push --tags</span><br></pre></td></tr></table></figure>
 
 <p>打 <code>tag</code> 默认在当前分支上，这里只有 <code>master</code> ，所以不用切换分支</p>
 <h1 id="发布到-cocoapods"><a href="#发布到-cocoapods" class="headerlink" title="发布到 cocoapods"></a>发布到 cocoapods</h1><ul>
 <li>我们创建的项目以及标签版本号都是沿用了 <code>podspec</code> 文件中的信息，因此可以直接验证 <code>podspec</code> 文件信息是否可以通过验证，<code>podspec</code> 文件的版本号一定要和 <code>tag</code> 保持一致</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ZJWeakProxy % pod spec link</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ZJWeakProxy % pod spec link</span><br></pre></td></tr></table></figure>
 
 <p>如果通过验证，那么你会看到类似下面的提示，绿色的 <code>passed validation</code></p>
 <ul>
 <li>首先要通过 <code>trunk</code> 注册生成一条会话：</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// pod trunk register 邮箱 用户名 描述</span><br><span class="line">mac@bogon ZJWeakProxy % pod trunk register 13718004742@163.com BboyZJ --description=ZJWeakProxy组件 </span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// pod trunk register 邮箱 用户名 描述</span><br><span class="line">mac@bogon ZJWeakProxy % pod trunk register 13718004742@163.com BboyZJ --description=ZJWeakProxy组件 </span><br></pre></td></tr></table></figure>
 
 <p>然后去邮箱进行验证，验证成功会出现下面页面：</p>
 <ul>
 <li>现在，就可以将 podspec 提交给 CocoaPods 了。这个文件将是别人搜索你的组件的索引。</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ZJWeakProxy % pod trunk push ZJWeakProxy.podspec --allow-warnings</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ZJWeakProxy % pod trunk push ZJWeakProxy.podspec --allow-warnings</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>pod search 组件名</li>
 </ul>
 <p>上传完成之后，接可以通过 pod search ZJWeakProxy 搜索到自己的组件了，如果搜索不到，删除本地的搜索文件，命令 ：</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ZJWeakProxy % rm ~/Library/Caches/CocoaPods/search_index.json</span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ZJWeakProxy % rm ~/Library/Caches/CocoaPods/search_index.json</span><br></pre></td></tr></table></figure>
 
 <p>重新 <code>search</code> 产生新的搜索文件，发布新版本则需要打新的 <code>tag</code>，重新编辑 <code>podspec</code> 文件，然后再次提交给 <code>CocoaPods</code>。</p>
 <h1 id="集成到宿主工程"><a href="#集成到宿主工程" class="headerlink" title="集成到宿主工程"></a>集成到宿主工程</h1><p>经过上面的操作我们已经完成了组件的创建和发布，也支持了 Cocoapods 的集成。现在我们需要将该组件集成到宿主工程中去，使用方式和集成三方库是一样的。</p>
 <ul>
 <li>新建个带 <code>pod</code> 的项目 <code>Demo</code>，把我们做好的 <code>ZJWeakProxy</code> 加入 <code>podfile</code> 文件</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># Uncomment the next line to define a global platform for your project</span><br><span class="line">platform :ios, &#x27;10.0&#x27;</span><br><span class="line"></span><br><span class="line">target &#x27;ZJWeakProxy-Demo&#x27; do</span><br><span class="line">  # Comment the next line if you don&#x27;t want to use dynamic frameworks</span><br><span class="line">  use_frameworks!</span><br><span class="line"></span><br><span class="line">  # ZJWeakProxy</span><br><span class="line">  pod &#x27;ZJWeakProxy&#x27;,:git =&gt;&quot;https://github.com/BboyZJ/ZJWeakProxy.git&quot;</span><br><span class="line">  </span><br><span class="line">  # Pods for ZJWeakProxy-Demo</span><br><span class="line"></span><br><span class="line">end </span><br></pre></td></tr></table></figure></div>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># Uncomment the next line to define a global platform for your project</span><br><span class="line">platform :ios, &#x27;10.0&#x27;</span><br><span class="line"></span><br><span class="line">target &#x27;ZJWeakProxy-Demo&#x27; do</span><br><span class="line">  # Comment the next line if you don&#x27;t want to use dynamic frameworks</span><br><span class="line">  use_frameworks!</span><br><span class="line"></span><br><span class="line">  # ZJWeakProxy</span><br><span class="line">  pod &#x27;ZJWeakProxy&#x27;,:git =&gt;&quot;https://github.com/BboyZJ/ZJWeakProxy.git&quot;</span><br><span class="line">  </span><br><span class="line">  # Pods for ZJWeakProxy-Demo</span><br><span class="line"></span><br><span class="line">end </span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>执行 pod install</li>
 </ul>
 <p><code>mac@bogon ZJWeakProxy-Demo % pod install</code></p>
 <p>【问题1】安装报错：[!] Unable to find a specification for <code>ZJWeakProxy</code></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042344858.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042344858.png"></p>
 <p>解决办法：</p>
 <p><code>mac@bogon ZJWeakProxy-Demo % pod repo update --verbose</code></p>
 <p>【问题2】：HTTP&#x2F;2 stream 1 was not closed cleanly before end of the underlying stream</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042345578.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042345578.png"></p>
 <p>解决办法：更改默认通信协议</p>
 <p><code>mac@bogon ZJWeakProxy-Demo % git config --global http.version HTTP/1.1</code></p>
 <ul>
 <li>引入头文件并打印结果</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042345740.png"
-                     
-                ></p>
+<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303042345740.png"></p>
 <h1 id="版本更新与维护"><a href="#版本更新与维护" class="headerlink" title="版本更新与维护"></a>版本更新与维护</h1><ul>
 <li><p>现在的 <code>ZJWeakProxy</code> 库已经在GitHub上托管了，以后维护这个项目就可以了（开始本地创建的ZJWeakProxy项目就可以删除了），管理GitHub仓库，有两种方案：</p>
 <ul>
-<li><p>可以使用命令行 git clone <a class="link"   target="_blank" rel="noopener" href="https://github.com/BboyZJ/ZJWeakProxy" >https://github.com/BboyZJ/ZJWeakProxy <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<li><p>可以使用命令行 git clone <a target="_blank" rel="noopener" href="https://github.com/BboyZJ/ZJWeakProxy">https://github.com/BboyZJ/ZJWeakProxy</a></p>
 </li>
 <li><p>也可以使用 GitHub Desktop</p>
 <ul>
-<li>下载 <a class="link"   target="_blank" rel="noopener" href="https://desktop.github.com/" >GitHub Desktop <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 登录你的用户名和密码，<code>File -&gt; Responsitory</code></li>
+<li>下载 <a target="_blank" rel="noopener" href="https://desktop.github.com/">GitHub Desktop</a> 登录你的用户名和密码，<code>File -&gt; Responsitory</code></li>
 </ul>
 </li>
 </ul>
@@ -603,336 +418,4 @@
 </li>
 </ul>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>终于写完了，哇哦😮！</p>
-
-            </div>
-
-            
-                <div class="post-copyright-info">
-                    <div class="article-copyright-info-container">
-    <ul>
-        <li>Post title：OC组件化05：【方案二】cocoapods组件化</li>
-        <li>Post author：The Redefine Team</li>
-        <li>Create time：2023-03-04 23:30:55</li>
-        <li>
-            Post link：https://redefine.ohevan.com/2023/03/04/OC组件化/OC组件化05：【方案二】cocoapods组件化/
-        </li>
-        <li>
-            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
-        </li>
-    </ul>
-</div>
-
-                </div>
-            
-
-            
-                <ul class="post-tags-box">
-                    
-                        <li class="tag-item">
-                            <a href="/BboyZJ.github.io/tags/%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91/">#组件化开发</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            
-
-            
-
-            
-                <div class="article-nav">
-                    
-                        <div class="article-prev">
-                            <a class="prev"
-                            rel="prev"
-                            href="/BboyZJ.github.io/2023/03/04/OC%E7%BB%84%E4%BB%B6%E5%8C%96/OC%E7%BB%84%E4%BB%B6%E5%8C%9606%EF%BC%9AGithub-Desktop%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"
-                            >
-                                <span class="left arrow-icon flex-center">
-                                    <i class="fa-solid fa-chevron-left"></i>
-                                </span>
-                                <span class="title flex-center">
-                                    <span class="post-nav-title-item">OC组件化06：Github-Desktop管理工具使用</span>
-                                    <span class="post-nav-item">Prev posts</span>
-                                </span>
-                            </a>
-                        </div>
-                    
-                    
-                        <div class="article-next">
-                            <a class="next"
-                            rel="next"
-                            href="/BboyZJ.github.io/2023/03/04/OC%E7%BB%84%E4%BB%B6%E5%8C%96/OC%E7%BB%84%E4%BB%B6%E5%8C%9604%EF%BC%9A%E3%80%90%E6%96%B9%E6%A1%88%E4%B8%80%E3%80%91%E6%9C%AC%E5%9C%B0%E7%BB%84%E4%BB%B6%E5%8C%96/"
-                            >
-                                <span class="title flex-center">
-                                    <span class="post-nav-title-item">OC组件化04：【方案一】本地组件化</span>
-                                    <span class="post-nav-item">Next posts</span>
-                                </span>
-                                <span class="right arrow-icon flex-center">
-                                    <i class="fa-solid fa-chevron-right"></i>
-                                </span>
-                            </a>
-                        </div>
-                    
-                </div>
-            
-
-
-            
-        </div>
-
-        
-            <div class="toc-content-container">
-                <div class="post-toc-wrap">
-    <div class="post-toc">
-        <div class="toc-title">On this page</div>
-        <div class="page-title">OC组件化05：【方案二】cocoapods组件化</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%AC%E5%9C%B0%E7%B4%A2%E5%BC%95%E5%BA%93"><span class="nav-text">查看本地索引库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E5%8C%96%E5%88%86%E7%B1%BB"><span class="nav-text">组件化分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%85%AC%E6%9C%89%E5%BA%93"><span class="nav-text">创建公有库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B3%A8%E5%86%8C-cocoapods-%E8%B4%A6%E6%88%B7"><span class="nav-text">注册 cocoapods 账户</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8%E6%9C%AC%E5%9C%B0%E5%88%9B%E5%BB%BApod%E5%BA%93"><span class="nav-text">在本地创建pod库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E7%9B%AE%E5%BD%95%E4%BB%8B%E7%BB%8D"><span class="nav-text">工程目录介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E7%B1%BB"><span class="nav-text">添加自己的类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E4%B8%8E%E5%8F%91%E5%B8%83"><span class="nav-text">项目上传与发布</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%93-tag-%E5%B9%B6%E5%8F%91%E5%B8%83%E5%88%B0-Cocoapods"><span class="nav-text">打 tag 并发布到 Cocoapods</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E5%88%B0-cocoapods"><span class="nav-text">发布到 cocoapods</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%86%E6%88%90%E5%88%B0%E5%AE%BF%E4%B8%BB%E5%B7%A5%E7%A8%8B"><span class="nav-text">集成到宿主工程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0%E4%B8%8E%E7%BB%B4%E6%8A%A4"><span class="nav-text">版本更新与维护</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol>
-
-    </div>
-</div>
-            </div>
-        
-    </div>
-</div>
-
-
-                
-
-            </div>
-
-
-
-        </div>
-
-        <div class="page-main-content-bottom">
-            <footer class="footer">
-    <div class="info-container">
-        <div class="copyright-info">
-            &copy;
-            
-              <span>2022</span>
-              -
-            
-            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">The Redefine Team</a>
-        </div>
-        
-            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-            <div class="website-count info-item">
-                
-                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
-                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
-                    </span>
-                
-                
-                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
-                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
-                    </span>
-                
-            </div>
-        
-        <div class="theme-info info-item">
-            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
-                <br> 
-            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
-        </div>
-        
-        
-        
-            <div id="start_time_div" style="display:none">
-                2022/8/17 11:45:14
-            </div>
-            <div>
-                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
-            </div>
-        
-        
-        
-            <script async data-pjax>
-                try {
-                    function odometer_init() {
-                    const elements = document.querySelectorAll('.odometer');
-                    elements.forEach(el => {
-                        new Odometer({
-                            el,
-                            format: '( ddd).dd',
-                            duration: 200
-                        });
-                    });
-                    }
-                    odometer_init();
-                } catch (error) {}
-            </script>
-        
-        
-        
-    </div>  
-</footer>
-        </div>
-    </div>
-
-    
-        <div class="post-tools">
-            <div class="post-tools-container">
-    <ul class="tools-list">
-        <!-- TOC aside toggle -->
-        
-            <li class="right-bottom-tools page-aside-toggle">
-                <i class="fa-regular fa-outdent"></i>
-            </li>
-        
-
-        <!-- go comment -->
-        
-    </ul>
-</div>
-
-        </div>
-    
-
-    <div class="right-bottom-side-tools">
-        <div class="side-tools-container">
-    <ul class="unfolded-tools-list">
-        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
-            <i class="fa-regular fa-magnifying-glass-plus"></i>
-        </li>
-
-        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
-            <i class="fa-regular fa-magnifying-glass-minus"></i>
-        </li>
-
-        <li class="right-bottom-tools tool-expand-width flex-center">
-            <i class="fa-regular fa-expand"></i>
-        </li>
-
-        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
-            <i class="fa-regular fa-moon"></i>
-        </li>
-
-        <!-- rss -->
-        
-
-        
-            <li class="right-bottom-tools tool-scroll-to-top flex-center">
-                <i class="fa-regular fa-arrow-up"></i>
-            </li>
-        
-
-        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
-            <i class="fa-regular fa-arrow-down"></i>
-        </li>
-    </ul>
-
-    <ul class="folded-tools-list">
-        <li class="right-bottom-tools tool-toggle-show flex-center">
-            <i class="fa-regular fa-cog fa-spin"></i>
-        </li>
-        
-    </ul>
-</div>
-
-    </div>
-
-    <div class="image-viewer-container">
-    <img src="">
-</div>
-
-
-    
-
-
-</main>
-
-
-
-
-<script src="/BboyZJ.github.io/js/utils.js"></script>
-
-<script src="/BboyZJ.github.io/js/main.js"></script>
-
-<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
-
-<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
-
-<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
-
-
-
-
-
-    
-<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
-
-
-
-
-    
-<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
-
-
-
-
-    
-<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
-
-    
-<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
-
-    
-<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
-
-
-
-
-
-<div class="post-scripts pjax">
-    
-        
-<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
-
-<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
-
-<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
-
-<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
-
-    
-    
-</div>
-
-
-    
-<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
-
-<script>
-    window.addEventListener('DOMContentLoaded', () => {
-        window.pjax = new Pjax({
-            selectors: [
-                'head title',
-                '.page-container',
-                '.pjax'
-            ],
-            history: true,
-            debug: false,
-            cacheBust: false,
-            timeout: 0,
-            analytics: false,
-            currentUrlFullReload: false,
-            scrollRestoration: false,
-            // scrollTo: true,
-        });
-
-        document.addEventListener('pjax:send', () => {
-            REDEFINE.utils.pjaxProgressBarStart();
-        });
-
-        document.addEventListener('pjax:complete', () => {
-            REDEFINE.utils.pjaxProgressBarEnd();
-            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
-            REDEFINE.refresh();
-        });
-    });
-</script>
-
-
-
-
-</body>
-</html>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://www.bboyzj.cn">小J</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://www.bboyzj.cn/2023/03/04/OC%E7%BB%84%E4%BB%B6%E5%8C%96/OC%E7%BB%84%E4%BB%B6%E5%8C%9605%EF%BC%9A%E3%80%90%E6%96%B9%E6%A1%88%E4%BA%8C%E3%80%91cocoapods%E7%BB%84%E4%BB%B6%E5%8C%96/">https://www.bboyzj.cn/2023/03/04/OC%E7%BB%84%E4%BB%B6%E5%8C%96/OC%E7%BB%84%E4%BB%B6%E5%8C%9605%EF%BC%9A%E3%80%90%E6%96%B9%E6%A1%88%E4%BA%8C%E3%80%91cocoapods%E7%BB%84%E4%BB%B6%E5%8C%96/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/BboyZJ.github.io/tags/%E7%BB%84%E4%BB%B6%E5%8C%96%E5%BC%80%E5%8F%91/">组件化开发</a></div><div class="post_share"><div class="social-share" data-image="https://user-images.githubusercontent.com/25925248/96336894-448abc80-10b5-11eb-9bbd-806faec1fa43.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/BboyZJ.github.io/2023/03/04/OC%E7%BB%84%E4%BB%B6%E5%8C%96/OC%E7%BB%84%E4%BB%B6%E5%8C%9606%EF%BC%9AGithub-Desktop%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" title="OC组件化06：Github-Desktop管理工具使用"><img class="cover" src="https://user-images.githubusercontent.com/25925248/96366406-0d321380-117a-11eb-941d-a4667dc2f89c.jpg" onerror="onerror=null;src='/BboyZJ.github.io/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">OC组件化06：Github-Desktop管理工具使用</div></div></a></div><div class="next-post pull-right"><a href="/BboyZJ.github.io/2023/03/04/OC%E7%BB%84%E4%BB%B6%E5%8C%96/OC%E7%BB%84%E4%BB%B6%E5%8C%9604%EF%BC%9A%E3%80%90%E6%96%B9%E6%A1%88%E4%B8%80%E3%80%91%E6%9C%AC%E5%9C%B0%E7%BB%84%E4%BB%B6%E5%8C%96/" title="OC组件化04：【方案一】本地组件化"><img class="cover" src="https://user-images.githubusercontent.com/25925248/96336894-448abc80-10b5-11eb-9bbd-806faec1fa43.jpg" onerror="onerror=null;src='/BboyZJ.github.io/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">OC组件化04：【方案一】本地组件化</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/BboyZJ.github.io/2023/03/04/OC%E7%BB%84%E4%BB%B6%E5%8C%96/OC%E7%BB%84%E4%BB%B6%E5%8C%9601%EF%BC%9A%E7%BB%84%E4%BB%B6%E5%8C%96%E4%BB%8B%E7%BB%8D/" title="OC组件化01：组件化介绍"><img class="cover" src="https://user-images.githubusercontent.com/25925248/96336894-448abc80-10b5-11eb-9bbd-806faec1fa43.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-04</div><div class="title">OC组件化01：组件化介绍</div></div></a></div><div><a href="/BboyZJ.github.io/2023/03/04/OC%E7%BB%84%E4%BB%B6%E5%8C%96/OC%E7%BB%84%E4%BB%B6%E5%8C%9603%EF%BC%9A%E5%9F%BA%E4%BA%8ERuntTime%E7%9A%84target-action%E7%9A%84%E4%BD%BF%E7%94%A8/" title="OC组件化03：基于RuntTime的target-action的使用"><img class="cover" src="https://user-images.githubusercontent.com/25925248/96336894-448abc80-10b5-11eb-9bbd-806faec1fa43.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-04</div><div class="title">OC组件化03：基于RuntTime的target-action的使用</div></div></a></div><div><a href="/BboyZJ.github.io/2023/03/04/OC%E7%BB%84%E4%BB%B6%E5%8C%96/OC%E7%BB%84%E4%BB%B6%E5%8C%9602%EF%BC%9A%E5%9F%BA%E4%BA%8EURL-Scheme%E7%9A%84%E4%BD%BF%E7%94%A8/" title="OC组件化02：基于URL Scheme的使用"><img class="cover" src="https://user-images.githubusercontent.com/25925248/89294514-33bfd280-d692-11ea-9151-7808205ed301.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-04</div><div class="title">OC组件化02：基于URL Scheme的使用</div></div></a></div><div><a href="/BboyZJ.github.io/2023/03/04/OC%E7%BB%84%E4%BB%B6%E5%8C%96/OC%E7%BB%84%E4%BB%B6%E5%8C%9603%EF%BC%9A%E9%9D%A2%E5%90%91%E5%8D%8F%E8%AE%AEProtocol-Class%E7%9A%84%E4%BD%BF%E7%94%A8/" title="OC组件化03：面向协议Protocol Class的使用"><img class="cover" src="https://user-images.githubusercontent.com/25925248/96366407-0dcaaa00-117a-11eb-98af-a4623b1a5aa6.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-04</div><div class="title">OC组件化03：面向协议Protocol Class的使用</div></div></a></div><div><a href="/BboyZJ.github.io/2023/03/04/OC%E7%BB%84%E4%BB%B6%E5%8C%96/OC%E7%BB%84%E4%BB%B6%E5%8C%9604%EF%BC%9A%E3%80%90%E6%96%B9%E6%A1%88%E4%B8%80%E3%80%91%E6%9C%AC%E5%9C%B0%E7%BB%84%E4%BB%B6%E5%8C%96/" title="OC组件化04：【方案一】本地组件化"><img class="cover" src="https://user-images.githubusercontent.com/25925248/96336894-448abc80-10b5-11eb-9bbd-806faec1fa43.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-04</div><div class="title">OC组件化04：【方案一】本地组件化</div></div></a></div><div><a href="/BboyZJ.github.io/2023/03/04/OC%E7%BB%84%E4%BB%B6%E5%8C%96/OC%E7%BB%84%E4%BB%B6%E5%8C%9606%EF%BC%9AGithub-Desktop%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" title="OC组件化06：Github-Desktop管理工具使用"><img class="cover" src="https://user-images.githubusercontent.com/25925248/96366406-0d321380-117a-11eb-941d-a4667dc2f89c.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-04</div><div class="title">OC组件化06：Github-Desktop管理工具使用</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/BboyZJ.github.io/img/avatar.png" onerror="this.onerror=null;this.src='/BboyZJ.github.io/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">小J</div><div class="author-info__description">我是小J，关注我</div></div><div class="card-info-data site-data is-center"><a href="/BboyZJ.github.io/archives/"><div class="headline">Articles</div><div class="length-num">76</div></a><a href="/BboyZJ.github.io/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a><a href="/BboyZJ.github.io/categories/"><div class="headline">Categories</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%AC%E5%9C%B0%E7%B4%A2%E5%BC%95%E5%BA%93"><span class="toc-number">2.</span> <span class="toc-text">查看本地索引库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E5%8C%96%E5%88%86%E7%B1%BB"><span class="toc-number">3.</span> <span class="toc-text">组件化分类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">4.</span> <span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%85%AC%E6%9C%89%E5%BA%93"><span class="toc-number">5.</span> <span class="toc-text">创建公有库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C-cocoapods-%E8%B4%A6%E6%88%B7"><span class="toc-number">6.</span> <span class="toc-text">注册 cocoapods 账户</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9C%A8%E6%9C%AC%E5%9C%B0%E5%88%9B%E5%BB%BApod%E5%BA%93"><span class="toc-number">7.</span> <span class="toc-text">在本地创建pod库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B7%A5%E7%A8%8B%E7%9B%AE%E5%BD%95%E4%BB%8B%E7%BB%8D"><span class="toc-number">8.</span> <span class="toc-text">工程目录介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E7%B1%BB"><span class="toc-number">9.</span> <span class="toc-text">添加自己的类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E4%B8%8E%E5%8F%91%E5%B8%83"><span class="toc-number">10.</span> <span class="toc-text">项目上传与发布</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%93-tag-%E5%B9%B6%E5%8F%91%E5%B8%83%E5%88%B0-Cocoapods"><span class="toc-number">11.</span> <span class="toc-text">打 tag 并发布到 Cocoapods</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%91%E5%B8%83%E5%88%B0-cocoapods"><span class="toc-number">12.</span> <span class="toc-text">发布到 cocoapods</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9B%86%E6%88%90%E5%88%B0%E5%AE%BF%E4%B8%BB%E5%B7%A5%E7%A8%8B"><span class="toc-number">13.</span> <span class="toc-text">集成到宿主工程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0%E4%B8%8E%E7%BB%B4%E6%8A%A4"><span class="toc-number">14.</span> <span class="toc-text">版本更新与维护</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">15.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/BboyZJ.github.io/2023/03/06/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A004%EF%BC%9AJSON%E5%92%8CXML%E6%95%B0%E6%8D%AE%E8%A7%A3%E6%9E%90/" title="OC学习04：JSON和XML数据解析"><img src="https://user-images.githubusercontent.com/25925248/96335834-ef977800-10ad-11eb-900b-54900bdb8a3c.jpg" onerror="this.onerror=null;this.src='/BboyZJ.github.io/img/404.jpg'" alt="OC学习04：JSON和XML数据解析"/></a><div class="content"><a class="title" href="/BboyZJ.github.io/2023/03/06/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A004%EF%BC%9AJSON%E5%92%8CXML%E6%95%B0%E6%8D%AE%E8%A7%A3%E6%9E%90/" title="OC学习04：JSON和XML数据解析">OC学习04：JSON和XML数据解析</a><time datetime="2023-03-06T06:09:53.000Z" title="Created 2023-03-06 14:09:53">2023-03-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A040%EF%BC%9A%E7%B1%BB-%E7%BB%93%E6%9E%84%E4%BD%93-%E6%9E%9A%E4%B8%BE%EF%BC%9A%E4%B8%8B%E6%A0%87%E5%92%8C%E4%B8%8B%E6%A0%87%E9%87%8D%E8%BD%BD/" title="Swift学习40：类&amp;结构体&amp;枚举：下标和下标重载"><img src="https://user-images.githubusercontent.com/25925248/96366399-073c3280-117a-11eb-936a-069163ad58dc.jpg" onerror="this.onerror=null;this.src='/BboyZJ.github.io/img/404.jpg'" alt="Swift学习40：类&amp;结构体&amp;枚举：下标和下标重载"/></a><div class="content"><a class="title" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A040%EF%BC%9A%E7%B1%BB-%E7%BB%93%E6%9E%84%E4%BD%93-%E6%9E%9A%E4%B8%BE%EF%BC%9A%E4%B8%8B%E6%A0%87%E5%92%8C%E4%B8%8B%E6%A0%87%E9%87%8D%E8%BD%BD/" title="Swift学习40：类&amp;结构体&amp;枚举：下标和下标重载">Swift学习40：类&amp;结构体&amp;枚举：下标和下标重载</a><time datetime="2023-03-05T12:28:10.000Z" title="Created 2023-03-05 20:28:10">2023-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A039%EF%BC%9A%E4%B8%BA%E7%B1%BB-%E7%BB%93%E6%9E%84%E4%BD%93-%E6%9E%9A%E4%B8%BE%E6%B7%BB%E5%8A%A0%E5%B1%9E%E6%80%A7%E5%92%8C%E6%96%B9%E6%B3%95/" title="Swift学习39：为类&amp;结构体&amp;枚举添加属性和方法"><img src="https://user-images.githubusercontent.com/25925248/96366405-0c997d00-117a-11eb-9a6a-69378ace519b.jpg" onerror="this.onerror=null;this.src='/BboyZJ.github.io/img/404.jpg'" alt="Swift学习39：为类&amp;结构体&amp;枚举添加属性和方法"/></a><div class="content"><a class="title" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A039%EF%BC%9A%E4%B8%BA%E7%B1%BB-%E7%BB%93%E6%9E%84%E4%BD%93-%E6%9E%9A%E4%B8%BE%E6%B7%BB%E5%8A%A0%E5%B1%9E%E6%80%A7%E5%92%8C%E6%96%B9%E6%B3%95/" title="Swift学习39：为类&amp;结构体&amp;枚举添加属性和方法">Swift学习39：为类&amp;结构体&amp;枚举添加属性和方法</a><time datetime="2023-03-05T10:25:21.000Z" title="Created 2023-03-05 18:25:21">2023-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A042%EF%BC%9A%E6%89%A9%E5%B1%95/" title="Swift学习37：扩展"><img src="https://user-images.githubusercontent.com/25925248/96366404-0c00e680-117a-11eb-8537-da55459381bc.jpg" onerror="this.onerror=null;this.src='/BboyZJ.github.io/img/404.jpg'" alt="Swift学习37：扩展"/></a><div class="content"><a class="title" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A042%EF%BC%9A%E6%89%A9%E5%B1%95/" title="Swift学习37：扩展">Swift学习37：扩展</a><time datetime="2023-03-05T09:05:03.000Z" title="Created 2023-03-05 17:05:03">2023-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A041%EF%BC%9A%E5%8D%8F%E8%AE%AE/" title="Swift学习37：协议"><img src="https://user-images.githubusercontent.com/25925248/89221104-4b04ae80-d605-11ea-88bc-368e5a27708f.png" onerror="this.onerror=null;this.src='/BboyZJ.github.io/img/404.jpg'" alt="Swift学习37：协议"/></a><div class="content"><a class="title" href="/BboyZJ.github.io/2023/03/05/Swift%E5%AD%A6%E4%B9%A0/Swift%E5%AD%A6%E4%B9%A041%EF%BC%9A%E5%8D%8F%E8%AE%AE/" title="Swift学习37：协议">Swift学习37：协议</a><time datetime="2023-03-05T09:04:54.000Z" title="Created 2023-03-05 17:04:54">2023-03-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By 小J</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/BboyZJ.github.io/js/utils.js"></script><script src="/BboyZJ.github.io/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
