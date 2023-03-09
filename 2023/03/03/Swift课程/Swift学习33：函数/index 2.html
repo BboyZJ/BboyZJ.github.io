@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/03/swift课程/swift学习33：函数/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Swift学习33：函数">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/03/03/Swift课程/Swift学习33：函数/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Swift学习33：函数">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            Swift学习33：函数 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">Swift学习33：函数</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-03-03 22:54:55</span>
+        <span class="mobile">2023-03-03 22:54</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-09 15:24:39</span>
+            <span class="mobile">2023-03-09 15:24</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="Swift中如何定义和使用函数"><a href="#Swift中如何定义和使用函数" class="headerlink" title="Swift中如何定义和使用函数"></a>Swift中如何定义和使用函数</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
+<li><p><code>函数是一个独立的代码块，用来执行特定的任务</code>。通过给函数一个名字来定义它的功能，并且在需要的时候，通过这个名字来 <code>调用</code> 函数执行它的任务</p>
+</li>
+<li><p><code>Swift统一的函数语法十分灵活</code>。可以从简单的无形式参数到复杂的每个形式参数都带有局部和外部形式参数名。形式参数提供一个默认值来简化函数的调用，可被当做输入输出形式参数被传递，在函数执行完成时修改传递进来的变量。</p>
+</li>
+<li><p><code>Swift中每一个函数都有类型，由函数的形式参数类型和返回类型组成</code> 。可以像swift中其它类型来使用它。可以将函数当一个形式参数传递到另外一个函数中。也可以在一个函数中返回另一个函数。同时也可以写在其他函数内部在内嵌范围封装有用的功能。</p>
+</li>
+<li><p>函数是 <code>引用类型</code> 的，不是值类型的</p>
+</li>
+</ul>
+<h2 id="定义和调用函数"><a href="#定义和调用函数" class="headerlink" title="定义和调用函数"></a>定义和调用函数</h2><ul>
+<li><p>当你定义一个函数时，可以 选择定义一个或多个形式参数类型，也可以定义返回类型</p>
+</li>
+<li><p>每个函数都有函数名，藐视执行的任务。</p>
+</li>
+<li><p>使用函数可通过 <code>函数名</code> 并且 <code>传入</code> 函数的 <code>实际参数</code> （即形式参数类型的输入值 ）来 <code>调用函数</code>。</p>
+</li>
+<li><p>实际参数顺序必须符合形式参数的列表顺序</p>
+</li>
+</ul>
+<h2 id="无形式参数的函数"><a href="#无形式参数的函数" class="headerlink" title="无形式参数的函数"></a>无形式参数的函数</h2><ul>
+<li><p>函数不要求必须传入一个参数，可以没有形式参数</p>
+</li>
+<li><p>函数定义需要在名字的后面加一个圆括号，即使没有形式参数也得加</p>
+</li>
+<li><p>调用函数的时候也要在函数的名字后面加一个圆括号</p>
+</li>
+</ul>
+<h2 id="多形式参数的函数"><a href="#多形式参数的函数" class="headerlink" title="多形式参数的函数"></a>多形式参数的函数</h2><ul>
+<li>函数可以输入多个形式参数，写在圆括号内，用逗号分割</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func manyPara(a:Int,b:Int) &#123;</span><br><span class="line">    pring(&quot;\(a) \(b)&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="无返回值的函数"><a href="#无返回值的函数" class="headerlink" title="无返回值的函数"></a>无返回值的函数</h2><ul>
+<li><p>函数定义可以没有返回类型，即没有返回箭头 -&gt; 或返回类型</p>
+</li>
+<li><p>严格上，函数还是有一个返回类型的，尽管没有定义返回值，实际上返回一个特殊的类型 <code>void</code>。它是一个空的元组，作用相当于没有元素的元组，写作()</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func manyTuple() -&gt; void &#123;</span><br><span class="line">    return nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="多返回值的函数"><a href="#多返回值的函数" class="headerlink" title="多返回值的函数"></a>多返回值的函数</h2><ul>
+<li>可以让函数返回多个值作为一个复合的返回值，你可以使用元组类型作为返回类型</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func manyTuple() -&gt; (a:Int,b:String) &#123;</span><br><span class="line">    return (1,&quot;aaa&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="可选元组返回类型"><a href="#可选元组返回类型" class="headerlink" title="可选元组返回类型"></a>可选元组返回类型</h2><ul>
+<li><p>如果在函数返回类型中元组可能 <code>没有值</code>，可以用可选元组说明元组可能是 <code>nil</code></p>
+</li>
+<li><p>写法是可选元组圆括号后面加一个问号 <code>？</code>，例如 (Int,Int)? 或 (String,Int,Bool)?</p>
+</li>
+</ul>
+<p>示例：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// 返回元组</span><br><span class="line">func minMax(arr: [Int]) -&gt; (min:Int,max:Int)? &#123;</span><br><span class="line">    if arr.isEmpty &#123;</span><br><span class="line">        return nil</span><br><span class="line">    &#125;</span><br><span class="line">    var minValue = arr[0]</span><br><span class="line">    var maxValue = arr[0]</span><br><span class="line">    for value in arr &#123;</span><br><span class="line">        if value &lt; minValue &#123;</span><br><span class="line">            minValue = value</span><br><span class="line">        &#125;</span><br><span class="line">        if value &gt; maxValue &#123;</span><br><span class="line">            maxValue = value</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return (minValue,maxValue)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 绑定</span><br><span class="line">if let minMaxValue = minMax(arr: [1,3,4,2,5]) &#123;</span><br><span class="line">    print(&quot;min is \(minMaxValue.min),max is \(minMaxValue.max)&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>编译运行，查看打印结果：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">min is 1,max is 5</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="隐士返回函数"><a href="#隐士返回函数" class="headerlink" title="隐士返回函数"></a>隐士返回函数</h2><ul>
+<li>如果整个函数体是一个单一的表达式，那么函数隐士返回这个表达式</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">func greet(person: String) -&gt; String&#123;</span><br><span class="line">    &quot;Hello,&quot; + person + &quot;!&quot;</span><br><span class="line">&#125;</span><br><span class="line">print(&quot;\(greet(person: &quot;World&quot;))&quot;)</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello,World!</span><br></pre></td></tr></table></figure></div>
+
+
+<h1 id="Swift形式参数和返回值"><a href="#Swift形式参数和返回值" class="headerlink" title="Swift形式参数和返回值"></a>Swift形式参数和返回值</h1><h2 id="实参标签和形参名"><a href="#实参标签和形参名" class="headerlink" title="实参标签和形参名"></a>实参标签和形参名</h2><ul>
+<li><p>每一个函数的形式参数都包含实际参数标签和形式参数名。</p>
+</li>
+<li><p>形式参数必须有唯一的名字，有助于代码易读</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">func someFunc(firstParamName:Int,secondParamName:Int)&#123;</span><br><span class="line">    // 形式参数 firstParamName secondParamName</span><br><span class="line">&#125;</span><br><span class="line">someFunc(firstParamName: 1, secondParamName: 2)</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="指定实际参数标签"><a href="#指定实际参数标签" class="headerlink" title="指定实际参数标签"></a>指定实际参数标签</h2><ul>
+<li><p>形式参数名之前写实际参数标签，用 <code>空格</code> 分割</p>
+</li>
+<li><p>如果你为 <code>形式参数</code> 定义了 <code>实际参数标签</code>，那么在调用函数的时候必须使用 <code>实际参数标签</code></p>
+</li>
+<li><p>实际参数标签能够让函数的调用更加明确，更像自然语言，更可读，更清晰表达你的意图</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 实际参数标签 home</span><br><span class="line">func greet(person: String, from home: String) -&gt; String &#123;</span><br><span class="line">    return &quot;Hello \(person)! my home is \(home)&quot;</span><br><span class="line">&#125;</span><br><span class="line">print(greet(person: &quot;ZJ&quot;,from: &quot;BeiJing&quot;))</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello ZJ! my home is BeiJing</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="省略实际参数标签"><a href="#省略实际参数标签" class="headerlink" title="省略实际参数标签"></a>省略实际参数标签</h2><ul>
+<li>可以利用下划线 <code>_</code> 替代显示的实际参数标签</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">func greet(_ person: String, _ home: String) -&gt; String &#123;</span><br><span class="line">    return &quot;Hello \(person)! my home is \(home)&quot;</span><br><span class="line">&#125;</span><br><span class="line">print(greet(person: &quot;ZJ&quot;,from: &quot;BeiJing&quot;))</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="默认形式参数值"><a href="#默认形式参数值" class="headerlink" title="默认形式参数值"></a>默认形式参数值</h2><ul>
+<li><p>可以在形式参数类型后，给类型定义一个默认值</p>
+</li>
+<li><p>如果定义了默认值，你就可以在调用的时候省略这个形式参数</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func someFunc(paramDefault: Int = 10) &#123;</span><br><span class="line">    print(&quot;\(paramDefault)&quot;)</span><br><span class="line">&#125;</span><br><span class="line">someFunc(paramDefault: 6)</span><br><span class="line">someFunc()</span><br><span class="line"></span><br><span class="line">===========</span><br><span class="line">6</span><br><span class="line">10</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="可变形式参数"><a href="#可变形式参数" class="headerlink" title="可变形式参数"></a>可变形式参数</h2><ul>
+<li><p>一个可变的形式参数可以接受零或多个特定类型的值。</p>
+</li>
+<li><p>通过在形式参数类型名后插入三个点符号 <code>...</code> 来书写可变形式参数。</p>
+</li>
+<li><p>传入到可变参数中的值在函数的主体中被当做是对应类型的 <code>数组</code>。</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">func changeFunc(_ numbers: Double...) -&gt; Double &#123;</span><br><span class="line">    var total: Double = 0</span><br><span class="line">    for number in numbers &#123;</span><br><span class="line">        total += number</span><br><span class="line">    &#125;</span><br><span class="line">    return total / Double(numbers.count)</span><br><span class="line">&#125;</span><br><span class="line">changeFunc(1,2,3,4,5)</span><br><span class="line"></span><br><span class="line">=============</span><br><span class="line">3</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="输入输出形式参数"><a href="#输入输出形式参数" class="headerlink" title="输入输出形式参数"></a>输入输出形式参数</h2><ul>
+<li><p>可变形式参数只能在函数的内部做改变。如果你想函数能修改一个形式参数的值，而且这些改变在函数结束之后依然生效，那么就需要将形式参数定义为输入输出形式参数</p>
+</li>
+<li><p>输入输出形式参数：在形式参数前边加 <code>inout</code> 关键字。</p>
+</li>
+<li><p>只能把 <code>变量</code> 作为输入输出形式参数的 <code>实际参数</code>，在将变量作为实际参数传入给输入输出形式参数时，在它前边添加一个符号 <code>&amp;</code> 来明确可以被函数修改</p>
+</li>
+<li><p>输入输出形式参数不能有默认值，可变形式参数不能被标记为 <code>inout</code></p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 输入输出形式参数</span><br><span class="line">func swapTwoInt(_ a: inout Int, _ b: inout Int) &#123;</span><br><span class="line">    let temp = a</span><br><span class="line">    a = b</span><br><span class="line">    b = temp</span><br><span class="line">&#125;</span><br><span class="line">var one = 10</span><br><span class="line">var two = 20</span><br><span class="line">swapTwoInt(&amp;one,&amp;two)</span><br><span class="line">print(&quot;\(one) \(two)&quot;)</span><br><span class="line"></span><br><span class="line">=========</span><br><span class="line">20 10</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="函数类型和内嵌函数"><a href="#函数类型和内嵌函数" class="headerlink" title="函数类型和内嵌函数"></a>函数类型和内嵌函数</h1><h2 id="函数类型"><a href="#函数类型" class="headerlink" title="函数类型"></a>函数类型</h2><ul>
+<li>每一个函数都有一个特定的函数类型，它由形式参数类型，返回类型组成</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">func addTwo(_ a:Int,_ b:Int) -&gt; Int &#123;</span><br><span class="line">    return a + b</span><br><span class="line">&#125;</span><br><span class="line">let c = addTwo(1,2)</span><br><span class="line">print(&quot;\(c)&quot;)</span><br><span class="line"></span><br><span class="line">========</span><br><span class="line">3</span><br></pre></td></tr></table></figure></div>
+
+<p>和 (Int,Int) -&gt; Int 相关</p>
+<h2 id="使用函数类型"><a href="#使用函数类型" class="headerlink" title="使用函数类型"></a>使用函数类型</h2><ul>
+<li>你可以像使用Swift中的其他类型一样使用函数类型。例如：你可一个常量或变量定义一个函数类型，并且未变量指定一个相应的函数</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">func addTwo(_ a:inout Int,_ b:inout Int) -&gt; Int &#123;</span><br><span class="line">    return a + b</span><br><span class="line">&#125;</span><br><span class="line">var mathFunc:(inout Int,inout Int) -&gt; Int = addTwo</span><br><span class="line">print(mathFunc(2,3))</span><br><span class="line"></span><br><span class="line">============</span><br><span class="line">5</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="函数类型作为形式参数类型"><a href="#函数类型作为形式参数类型" class="headerlink" title="函数类型作为形式参数类型"></a>函数类型作为形式参数类型</h2><ul>
+<li>你可以将 <code>函数</code> 作为 <code>其他函数的形式参数</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func addTwo(_ a:Int,_ b:Int) -&gt; Int &#123;</span><br><span class="line">    return a + b</span><br><span class="line">&#125;</span><br><span class="line">func printResult(_ mathFunc:(Int,Int) -&gt; Int,_ a:Int,_ b:Int) &#123;</span><br><span class="line">    print(&quot;Result:\(mathFunc(a,b))&quot;)</span><br><span class="line">&#125;</span><br><span class="line">printResult(addTwo,2,3)</span><br><span class="line"></span><br><span class="line">==========</span><br><span class="line">5</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="函数类型作为返回类型"><a href="#函数类型作为返回类型" class="headerlink" title="函数类型作为返回类型"></a>函数类型作为返回类型</h2><ul>
+<li>可以利用函数的类型作为另一个函数的返回类型。写法在函数的返回箭头后写一个完整的函数类型</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">func backF(_ input:Int) -&gt; Int&#123;</span><br><span class="line">    return input - 1</span><br><span class="line">&#125;</span><br><span class="line">func chooseFunc(back: Bool) -&gt; (Int) -&gt; Int &#123;</span><br><span class="line">    return backF</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="内嵌函数"><a href="#内嵌函数" class="headerlink" title="内嵌函数"></a>内嵌函数</h1><ul>
+<li><p>可以在函数内定义另外一个函数。这就是内嵌函数</p>
+</li>
+<li><p>内嵌函数默认是被隐藏起来的，但仍然可以通过包裹他们的函数来调用他们。</p>
+</li>
+<li><p>包裹的函数也可以返回它内部的一个内嵌函数来在另外的返回里使用</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">func chooseFunc(back: Bool) -&gt; (Int) -&gt; Int &#123;</span><br><span class="line">    func stepForward(step:Int) -&gt; Int &#123; return step + 1&#125;</span><br><span class="line">    func stepBackward(step:Int) -&gt; Int &#123; return step - 1&#125;</span><br><span class="line">    return back ? stepBackward : stepForward</span><br><span class="line">&#125;</span><br><span class="line">var current = -4</span><br><span class="line">let stepFunc = chooseFunc(back: current &gt; 0)</span><br><span class="line">while current != 0 &#123;</span><br><span class="line">    current = stepFunc(current)</span><br><span class="line">&#125;</span><br><span class="line">print(current)</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">0</span><br></pre></td></tr></table></figure></div>
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：Swift学习33：函数</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-03-03 22:54:55</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/03/03/Swift课程/Swift学习33：函数/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">#Swift-课程篇</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/03/03/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A034%EF%BC%9A%E9%97%AD%E5%8C%85/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习34：闭包</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/03/03/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A032%EF%BC%9ADictionary%E5%AD%97%E5%85%B8%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习32：Dictionary字典底层实现探索</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">Swift学习33：函数</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Swift%E4%B8%AD%E5%A6%82%E4%BD%95%E5%AE%9A%E4%B9%89%E5%92%8C%E4%BD%BF%E7%94%A8%E5%87%BD%E6%95%B0"><span class="nav-text">Swift中如何定义和使用函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E5%92%8C%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0"><span class="nav-text">定义和调用函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-text">无形式参数的函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-text">多形式参数的函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-text">无返回值的函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-text">多返回值的函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E5%85%83%E7%BB%84%E8%BF%94%E5%9B%9E%E7%B1%BB%E5%9E%8B"><span class="nav-text">可选元组返回类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%90%E5%A3%AB%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0"><span class="nav-text">隐士返回函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Swift%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0%E5%92%8C%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="nav-text">Swift形式参数和返回值</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E5%8F%82%E6%A0%87%E7%AD%BE%E5%92%8C%E5%BD%A2%E5%8F%82%E5%90%8D"><span class="nav-text">实参标签和形参名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E5%AE%9E%E9%99%85%E5%8F%82%E6%95%B0%E6%A0%87%E7%AD%BE"><span class="nav-text">指定实际参数标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9C%81%E7%95%A5%E5%AE%9E%E9%99%85%E5%8F%82%E6%95%B0%E6%A0%87%E7%AD%BE"><span class="nav-text">省略实际参数标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0%E5%80%BC"><span class="nav-text">默认形式参数值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E5%8F%98%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0"><span class="nav-text">可变形式参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0"><span class="nav-text">输入输出形式参数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E7%B1%BB%E5%9E%8B%E5%92%8C%E5%86%85%E5%B5%8C%E5%87%BD%E6%95%B0"><span class="nav-text">函数类型和内嵌函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E7%B1%BB%E5%9E%8B"><span class="nav-text">函数类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%87%BD%E6%95%B0%E7%B1%BB%E5%9E%8B"><span class="nav-text">使用函数类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E7%B1%BB%E5%9E%8B%E4%BD%9C%E4%B8%BA%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0%E7%B1%BB%E5%9E%8B"><span class="nav-text">函数类型作为形式参数类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E7%B1%BB%E5%9E%8B%E4%BD%9C%E4%B8%BA%E8%BF%94%E5%9B%9E%E7%B1%BB%E5%9E%8B"><span class="nav-text">函数类型作为返回类型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%B5%8C%E5%87%BD%E6%95%B0"><span class="nav-text">内嵌函数</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

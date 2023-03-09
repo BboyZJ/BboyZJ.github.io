@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2020/10/06/oc底层原理/oc底层原理14-3：objc_msgsend之动态方法决议&消息转发/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC底层原理14-3：objc_msgSend之动态方法决议 &amp; 消息转发">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2020/10/06/OC底层原理/OC底层原理14-3：objc_msgSend之动态方法决议&amp;消息转发/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC底层原理14-3：objc_msgSend之动态方法决议 &amp; 消息转发">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC底层原理14-3：objc_msgSend之动态方法决议 &amp; 消息转发 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC底层原理14-3：objc_msgSend之动态方法决议 &amp; 消息转发</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2020-10-06 10:13:46</span>
+        <span class="mobile">2020-10-06 10:13</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-02-26 03:06</span>
+            <span class="mobile">2023-02-26 03</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/iOS-OC/">iOS-OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><ul>
+<li><p>在前面两篇文章中，分别分析了 <code>objc_msgSend</code> 的 <code>快速查找(缓存)</code> 和 <code>慢速查找(方法列表)</code>，其整个流程：</p>
+<ul>
+<li><p>objc_msgSend -&gt; 慢速缓存查找(没有) -&gt; 慢速方法列表二分查找自己(有) -&gt; cache_fill -&gt; objc_msgSend 整个闭环</p>
+</li>
+<li><p>慢速方法列表二分查找没有找到 -&gt; 父类去查找（缓存 -&gt; 方法列表） -&gt; 根类（NSObject）也没找到</p>
+</li>
+</ul>
+</li>
+<li><p>在这两种方法都没找到方法实现的情况下，苹果给了两条建议</p>
+<ul>
+<li><code>动态方法决议</code>：慢速查找流程未能找到，会执行一次动态方法决议</li>
+<li><code>消息转发</code>：如果动态方法决议仍然没有找到实现，则进行消息转发</li>
+</ul>
+</li>
+<li><p>如果这两个建议都没有作出任何操作，就会报我们日常开发中常见的 <code>方法未实现</code> 的 <code>崩溃报错</code>，其步骤如下</p>
+</li>
+<li><p>定义 <code>ZJPerson</code> 类，其中 <code>say666</code> 实例方法 和 <code>sayNB</code> 类方法均没有实现</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738005-3064bf19-52a0-4e72-86ac-b690230edae3.jpg"
+                     
+                ></p>
+<ul>
+<li>调用类方法 <code>sayNB</code> 的报错结果</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738017-fab9216b-52d1-4cb9-9807-e96446ad57a5.jpg"
+                     
+                ></p>
+<h1 id="方法未实现报错源码"><a href="#方法未实现报错源码" class="headerlink" title="方法未实现报错源码"></a>方法未实现报错源码</h1><p>根据 <code>慢速查找</code> 的源码，我们发现，其报错最后都是走到 <code>__objc_msgForward_impcache</code> 方法，本质是调用的 <code>objc_defaultForwardHandler</code> 方法</p>
+<p>下面我们来讲讲如何在崩溃前，防止方法未实现的崩溃</p>
+<h1 id="三次方法查找的挽救机会"><a href="#三次方法查找的挽救机会" class="headerlink" title="三次方法查找的挽救机会"></a>三次方法查找的挽救机会</h1><p>根据苹果建议，我们一共有三次挽救的机会：</p>
+<ul>
+<li><p>【第一次机会】：<code>动态方法决议</code></p>
+</li>
+<li><p>消息转发流程：</p>
+<ul>
+<li>【第二次机会】：<code>快速转发</code></li>
+<li>【第三次机会】：<code>慢速转发</code></li>
+</ul>
+</li>
+</ul>
+<h1 id="【第一次机会】动态方法决议"><a href="#【第一次机会】动态方法决议" class="headerlink" title="【第一次机会】动态方法决议"></a>【第一次机会】动态方法决议</h1><p>在 <code>慢速查找</code> 流程 <code>未找到</code> 方法实现时，首先会 <code>尝试一次动态方法决议</code>，其源码实现如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">static NEVER_INLINE IMP</span><br><span class="line">resolveMethod_locked(id inst, SEL sel, Class cls, int behavior)</span><br><span class="line">&#123;</span><br><span class="line">    runtimeLock.assertLocked();</span><br><span class="line">    ASSERT(cls-&gt;isRealized());</span><br><span class="line"></span><br><span class="line">    runtimeLock.unlock();</span><br><span class="line">    // 对象 -&gt; 类</span><br><span class="line">    if (! cls-&gt;isMetaClass()) &#123; // 类不是元类，调用对象的解析方法</span><br><span class="line">        // try [cls resolveInstanceMethod:sel]</span><br><span class="line">        resolveInstanceMethod(inst, sel, cls);</span><br><span class="line">    &#125; </span><br><span class="line">    else &#123; // 如果是元类，调用类的解析方法，类 -&gt; 元类</span><br><span class="line">        // try [nonMetaClass resolveClassMethod:sel]</span><br><span class="line">        // and [cls resolveInstanceMethod:sel]</span><br><span class="line">        resolveClassMethod(inst, sel, cls);</span><br><span class="line">        // 为什么要有这行代码？ -&gt; 类方法在元类中是对象方法，所以还是需要查询元类中对象方法的动态方法决议</span><br><span class="line">        if (!lookUpImpOrNil(inst, sel, cls)) &#123; // 如果没有找到或者为空，在元类的对象方法解析方法中查找</span><br><span class="line">            resolveInstanceMethod(inst, sel, cls);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // chances are that calling the resolver have populated the cache</span><br><span class="line">    // so attempt using it</span><br><span class="line">    // 如果方法解析中奖其实现指向其他方法，则继续走方法查找流程</span><br><span class="line">    return lookUpImpOrForward(inst, sel, cls, behavior | LOOKUP_CACHE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>主要分为以下几个步骤</strong></p>
+<ul>
+<li><p>判断类是否是元类</p>
+<ul>
+<li>如果是 <code>类</code>，执行 <code>实例方法</code> 的动态方法决议 <code>resolveInstanceMethod</code></li>
+<li>如果是 <code>元类</code>，执行 <code>类方法</code> 的动态方法决议 <code>resolveClassMethod</code>，如果在元类中 <code>没有找到</code> 或者为 <code>空</code>，则在 <code>元类</code> 的 <code>实例方法</code> 的动态方法决议 <code>resolveInstanceMethod</code> 中查找，主要是因为 <code>类方法在元类中是实例方法</code>，所以还需要查找元类中实例方法的动态方法决议</li>
+</ul>
+</li>
+<li><p>如果 <code>动态方法决议</code> 中，将其 <code>实现指向了其他方法</code>，则继续 <code>查找指定的imp</code>，即继续慢速查找 <code>lookupImpOrForward</code></p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738052-60f95902-119f-4f7e-a3a0-58db0f42dc52.png"
+                     
+                ></p>
+<h1 id="实例方法"><a href="#实例方法" class="headerlink" title="实例方法"></a>实例方法</h1><p>针对 <code>实例方法</code> 调用，在 <code>快速、慢速查找</code> 均没有找到 <code>实例方法</code> 的实现时，我们有一次挽救的机会，即尝试一次 <code>动态方法决议</code>，由于是 <code>实例方法</code>，所以会走到 <code>resolveInstanceMethod</code> 方法，其源码如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">static void resolveInstanceMethod(id inst, SEL sel, Class cls)</span><br><span class="line">&#123;</span><br><span class="line">    runtimeLock.assertUnlocked();</span><br><span class="line">    ASSERT(cls-&gt;isRealized());</span><br><span class="line">    SEL resolve_sel = @selector(resolveInstanceMethod:);</span><br><span class="line"></span><br><span class="line">    // look的是 resolveInstanceMethod 相当于是发送消息前的容错处理</span><br><span class="line">    if (!lookUpImpOrNil(cls, resolve_sel, cls-&gt;ISA())) &#123;</span><br><span class="line">        // Resolver not implemented.</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    BOOL (*msg)(Class, SEL, SEL) = (typeof(msg))objc_msgSend;</span><br><span class="line">    bool resolved = msg(cls, resolve_sel, sel); // 发送resolve_sel消息</span><br><span class="line"></span><br><span class="line">    // Cache the result (good or bad) so the resolver doesn&#x27;t fire next time.</span><br><span class="line">    // +resolveInstanceMethod adds to self a.k.a. cls</span><br><span class="line">    // 查找say666</span><br><span class="line">    IMP imp = lookUpImpOrNil(inst, sel, cls);</span><br><span class="line"></span><br><span class="line">    if (resolved  &amp;&amp;  PrintResolving) &#123;</span><br><span class="line">        if (imp) &#123;</span><br><span class="line">            _objc_inform(&quot;RESOLVE: method %c[%s %s] &quot;</span><br><span class="line">                         &quot;dynamically resolved to %p&quot;, </span><br><span class="line">                         cls-&gt;isMetaClass() ? &#x27;+&#x27; : &#x27;-&#x27;, </span><br><span class="line">                         cls-&gt;nameForLogging(), sel_getName(sel), imp);</span><br><span class="line">        &#125;</span><br><span class="line">        else &#123;</span><br><span class="line">            // Method resolver didn&#x27;t add anything?</span><br><span class="line">            _objc_inform(&quot;RESOLVE: +[%s resolveInstanceMethod:%s] returned YES&quot;</span><br><span class="line">                         &quot;, but no new implementation of %c[%s %s] was found&quot;,</span><br><span class="line">                         cls-&gt;nameForLogging(), sel_getName(sel), </span><br><span class="line">                         cls-&gt;isMetaClass() ? &#x27;+&#x27; : &#x27;-&#x27;, </span><br><span class="line">                         cls-&gt;nameForLogging(), sel_getName(sel));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>主要分为以下几个步骤</p>
+<ul>
+<li><p>在 <code>发送resolveInstanceMethod消息</code> 前，需要查找 <code>cls类</code> 中是否有该方法的 <code>实现</code>，即通过 <code>lookupImpOrNil</code> 方法又会进入 <code>lookupImpOrForward</code> 慢速查找流程查找 <code>resolveInstanceMethod</code> 方法</p>
+<ul>
+<li>如果没有，则直接返回</li>
+<li>如果有，则发送 <code>resolveInstanceMethod</code> 消息</li>
+</ul>
+</li>
+<li><p>再次慢速查找实例方法的实现，即通过 <code>lookupImpOrNil</code> 方法又会进入 <code>lookupImpOrForward</code> 慢速查找流程查找 <code>实例方法</code></p>
+</li>
+</ul>
+<p><strong>崩溃修改</strong></p>
+<p>所以，针对 <code>实例方法sya666</code> 未实现的报错崩溃，可以通过在 <code>类</code> 中 <code>重写resolveInstanceMethod类方法</code>，并将其指向其他方法的实现，即在 <code>ZJPerson</code> 中 <code>重写resolveInstanceMethod类方法</code>，将 <code>实例方法sya666</code> 的实现指向 <code>sayMaster</code> 方法实现，如下所示</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">- (void)say666;</span><br><span class="line">- (void)sayMaster;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ZJPerson</span><br><span class="line">- (void)sayMaster&#123;</span><br><span class="line">    NSLog(@&quot;say666&quot;);</span><br><span class="line">&#125;</span><br><span class="line">// 重写resolveInstanceMethod</span><br><span class="line">+ (BOOL)resolveInstanceMethod:(SEL)sel&#123;</span><br><span class="line">    if (sel == @selector(say666)) &#123;</span><br><span class="line">        NSLog(@&quot;%@ 来了&quot;,NSStringFromSelector(sel));</span><br><span class="line">        // 获取sayMaster方法的imp</span><br><span class="line">        IMP imp = class_getMethodImplementation(self, @selector(sayMaster));</span><br><span class="line">        // 获取sayMaster的实例方法</span><br><span class="line">        Method sayMethod = class_getInstanceMethod(self, @selector(sayMaster));</span><br><span class="line">        // 获取sayMaster的丰富签名</span><br><span class="line">        const char * type = method_getTypeEncoding(sayMethod);</span><br><span class="line">        // 将sel的实现指向sayMaster</span><br><span class="line">        return class_addMethod(self, sel, imp, type);</span><br><span class="line">    &#125;</span><br><span class="line">    return [super resolveInstanceMethod:sel];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p>重新运行，其打印结果如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738074-7ccad015-b3d3-41f4-817e-ad335c4e2763.jpg"
+                     
+                ></p>
+<h1 id="类方法"><a href="#类方法" class="headerlink" title="类方法"></a>类方法</h1><p>针对 <code>类方法</code>，与实例方法类似，同样可以通过重写 <code>resolveClassMethod</code> 类方法来解决前文的崩溃问题，即在 <code>ZJPerson</code> 类中重写该方法，并将 <code>sayNB</code> 类方法的实现 <code>指向类方法zjClassMethod</code> </p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">+ (void)sayNB;</span><br><span class="line">+ (void)zjClassMethod;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ZJPerson</span><br><span class="line">+ (void)zjClassMethod&#123;</span><br><span class="line">    NSLog(@&quot;sayNB&quot;);</span><br><span class="line">&#125;</span><br><span class="line">+ (BOOL)resolveClassMethod:(SEL)sel&#123;</span><br><span class="line">    if (sel == @selector(sayNB)) &#123;</span><br><span class="line">        NSLog(@&quot;%@ 来了&quot;,NSStringFromSelector(sel));</span><br><span class="line">        </span><br><span class="line">        IMP imp = class_getMethodImplementation(objc_getMetaClass(&quot;ZJPerson&quot;), @selector(zjClassMethod));</span><br><span class="line">        Method zjClassMethod = class_getInstanceMethod(objc_getMetaClass(&quot;ZJPerson&quot;), @selector(zjClassMethod));</span><br><span class="line">        const char * type = method_getTypeEncoding(zjClassMethod);</span><br><span class="line">        return class_addMethod(objc_getMetaClass(&quot;ZJPerson&quot;), sel, imp, type);</span><br><span class="line">    &#125;</span><br><span class="line">    return [super resolveClassMethod:sel];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p><code>resolveClassMethod</code> 类方法的重写需要注意一点，传入的 <code>cls</code> 不再是类，而是 <code>元类</code>，可以通过 <code>objc_getMetaClass</code> 方法 <code>获取元类</code>，原因是因为 <code>类方法在元类中是实例方法</code></p>
+<p><strong>优化</strong></p>
+<p>上面的这种方式是单独再每个类中重写，有没有更好的，一劳永逸的方法呢？其实通过方法慢速查找流程可以发现其查找路径有两条</p>
+<ul>
+<li>实例方法：<code>类 -&gt; 父类 -&gt; 根类 -&gt; nil</code></li>
+<li>类方法：<code>元类 -&gt; 根元类 -&gt; 根类 -&gt; nil</code></li>
+</ul>
+<p>它们的共同点是如果前面没找到，都会来到 <code>根类即NSObject中查找</code>，所以我们是否可以将上述的两个方法统一整合在一起呢？答案是 <code>可以的</code>，可以通过 <code>NSObject添加分类</code> 的方式来 实现同意处理，而且由于类方法的查找，在其集成链，查找的也是实例方法，所以将 <code>实例方法</code> 和 <code>类方法</code> 的统一处理放在 <code>resolveInstanceMethod</code> 方法中，如下所示：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">@interface NSObject (ZJ)</span><br><span class="line">@end</span><br><span class="line">@implementation NSObject (ZJ)</span><br><span class="line">+ (BOOL)resolveInstanceMethod:(SEL)sel&#123;</span><br><span class="line">    if (sel == @selector(say666)) &#123;</span><br><span class="line">        NSLog(@&quot;%@ 来了&quot;,NSStringFromSelector(sel));</span><br><span class="line">        </span><br><span class="line">        IMP imp = class_getMethodImplementation(self, @selector(sayMaster));</span><br><span class="line">        Method sayMethod  = class_getInstanceMethod(self, @selector(sayMaster));</span><br><span class="line">        const char *type = method_getTypeEncoding(sayMethod);</span><br><span class="line">        return class_addMethod(self, sel, imp, type);</span><br><span class="line">    &#125;else if (sel == @selector(sayNB))&#123;</span><br><span class="line">        NSLog(@&quot;%@ 来了&quot;,NSStringFromSelector(sel));</span><br><span class="line">        </span><br><span class="line">        IMP imp = class_getMethodImplementation(objc_getMetaClass(&quot;ZJPerson&quot;), @selector(zjClassMethod));</span><br><span class="line">        Method zjClassMethod = class_getInstanceMethod(objc_getMetaClass(&quot;ZJPerson&quot;), @selector(zjClassMethod));</span><br><span class="line">        const char * type = method_getTypeEncoding(zjClassMethod);</span><br><span class="line">        return class_addMethod(objc_getMetaClass(&quot;ZJPerson&quot;), sel, imp, type);</span><br><span class="line">    &#125;</span><br><span class="line">    return NO;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p>这样方式的实现，正好与源码中针对类方法的处理逻辑是一致的，即完美阐述为什么调用了类方法动态方法决议，还要调用对象方法的动态方法决议，其根本原因还是 <code>类方法在元类中的实例方法</code></p>
+<p>当然，上面这种写法还是会有其他问题，比如 <code>系统方法也会被更改</code>，针对这一点，是可以优化的，即我们 <code>可以针对自定义类中方法同意方法名的前缀</code>，根据前缀来判断是否是自定义方法，然后 <code>统一处理自定义方法</code>，例如可以在崩溃前pop到首页，主要是用于 <code>app线上防崩溃的处理</code>，提升用户的体验</p>
+<h1 id="消息转发流程"><a href="#消息转发流程" class="headerlink" title="消息转发流程"></a>消息转发流程</h1><p>在慢速查找的流程中，我们了解到，如果快速+慢速没有找到方法实现，动态方法决议也不行，就使用 <code>消息转发</code>，但是，我们找遍了源码也没有发现消息转发的相关源码，可以通过以下方式来了解，方法调用崩溃前都走了哪些方法</p>
+<ul>
+<li>通过 <code>instrumentObjcMessageSends</code> 方式打印发小消息的日志</li>
+<li>通过 <code>hopper/IDA反编译</code></li>
+</ul>
+<p><strong>通过 <code>instrumentObjcMessageSends</code></strong></p>
+<ul>
+<li><p>通过 <code>lookUpImpOrForward -&gt; log_and_fill_cache -&gt; logMessageSend</code>，在logMessageSend源码下方找到 <code>instrumentObjcMessageSends</code> 的源码实现，在main中调用 <code>instrumentObjcMessageSends</code> 打印方法调用的日志信息，有以下两点准备工作</p>
+<ul>
+<li>打开 <code>objcMsgLogEnabled</code> 开关，即调用 <code>instrumentObjcMessageSends</code> 方法时，传入 <code>YES</code></li>
+<li>在 <code>main</code> 中通过 <code>extern</code> 声明 <code>instrumentObjcMessageSends</code> 方法</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">extern void instrumentObjcMessageSends(BOOL flag);</span><br><span class="line"></span><br><span class="line">int main(int argc, char * argv[]) &#123;</span><br><span class="line">    NSString * appDelegateClassName;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        </span><br><span class="line">        ZJPerson * person = [ZJPerson alloc];</span><br><span class="line">        instrumentObjcMessageSends(YES);</span><br><span class="line">        [person sayHello];</span><br><span class="line">        instrumentObjcMessageSends(NO);</span><br><span class="line">        </span><br><span class="line">        appDelegateClassName = NSStringFromClass([AppDelegate class]);</span><br><span class="line">    &#125;</span><br><span class="line">    return UIApplicationMain(argc, argv, nil, appDelegateClassName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>通过 <code>logMessageSend</code> 源码，了解到消息发送打印信息存储在 <code>/tmp/msgSends</code> 目录，如下所示：</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738092-a469b37f-7f85-4b49-993e-600fa3af2e36.jpg"
+                     
+                ></p>
+<ul>
+<li><p>运行代码，并前往 <code>/tmp/msgSends/</code> 目录，发现有 <code>msgSends</code> 开头的日志文件，打开发现崩溃前，执行了以下方法：</p>
+<ul>
+<li>两次 <code>动态方法决议</code>：<code>resolveInstanceMethod</code> 方法</li>
+<li>两次 <code>消息快速转发</code>：<code>forwardingTargetForSelector</code> 方法</li>
+<li>两次 <code>消息慢速转发</code>：<code>methodSignatureForSelector + resolveInvocation</code></li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738104-4c3db372-a49a-49fd-b0e3-af5ca67be264.jpg"
+                     
+                ></p>
+<h1 id="通过hopper-x2F-IDA反编译"><a href="#通过hopper-x2F-IDA反编译" class="headerlink" title="通过hopper&#x2F;IDA反编译"></a>通过hopper&#x2F;IDA反编译</h1><p><code>Hopper</code> 和 <code>IDA</code> 是一个可以帮助我们静态分析可视性文件的工具，可以将执行文件反编译成伪代码、控制流程图等，下面以Hopper为例（注：hopper高级版本是一款收费软件，针对比较简单的反汇编需求来说，demo版本足够使用了）</p>
+<ul>
+<li>运行程序崩溃，查看堆栈信息</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738113-c16458dd-f33c-4c76-b067-3cf03fc08e53.jpg"
+                     
+                ></p>
+<ul>
+<li><p>发现 <code>__forwarding__</code> 来自 <code>CoreFoundation</code></p>
+</li>
+<li><p>通过 <code>image list</code>，读取整个镜像文件，然后搜索 <code>CoreFoundation</code>，查看其可执行文件的路径</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738122-f3e69bce-b246-42ee-96e5-18be8438f605.jpg"
+                     
+                ></p>
+<ul>
+<li>通过文件路径，找到 <code>CoreFoundation</code> 的 <code>可执行文件</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738157-0cacaeef-0424-4d8d-877b-ac1b5e4f33fa.jpg"
+                     
+                ></p>
+<ul>
+<li>打开hopper，选择<code>Try the Demo</code>，然后将上一步的可执行文件拖入hopper进行反汇编，选择x86(64 bits)</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738181-472df11c-e67a-4666-85dd-88f32f3ae2b3.png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738568-0db789cc-0fe2-4dfe-8b4b-3f924cc2b3f3.png"
+                     
+                ></p>
+<ul>
+<li>以下是反汇编后的界面，主要使用上面的三个功能，分别是 汇编、流程图、伪代码</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738584-55203118-a8b2-43f9-972e-feeb3e0d62e0.png"
+                     
+                ></p>
+<ul>
+<li><p>通过左侧的搜索框搜索<code>__forwarding_prep_0___</code>，然后选择伪代码</p>
+<ul>
+<li>以下是<code>__forwarding_prep_0___</code>的汇编伪代码，跳转至<code>___forwarding___</code></li>
+</ul>
+<p>  <img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738593-c966413f-18e4-4b0b-8766-e591b3d81fe3.png"
+                     
+                ></p>
+</li>
+<li><p>以下是___forwarding___的伪代码实现，首先是查看是否实现forwardingTargetForSelector方法，如果没有响应，跳转至loc_6459b即快速转发没有响应，进入慢速转发流程</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738606-53b208ed-9318-42fe-b6b6-e71a6a3f9409.png"
+                     
+                ></p>
+<ul>
+<li>跳转至loc_6459b，在其下方判断是否响应methodSignatureForSelector方法</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738623-d533b9ac-21c7-4a71-880d-002db4f9bdc6.png"
+                     
+                ></p>
+<ul>
+<li><p>如果没有响应，跳转至loc_6490b，则直接报错</p>
+</li>
+<li><p>如果获取methodSignatureForSelector的方法签名为nil，也是直接报错</p>
+</li>
+<li><p>如果methodSignatureForSelector返回值不为空，则在forwardInvocation方法中对invocation进行处理</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738647-cc646ab1-c641-473e-9036-123f395753bf.png"
+                     
+                ></p>
+<p>所以，通过上面两种查找方式可以验证，<code>消息转发</code> 的方法有3个</p>
+<ul>
+<li>【快速转发】<code>forwardingTargetForSelector</code></li>
+<li>【慢速转发】<ul>
+<li><code>methodSignatureForSelector</code></li>
+<li><code>forwardInvocation</code></li>
+</ul>
+</li>
+</ul>
+<p>所以，综上所述，消息转发整体的流程如下</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738656-1bafa395-aba4-43a0-a57f-6e3e446b4816.png"
+                     
+                ></p>
+<p><code>消息转发</code> 的处理主要分为两部分：</p>
+<ul>
+<li><p>【快速转发】当慢速查找以及动态方法决议没有找到实现时，进行消息转发，首先是进行 <code>快速消息转发</code>，即走到 <code>forwardingTargetForSelector</code> 方法</p>
+<ul>
+<li><p>如果返回 <code>消息接收者</code>，在消息接收者中还是没有找到，则进入另一个方法的查找流程</p>
+</li>
+<li><p>如果返回 <code>nil</code>，则进入 <code>慢速消息转发</code></p>
+</li>
+</ul>
+</li>
+<li><p>【慢速转发】执行到 <code>methodSignalForSelector</code> 方法</p>
+<ul>
+<li><p>如果返回的 <code>方法签名</code> 为 <code>nil</code>，则直接 <code>崩溃报错</code></p>
+</li>
+<li><p>如果返回的方法签名 <code>不为nil</code>，走到 <code>forwardInvocation</code> 方法中，对invocation事务进行处理，如果不处理也不会报错</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="【第二次机会】快速转发"><a href="#【第二次机会】快速转发" class="headerlink" title="【第二次机会】快速转发"></a>【第二次机会】快速转发</h1><p>针对前文的崩溃问题，如果 <code>动态方法决议</code> 也没有找到方法实现，则需要在 <code>ZJPerson</code> 中重写 <code>forwardingTargetForSelector</code> 方法，将ZJPerson的实例方法的 <code>接收者指定为ZJStudent</code> 的对象（ZJStudent类中有say666的具体实现），如下所示</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">// ZJPerson类</span><br><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">- (void)say666;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJPerson</span><br><span class="line">- (id)forwardingTargetForSelector:(SEL)aSelector&#123;</span><br><span class="line">    NSLog(@&quot;%s - %@&quot;,__func__,NSStringFromSelector(aSelector));</span><br><span class="line">    </span><br><span class="line">    // 将消息接收者指定为ZJStudent，在ZJStudent中查找say666的实现</span><br><span class="line">    return [ZJStudent alloc];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// ZJStudent类</span><br><span class="line">@interface ZJStudent : NSObject</span><br><span class="line">@end</span><br><span class="line">@implementation ZJStudent</span><br><span class="line">- (void)say666&#123;</span><br><span class="line">    NSLog(@&quot;say666&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// main中</span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        ZJPerson * person = [ZJPerson new];</span><br><span class="line">        [person say666];</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>执行结果如下</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738861-db408803-b9af-42e0-a65d-bea01d919c16.jpg"
+                     
+                ></p>
+<p>也可以直接不指定消息接收者，<code>直接调用父类的该方法</code>，如果还是没有找到，则 <code>直接报错</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738865-5f2391a1-5b6d-49d3-9f26-ee516228812c.jpg"
+                     
+                ></p>
+<h1 id="【第三次机会】慢速转发"><a href="#【第三次机会】慢速转发" class="headerlink" title="【第三次机会】慢速转发"></a>【第三次机会】慢速转发</h1><p>针对 <code>第二次机会即快速转发</code> 中还是没有找到，则进入最后的一次挽救机会，即在 <code>ZJPerson</code> 中重写 <code>methodSignalForSelector</code>，如下所示</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 慢速转发</span><br><span class="line">- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector&#123;</span><br><span class="line">    NSLog(@&quot;%s - %@&quot;,__func__,NSStringFromSelector(aSelector));</span><br><span class="line">    </span><br><span class="line">    return [NSMethodSignature signatureWithObjCTypes:&quot;v@:&quot;];</span><br><span class="line">&#125;</span><br><span class="line">- (void)forwardInvocation:(NSInvocation *)anInvocation&#123;</span><br><span class="line">    NSLog(@&quot;%s - %@&quot;,__func__,anInvocation);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果如下，发现 <code>forwardInvocation</code> 方法中不对 <code>invocation</code> 进行处理，也不会崩溃</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160738890-7671f770-8192-4d6d-9c19-05813459c1cf.jpg"
+                     
+                ></p>
+<p>也可以 <code>处理invocation</code> 事务，如下所示，修改 <code>invocation</code> 的 <code>target</code> 为 <code>[ZJStudent alloc]</code>，调用 <code>[anInvocation invoke]</code> 触发 <code>即ZJPerson</code> 类的 <code>say666</code> 实例方法的调用会调用 <code>ZJStudent</code> 的 <code>say666</code> 方法</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (void)forwardInvocation:(NSInvocation *)anInvocation&#123;</span><br><span class="line">    NSLog(@&quot;%s - %@&quot;,__func__,anInvocation);</span><br><span class="line">    anInvocation.target = [ZJStudent alloc];</span><br><span class="line">    [anInvocation invoke];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>执行结果如下</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://user-images.githubusercontent.com/25925248/160738899-270d3fb2-e047-4f64-a962-23b5278f8ddd.jpg" >https://user-images.githubusercontent.com/25925248/160738899-270d3fb2-e047-4f64-a962-23b5278f8ddd.jpg <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>所以，由上述可知，无论在 <code>forwardInvocation</code> 方法中 <code>是否处理invocation</code> 事务，<code>程序都不会崩溃</code></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>到目前为止，objc_msgSend 发送消息的流程就分析完成了，在这里简单总结下</p>
+<ul>
+<li><p>【快速查找流程】在类的 <code>缓存cache</code> 中查找指定方法的实现</p>
+</li>
+<li><p>【慢速查找流程】如果缓存中 <code>没有找到</code>，则在 <code>类的方法列表</code> 中查找，如果还是没有找到，则去 <code>父类的缓存和方法列表中</code> 查找</p>
+</li>
+<li><p>【动态方法决议】如果慢速查找 <code>还是没有找到</code>，第一次挽救的机会就是 <code>尝试一次动态方法决议</code>，即 <code>重写resolveInstanceMethod/resolveClassMethod</code> 方法</p>
+</li>
+<li><p>【消息转发】如果动态方法决议还是没有找到，则进行 <code>消息转发</code>，消息转发中有 <code>两次挽救几会：快速转发+慢速转发</code></p>
+</li>
+<li><p>如果转发之后也没有，则程序直接报错崩溃 <code>unrecognized selector sent to instance</code></p>
+</li>
+</ul>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC底层原理14-3：objc_msgSend之动态方法决议 &amp; 消息转发</li>
+        <li>Post author：张建</li>
+        <li>Create time：2020-10-06 10:13:46</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2020/10/06/OC底层原理/OC底层原理14-3：objc_msgSend之动态方法决议&amp;消息转发/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/iOS-OC/">#iOS-OC</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2020/10/10/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8615-1%EF%BC%9Adyld%E5%8A%A0%E8%BD%BD%E6%B5%81%E7%A8%8B/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理15：dyld源码分析</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2020/10/05/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8614-2%EF%BC%9Aobjc_msgSend%E6%96%B9%E6%B3%95%E5%88%97%E8%A1%A8%E6%9F%A5%E6%89%BE(%E6%85%A2%E9%80%9F%E6%9F%A5%E6%89%BE)%E6%B1%87%E7%BC%96%E5%88%86%E6%9E%90/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理14-2：objc_msgSend方法列表查找(快速查找)汇编分析</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC底层原理14-3：objc_msgSend之动态方法决议 &amp; 消息转发</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E6%9C%AA%E5%AE%9E%E7%8E%B0%E6%8A%A5%E9%94%99%E6%BA%90%E7%A0%81"><span class="nav-text">方法未实现报错源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E6%AC%A1%E6%96%B9%E6%B3%95%E6%9F%A5%E6%89%BE%E7%9A%84%E6%8C%BD%E6%95%91%E6%9C%BA%E4%BC%9A"><span class="nav-text">三次方法查找的挽救机会</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%80%90%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%9C%BA%E4%BC%9A%E3%80%91%E5%8A%A8%E6%80%81%E6%96%B9%E6%B3%95%E5%86%B3%E8%AE%AE"><span class="nav-text">【第一次机会】动态方法决议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E4%BE%8B%E6%96%B9%E6%B3%95"><span class="nav-text">实例方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B1%BB%E6%96%B9%E6%B3%95"><span class="nav-text">类方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B"><span class="nav-text">消息转发流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E8%BF%87hopper-x2F-IDA%E5%8F%8D%E7%BC%96%E8%AF%91"><span class="nav-text">通过hopper&#x2F;IDA反编译</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%80%90%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%9C%BA%E4%BC%9A%E3%80%91%E5%BF%AB%E9%80%9F%E8%BD%AC%E5%8F%91"><span class="nav-text">【第二次机会】快速转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%80%90%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%9C%BA%E4%BC%9A%E3%80%91%E6%85%A2%E9%80%9F%E8%BD%AC%E5%8F%91"><span class="nav-text">【第三次机会】慢速转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

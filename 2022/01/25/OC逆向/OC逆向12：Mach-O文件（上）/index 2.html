@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2022/01/25/oc逆向/oc逆向12：mach-o文件（上）/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC逆向12：Mach-O文件（上）">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2022/01/25/OC逆向/OC逆向12：Mach-O文件（上）/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC逆向12：Mach-O文件（上）">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC逆向12：Mach-O文件（上） -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC逆向12：Mach-O文件（上）</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2022-01-25 09:33:32</span>
+        <span class="mobile">2022-01-25 09:33</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2022-02-08 16:11:08</span>
+            <span class="mobile">2022-02-08 16:11</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC-%E9%80%86%E5%90%91%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-逆向探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/iOS-OC/">iOS-OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文主要介绍 <code>Mach-O文件格式</code> 以及 <code>通用二进制文件</code></p>
+<h1 id="Mach-O-文件概述"><a href="#Mach-O-文件概述" class="headerlink" title="Mach-O 文件概述"></a>Mach-O 文件概述</h1><ul>
+<li><p><code>Mach-O</code>其实是 <code>Mach Object</code> 文件格式的缩写，是 <code>Mac</code> 以及 <code>iOS</code> 上 <code>可执行文件的格式</code>，类似于 <code>Window</code> 上的 <code>PE格式</code>（Portable Executable），<code>linux</code> 上的 <code>elf格式</code>（Executable And LinkingFormat）。</p>
+</li>
+<li><p><code>Mach-O</code> 是一种 <code>用于可执行文件、目标代码、动态库的文件格式</code>，作为 <code>a.out格式</code> 的替代，<code>Mach-O</code> 提供了更强的扩展性</p>
+</li>
+</ul>
+<h1 id="Mach-O-文件格式"><a href="#Mach-O-文件格式" class="headerlink" title="Mach-O 文件格式"></a>Mach-O 文件格式</h1><p>常见的 Mach-O格式 有以下几种：</p>
+<ul>
+<li>目标文件 <code>.o</code></li>
+<li>库文件，细分主要有以下几种：<ul>
+<li><code>.a</code></li>
+<li><code>.dylib</code></li>
+<li><code>.framework</code></li>
+</ul>
+</li>
+<li>可执行文件</li>
+<li>dyld</li>
+<li>dsym</li>
+</ul>
+<p>我们可以通过终端的 <code>file</code> 指令来查看文件的类型</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$cd 文件目录</span><br><span class="line">$file 文件</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="目标文件-o"><a href="#目标文件-o" class="headerlink" title="目标文件 .o"></a>目标文件 .o</h1><ol>
+<li>新建一个 <code>.c</code> 文件</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">% cd Desktop </span><br><span class="line">% touch demo.c</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>在 .c 文件中实现如下</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">    printf(&quot;test\n&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>通过 clang 命令编译 .c 文件</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">% clang -c demo.c</span><br><span class="line"></span><br><span class="line">% file demo.o</span><br><span class="line">demo.o: Mach-O 64-bit object x86_64</span><br><span class="line"></span><br><span class="line">% clang demo.o</span><br><span class="line"></span><br><span class="line">% ls</span><br><span class="line">a.out			demo.c		demo.o </span><br><span class="line"></span><br><span class="line">% file a.out </span><br><span class="line">a.out: Mach-O 64-bit executable x86_64</span><br><span class="line"></span><br><span class="line">% ./a.out </span><br><span class="line">test</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>ls</code>：查看当前文件夹</li>
+<li><code>clang -c demo.c</code> ： 将 <code>.c文件</code> 编译成 <code>.o文件</code>（OC在后端中使用的是LLVM编译，而前端使用的工具是 clang，即理解为 LLVM包含clang）</li>
+<li><code>file demo.o</code> ： 查看文件类型 Mach-O文件、64位、x86_64架构</li>
+<li><code>clang demo.o</code> ： 将 <code>.o文件</code> 编译成 <code>可执行文件</code></li>
+<li><code>./a.out</code> ： 执行可执行文件</li>
+</ul>
+<ol start="4">
+<li>也可以通过一行命令将 <code>.c文件</code> 编译成可执行文件 ： <code>clang -o demo2 demo.c</code></li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">% clang -o demo2 demo.c</span><br><span class="line"></span><br><span class="line">% ls</span><br><span class="line">demo.c			demo2</span><br><span class="line"></span><br><span class="line">% ./demo2</span><br><span class="line">test</span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li><code>重复4</code> 的操作，再次生成一个可执行文件 <code>demo3</code>，此时问题来了，这三个可执行文件（即 a、demo2、demo3）是否是一样的？我们可以通过 <code>md5</code> 验证，如果hash值一样，则说明一样的，反之不一样</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">% md5 a.out</span><br><span class="line">MD5 (a.out) = 922bae326e46b2ac90f5ad4bf2ed031c</span><br><span class="line"></span><br><span class="line">% md5 demo2</span><br><span class="line">MD5 (demo2) = 922bae326e46b2ac90f5ad4bf2ed031c</span><br><span class="line"></span><br><span class="line">% md5 demo3</span><br><span class="line">MD5 (demo3) = 922bae326e46b2ac90f5ad4bf2ed031c</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="中间产物-o文件"><a href="#中间产物-o文件" class="headerlink" title="中间产物 .o文件"></a>中间产物 .o文件</h1><p>其中 <code>.c</code> 和 <code>.out</code> 文件的区别是中间多了一个 <code>.o</code> 文件。而在我们的实际开发中，其实是由多个源码的，所以最终的 <code>可执行文件是由多个源码</code> 生成的，如下所示，将 <code>两个.o</code> 文件编译成 <code>一个可执行文件</code></p>
+<ul>
+<li>新建两个 .c 文件</li>
+</ul>
+<p>test.c 代码如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">// 函数外定义变量 x 和 y</span><br><span class="line">int x;</span><br><span class="line">int y;</span><br><span class="line">int addtwonum()</span><br><span class="line">&#123;</span><br><span class="line">    // 函数内声明变量 x 和 y 为外部变量</span><br><span class="line">    extern int x;</span><br><span class="line">    extern int y;</span><br><span class="line">    // 给外部变量（全局变量）x 和 y 赋值</span><br><span class="line">    x = 1;</span><br><span class="line">    y = 2;</span><br><span class="line">    return x+y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>test1.c 代码如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	int result;</span><br><span class="line">    result = 1;</span><br><span class="line">    </span><br><span class="line">    printf(&quot;result 为: %d&quot;,result);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>通过 <code>clang</code> 将 <code>两个.c文件</code> 生成 <code>两个.o文件</code>：<code>clang -c test1.c test.c</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">% clang -c test1.c test.c</span><br><span class="line">% ls</span><br><span class="line">test1.o   test.c	test.o  test1.c</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>通过 clang 将 <code>两个.o文件</code> 编译成 <code>两个可执行文件</code>：<code>clang -o demo test1.o test.o</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% clang -o demo test1.o test.o</span><br></pre></td></tr></table></figure></div>
+
+<p>如果出现如下报错</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">% clang -o demo test1.o test.o</span><br><span class="line">duplicate symbol &#x27;_main&#x27; in:</span><br><span class="line">    test1.o</span><br><span class="line">    test.o</span><br><span class="line">ld: 1 duplicate symbol for architecture x86_64</span><br><span class="line">clang: error: linker command failed with exit code 1 (use -v to see invocation)</span><br></pre></td></tr></table></figure></div>
+
+<p>说明: <code>text.c</code> 和 <code>test1.c</code> 中的 <code>代码相同</code>，需要将其中一个中的代码删除即可，即保证 test1.c 和 test.c 内代码不同</p>
+<ul>
+<li><p>如果此时换一下链接顺序呢？例如： <code>clang -o demo1 test.o test1.o</code></p>
+</li>
+<li><p>多个源码一次性生成可执行文件： <code>clang -o demo2 test1.c test.c</code> </p>
+</li>
+<li><p>对比上述生成三个可执行文件，是否是同一个？这里我们也通过 md5 生成的 hash值 进行对比：</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">% md5 demo</span><br><span class="line">MD5 (demo) = 4be533adc572558230adcbd067379fea</span><br><span class="line">% md5 demo1</span><br><span class="line">MD5 (demo1) = a3ff882d7d541fe3bc2a11538bc2e031</span><br><span class="line">% md5 demo2</span><br><span class="line">MD5 (demo2) = 4be533adc572558230adcbd067379fea</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>结论</strong>：通过对比发现，如果改变了 .o文件的 连接顺序，那么 Mach-O 也会发生改变</p>
+<ul>
+<li>这里可以通过 <code>objdump --macho -d demo</code> 查看 <code>Mach-O</code> 链接顺序，如下：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">% objdump --macho -d demo</span><br><span class="line">demo:</span><br><span class="line">(__TEXT,__text) section</span><br><span class="line">_main:</span><br><span class="line">100003f30:	55	pushq	%rbp</span><br><span class="line">100003f31:	48 89 e5	movq	%rsp, %rbp</span><br><span class="line">100003f34:	48 83 ec 10	subq	$16, %rsp</span><br><span class="line">100003f38:	c7 45 fc 00 00 00 00	movl	$0, -4(%rbp)</span><br><span class="line">100003f3f:	c7 45 f8 01 00 00 00	movl	$1, -8(%rbp)</span><br><span class="line">100003f46:	8b 75 f8	movl	-8(%rbp), %esi</span><br><span class="line">100003f49:	48 8d 3d 56 00 00 00	leaq	86(%rip), %rdi ## literal pool for: &quot;result \344\270\272: %d&quot;</span><br><span class="line">100003f50:	b0 00	movb	$0, %al</span><br><span class="line">100003f52:	e8 2d 00 00 00	callq	0x100003f84 ## symbol stub for: _printf</span><br><span class="line">100003f57:	31 c0	xorl	%eax, %eax</span><br><span class="line">100003f59:	48 83 c4 10	addq	$16, %rsp</span><br><span class="line">100003f5d:	5d	popq	%rbp</span><br><span class="line">100003f5e:	c3	retq</span><br><span class="line">100003f5f:	90	nop</span><br><span class="line">_addtwonum:</span><br><span class="line">100003f60:	55	pushq	%rbp</span><br><span class="line">100003f61:	48 89 e5	movq	%rsp, %rbp</span><br><span class="line">100003f64:	48 8d 0d a9 40 00 00	leaq	_y(%rip), %rcx</span><br><span class="line">100003f6b:	48 8d 05 9e 40 00 00	leaq	_x(%rip), %rax</span><br><span class="line">100003f72:	c7 00 01 00 00 00	movl	$1, (%rax)</span><br><span class="line">100003f78:	c7 01 02 00 00 00	movl	$2, (%rcx)</span><br><span class="line">100003f7e:	8b 00	movl	(%rax), %eax</span><br><span class="line">100003f80:	03 01	addl	(%rcx), %eax</span><br><span class="line">100003f82:	5d	popq	%rbp</span><br><span class="line">100003f83:	c3	retq</span><br></pre></td></tr></table></figure></div>
+
+<p>源文件链接顺序是 <code>main + addtwonum</code></p>
+<ul>
+<li>这里可以通过 <code>objdump --macho -d demo1</code> 查看 <code>Mach-O</code> 链接顺序，如下：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">% objdump --macho -d demo1</span><br><span class="line">demo1:</span><br><span class="line">(__TEXT,__text) section</span><br><span class="line">_addtwonum:</span><br><span class="line">100003f20:	55	pushq	%rbp</span><br><span class="line">100003f21:	48 89 e5	movq	%rsp, %rbp</span><br><span class="line">100003f24:	48 8d 0d e9 40 00 00	leaq	_y(%rip), %rcx</span><br><span class="line">100003f2b:	48 8d 05 de 40 00 00	leaq	_x(%rip), %rax</span><br><span class="line">100003f32:	c7 00 01 00 00 00	movl	$1, (%rax)</span><br><span class="line">100003f38:	c7 01 02 00 00 00	movl	$2, (%rcx)</span><br><span class="line">100003f3e:	8b 00	movl	(%rax), %eax</span><br><span class="line">100003f40:	03 01	addl	(%rcx), %eax</span><br><span class="line">100003f42:	5d	popq	%rbp</span><br><span class="line">100003f43:	c3	retq</span><br><span class="line">100003f44:	90	nop</span><br><span class="line">100003f45:	90	nop</span><br><span class="line">100003f46:	90	nop</span><br><span class="line">100003f47:	90	nop</span><br><span class="line">100003f48:	90	nop</span><br><span class="line">100003f49:	90	nop</span><br><span class="line">100003f4a:	90	nop</span><br><span class="line">100003f4b:	90	nop</span><br><span class="line">100003f4c:	90	nop</span><br><span class="line">100003f4d:	90	nop</span><br><span class="line">100003f4e:	90	nop</span><br><span class="line">100003f4f:	90	nop</span><br><span class="line">_main:</span><br><span class="line">100003f50:	55	pushq	%rbp</span><br><span class="line">100003f51:	48 89 e5	movq	%rsp, %rbp</span><br><span class="line">100003f54:	48 83 ec 10	subq	$16, %rsp</span><br><span class="line">100003f58:	c7 45 fc 00 00 00 00	movl	$0, -4(%rbp)</span><br><span class="line">100003f5f:	c7 45 f8 01 00 00 00	movl	$1, -8(%rbp)</span><br><span class="line">100003f66:	8b 75 f8	movl	-8(%rbp), %esi</span><br><span class="line">100003f69:	48 8d 3d 32 00 00 00	leaq	50(%rip), %rdi ## literal pool for: &quot;result \344\270\272: %d&quot;</span><br><span class="line">100003f70:	b0 00	movb	$0, %al</span><br><span class="line">100003f72:	e8 09 00 00 00	callq	0x100003f80 ## symbol stub for: _printf</span><br><span class="line">100003f77:	31 c0	xorl	%eax, %eax</span><br><span class="line">100003f79:	48 83 c4 10	addq	$16, %rsp</span><br><span class="line">100003f7d:	5d	popq	%rbp</span><br><span class="line">100003f7e:	c3	retq</span><br></pre></td></tr></table></figure></div>
+
+<p>源文件的链接顺序是 <code>addtwonum + main</code></p>
+<ul>
+<li>这里可以通过 <code>objdump --macho -d demo2</code> 查看 <code>Mach-O</code> 链接顺序，如下：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">% objdump --macho -d demo2</span><br><span class="line">demo2:</span><br><span class="line">(__TEXT,__text) section</span><br><span class="line">_main:</span><br><span class="line">100003f30:	55	pushq	%rbp</span><br><span class="line">100003f31:	48 89 e5	movq	%rsp, %rbp</span><br><span class="line">100003f34:	48 83 ec 10	subq	$16, %rsp</span><br><span class="line">100003f38:	c7 45 fc 00 00 00 00	movl	$0, -4(%rbp)</span><br><span class="line">100003f3f:	c7 45 f8 01 00 00 00	movl	$1, -8(%rbp)</span><br><span class="line">100003f46:	8b 75 f8	movl	-8(%rbp), %esi</span><br><span class="line">100003f49:	48 8d 3d 56 00 00 00	leaq	86(%rip), %rdi ## literal pool for: &quot;result \344\270\272: %d&quot;</span><br><span class="line">100003f50:	b0 00	movb	$0, %al</span><br><span class="line">100003f52:	e8 2d 00 00 00	callq	0x100003f84 ## symbol stub for: _printf</span><br><span class="line">100003f57:	31 c0	xorl	%eax, %eax</span><br><span class="line">100003f59:	48 83 c4 10	addq	$16, %rsp</span><br><span class="line">100003f5d:	5d	popq	%rbp</span><br><span class="line">100003f5e:	c3	retq</span><br><span class="line">100003f5f:	90	nop</span><br><span class="line">_addtwonum:</span><br><span class="line">100003f60:	55	pushq	%rbp</span><br><span class="line">100003f61:	48 89 e5	movq	%rsp, %rbp</span><br><span class="line">100003f64:	48 8d 0d a9 40 00 00	leaq	_y(%rip), %rcx</span><br><span class="line">100003f6b:	48 8d 05 9e 40 00 00	leaq	_x(%rip), %rax</span><br><span class="line">100003f72:	c7 00 01 00 00 00	movl	$1, (%rax)</span><br><span class="line">100003f78:	c7 01 02 00 00 00	movl	$2, (%rcx)</span><br><span class="line">100003f7e:	8b 00	movl	(%rax), %eax</span><br><span class="line">100003f80:	03 01	addl	(%rcx), %eax</span><br><span class="line">100003f82:	5d	popq	%rbp</span><br><span class="line">100003f83:	c3	retq</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>源文件的链接顺序是 <code>main + addtwonum</code></p>
+<p>上述所说的链接顺序，对应到我们日常开发中是指工程中的 <code>target -&gt; Build Phase -&gt; Compiles Sources</code>，这里就是对应源文件的 <code>编译顺序</code>，如果源文件的顺序发生了变化，生成的可执行文件是不一样的</p>
+<h1 id="库-文件"><a href="#库-文件" class="headerlink" title="库 文件"></a>库 文件</h1><ul>
+<li><p>什么是库？</p>
+<p>  主要是程序代码的集合，即将N个文件组织起来，是共享程序代码的一种方式，</p>
+</li>
+<li><p>库的分类</p>
+<ul>
+<li><p><code>开源库（公有库）</code>：源码是公开的，可以看到每个文件的实现，例如Github中的AFNetworking、SDWebImage等</p>
+</li>
+<li><p><code>闭源库（私有库）</code>：源码未公开，是经过编译后的二进制文件，看不到具体的实现，再细分又分为 静态库 和 动态库。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="静态库-amp-动态库"><a href="#静态库-amp-动态库" class="headerlink" title="静态库 &amp; 动态库"></a>静态库 &amp; 动态库</h1><ol>
+<li>静态库：静态库的存在形式主要有两种（建议用.framework）：<code>.a + .framework</code></li>
+</ol>
+<ul>
+<li><p><code>.a</code> 是一个 纯二进制文件，<code>.a</code> 不能直接使用，至少需要<code>.h</code>文件配合，可能还会需要资源文件</p>
+</li>
+<li><p><code>.framework</code> 中除了有二进制文件外，还有资源文件，且可以 <code>直接使用</code></p>
+</li>
+<li><p>两者的关系： <code>.a + .h + sourceFile = .frmework</code></p>
+</li>
+<li><p>优势：方便共享代码，便于合理使用</p>
+<ul>
+<li>实现iOS的模块化，即将固定业务模块化为静态库</li>
+<li>共享代码，但不希望被看到代码的具体实现</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li><p>动态库：动态库的存在形式也是两种：<code>.dylib + .framework</code></p>
+</li>
+<li><p>.framework 为什么即是静态库又是动态库？</p>
+</li>
+</ol>
+<ul>
+<li>系统的 .framework 是动态库</li>
+<li>自定义的 .framework 是静态库</li>
+</ul>
+<ol start="4">
+<li>静态库和动态库的区别</li>
+</ol>
+<ul>
+<li><code>静态库</code> 在 <code>链接</code> 时会被完整的拷贝到项目中，如果有多个APP都是用了同一个静态库，<code>会拷贝多份</code>，浪费内存</li>
+<li><code>动态库</code> 不会复制，<code>只有一份</code>，在程序运行时 动态加载 到内存中，多个APP共用一份，节约内存</li>
+</ul>
+<h1 id="验证-a-dylib-是否是-Mach-O文件"><a href="#验证-a-dylib-是否是-Mach-O文件" class="headerlink" title="验证 .a  .dylib 是否是 Mach-O文件"></a>验证 .a  .dylib 是否是 Mach-O文件</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cd 项目根目录下</span><br></pre></td></tr></table></figure></div>
+
+<ol>
+<li>验证 .a</li>
+</ol>
+<ul>
+<li><p>在项目中，通过<code>find</code>命令查找到 <code>.a</code> 文件: 终端输入 <code>find /usr -name &quot;*.a&quot;</code></p>
+</li>
+<li><p>随机查看一个 <code>.a</code> 文件，是一个 <code>dynamically</code> 类型： <code>file .a文件路径</code></p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">zhangjian@zhangjiandeMBP SRSF % find /usr -name &quot;*.a&quot;</span><br><span class="line">find: /usr/sbin/authserver: Permission denied</span><br><span class="line">/usr/local/lib/libbrotlidec-static.a</span><br><span class="line">/usr/local/lib/libev.a</span><br><span class="line">/usr/local/lib/libjemalloc.a</span><br><span class="line">/usr/local/lib/libnghttp2.a</span><br><span class="line">/usr/local/lib/libevent_extra.a</span><br><span class="line">/usr/local/lib/libevent.a</span><br><span class="line">/usr/local/lib/libevent_core.a</span><br><span class="line">/usr/local/lib/libprotobuf.a</span><br><span class="line">/usr/local/lib/liblz4.a</span><br><span class="line">/usr/local/lib/libprotoc.a</span><br><span class="line">/usr/local/lib/libprotobuf-lite.a</span><br><span class="line">/usr/local/lib/libbrotlienc-static.a</span><br><span class="line">/usr/local/lib/libbrotlicommon-static.a</span><br><span class="line">/usr/local/lib/libuv.a</span><br><span class="line">/usr/local/lib/libzstd.a</span><br><span class="line">/usr/local/lib/libevent_openssl.a</span><br><span class="line">/usr/local/lib/libmysqlservices.a</span><br><span class="line">/usr/local/lib/libjemalloc_pic.a</span><br><span class="line">/usr/local/lib/libmysqlclient.a</span><br><span class="line">/usr/local/lib/libevent_pthreads.a</span><br><span class="line">/usr/local/Cellar/nghttp2/1.43.0/lib/libnghttp2.a</span><br><span class="line">/usr/local/Cellar/mysql-client/8.0.25/lib/libmysqlclient.a</span><br><span class="line">/usr/local/Cellar/libuv/1.41.0/lib/libuv.a</span><br><span class="line">/usr/local/Cellar/jemalloc/5.2.1_1/lib/libjemalloc.a</span><br><span class="line">/usr/local/Cellar/jemalloc/5.2.1_1/lib/libjemalloc_pic.a</span><br><span class="line">/usr/local/Cellar/brotli/1.0.9/lib/libbrotlidec-static.a</span><br><span class="line">/usr/local/Cellar/brotli/1.0.9/lib/libbrotlienc-static.a</span><br><span class="line">/usr/local/Cellar/brotli/1.0.9/lib/libbrotlicommon-static.a</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicui18n.a</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicutest.a</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicuio.a</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicudata.a</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicuuc.a</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicutu.a</span><br><span class="line">/usr/local/Cellar/lz4/1.9.3/lib/liblz4.a</span><br><span class="line">/usr/local/Cellar/zstd/1.5.0/lib/libzstd.a</span><br><span class="line">/usr/local/Cellar/mysql/8.0.25_1/lib/libmysqlservices.a</span><br><span class="line">/usr/local/Cellar/mysql/8.0.25_1/lib/libmysqlclient.a</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent_extra.a</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent.a</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent_core.a</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent_openssl.a</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent_pthreads.a</span><br><span class="line">/usr/local/Cellar/openssl@1.1/1.1.1k/lib/libcrypto.a</span><br><span class="line">/usr/local/Cellar/openssl@1.1/1.1.1k/lib/libssl.a</span><br><span class="line">/usr/local/Cellar/libev/4.33/lib/libev.a</span><br><span class="line">/usr/local/Cellar/protobuf/3.17.3/lib/libprotobuf.a</span><br><span class="line">/usr/local/Cellar/protobuf/3.17.3/lib/libprotoc.a</span><br><span class="line">/usr/local/Cellar/protobuf/3.17.3/lib/libprotobuf-lite.a</span><br><span class="line"></span><br><span class="line">% file /usr/local/Cellar/protobuf/3.17.3/lib/libprotobuf-lite.a</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent_openssl.a: current ar archive random library</span><br></pre></td></tr></table></figure></div>
+
+<p>这个.a库是看不出来是 dynamically类型</p>
+<ol start="2">
+<li>验证 <code>.dylib</code></li>
+</ol>
+<ul>
+<li><p>在项目中通过 <code>find</code> 查找 <code>.dylib文件</code>： <code>find /usr -name &quot;*.dylib&quot;</code></p>
+</li>
+<li><p>查看 <code>.dylib</code> 文件： <code>file .dylib文件路径</code></p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br></pre></td><td class="code"><pre><span class="line">find: /usr/sbin/authserver: Permission denied</span><br><span class="line">/usr/local/Homebrew/Library/Homebrew/test/support/fixtures/mach/fat.dylib</span><br><span class="line">/usr/local/Homebrew/Library/Homebrew/test/support/fixtures/mach/i386.dylib</span><br><span class="line">/usr/local/Homebrew/Library/Homebrew/test/support/fixtures/mach/x86_64.dylib</span><br><span class="line">/usr/local/lib/libmysqlrouter_http_auth_backend.1.dylib</span><br><span class="line">/usr/local/lib/libmysqlharness_stdx.1.dylib</span><br><span class="line">/usr/local/lib/libevent_pthreads-2.1.7.dylib</span><br><span class="line">/usr/local/lib/libbrotlidec.1.dylib</span><br><span class="line">/usr/local/lib/libuv.dylib</span><br><span class="line">/usr/local/lib/libbrotlicommon.1.dylib</span><br><span class="line">/usr/local/lib/liblz4.1.9.3.dylib</span><br><span class="line">/usr/local/lib/libcares.dylib</span><br><span class="line">/usr/local/lib/libmysqlharness.1.dylib</span><br><span class="line">/usr/local/lib/libbrotlienc.dylib</span><br><span class="line">/usr/local/lib/libprotobuf-lite.dylib</span><br><span class="line">/usr/local/lib/libevent_openssl-2.1.7.dylib</span><br><span class="line">/usr/local/lib/libevent_extra.dylib</span><br><span class="line">/usr/local/lib/libbrotlienc.1.dylib</span><br><span class="line">/usr/local/lib/libuv.1.dylib</span><br><span class="line">/usr/local/lib/libevent_extra-2.1.7.dylib</span><br><span class="line">/usr/local/lib/libprotoc.28.dylib</span><br><span class="line">/usr/local/lib/libprotobuf.28.dylib</span><br><span class="line">/usr/local/lib/libmysqlharness_tls.1.dylib</span><br><span class="line">/usr/local/lib/libevent.dylib</span><br><span class="line">/usr/local/lib/libcares.2.dylib</span><br><span class="line">/usr/local/lib/libcares.2.4.2.dylib</span><br><span class="line">/usr/local/lib/libbrotlienc.1.0.9.dylib</span><br><span class="line">/usr/local/lib/libmysqlclient.21.dylib</span><br><span class="line">/usr/local/lib/libev.dylib</span><br><span class="line">/usr/local/lib/libprotoc.dylib</span><br><span class="line">/usr/local/lib/libzstd.1.5.0.dylib</span><br><span class="line">/usr/local/lib/libevent-2.1.7.dylib</span><br><span class="line">/usr/local/lib/libevent_pthreads.dylib</span><br><span class="line">/usr/local/lib/liblz4.dylib</span><br><span class="line">/usr/local/lib/libmysqlrouter_io_component.1.dylib</span><br><span class="line">/usr/local/lib/libmysqlrouter_http.1.dylib</span><br><span class="line">/usr/local/lib/libjemalloc.2.dylib</span><br><span class="line">/usr/local/lib/libnghttp2.14.dylib</span><br><span class="line">/usr/local/lib/libprotobuf.dylib</span><br><span class="line">/usr/local/lib/libmysqlclient.dylib</span><br><span class="line">/usr/local/lib/libevent_openssl.dylib</span><br><span class="line">/usr/local/lib/liblz4.1.dylib</span><br><span class="line">/usr/local/lib/libmysqlrouter_http_auth_realm.1.dylib</span><br><span class="line">/usr/local/lib/libbrotlicommon.dylib</span><br><span class="line">/usr/local/lib/libnghttp2.dylib</span><br><span class="line">/usr/local/lib/libzstd.1.dylib</span><br><span class="line">/usr/local/lib/libbrotlidec.dylib</span><br><span class="line">/usr/local/lib/libmysqlrouter.1.dylib</span><br><span class="line">/usr/local/lib/libbrotlidec.1.0.9.dylib</span><br><span class="line">/usr/local/lib/libevent_core.dylib</span><br><span class="line">/usr/local/lib/libbrotlicommon.1.0.9.dylib</span><br><span class="line">/usr/local/lib/libev.4.dylib</span><br><span class="line">/usr/local/lib/libzstd.dylib</span><br><span class="line">/usr/local/lib/libjemalloc.dylib</span><br><span class="line">/usr/local/lib/libprotobuf-lite.28.dylib</span><br><span class="line">/usr/local/lib/libevent_core-2.1.7.dylib</span><br><span class="line">/usr/local/Cellar/nghttp2/1.43.0/lib/libnghttp2.14.dylib</span><br><span class="line">/usr/local/Cellar/nghttp2/1.43.0/lib/libnghttp2.dylib</span><br><span class="line">/usr/local/Cellar/mysql-client/8.0.25/lib/libssl.dylib</span><br><span class="line">/usr/local/Cellar/mysql-client/8.0.25/lib/libssl.1.1.dylib</span><br><span class="line">/usr/local/Cellar/mysql-client/8.0.25/lib/plugin/libssl.1.1.dylib</span><br><span class="line">/usr/local/Cellar/mysql-client/8.0.25/lib/plugin/libcrypto.1.1.dylib</span><br><span class="line">/usr/local/Cellar/mysql-client/8.0.25/lib/libmysqlclient.21.dylib</span><br><span class="line">/usr/local/Cellar/mysql-client/8.0.25/lib/libcrypto.dylib</span><br><span class="line">/usr/local/Cellar/mysql-client/8.0.25/lib/libmysqlclient.dylib</span><br><span class="line">/usr/local/Cellar/mysql-client/8.0.25/lib/libcrypto.1.1.dylib</span><br><span class="line">/usr/local/Cellar/libuv/1.41.0/lib/libuv.dylib</span><br><span class="line">/usr/local/Cellar/libuv/1.41.0/lib/libuv.1.dylib</span><br><span class="line">/usr/local/Cellar/jemalloc/5.2.1_1/lib/libjemalloc.2.dylib</span><br><span class="line">/usr/local/Cellar/jemalloc/5.2.1_1/lib/libjemalloc.dylib</span><br><span class="line">/usr/local/Cellar/brotli/1.0.9/lib/libbrotlidec.1.dylib</span><br><span class="line">/usr/local/Cellar/brotli/1.0.9/lib/libbrotlicommon.1.dylib</span><br><span class="line">/usr/local/Cellar/brotli/1.0.9/lib/libbrotlienc.dylib</span><br><span class="line">/usr/local/Cellar/brotli/1.0.9/lib/libbrotlienc.1.dylib</span><br><span class="line">/usr/local/Cellar/brotli/1.0.9/lib/libbrotlienc.1.0.9.dylib</span><br><span class="line">/usr/local/Cellar/brotli/1.0.9/lib/libbrotlicommon.dylib</span><br><span class="line">/usr/local/Cellar/brotli/1.0.9/lib/libbrotlidec.dylib</span><br><span class="line">/usr/local/Cellar/brotli/1.0.9/lib/libbrotlidec.1.0.9.dylib</span><br><span class="line">/usr/local/Cellar/brotli/1.0.9/lib/libbrotlicommon.1.0.9.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicui18n.69.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicuio.69.1.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicuio.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicuuc.69.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicutest.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicudata.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicudata.69.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicutu.69.1.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicui18n.69.1.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicuuc.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicutu.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicui18n.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicutest.69.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicudata.69.1.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicutest.69.1.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicuuc.69.1.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicuio.69.dylib</span><br><span class="line">/usr/local/Cellar/icu4c/69.1/lib/libicutu.69.dylib</span><br><span class="line">/usr/local/Cellar/lz4/1.9.3/lib/liblz4.1.9.3.dylib</span><br><span class="line">/usr/local/Cellar/lz4/1.9.3/lib/liblz4.dylib</span><br><span class="line">/usr/local/Cellar/lz4/1.9.3/lib/liblz4.1.dylib</span><br><span class="line">/usr/local/Cellar/c-ares/1.17.1/lib/libcares.dylib</span><br><span class="line">/usr/local/Cellar/c-ares/1.17.1/lib/libcares.2.dylib</span><br><span class="line">/usr/local/Cellar/c-ares/1.17.1/lib/libcares.2.4.2.dylib</span><br><span class="line">/usr/local/Cellar/zstd/1.5.0/lib/libzstd.1.5.0.dylib</span><br><span class="line">/usr/local/Cellar/zstd/1.5.0/lib/libzstd.1.dylib</span><br><span class="line">/usr/local/Cellar/zstd/1.5.0/lib/libzstd.dylib</span><br><span class="line">/usr/local/Cellar/mysql/8.0.25_1/lib/libmysqlrouter_http_auth_backend.1.dylib</span><br><span class="line">/usr/local/Cellar/mysql/8.0.25_1/lib/libmysqlharness_stdx.1.dylib</span><br><span class="line">/usr/local/Cellar/mysql/8.0.25_1/lib/libmysqlharness.1.dylib</span><br><span class="line">/usr/local/Cellar/mysql/8.0.25_1/lib/libmysqlharness_tls.1.dylib</span><br><span class="line">/usr/local/Cellar/mysql/8.0.25_1/lib/libmysqlclient.21.dylib</span><br><span class="line">/usr/local/Cellar/mysql/8.0.25_1/lib/libmysqlrouter_io_component.1.dylib</span><br><span class="line">/usr/local/Cellar/mysql/8.0.25_1/lib/libmysqlrouter_http.1.dylib</span><br><span class="line">/usr/local/Cellar/mysql/8.0.25_1/lib/libmysqlclient.dylib</span><br><span class="line">/usr/local/Cellar/mysql/8.0.25_1/lib/libmysqlrouter_http_auth_realm.1.dylib</span><br><span class="line">/usr/local/Cellar/mysql/8.0.25_1/lib/libmysqlrouter.1.dylib</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent_pthreads-2.1.7.dylib</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent_openssl-2.1.7.dylib</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent_extra.dylib</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent_extra-2.1.7.dylib</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent.dylib</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent-2.1.7.dylib</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent_pthreads.dylib</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent_openssl.dylib</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent_core.dylib</span><br><span class="line">/usr/local/Cellar/libevent/2.1.12/lib/libevent_core-2.1.7.dylib</span><br><span class="line">/usr/local/Cellar/openssl@1.1/1.1.1k/lib/libssl.dylib</span><br><span class="line">/usr/local/Cellar/openssl@1.1/1.1.1k/lib/libssl.1.1.dylib</span><br><span class="line">/usr/local/Cellar/openssl@1.1/1.1.1k/lib/libcrypto.dylib</span><br><span class="line">/usr/local/Cellar/openssl@1.1/1.1.1k/lib/engines-1.1/padlock.dylib</span><br><span class="line">/usr/local/Cellar/openssl@1.1/1.1.1k/lib/engines-1.1/capi.dylib</span><br><span class="line">/usr/local/Cellar/openssl@1.1/1.1.1k/lib/libcrypto.1.1.dylib</span><br><span class="line">/usr/local/Cellar/libev/4.33/lib/libev.dylib</span><br><span class="line">/usr/local/Cellar/libev/4.33/lib/libev.4.dylib</span><br><span class="line">/usr/local/Cellar/protobuf/3.17.3/lib/libprotobuf-lite.dylib</span><br><span class="line">/usr/local/Cellar/protobuf/3.17.3/lib/libprotoc.28.dylib</span><br><span class="line">/usr/local/Cellar/protobuf/3.17.3/lib/libprotobuf.28.dylib</span><br><span class="line">/usr/local/Cellar/protobuf/3.17.3/lib/libprotoc.dylib</span><br><span class="line">/usr/local/Cellar/protobuf/3.17.3/lib/libprotobuf.dylib</span><br><span class="line">/usr/local/Cellar/protobuf/3.17.3/lib/libprotobuf-lite.28.dylib</span><br><span class="line">/usr/lib/libobjc-trampolines.dylib</span><br><span class="line">/usr/lib/libLeaksAtExit.dylib</span><br><span class="line">/usr/lib/libstdc++.6.dylib</span><br><span class="line">/usr/lib/libpython2.7.dylib</span><br><span class="line">/usr/lib/libhunspell-1.2.0.dylib</span><br><span class="line">/usr/lib/libMTLCapture.dylib</span><br><span class="line">/usr/lib/system/libsystem_pthread.dylib</span><br><span class="line">/usr/lib/system/introspection/libsystem_pthread.dylib</span><br><span class="line">/usr/lib/system/introspection/libdispatch.dylib</span><br><span class="line">/usr/lib/system/libsystem_kernel.dylib</span><br><span class="line">/usr/lib/system/libsystem_platform.dylib</span><br><span class="line">/usr/lib/libgmalloc.dylib</span><br><span class="line">/usr/lib/swift/libswiftRemoteMirror.dylib</span><br><span class="line">/usr/lib/swift/libswiftCreateML.dylib</span><br><span class="line">/usr/lib/libiodbc.2.dylib</span><br><span class="line">/usr/lib/libffi-trampolines.dylib</span><br><span class="line">/usr/lib/ssh-keychain.dylib</span><br><span class="line">/usr/lib/libpython.dylib</span><br><span class="line">/usr/lib/libiodbcinst.2.dylib</span><br><span class="line"></span><br><span class="line">% file /usr/lib/libpython.dylib</span><br><span class="line">/usr/lib/libpython.dylib: Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit dynamically linked shared library x86_64] [arm64e]</span><br><span class="line">/usr/lib/libpython.dylib (for architecture x86_64):	Mach-O 64-bit dynamically linked shared library x86_64</span><br><span class="line">/usr/lib/libpython.dylib (for architecture arm64e):	Mach-O 64-bit dynamically linked shared library arm64e</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>可执行文件</li>
+</ol>
+<p>这里的可执行文件，即一般是指日常项目中，编译后生成的可执行文件，可以通过 file 查看其文件类型</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">% file /Users/zhangjian/Desktop/demo1 </span><br><span class="line">/Users/zhangjian/Desktop/demo1: Mach-O 64-bit executable x86_64</span><br></pre></td></tr></table></figure></div>
+
+<ol start="4">
+<li>dyld</li>
+</ol>
+<p><code>dyld</code>（the dynamic link editor）是苹果的 <code>动态连接器</code>，是苹果操作系统一个重要的组成部分，在系统内核做好程序准备工作之后，交由dyld负责余下的工作，而且它是开源的，任何人可以通过苹果官网下载它的源码来阅读理解它的运作方式，了解系统加载动态库的细节。</p>
+<ul>
+<li>共享缓存机制</li>
+</ul>
+<p>在iOS系统中，每个程序依赖的<code>动态库</code>都需要通过<code>dyld</code>（位于&#x2F;usr&#x2F;lib&#x2F;dyld）一个一个 加载到内存，然而，很多系统库几乎是每个程序都会用到的，如果在每个程序运行的时候都重复的去加载一次，势必造成运行缓慢，为了优化启动速度和提高程序性能，共享缓存机制就应运而生。所有默认的动态链接库被合并成一个大的缓存文件，放到<code>/System/Library/Caches/com.apple.dyld/目录</code>下，按照不同的架构分别保存着</p>
+<ul>
+<li>验证dyld</li>
+</ul>
+<p>查找Mac中的dyld</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">zhangjian@zhangjiandeMBP ~ % cd /usr/lib  </span><br><span class="line">zhangjian@zhangjiandeMBP lib % ls</span><br><span class="line"></span><br><span class="line">charset.alias			libstdc++.6.dylib</span><br><span class="line">cron				log</span><br><span class="line">dsc_extractor.bundle		pam</span><br><span class="line">dtrace				pkgconfig</span><br><span class="line">dyld				python2.7</span><br><span class="line">groff				rpcsvc</span><br><span class="line">libLeaksAtExit.dylib		ruby</span><br><span class="line">libMTLCapture.dylib		sasl2</span><br><span class="line">libffi-trampolines.dylib	sqlite3</span><br><span class="line">libgmalloc.dylib		ssh-keychain.dylib</span><br><span class="line">libhunspell-1.2.0.dylib		swift</span><br><span class="line">libiodbc.2.dylib		system</span><br><span class="line">libiodbcinst.2.dylib		updaters</span><br><span class="line">libobjc-trampolines.dylib	xpc</span><br><span class="line">libpython.dylib			zsh</span><br><span class="line">libpython2.7.dylib</span><br><span class="line"></span><br><span class="line">zhangjian@zhangjiandeMBP lib % ls dyld</span><br><span class="line">dyld</span><br></pre></td></tr></table></figure></div>
+
+<p>查看 <code>dyld</code>的文件类型： <code>file dyld</code>，是一个 <code>动态链接器</code>，其本身也是一个<code>Mach-O</code>文件</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">zhangjian@zhangjiandeMBP lib % file dyld</span><br><span class="line">dyld: Mach-O universal binary with 3 architectures: [i386:Mach-O dynamic linker i386] [x86_64:Mach-O 64-bit dynamic linker x86_64] [arm64e]</span><br><span class="line">dyld (for architecture i386):	Mach-O dynamic linker i386</span><br><span class="line">dyld (for architecture x86_64):	Mach-O 64-bit dynamic linker x86_64</span><br><span class="line">dyld (for architecture arm64e):	Mach-O 64-bit dynamic linker arm64e</span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>dsym文件</li>
+</ol>
+<ul>
+<li>dsym介绍</li>
+</ul>
+<p>Xcode编译项目后，我们会看到一个同名的 <code>dSYM文件</code>，dSYM是 <code>保存16进制函数地址映射信息的中转文件</code>，我们调试的 <code>symbols</code> 都会包含在这个文件中，并且每次编译项目的时候都会生成一个新的 dSYM文件，位于<code>/Users/&lt;用户名&gt;/Library/Developer/Xcode/Archives</code>目录下，所以对于每一个发布版本我们都很有必要保存对应的 Archives 文件。</p>
+<p>当我们软件 <code>release</code> 模式打包或上线后，不会像我们在xcode中那样直观的看到 <code>崩溃</code> 的错误日志，这个时候我们就需要 <code>分析crash report</code>文件了，iOS设备中会有日志文件保存我们每个应用出错的函数内存地址，通过 <code>xcode</code> 的 <code>organizer</code> 可以将iOS设备中的 <code>deviceLog</code> 导出成 <code>crash文件</code>，这个时候我们就可以 通过出错的函数地址去 <code>查询dSYM</code> 文件中程序对应的函数和文件名，但前提是我们需要有软件版本对应的dSYM文件，这也是为什么我们很有必要保存每个发布版本的 <code>Archives</code> 文件了</p>
+<ul>
+<li>验证 .dSYM文件</li>
+</ul>
+<p>程序 <code>真机+release</code> 编译时，有一个 <code>.dSYM文件</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152944480-381f1890-540c-4e90-b7c6-fe0b7c9eb505.jpg"
+                     
+                ></p>
+<ul>
+<li><code>.dSYM</code> 也是一个 <code>mach-o</code> 文件，是一个 <code>符号表</code>，主要用于出现崩溃后可以通过这个文件 <code>取符号</code>，方便 <code>查询问题</code></li>
+</ul>
+<h1 id="通用二进制文件"><a href="#通用二进制文件" class="headerlink" title="通用二进制文件"></a>通用二进制文件</h1><p>mac系统所支持的cpu及硬件平台发生了很大的变化，为了解决软件在多个平台硬件平台上的 <code>兼容性</code> 问题，苹果开发了一个 <code>通用的二进制文件格式（Universal Binary）</code>，又称 <code>胖二进制（Fat Binary）</code></p>
+<ul>
+<li>苹果公司提出的一种程序代码，能同时 <code>适用多种架构的二进制文件</code></li>
+<li>同一个程序包中同时为多种架构提供最理想的性能。</li>
+<li>因为需要存储多种代码，通用二进制应用程序通常比单一平台二进制的程序要大</li>
+<li>但是由于两种架构有 <code>共通的非执行资源（代码以外的）</code>，所以并不会达到单一版本的两倍之多</li>
+<li>而且由于执行中只调用一部分代码，运行起来也不需要额外的内存</li>
+</ul>
+<p><strong>演示</strong></p>
+<ul>
+<li>在日常开发的项目中，可以通过<code>Build Setting -&gt; Mach-O type</code>，指定 Mach-O文件的类型，如下图：</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152944589-f10187b9-daa5-4041-8f96-760188f4fe85.jpg"
+                     
+                ></p>
+<ul>
+<li><p>一般我们通过真机生成的可执行文件，其架构是arm64，是一个单一架构</p>
+<ul>
+<li>iOS 9.0 以上的系统否支持 64位架构</li>
+</ul>
+  <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">% cd /Users/zhangjian/Library/Developer/Xcode/DerivedData/SRSF-bzdqlauzaknekvclilbreawtebqi/Build/Products/Debug-iphoneos/中图云书房.app</span><br><span class="line">% file 中图云书房 </span><br><span class="line">中图云书房: Mach-O 64-bit executable arm64</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>同时也可以在 <code>Build Setting -&gt; Architectures</code> 中设值编译的 <code>架构</code></p>
+<ul>
+<li>环境变量 <code>$(ARCHS_STANDRAD)</code> ：包含 <code>arm64、armv7</code></li>
+</ul>
+<p>  <img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152944738-29cd2fee-4dfd-4d4d-bcff-256e5498101c.jpg"
+                     
+                ></p>
+<ul>
+<li>还有一种架构：armv7s，iPhone5、iPhone5c可用的架构，可在工程中添加，此时查看<code> Release + 真机环境</code> 可执行文件，支持3个架构</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">% cd /Users/zhangjian/Library/Developer/Xcode/DerivedData/Demo-edwjvapoqaffzeeiyzyhfryhfrsr/Build/Products/Release-iphoneos/Demo.app </span><br><span class="line"></span><br><span class="line">% file Demo</span><br><span class="line">Demo: Mach-O universal binary with 3 architectures: [arm_v7:Mach-O executable arm_v7] [arm_v7s:Mach-O executable arm_v7s] [arm64:Mach-O 64-bit executable arm64]</span><br><span class="line">Demo (for architecture armv7):	Mach-O executable arm_v7</span><br><span class="line">Demo (for architecture armv7s):	Mach-O executable arm_v7s</span><br><span class="line">Demo (for architecture arm64):	Mach-O 64-bit executable arm64</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="ARM架构"><a href="#ARM架构" class="headerlink" title="ARM架构"></a>ARM架构</h1><p><code>ARM架构</code>过去称作 <code>进阶精简指令集机器（Advanced RISC Machine，更早称作：Acorn RISC Machine）</code>，是一个 <code>32位精简指令集（RISC）</code>处理器架构，ARM处理器非常适用于通讯领域，符合其主要设计目标为低耗电的特性</p>
+<p><code>ARM</code>和<code>Intel</code>处理器的第一个区别是，前者使用 <code>精简指令集（RISC）</code>,而后者使用 <code>复杂指令集（CISC）</code></p>
+<p>ARM处理器指令集：是指计算机ARM操作系统指令系统</p>
+<ul>
+<li><p>armv6、armv7、armv7s、arm64、arm64e 都是arm处理器的指令集，所有指令集原则上都是 <code>向下兼容</code> 的</p>
+</li>
+<li><p>苹果A7处理器支持两个不同的指令集：</p>
+</li>
+</ul>
+<p><code>32位</code> ARM指令集（<code>armv6 | armv7 | armv7s</code>）<br><code>64位</code> ARM指令集（<code>arm64</code>）</p>
+<ul>
+<li><code>i386 | x86_64</code> 是 <code>Mac</code> 处理器的指令集</li>
+</ul>
+<p><strong>iOS 设备支持的指令集</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152944846-bca8fe8e-c0c3-4988-bd76-4b3688206f38.jpg"
+                     
+                ></p>
+<h1 id="通用二进制源码"><a href="#通用二进制源码" class="headerlink" title="通用二进制源码"></a>通用二进制源码</h1><ul>
+<li>通过 CMD + shift + O 搜索 fat.h</li>
+<li>找到其中通用二进制文件的头部结构 fat_header 如下所示</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct fat_header &#123;</span><br><span class="line">	uint32_t	magic;		/* magic字段被定义为常量FAT_MAGIC，表示这是一个胖二进制 */</span><br><span class="line">	uint32_t	nfat_arch;	/* 表示有多少个Mach-O文件 */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>每个胖二进制都用 fat_arch 结构表示，在 fat_header 之后，紧接着一个活多个连续的fat_arch结构体</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct fat_arch &#123;</span><br><span class="line">	cpu_type_t	cputype;	/* cpu 类型 */</span><br><span class="line">	cpu_subtype_t	cpusubtype;	/* cpu的子类型 */</span><br><span class="line">	uint32_t	offset;		/* 制定了当前cpu架构数据相对于当前文件开头的偏移量 */</span><br><span class="line">	uint32_t	size;		/* 数据的大小 */</span><br><span class="line">	uint32_t	align;		/* 数据的内存对齐边界，取值必须是2的次方，它确保了当前cpu架构的目标文件在加载到内存中时，数据是经过内存优化对齐的 */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="终端指令"><a href="#终端指令" class="headerlink" title="终端指令"></a>终端指令</h1><ul>
+<li>可以通过tool来查看fat_header信息：<code>otool -f 可执行文件</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">% cd /Users/zhangjian/Library/Developer/Xcode/DerivedData/Demo-edwjvapoqaffzeeiyzyhfryhfrsr/Build/Products/Release-iphoneos/Demo.app </span><br><span class="line"></span><br><span class="line">% otool -f Demo</span><br><span class="line">Fat headers</span><br><span class="line">fat_magic 0xcafebabe</span><br><span class="line">nfat_arch 3</span><br><span class="line">architecture 0</span><br><span class="line">    cputype 12</span><br><span class="line">    cpusubtype 9</span><br><span class="line">    capabilities 0x0</span><br><span class="line">    offset 16384</span><br><span class="line">    size 79280</span><br><span class="line">    align 2^14 (16384)</span><br><span class="line">architecture 1</span><br><span class="line">    cputype 12</span><br><span class="line">    cpusubtype 11</span><br><span class="line">    capabilities 0x0</span><br><span class="line">    offset 98304</span><br><span class="line">    size 79280</span><br><span class="line">    align 2^14 (16384)</span><br><span class="line">architecture 2</span><br><span class="line">    cputype 16777228</span><br><span class="line">    cpusubtype 0</span><br><span class="line">    capabilities 0x0</span><br><span class="line">    offset 180224</span><br><span class="line">    size 80000</span><br><span class="line">    align 2^14 (16384)</span><br><span class="line">zhangjian@zhangjiandeMBP Demo.app % </span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>可以通过lipo命令拆分、合并胖二进制文件，常用命令如下：</p>
+<ul>
+<li><p>$<code>lipo -info MachO文件</code>：使用lifo -info 可以查看MachO文件包含的架构</p>
+</li>
+<li><p>$<code>lipo MachO文件 -thin 架构 -output 输出文件路径</code>：使用<code>lipo -thin</code> 拆分某种架构</p>
+</li>
+<li><p>$<code>lipo -create MachO1 MachO2 -output 输出文件路径</code>：使用<code>lipo -create</code> 合并 多种架构</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="lipo演示"><a href="#lipo演示" class="headerlink" title="lipo演示"></a>lipo演示</h1><ul>
+<li>查看二进制文件中包含的架构：lipo -info Demo</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">% cd /Users/zhangjian/Library/Developer/Xcode/DerivedData/Demo-edwjvapoqaffzeeiyzyhfryhfrsr/Build/Products/Release-iphoneos/Demo.app </span><br><span class="line"></span><br><span class="line">% lipo -info Demo </span><br><span class="line">Architectures in the fat file: Demo are: armv7 armv7s arm64</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>拆分：<code>lipo Demo -thin armv7 -output Demo_armv7</code>，如果拆分没有的架构会报错</p>
+</li>
+<li><p>查看拆分后的可执行文件类型：<code>file Demo_armv7</code></p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">% lipo Demo -thin armv7 -output Demo_armv7</span><br><span class="line">% file Demo_armv7</span><br><span class="line">Demo_armv7: Mach-O executable arm_v7</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>合并：<code>lipo -create Demo_armv7 Demo_arm64 -output Demo_v7_64</code></li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li><p><code>Mach-O</code> 其实是<code> Mach Object</code>文件格式的缩写，是mac以及iOS上可执行文件的格式，是一种 <code>用于可执行文件、目标代码、动态库的文件格式</code>，且 Mach-O提供了更强的扩展性</p>
+</li>
+<li><p>常见的Mach-O格式：<code>.o</code>、<code>库文件（.a、.dylib、.framework）</code>、<code>可执行文件</code>、<code>dyld</code>、<code>.dsym</code></p>
+<ul>
+<li><p><code>.a + .h + sourceFile = .framwork</code></p>
+</li>
+<li><p>动态.framework：系统Framework库</p>
+</li>
+<li><p>静态.framwork：自定义的Framework库</p>
+</li>
+</ul>
+</li>
+<li><p>查看文件类型命令：<code>file 文件路径</code></p>
+</li>
+<li><p>查看Mach-O源文件的链接顺序：<code>objdump --macho -d 可执行文件</code></p>
+</li>
+<li><p><code>dyld</code>（the dynamic link editor）是苹果的动态链接器，mac中路径为&#x2F;usr&#x2F;lib</p>
+</li>
+<li><p><code>dSYM</code> 是保存 16 进制函数地址映射信息的中转文件，位于<code>/Users/&lt;用户名&gt;/Library/Developer/Xcode/Archives</code>目录。可以用于通过出错的函数地址去查询 dSYM 文件中程序对应的函数名和文件名</p>
+</li>
+<li><p><code>通用二进制</code>文件（Universal Binary，也称为<code>胖二进制</code>（Fat Binary））。主要适用于解决多个平台的兼容性问题</p>
+</li>
+<li><p>通过otool来查看fat_header信息：<code>otool -f 可执行文件</code></p>
+</li>
+<li><p>lipo命令拆分、合并胖二进制文件</p>
+<ul>
+<li><p>$<code>lipo -info MachO</code>文件：使用<code>lifo -info</code> 可以查看MachO文件包含的架构</p>
+</li>
+<li><p>$<code>lipo MachO文件 –thin 架构 –output 输出文件路径</code>：使用<code>lifo –thin</code> 拆分某种架构</p>
+</li>
+<li><p>$<code>lipo -create MachO1 MachO2 -output 输出文件路径</code>： 使用<code>lipo -create</code> 合并多种架构</p>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC逆向12：Mach-O文件（上）</li>
+        <li>Post author：张建</li>
+        <li>Create time：2022-01-25 09:33:32</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2022/01/25/OC逆向/OC逆向12：Mach-O文件（上）/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/iOS-OC/">#iOS-OC</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2022/01/25/OC%E9%80%86%E5%90%91/OC%E9%80%86%E5%90%9112%EF%BC%9AMach-O%E6%96%87%E4%BB%B6%EF%BC%88%E4%B8%8B%EF%BC%89/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC逆向12：Mach-O文件（下）</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2021/07/22/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8641%EF%BC%9A%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96%EF%BC%88%E4%B8%80%EF%BC%89%E9%87%8E%E6%8C%87%E9%92%88%E6%8E%A2%E6%B5%8B/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理41：内存优化（一）野指针探测</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC逆向12：Mach-O文件（上）</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mach-O-%E6%96%87%E4%BB%B6%E6%A6%82%E8%BF%B0"><span class="nav-text">Mach-O 文件概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mach-O-%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="nav-text">Mach-O 文件格式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6-o"><span class="nav-text">目标文件 .o</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%AD%E9%97%B4%E4%BA%A7%E7%89%A9-o%E6%96%87%E4%BB%B6"><span class="nav-text">中间产物 .o文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%93-%E6%96%87%E4%BB%B6"><span class="nav-text">库 文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%BA%93-amp-%E5%8A%A8%E6%80%81%E5%BA%93"><span class="nav-text">静态库 &amp; 动态库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-a-dylib-%E6%98%AF%E5%90%A6%E6%98%AF-Mach-O%E6%96%87%E4%BB%B6"><span class="nav-text">验证 .a  .dylib 是否是 Mach-O文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6"><span class="nav-text">通用二进制文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ARM%E6%9E%B6%E6%9E%84"><span class="nav-text">ARM架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%BA%90%E7%A0%81"><span class="nav-text">通用二进制源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF%E6%8C%87%E4%BB%A4"><span class="nav-text">终端指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lipo%E6%BC%94%E7%A4%BA"><span class="nav-text">lipo演示</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

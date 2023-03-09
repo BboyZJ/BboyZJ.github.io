@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2021/01/17/oc底层原理/oc底层原理22：kvc底层原理分析/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC底层原理22：KVC底层原理分析">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2021/01/17/OC底层原理/OC底层原理22：KVC底层原理分析/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC底层原理22：KVC底层原理分析">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC底层原理22：KVC底层原理分析 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC底层原理22：KVC底层原理分析</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2021-01-17 16:33:44</span>
+        <span class="mobile">2021-01-17 16:33</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2022-04-24 16:39:28</span>
+            <span class="mobile">2022-04-24 16:39</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/iOS-OC/">iOS-OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>KVC</code> 的全称是 <code>Key-Value-Coding</code> ，翻译成中文是 <code>键值编码</code> ，键值编码是由<code>NSKeyValueCoding</code> 非正式协议启动的一种机制，<code>对象采用该协议来间接访问其属性</code>。既可以通过一个 <code>字符串Key来访问某个属性</code>。这种间接访问机制补充了实例变量及其相关的访问器方法所提供的直接访问。</p>
+<h1 id="KVC相关API"><a href="#KVC相关API" class="headerlink" title="KVC相关API"></a>KVC相关API</h1><p><strong>常用方法</strong></p>
+<p>主要有以下四种常用的方法：</p>
+<ul>
+<li>通过 <code>key</code> 设值&#x2F;取值</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 通过key来取值</span><br><span class="line">- (nullable id)valueForKey:(NSString *)key;</span><br><span class="line"></span><br><span class="line">// 通过key来设值</span><br><span class="line">- (void)setValue:(nullable id)value forKey:(NSString *)key;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>通过 <code>keyPath</code>（即<code>路由</code>）设值&#x2F;取值</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 通过keyPath来取值</span><br><span class="line">-(nullable id)valueForKeyPath:(NSString *)keyPath;</span><br><span class="line"></span><br><span class="line">// 通过keyPath来设值</span><br><span class="line">-(void)setValue:(nullable id)value forKeyPath:(NSString *)keyPath;</span><br></pre></td></tr></table></figure></div>
+
+
+<ul>
+<li>其他方法</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">默认返回YES，表示如果没有找到Set&lt;Key&gt;方法的话，会按照_key，_iskey，key，iskey的顺序搜索成员，设置成NO就不这样搜索</span><br><span class="line">是否可以直接访问实例变量</span><br><span class="line">+(BOOL)accessInstanceVariablesDirectly;</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">KVC提供属性值正确性验证的API，它可以用来检查set的值是否正确、为不正确的值做一个替换值或者拒绝设置新值并返回错误原因。</span><br><span class="line">- (BOOL)validateValue:(inout id __nullable * __nonnull)ioValue forKey:(NSString *)inKey error:(out NSError **)outError;</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这是集合操作的API，里面还有一系列这样的API，如果属性是一个NSMutableArray，那么可以用这个方法来返回。</span><br><span class="line">- (NSMutableArray *)mutableArrayValueForKey:(NSString *)key;</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如果Key不存在，且KVC无法搜索到任何和Key有关的字段或者属性，则会调用这个方法，默认是抛出异常。</span><br><span class="line">- (nullable id)valueForUndefinedKey:(NSString *)key;</span><br></pre></td></tr></table></figure></div>
+
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">和上一个方法一样，但这个方法是设值。</span><br><span class="line">- (void)setValue:(nullable id)value forUndefinedKey:(NSString *)key;</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如果你在SetValue方法时面给Value传nil，则会调用这个方法</span><br><span class="line">- (void)setNilValueForKey:(NSString *)key;</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入一组key,返回该组key对应的Value，再转成字典返回，用于将Model转到字典。</span><br><span class="line">- (NSDictionary&lt;NSString *, id&gt; *)dictionaryWithValuesForKeys:(NSArray&lt;NSString *&gt; *)keys;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="KVC设值底层原理"><a href="#KVC设值底层原理" class="headerlink" title="KVC设值底层原理"></a>KVC设值底层原理</h1><p>在日常开发中，针对对象属性的赋值，一般有以下两种方式</p>
+<ul>
+<li>直接通过 <code>setter</code> 方法赋值</li>
+<li>通过 <code>KVC键值编码</code> 的相关API赋值</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ZJPerson * person = [[ZJPerson alloc] init];</span><br><span class="line">// 1.一般setter方法</span><br><span class="line">person.name = @&quot;ZJ_哈哈&quot;;</span><br><span class="line">// 2.KVC方法</span><br><span class="line">[person setValue:@&quot;ZJ_嘻嘻&quot; forKey:@&quot;name&quot;];</span><br></pre></td></tr></table></figure></div>
+
+<p>下面针对使用最多的KVC设值方法：<code>seValue:forKey</code>，来进行底层原理的探索</p>
+<p>首先进入 <code>seValue:forKey</code> 的声明，发现是在 <code>Foundation</code> 框架中，而<code>Foundation</code> 框架是不开源的，有以下几种方式可以去探索底层：</p>
+<ul>
+<li>通过 <code>Hopper</code> 反汇编，查看伪代码</li>
+<li>通过苹果 <code>官方文档</code></li>
+<li><code>Github</code> 搜索是否有相关的demo</li>
+</ul>
+<p>在这里，我们通过 <a class="link"   target="_blank" rel="noopener" href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/KeyValueCoding/index.html#//apple_ref/doc/uid/10000107-SW1" >Key-Value Coding Programming Guide <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 苹果官方文档来研究，针对设值流程，有如下说明</p>
+<p>当调用 <code>seValue:forKey</code> 设值属性 <code>value</code> 时，其底层的执行流程为：</p>
+<ul>
+<li><p><strong>【第一步】</strong> 首先查找是否有这三种 <code>setter</code> 方法，按照查找顺序为 <code>set&lt;Key&gt; 、_set&lt;Key&gt;、setIs&lt;Key&gt;</code></p>
+<ul>
+<li>如果 <code>有其中任意一个</code> setter方法，则 <code>直接设值属性的value</code>（注意：<code>key是指成功变量名，首字母的大小写需要符合KVC的命名规范</code>） </li>
+<li>如果都 <code>没有</code> ，则进入 <strong>【第二步】</strong></li>
+</ul>
+</li>
+<li><p><strong>【第二步】</strong> 如果没有第一步的三个简单的setter方法，则查找<code>accessInstanceVariablesDirectly</code> 是否返回 <code>YES</code></p>
+<ul>
+<li><p>如果返回 <code>YES</code>，则查找间接访问的实例变量进行赋值，查找顺序为：<code>_&lt;key&gt;、_is&lt;Key&gt;、&lt;key&gt;、is&lt;Key&gt;</code></p>
+<ul>
+<li>如果找到其中任意一个实例变量，则赋值</li>
+<li>如果都没有，则进入 <strong>【第三步】</strong></li>
+</ul>
+</li>
+<li><p>如果返回<code>NO</code>，则进入 <strong>【第三步】</strong></p>
+</li>
+</ul>
+</li>
+<li><p><strong>【第三步】</strong> 如果 <code>setter方法</code> 或者 <code>实例变量</code> 都没有找到，系统会执行该对象的<code>seValue:forUnderfinedKey:</code>方法，默认抛出<code>NSUnderfinedKeyException</code>类型的异常</p>
+</li>
+</ul>
+<p>综上所述，KVC通过 <code>seValue:forKey</code> 方法设值的流程，以ZJPerson的对象person的属性name为例，如下图所示：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/126090941-c91a337c-21e4-432c-b027-35d4ef9a73f4.png"
+                     
+                ></p>
+<h1 id="KVC取值底层原理"><a href="#KVC取值底层原理" class="headerlink" title="KVC取值底层原理"></a>KVC取值底层原理</h1><p>同样的，我们可以通过官方文档分析KVC取值的底层原理</p>
+<p>当调用 <code>valueForKey</code> 时，其底层的执行流程如下：</p>
+<ul>
+<li><p><strong>【第一步】</strong> 首先查找 <code>getter</code> 方法，按照：<code>get&lt;Key&gt;、&lt;key&gt;、is&lt;Key&gt;、_&lt;key&gt;</code> 的方法顺序查找</p>
+<ul>
+<li>如果 <code>找到</code> ，则进入 <strong>【第五步】</strong> </li>
+<li>如果 <code>没有找到</code> ，则进入 <strong>【第二步】</strong></li>
+</ul>
+</li>
+<li><p><strong>【第二步】</strong> 如果第一步中的 <code>getter</code> 方法没有找到，KVC会查找：<code>countOf&lt;Key&gt;、objectIn&lt;Key&gt; AtIndex:、&lt;key&gt;AtIndex:</code></p>
+<ul>
+<li><p>如果找到 <code>countOf&lt;Key&gt;</code> 和其他两个中的一个，则会创建一个响应所有 <code>NSArray</code> 方法的 <code>集合代理对象</code>，并返回该对象，即 <code>NSKeyValueArray</code>，是<code>NSArray</code> 的子类。代理对象随后将接收到的所有 <code>NSArray</code> 消息转换为<code>countOf&lt;Key&gt;、objectIn&lt;Key&gt; AtIndex:、&lt;key&gt;AtIndex:</code> 消息的某种组合，用来创建键值编码对象。如果原始对象还实现了一个名为 <code>get&lt;Key&gt;：range：</code>之类的可选方法，则代理对象也将在适当时使用该方法（注意：方法名的命名规则要符合KVC的标准命名方法，包括方法签名。）</p>
+</li>
+<li><p>如果没有找到这三个访问数组，则继续进入 <strong>【第三步】</strong></p>
+</li>
+</ul>
+</li>
+<li><p><strong>【第三步】</strong> 如果没有找到上面的几种方法，则会同时查找 <code>countOf &lt;Key&gt;，enumeratorOf&lt;Key&gt;和memberOf&lt;Key&gt; </code>这三个方法</p>
+<ul>
+<li><p>如果这三个方法都找到，则会创建一个响应 <code>所有NSSet方法的集合代理对象</code> ，并返回<br>该对象，此代理对象随后将其收到的所有 <code>NSSet</code> 消息转换为 <code>countOf&lt;Key&gt;，enumeratorOf&lt;Key&gt;和memberOf&lt;Key&gt;：</code> 消息的某种组合，用于创建它的对象</p>
+</li>
+<li><p>如果还是没有找到，则进入 <strong>【第四步】</strong></p>
+</li>
+</ul>
+</li>
+<li><p><strong>【第四步】</strong>  如果还没有找到，检查类方法 <code>InstanceVariablesDirectly</code> 是否 <code>YES</code>，依次搜索 <code>_&lt;key&gt;，_is&lt;Key&gt;</code>，<code>&lt;key&gt;</code> 或 <code>is&lt;Key&gt;</code> 的实例变量</p>
+<ul>
+<li>如果搜到，<code>直接获取实例变量的值</code>，进入 <strong>【第五步】</strong></li>
+</ul>
+</li>
+<li><p><strong>【第五步】</strong> 根据搜索到的属性值的类型，返回不同的结果</p>
+<ul>
+<li><p>如果是<code>对象指针</code>，则直接返回结果</p>
+</li>
+<li><p>如果是 <code>NSNumber支持</code> 的标量类型，则将其 <code>存储在NSNumber实例</code> 中并返回它</p>
+</li>
+<li><p>如果是是 <code>NSNumber不支持</code> 的标量类型，请 <code>转换为NSValue对象</code> 并返回该对象</p>
+</li>
+</ul>
+</li>
+<li><p><strong>【第六步】</strong> 如果上面5步的方法 <code>均失败</code>，系统会执行该对象的<code>valueForUndefinedKey:</code> 方法，默认抛出 <code>NSUndefinedKeyException</code> 类型的异常</p>
+</li>
+</ul>
+<p>综上所述，<code>KVC通过 valueForKey:</code> 方法取值的流程以设值 <code>ZJPerson</code> 的对象person的属性 <code>name</code> 为例，如下图所示：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/126091940-46a9e40f-7ca7-4b71-8a81-2137826a1683.png"
+                     
+                ></p>
+<h1 id="自定义KVC"><a href="#自定义KVC" class="headerlink" title="自定义KVC"></a>自定义KVC</h1><p>原理：通过给 <code>NSObject</code> 添加 <code>分类ZJKVC</code>，实现自定义的 <code>zj_setValue：forKey：</code> 和 <code>zj_valueForKey：</code> 方法，根据苹果官方文档提供的查找规则进行实现：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@interface NSObject (ZJKVC)</span><br><span class="line">// 设值</span><br><span class="line">- (void)zj_setValue:(nullable id)value forKey:(NSString *)key;</span><br><span class="line">// 取值</span><br><span class="line">- (nullable id)zj_valueForKey:(NSString *)key;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="自定义KVC设值"><a href="#自定义KVC设值" class="headerlink" title="自定义KVC设值"></a>自定义KVC设值</h1><p>自定义KVC设值</p>
+<ul>
+<li><p>1、判断 <code>key非空</code></p>
+</li>
+<li><p>2、查找 <code>setter</code> 方法，顺序是：<code>setXXX、_setXXX、setIsXXX</code></p>
+</li>
+<li><p>3、判断是否响应 <code>accessInstanceVariablesDirectly</code> 方法，即间接访问实例变量</p>
+<ul>
+<li>返回 <code>YES</code>，继续下一步设值</li>
+<li>返回 <code>NO</code>，则崩溃</li>
+</ul>
+</li>
+<li><p>4、间接访问变量赋值（只会走一次），顺序是：<code>_key、_isKey、key、isKey</code></p>
+<ul>
+<li>定义一个手机实例变量的可变数组</li>
+<li>通过<code>class_getInstanceVariable</code> 方法，获取响应的ivar</li>
+<li>通过<code>object_setIvar</code>方法，对响应的ivar设值值</li>
+</ul>
+</li>
+<li><p>5、如果找不到相关实例变量，则抛出异常</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">@implementation NSObject (ZJKVC)</span><br><span class="line">// 设值</span><br><span class="line">- (void)zj_setValue:(nullable id)value forKey:(NSString *)key&#123;</span><br><span class="line">    // 1.判断key是否存在</span><br><span class="line">    if (key == nil || key.length == 0) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 2.找setter方法，顺序是：setXXX、_setXXX、setIsXXX</span><br><span class="line">    NSString * Key = key.capitalizedString;</span><br><span class="line">    // key 要大写</span><br><span class="line">    NSString * setKey = [NSString stringWithFormat:@&quot;set%@:&quot;, Key];</span><br><span class="line">    NSString * _setKey = [NSString stringWithFormat:@&quot;_set%@:&quot;, Key];</span><br><span class="line">    NSString * setIsKey = [NSString stringWithFormat:@&quot;setIs%@:&quot;, Key];</span><br><span class="line">    </span><br><span class="line">    // 判断是否有方法</span><br><span class="line">    if ([self zj_performSelectorWithMethodName:setKey value:value]) &#123;</span><br><span class="line">        NSLog(@&quot;*************%@*************&quot;, setKey);</span><br><span class="line">        return;</span><br><span class="line">    &#125;else if ([self zj_performSelectorWithMethodName:_setKey value:value]) &#123;</span><br><span class="line">        NSLog(@&quot;*************%@*************&quot;, _setKey);</span><br><span class="line">        return;</span><br><span class="line">    &#125;if([self zj_performSelectorWithMethodName:setIsKey value:value])&#123;</span><br><span class="line">        NSLog(@&quot;*************%@*************&quot;, setIsKey);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 3、判断是否响应accessInstanceVariablesDirectly方法，即间接访问实例变量，返回YES，继续下一步设值，如果是NO，则崩溃</span><br><span class="line">    if (![self.class accessInstanceVariablesDirectly]) &#123;</span><br><span class="line">        @throw [NSException exceptionWithName:@&quot;ZJUnKnownKeyException&quot; reason:[NSString stringWithFormat:@&quot;***[%@ valueForUnderfinedKey:] this class is not key value coding-compliant for the key name.***&quot;] userInfo:nil];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 4.间接访问变量赋值，顺序为：_key、_isKey、key、isKey</span><br><span class="line">    // 4.1 定义一个手机实例变量的可变数组</span><br><span class="line">    NSMutableArray * mArray = [self getIvarListName];</span><br><span class="line">    // _key、_isKey、key、isKey</span><br><span class="line">    NSString * _key = [NSString stringWithFormat:@&quot;_%@:&quot;, Key];</span><br><span class="line">    NSString * _isKey = [NSString stringWithFormat:@&quot;_is%@:&quot;, Key];</span><br><span class="line">    NSString * isKey = [NSString stringWithFormat:@&quot;is%@:&quot;, Key];</span><br><span class="line">    if ([mArray containsObject:_key]) &#123;</span><br><span class="line">        // 4.2 获取响应的 ivar</span><br><span class="line">        Ivar ivar = class_getInstanceVariable([self class], _key.UTF8String);</span><br><span class="line">        // 4.3 对相应的 ivar 设值值</span><br><span class="line">        object_setIvar(self, ivar, value);</span><br><span class="line">        return;</span><br><span class="line">    &#125;else if ([mArray containsObject:_isKey]) &#123;</span><br><span class="line">        Ivar ivar = class_getInstanceVariable([self class], _isKey.UTF8String);</span><br><span class="line">        object_setIvar(self, ivar, value);</span><br><span class="line">        return;</span><br><span class="line">    &#125;else if ([mArray containsObject:key]) &#123;</span><br><span class="line">        Ivar ivar = class_getInstanceVariable([self class], key.UTF8String);</span><br><span class="line">        object_setIvar(self, ivar, value);</span><br><span class="line">        return;</span><br><span class="line">    &#125;else if ([mArray containsObject:isKey]) &#123;</span><br><span class="line">        Ivar ivar = class_getInstanceVariable([self class], isKey.UTF8String);</span><br><span class="line">        object_setIvar(self, ivar, value);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 5.如果找不到则抛出异常</span><br><span class="line">    @throw [NSException exceptionWithName:@&quot;ZJUnknownKeyException&quot; reason:[NSString stringWithFormat:@&quot;****[%@ %@]: this class is not key value coding-compliant for the key name.****&quot;,self,NSStringFromSelector(_cmd)] userInfo:nil];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+<p><strong>相关方法</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - 相关方法</span><br><span class="line">- (BOOL)zj_performSelectorWithMethodName:(NSString *)methodName value:(id)value&#123;</span><br><span class="line">    if ([self respondsToSelector:NSSelectorFromString(methodName)]) &#123;</span><br><span class="line">#pragma clang diagnostic push</span><br><span class="line">        // 如果你确定不会发生内存泄漏的情况下，可以使用如下的语句来忽略掉这条警告</span><br><span class="line">#pragma clang diagnostic ignored &quot;-Warc-performSelector-leaks&quot;</span><br><span class="line">        [self performSelector:NSSelectorFromString(methodName) withObject:value];</span><br><span class="line">#pragma clang diagnostic pop</span><br><span class="line">        return YES;</span><br><span class="line">    &#125;</span><br><span class="line">    return NO;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (id)performSelectorWithMethodName:(NSString *)methodName&#123;</span><br><span class="line">    if ([self respondsToSelector:NSSelectorFromString(methodName)]) &#123;</span><br><span class="line">#pragma clang diagnostic push</span><br><span class="line">        // 如果你确定不会发生内存泄漏的情况下，可以使用如下的语句来忽略掉这条警告</span><br><span class="line">#pragma clang diagnostic ignored &quot;-Warc-performSelector-leaks&quot;</span><br><span class="line">        return [self performSelector:NSSelectorFromString(methodName) ];</span><br><span class="line">#pragma clang diagnostic pop</span><br><span class="line">    &#125;</span><br><span class="line">    return nil;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>获取成员变量</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark -获取成员变量名</span><br><span class="line">- (NSMutableArray *)getIvarListName&#123;</span><br><span class="line">    // 创建可变数组，用于存储ivar成员变量</span><br><span class="line">    NSMutableArray * mArray = [NSMutableArray arrayWithCapacity:1];</span><br><span class="line">    unsigned int count = 0;</span><br><span class="line">    // 获取类的成员变量列表</span><br><span class="line">    Ivar * ivars = class_copyIvarList([self class], &amp;count);</span><br><span class="line">    // 遍历成员变量列表</span><br><span class="line">    for (int i = 0; i&lt;count; i++) &#123;</span><br><span class="line">        Ivar ivar = ivars[i];</span><br><span class="line">        // 获取成员变量名字字符</span><br><span class="line">        const char * ivarNameChar = ivar_getName(ivar);</span><br><span class="line">        // 将字符转换成字符串</span><br><span class="line">        NSString * ivarName = [NSString stringWithUTF8String:ivarNameChar];</span><br><span class="line">        NSLog(@&quot;ivarName == %@&quot;, ivarName);</span><br><span class="line">        // 存入可变数组</span><br><span class="line">        [mArray addObject:ivarName];</span><br><span class="line">    &#125;</span><br><span class="line">    //释放成员变量列表</span><br><span class="line">    free(ivars);</span><br><span class="line">    return mArray;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="自定义KVC取值"><a href="#自定义KVC取值" class="headerlink" title="自定义KVC取值"></a>自定义KVC取值</h1><ul>
+<li><p>1、判断 <code>key非空</code></p>
+</li>
+<li><p>2、查找相应方法，顺序是 <code>get&lt;Key&gt;、&lt;key&gt;、countOf&lt;Key&gt;、objectIn&lt;Key&gt;AtIndex</code></p>
+</li>
+<li><p>3、判断是否能够直接赋值实例变量，即判断是否响应 <code>accessInstanceVariablesDirectly</code> 方法，间接访问实例变量</p>
+<ul>
+<li>返回 <code>YES</code>，继续下一步取值</li>
+<li>返回 <code>NO</code>，则崩溃</li>
+</ul>
+</li>
+<li><p>4、间接访问实例变量，顺序是 <code>_&lt;key&gt;、_is&lt;Key&gt;、&lt;key&gt;、is&lt;Key&gt;</code></p>
+<ul>
+<li>定义一个手机实例变量的<code>可变数组</code></li>
+<li>通过<code>class_getInstanceVariable</code>方法，获取相应的ivar</li>
+<li>通过<code>object_getIvar</code>方法，返回相应的ivar的值</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark -取值</span><br><span class="line">- (nullable id)zj_valueForKey:(NSString *)key&#123;</span><br><span class="line">    </span><br><span class="line">    // 1、判断非空</span><br><span class="line">    if (key == nil || key.length == 0) &#123;</span><br><span class="line">        return nil;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 2、找到相关方法：get&lt;Key&gt;、&lt;key&gt;、countOf&lt;Key&gt; 、objectIn&lt;Key&gt;AtIndex</span><br><span class="line">    // key 要大写</span><br><span class="line">    NSString * Key = key.capitalizedString;</span><br><span class="line">    // 拼接方法</span><br><span class="line">    NSString * getKey = [NSString stringWithFormat:@&quot;get%@&quot;,Key];</span><br><span class="line">    NSString * countOfKey = [NSString stringWithFormat:@&quot;countOf%@&quot;,Key];</span><br><span class="line">    NSString * objectInKeyAtIndex = [NSString stringWithFormat:@&quot;objectIn%@AtIndex:&quot;,Key];</span><br><span class="line"></span><br><span class="line">#pragma clang diagnostic push</span><br><span class="line">#pragma clang diagnostic ignored &quot;-Warc-performSelector-leaks&quot;</span><br><span class="line">    if ([self respondsToSelector:NSSelectorFromString(getKey)]) &#123;</span><br><span class="line">        return [self performSelector:NSSelectorFromString(getKey)];</span><br><span class="line">    &#125;else if ([self respondsToSelector:NSSelectorFromString(key)])&#123;</span><br><span class="line">        return [self performSelector:NSSelectorFromString(key)];</span><br><span class="line">    &#125;</span><br><span class="line">    // 集合类型</span><br><span class="line">    else if ([self respondsToSelector:NSSelectorFromString(countOfKey)])&#123;</span><br><span class="line">        if ([self respondsToSelector:NSSelectorFromString(objectInKeyAtIndex)]) &#123;</span><br><span class="line">            int num = (int)[self performSelector:NSSelectorFromString(countOfKey)];</span><br><span class="line">            NSMutableArray *mArray = [NSMutableArray arrayWithCapacity:1];</span><br><span class="line">            for (int i = 0; i&lt;num-1; i++) &#123;</span><br><span class="line">                num = (int)[self performSelector:NSSelectorFromString(countOfKey)];</span><br><span class="line">            &#125;</span><br><span class="line">            for (int j = 0; j&lt;num; j++) &#123;</span><br><span class="line">                id objc = [self performSelector:NSSelectorFromString(objectInKeyAtIndex) withObject:@(num)];</span><br><span class="line">                [mArray addObject:objc];</span><br><span class="line">            &#125;</span><br><span class="line">            return mArray;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">#pragma clang diagnostic pop</span><br><span class="line">    </span><br><span class="line">    // 3、判断是否响应`accessInstanceVariablesDirectly`方法，即间接访问实例变量，返回YES，继续下一步设值，如果是NO，则崩溃</span><br><span class="line">    if (![self.class accessInstanceVariablesDirectly]) &#123;</span><br><span class="line">        @throw [NSException exceptionWithName:@&quot;ZJLUnKnownKeyException&quot; reason:[NSString stringWithFormat:@&quot;****[%@ valueForUndefinedKey:]: this class is not key value coding-compliant for the key name.****&quot;,self] userInfo:nil];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 4.找相关实例变量进行赋值，顺序为：_&lt;key&gt;、 _is&lt;Key&gt;、 &lt;key&gt;、 is&lt;Key&gt;</span><br><span class="line">    // 4.1 定义一个收集实例变量的可变数组</span><br><span class="line">    NSMutableArray *mArray = [self getIvarListName];</span><br><span class="line">    // 例如：_name -&gt; _isName -&gt; name -&gt; isName</span><br><span class="line">    NSString * _key = [NSString stringWithFormat:@&quot;_%@&quot;,key];</span><br><span class="line">    NSString * _isKey = [NSString stringWithFormat:@&quot;_is%@&quot;,Key];</span><br><span class="line">    NSString * isKey = [NSString stringWithFormat:@&quot;is%@&quot;,Key];</span><br><span class="line">    if ([mArray containsObject:_key]) &#123;</span><br><span class="line">        Ivar ivar = class_getInstanceVariable([self class], _key.UTF8String);</span><br><span class="line">        return object_getIvar(self, ivar);;</span><br><span class="line">    &#125;else if ([mArray containsObject:_isKey]) &#123;</span><br><span class="line">        Ivar ivar = class_getInstanceVariable([self class], _isKey.UTF8String);</span><br><span class="line">        return object_getIvar(self, ivar);;</span><br><span class="line">    &#125;else if ([mArray containsObject:key]) &#123;</span><br><span class="line">        Ivar ivar = class_getInstanceVariable([self class], key.UTF8String);</span><br><span class="line">        return object_getIvar(self, ivar);;</span><br><span class="line">    &#125;else if ([mArray containsObject:isKey]) &#123;</span><br><span class="line">        Ivar ivar = class_getInstanceVariable([self class], isKey.UTF8String);</span><br><span class="line">        return object_getIvar(self, ivar);;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return @&quot;&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="使用路由访问，即keyPath"><a href="#使用路由访问，即keyPath" class="headerlink" title="使用路由访问，即keyPath"></a>使用路由访问，即keyPath</h1><p>在日常开发中，一个类的成员变量有可能是自定义类或者其他的复杂数据类型，一般的操作是，我们可以先通过KVC获取该属性，然后再通过KVC获取自定义类的属性，就是比较麻烦，还有另一种比较简单的方法，就是使用 <code>KeyPath</code> 即路由，涉及一下两个方法： <code>setValue:forKeyPath:</code> 和 <code>valueForKeyPath:</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 通过KeyPath来设值</span><br><span class="line">- (void)setValue:(nullable id)value forKeyPath:(NSString *)keyPath;</span><br><span class="line">// 通过KeyPath来取值</span><br><span class="line">- (nullable id)valueForKeyPath:(NSString *)kePath;</span><br></pre></td></tr></table></figure></div>
+
+<p>参考如下的案例</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">// ZJPerson类</span><br><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">@property (nonatomic, copy)   NSString          *age;</span><br><span class="line">@property (nonatomic, strong) ZJStudent         *student;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// ZJStudent类</span><br><span class="line">@interface ZJStudent : NSObject</span><br><span class="line">@property (nonatomic, copy)   NSString          *name;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        ZJPerson *person = [[ZJPerson alloc] init];</span><br><span class="line">        ZJStudent *student = [ZJStudent alloc];</span><br><span class="line">        student.name    = @&quot;ZJ&quot;;</span><br><span class="line">        person.student     = student;</span><br><span class="line">        //根据kvc - keyPath路由修改student的subject属性的值</span><br><span class="line">        [person setValue:@&quot;嘻嘻&quot; forKeyPath:@&quot;student.name&quot;];</span><br><span class="line">        NSLog(@&quot;%@&quot;,[person valueForKeyPath:@&quot;student.name&quot;]);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//*************打印结果*************</span><br><span class="line">2021-5-27 09:55:08.512833+0800 001-KVC简介[58089:6301894] 改变前：ZJ</span><br><span class="line">2021-5-27 09:55:08.512929+0800 001-KVC简介[58089:6301894] 改变后：嘻嘻</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="KVC的使用场景"><a href="#KVC的使用场景" class="headerlink" title="KVC的使用场景"></a>KVC的使用场景</h1><ul>
+<li><p>1、动态设值和取值</p>
+<ul>
+<li><p>常用的可以通过 <code>setValue:forKey:</code> 和 <code>valueForKey:</code></p>
+</li>
+<li><p>也可以通过路由的方式 <code>setValue:forKeyPath:</code> 和 <code>valueForKeyPath:</code></p>
+</li>
+</ul>
+</li>
+<li><p>2、通过KVC访问和修改私有变量</p>
+</li>
+</ul>
+<p>在日常开发中，对于类的私有属性，在外部定义的对象，是 <code>无法直接访问私有属性的</code>，但是对于KVC而言，一个对象没有自己的隐私，所以可以 <code>通过KVC修改和访问任何私有属性</code></p>
+<ul>
+<li>3、多值操作（model和字典互转）</li>
+</ul>
+<p>model和字典的转换可以通过下面两个KVC的API实现</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 字典转模型</span><br><span class="line">- (void)setValuesForKeysWithDictionary:(NSDictionary&lt;NSString *, id&gt; *)keyedValues;</span><br><span class="line"></span><br><span class="line">// 模型转字典</span><br><span class="line">- (NSDictionary&lt;NSString *, id&gt; *)dictionaryWithValuesForKeys:(NSArray&lt;NSString *&gt; *)keys;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>4、修改一些系统空间的内部属性</li>
+</ul>
+<p>在日常开发中，我们知道，很多UI控件都是在其内部由多个UI空间组合而成，这些内部控件苹果并没有提供访问的API，但是使用KVC可以解决这个问题，常用的就是 <code>自定义tabbar、个性化UITextField中的placeHolderText</code></p>
+<ul>
+<li>5、用KVC实现高阶消息传递</li>
+</ul>
+<p>在对容器类使用KVC时，<code>valueForKey:</code> 将会被传递给容器中的每一个对象，而不是对容器本身进行操作，结果会被添加到返回的容器中，这样，可以很方便的操作集合 <code>来返回</code> 另一个集合</p>
+<p>如下所示：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// KVC实现高阶消息传递</span><br><span class="line">- (void)transmitMsg&#123;</span><br><span class="line">    NSArray *arrStr = @[@&quot;english&quot;, @&quot;franch&quot;, @&quot;chinese&quot;];</span><br><span class="line">    NSArray *arrCapStr = [arrStr valueForKey:@&quot;capitalizedString&quot;];</span><br><span class="line">    </span><br><span class="line">    for (NSString *str in arrCapStr) &#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;, str);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    NSArray *arrCapStrLength = [arrCapStr valueForKeyPath:@&quot;capitalizedString.length&quot;];</span><br><span class="line">    for (NSNumber *length in arrCapStrLength) &#123;</span><br><span class="line">        NSLog(@&quot;%ld&quot;, (long)length.integerValue);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//********打印结果********</span><br><span class="line">2021-5-27 11:33:43.377672+0800 CJLCustom[60035:6380757] English</span><br><span class="line">2021-5-27 11:33:43.377773+0800 CJLCustom[60035:6380757] Franch</span><br><span class="line">2021-5-27 11:33:43.377860+0800 CJLCustom[60035:6380757] Chinese</span><br><span class="line">2021-5-27 11:33:43.378233+0800 CJLCustom[60035:6380757] 7</span><br><span class="line">2021-5-27 11:33:43.378327+0800 CJLCustom[60035:6380757] 6</span><br><span class="line">2021-5-27 11:33:43.378417+0800 CJLCustom[60035:6380757] 7</span><br></pre></td></tr></table></figure></div>
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC底层原理22：KVC底层原理分析</li>
+        <li>Post author：张建</li>
+        <li>Create time：2021-01-17 16:33:44</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2021/01/17/OC底层原理/OC底层原理22：KVC底层原理分析/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/iOS-OC/">#iOS-OC</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2021/01/25/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8623%EF%BC%9AKVO%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理23：KVO底层原理分析</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2021/01/10/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8621%EF%BC%9AMethod-Swizzling%E6%96%B9%E6%B3%95%E4%BA%A4%E6%8D%A2/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理21：Method-Swizzling方法交换</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC底层原理22：KVC底层原理分析</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KVC%E7%9B%B8%E5%85%B3API"><span class="nav-text">KVC相关API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KVC%E8%AE%BE%E5%80%BC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86"><span class="nav-text">KVC设值底层原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KVC%E5%8F%96%E5%80%BC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86"><span class="nav-text">KVC取值底层原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89KVC"><span class="nav-text">自定义KVC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89KVC%E8%AE%BE%E5%80%BC"><span class="nav-text">自定义KVC设值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89KVC%E5%8F%96%E5%80%BC"><span class="nav-text">自定义KVC取值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%B7%AF%E7%94%B1%E8%AE%BF%E9%97%AE%EF%BC%8C%E5%8D%B3keyPath"><span class="nav-text">使用路由访问，即keyPath</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KVC%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-text">KVC的使用场景</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
