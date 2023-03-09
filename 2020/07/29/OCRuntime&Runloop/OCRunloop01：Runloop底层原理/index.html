@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2020/07/29/ocruntime&runloop/ocrunloop01：runloop底层原理/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OCRunloop01：Runloop底层原理">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2020/07/29/OCRuntime&amp;Runloop/OCRunloop01：Runloop底层原理/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OCRunloop01：Runloop底层原理">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OCRunloop01：Runloop底层原理 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OCRunloop01：Runloop底层原理</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2020-07-29 23:26:45</span>
+        <span class="mobile">2020-07-29 23:26</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-07 12:02:52</span>
+            <span class="mobile">2023-03-07 12:02</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC-Runloop%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-Runloop探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/iOS-OC/">iOS-OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="什么是Runloop"><a href="#什么是Runloop" class="headerlink" title="什么是Runloop?"></a>什么是Runloop?</h1><ol>
+<li>runloop不仅仅是一个运行循环，还是一个对象，这个对象管理其需要处理的事件和消息，并提供了一个入口函数，通过这个入口函数，程序进入do…while循环，保证程序持续运行，不会退出。</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/88535378-5ae82580-d03c-11ea-8664-f0380cc8f6b8.png"
+                     
+                ></p>
+<ol start="2">
+<li>验证：<a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/CF/" >下载源码 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>,查看CFRunloop.c文件，找到CFRunLoopRun源码可知：确实是do…while循环。</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void CFRunLoopRun(void) &#123;	/* DOES CALLOUT */</span><br><span class="line">    int32_t result;</span><br><span class="line">    do &#123;</span><br><span class="line">        result = CFRunLoopRunSpecific(CFRunLoopGetCurrent(), kCFRunLoopDefaultMode, 1.0e10, false);</span><br><span class="line">        CHECK_FOR_FORK();</span><br><span class="line">    &#125; while (kCFRunLoopRunStopped != result &amp;&amp; kCFRunLoopRunFinished != result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li><a class="link"   target="_blank" rel="noopener" href="https://developer.apple.com/documentation/foundation/runloop" >官方文档 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>：也有详细的说明:</li>
+</ol>
+<ul>
+<li>Runloop不是线程安全的</li>
+</ul>
+<h1 id="Runloop的作用？"><a href="#Runloop的作用？" class="headerlink" title="Runloop的作用？"></a>Runloop的作用？</h1><ol>
+<li>保持程序的持续运行。</li>
+<li>处理APP中各种事件（触摸、定时器、performSelector）。</li>
+<li>节省CPU资源，提高程序性能：该做事时做事，该休息时休息。</li>
+</ol>
+<p>程序中main函数的UIApplicationMain函数主要作用就是创建了一个主运行循环，主线程几乎所有的事情都是交给runloop去完成，如UI界面的刷新、点击事件的处理、performSelector等等，但并非所有的任务都是由runloop完成。</p>
+<h1 id="Runloop对象"><a href="#Runloop对象" class="headerlink" title="Runloop对象"></a>Runloop对象</h1><h2 id="对象：iOS中有2套API来访问和使用RunLoop"><a href="#对象：iOS中有2套API来访问和使用RunLoop" class="headerlink" title="对象：iOS中有2套API来访问和使用RunLoop"></a>对象：iOS中有2套API来访问和使用RunLoop</h2><ul>
+<li>OC语言：Foundation – NSRunloop </li>
+<li>C语言： Core Foundaton – CFRunloopRef<br>NSRunLoop是基于CFRunLoopRef的一层OC包装。<br>获取RunLoop对象：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Foundation</span><br><span class="line">[NSRunLoop currentRunLoop]; // 获得当前线程的RunLoop对象</span><br><span class="line">[NSRunLoop mainRunLoop]; // 获得主线程的RunLoop对象</span><br><span class="line"></span><br><span class="line">Core Foundation</span><br><span class="line">CFRunLoopGetCurrent(); // 获得当前线程的RunLoop对象</span><br><span class="line">CFRunLoopGetMain(); // 获得主线程的RunLoop对象</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h1 id="Runloop相关的类"><a href="#Runloop相关的类" class="headerlink" title="Runloop相关的类"></a>Runloop相关的类</h1><p><strong>1.Core Foundation中关于Runloop的5个类：</strong></p>
+<ul>
+<li>CFRunloopRef： Runloop的对象</li>
+<li>CFRunloopModeRef： 模式</li>
+<li>CFRunloopSourceRef： 输入源&#x2F;事件源</li>
+<li>CFRunloopTimerRef： Timer事件</li>
+<li>CFRunloopObserveRef： 监听这，监听Runloop的状态改变</li>
+</ul>
+<p><strong>2.CFRunloopRef:</strong></p>
+<p>CFRunloopRef是Runloop的对象</p>
+<p><strong>3.CFRunloopModeRef：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct __CFRunLoopMode *CFRunLoopModeRef;</span><br><span class="line">struct __CFRunLoopMode &#123;</span><br><span class="line">    CFMutableSetRef _sources0;</span><br><span class="line">    CFMutableSetRef _sources1;</span><br><span class="line">    CFMutableArrayRef _observers;</span><br><span class="line">    CFMutableArrayRef _timers;</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/88552900-364d7700-d057-11ea-8e52-51056b6536a4.png"
+                     
+                ></p>
+<p>由上述源码和图可知:</p>
+<ol>
+<li>CFRunLoopModeRef代表RunLoop的运行模式，一个RunLoop包含若干个Mode，每个Mode又包含若干个Source0&#x2F;Source1&#x2F;Timer&#x2F;Observer，RunLoop启动时只能选择其中一个Mode，作为currentMode，如果需要切换Mode，只能退出当前Loop，再重新选择一个Mode进入，不同组的Source0&#x2F;Source1&#x2F;Timer&#x2F;Observer能分隔开来，互不影响，如果Mode里没有任何Source0&#x2F;Source1&#x2F;Timer&#x2F;Observer，RunLoop会立马退出。</li>
+</ol>
+<p><strong>2) NSRunloopRef常见的几种Mode:</strong><br>代码去打印一下:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// CFRunloopModel研究</span><br><span class="line">CFRunLoopRef lp = CFRunLoopGetCurrent();</span><br><span class="line">CFRunLoopMode mode = CFRunLoopCopyCurrentMode(lp);</span><br><span class="line">NSLog(@&quot;mode:%@&quot;,mode);</span><br><span class="line">CFArrayRef modeArr = CFRunLoopCopyAllModes(lp);</span><br><span class="line">NSLog(@&quot;modeArr:%@&quot;,modeArr);</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>kCFRunLoopDefaultMode（NSDefaultRunLoopMode）：App的默认Mode，通常主线程是在这个Mode下运行;</li>
+<li>UITrackingRunLoopMode：界面跟踪 Mode，用于 ScrollView 追踪触摸滑动，保证界面滑动时不受其他 Mode 影响。</li>
+<li>NSRunLoopCommonModes：并不是一个真正的模式,只是一个标记</li>
+<li>GSEventReceiveRunLoopMode</li>
+</ul>
+<p><strong>4.CFRunloopSourceRef：</strong><br>触摸事件：source0</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/88558928-c8a54900-d05e-11ea-826c-6c21a0a943d9.png"
+                     
+                ></p>
+<p>由上面的截图可知：runloop处理source0事件是调用的*<strong>CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION</strong>*函数。<br>我们来看一下源码：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">static void __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__() __attribute__((noinline));</span><br><span class="line">static void __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__(void (*perform)(void *), void *info) &#123;</span><br><span class="line">    if (perform) &#123;</span><br><span class="line">        perform(info);</span><br><span class="line">    &#125;</span><br><span class="line">    asm __volatile__(&quot;&quot;); // thwart tail-call optimization</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>5.CFRunloopTimerRef：</strong><br>timer类型:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">        NSLog(@&quot;小老弟&quot;);</span><br><span class="line">    &#125;];</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/88558179-c989ab00-d05d-11ea-9d3b-5f0e0121c66c.png"
+                     
+                ></p>
+<p>由上面的截图可知：runloop处理timer事件是调用的__CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION__*函数进行事件处理：<br>再看一下源码：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">static void __CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION__() __attribute__((noinline));</span><br><span class="line">static void __CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION__(CFRunLoopTimerCallBack func, CFRunLoopTimerRef timer, void *info) &#123;</span><br><span class="line">    if (func) &#123;</span><br><span class="line">        func(timer, info);</span><br><span class="line">    &#125;</span><br><span class="line">    asm __volatile__(&quot;&quot;); // thwart tail-call optimization</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>6.CFRunloopObserveRef：</strong><br>用来监听runloop的活动：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/ Run Loop Observer Activities */</span><br><span class="line">typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) &#123;</span><br><span class="line">    kCFRunLoopEntry = (1UL &lt;&lt; 0), //即将进入Loop</span><br><span class="line">    kCFRunLoopBeforeTimers = (1UL &lt;&lt; 1), //即将处理timers</span><br><span class="line">    kCFRunLoopBeforeSources = (1UL &lt;&lt; 2), //即将处理sources</span><br><span class="line">    kCFRunLoopBeforeWaiting = (1UL &lt;&lt; 5), //即将进入休眠</span><br><span class="line">    kCFRunLoopAfterWaiting = (1UL &lt;&lt; 6), //刚从休眠中唤醒</span><br><span class="line">    kCFRunLoopExit = (1UL &lt;&lt; 7), //即将推出Loop</span><br><span class="line">    kCFRunLoopAllActivities = 0x0FFFFFFFU</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<p>添加Observer监听RunLoop的所有状态</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">// 创建监听者</span><br><span class="line">CFRunLoopObserverRef observer = CFRunLoopObserverCreateWithHandler(kCFAllocatorDefault, kCFRunLoopAllActivities, YES, 0, ^(CFRunLoopObserverRef observer, CFRunLoopActivity activity) &#123;</span><br><span class="line">    switch (activity) &#123;</span><br><span class="line">      case kCFRunLoopEntry:</span><br><span class="line">        NSLog(@&quot;kCFRunLoopEntry&quot;);</span><br><span class="line">        break;</span><br><span class="line">    case kCFRunLoopBeforeTimers:</span><br><span class="line">        NSLog(@&quot;kCFRunLoopBeforeTimers&quot;);</span><br><span class="line">        break;</span><br><span class="line">    case kCFRunLoopBeforeSources:</span><br><span class="line">        NSLog(@&quot;kCFRunLoopBeforeSources&quot;);</span><br><span class="line">        break;</span><br><span class="line">    case kCFRunLoopBeforeWaiting:</span><br><span class="line">        NSLog(@&quot;kCFRunLoopBeforeWaiting&quot;);</span><br><span class="line">        break;</span><br><span class="line">    case kCFRunLoopAfterWaiting:</span><br><span class="line">        NSLog(@&quot;kCFRunLoopAfterWaiting&quot;);</span><br><span class="line">        break;</span><br><span class="line">    case kCFRunLoopExit:</span><br><span class="line">        NSLog(@&quot;kCFRunLoopExit&quot;);</span><br><span class="line">        break;</span><br><span class="line">    default:</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">// 添加Observer到RunLoop中</span><br><span class="line">CFRunLoopAddObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes);</span><br><span class="line">// 释放</span><br><span class="line">CFRelease(observer);</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>7.Mode中各个成员的含义:</strong></p>
+<ul>
+<li>source0:<br>1）触摸事件(TouchUp)<br>2）performSelector :OnThread</li>
+<li>source1<br>1）基于Port的线程间通信<br>2）系统事件的捕捉</li>
+<li>Timer<br>1）NSTimer<br>2）performSelector :afterDelay &#x2F;&#x2F; 这句代码的本质是往Runloop中添加定时器</li>
+<li>Observers<br>1）监听runloop的状态<br>2）UI刷新(在runloop休眠之前)<br>3）自动释放池(在runloop休眠之前)</li>
+</ul>
+<p><strong>8.runloop处理items事件的总结:</strong><br>runloop处理items以下事件调用函数的总结:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">* block:__CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__</span><br><span class="line">* timer:__CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION__</span><br><span class="line">* source0:__CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__</span><br><span class="line">* source1:__CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE1_PERFORM_FUNCTION__</span><br><span class="line">* gcd主队列:_CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__()</span><br><span class="line">* observe源：__CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Runloop与线程的关系？"><a href="#Runloop与线程的关系？" class="headerlink" title="Runloop与线程的关系？"></a>Runloop与线程的关系？</h1><ol>
+<li>每一条线程都有一个与之对应runloop对象。</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/88561601-3606a900-d062-11ea-8775-1fc03400c90c.png"
+                     
+                ></p>
+<p>查看源码验证，线程和runloop是一一对应的关系:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CFRunLoopRef CFRunLoopGetMain(void) &#123;</span><br><span class="line">    CHECK_FOR_FORK();</span><br><span class="line">    static CFRunLoopRef __main = NULL; // no retain needed</span><br><span class="line">    if (!__main) __main = _CFRunLoopGet0(pthread_main_thread_np()); // no CAS needed</span><br><span class="line">    return __main;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>继续查找</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">CF_EXPORT CFRunLoopRef _CFRunLoopGet0(pthread_t t) &#123;</span><br><span class="line">    if (pthread_equal(t, kNilPthreadT)) &#123;</span><br><span class="line">	t = pthread_main_thread_np();</span><br><span class="line">    &#125;</span><br><span class="line">    __CFLock(&amp;loopsLock);</span><br><span class="line">    if (!__CFRunLoops) &#123;</span><br><span class="line">        __CFUnlock(&amp;loopsLock);</span><br><span class="line">	CFMutableDictionaryRef dict = CFDictionaryCreateMutable(kCFAllocatorSystemDefault, 0, NULL, &amp;kCFTypeDictionaryValueCallBacks);</span><br><span class="line">	//获取mainloop</span><br><span class="line">	CFRunLoopRef mainLoop = __CFRunLoopCreate(pthread_main_thread_np());</span><br><span class="line">	//通过key value方式一一对应</span><br><span class="line">	CFDictionarySetValue(dict, pthreadPointer(pthread_main_thread_np()), mainLoop);</span><br><span class="line">	if (!OSAtomicCompareAndSwapPtrBarrier(NULL, dict, (void * volatile *)&amp;__CFRunLoops)) &#123;</span><br><span class="line">	    CFRelease(dict);</span><br><span class="line">	&#125;</span><br><span class="line">	CFRelease(mainLoop);</span><br><span class="line">        __CFLock(&amp;loopsLock);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li><p>runloop保存在全局的NSMutableDictionaryRef字典当中，以线程为key，runloop为value。<br>由上面的源码可验证。</p>
+</li>
+<li><p>主线程的Runloop系统自动获取（创建），子线程默认没有开启runloop。<br>看代码：问下面的<em>子线程 timer</em>会打印么？<br>答:不会，因为子线程的runloop默认没有开启，需要开启子线程的runloop</p>
+</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">NSThread * thread = [[NSThread alloc] initWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;hello:%@&quot;,[NSThread currentThread]);</span><br><span class="line">    [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">        NSLog(@&quot;子线程 timer&quot;);</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;];</span><br><span class="line">    </span><br><span class="line">thread.name = @&quot;zj&quot;;</span><br><span class="line">[thread start];</span><br></pre></td></tr></table></figure></div>
+<p>问：那要怎么写才能开启？并能控制其打印?<br>答：通过[[NSRunLoop currentRunLoop] run];获取子线程的runloop并开启子线程的runloop。通过控制线程退出-&gt;控制runloop退出-&gt;控制timer不打印</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">@interface ViewController ()</span><br><span class="line">@property (nonatomic,assign)BOOL isStop;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    self.isStop = NO;</span><br><span class="line">    </span><br><span class="line">    NSThread * thread = [[NSThread alloc] initWithBlock:^&#123;</span><br><span class="line">        NSLog(@&quot;hello:%@&quot;,[NSThread currentThread]);</span><br><span class="line">        [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">            NSLog(@&quot;子线程 timer&quot;);</span><br><span class="line">            if (self.isStop) &#123;</span><br><span class="line">                [NSThread exit];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;];</span><br><span class="line">        [[NSRunLoop currentRunLoop] run];</span><br><span class="line">    &#125;];</span><br><span class="line">    </span><br><span class="line">    thread.name = @&quot;zj&quot;;</span><br><span class="line">    [thread start];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event&#123;</span><br><span class="line">    self.isStop = YES;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>线程刚创建时是没有runloop对象，runloop会在第一次获取时创建。</li>
+<li>runloop在线程销毁时销毁。</li>
+</ol>
+<h1 id="timer和runloop？"><a href="#timer和runloop？" class="headerlink" title="timer和runloop？"></a>timer和runloop？</h1><ol>
+<li>问：视图在滑动的时候为什么NSTimer会不走？</li>
+</ol>
+<p>答：因为默认在主线程NSTimer是加入到kCFRunLoopDefaultMode下的，而视图滑动的时候主线程的mode会切换到UITrackingRunLoopMode模式下，导致NSTimer不走，因而需要将NSTimer加入到UITrackingRunLoopMode或者KCFRunloopCommonMode下。</p>
+<p>代码如下:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NSTimer * timer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">    NSLog(@&quot;aaaaa&quot;);</span><br><span class="line">&#125;];</span><br><span class="line">[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>问NSTimer是怎么加入到UITrackingRunLoopMode或者KCFRunloopCommonMode下就不会造成卡顿?</li>
+</ol>
+<p>答:NSTimer通过底层函数CFRunLoopAddTimer加入到items中。然后再runloopRun运行的时候，通过while循环遍历item找到timer的mode是否和当前的mode相等或等于commonMode，如果相等调用block函数返回执行。</p>
+<p>自己去写代码验证一下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">- (void)cftimerDemo&#123;</span><br><span class="line">    CFRunLoopTimerContext context = &#123;</span><br><span class="line">        0,</span><br><span class="line">        ((__bridge void *)self),</span><br><span class="line">        NULL,</span><br><span class="line">        NULL,</span><br><span class="line">        NULL</span><br><span class="line">    &#125;;</span><br><span class="line">    CFRunLoopRef rlp = CFRunLoopGetCurrent();</span><br><span class="line">    /*</span><br><span class="line">     参数一：用于分配对象的内存</span><br><span class="line">     参数二：在什么时候触发</span><br><span class="line">     参数三：每隔多少时间触发一次</span><br><span class="line">     参数四：未来参数</span><br><span class="line">     参数五：CFRunloopObserver的优先级，当Runloop同一运行阶段中有多少CFRunloopObserver 正常情况下使用0</span><br><span class="line">     参数六：回调，比如触发事件，我们就会来到这里</span><br><span class="line">     参数七：上下文记录信息</span><br><span class="line">     */</span><br><span class="line">    CFRunLoopTimerRef timerRef = CFRunLoopTimerCreate(kCFAllocatorDefault, 0, 1, 0, 0, zjRunloopTimerCallBack, &amp;context);</span><br><span class="line">    CFRunLoopAddTimer(rlp, timerRef, kCFRunLoopDefaultMode);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void zjRunloopTimerCallBack(CFRunLoopTimerRef timer,void * info) &#123;</span><br><span class="line">    NSLog(@&quot;%@---%@&quot;,timer,info);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Observer和runloop"><a href="#Observer和runloop" class="headerlink" title="Observer和runloop"></a>Observer和runloop</h1><h1 id="Runloop运行流程"><a href="#Runloop运行流程" class="headerlink" title="Runloop运行流程"></a>Runloop运行流程</h1><p><strong>1.NSRunLoop:</strong><br> 是基于 CFRunLoopRef 的OC封装，提供了面向对象的 API，但不是线程安全的，CFRunLoopRef 是在 CoreFoundation 框架内的，它提供了纯 C 函数的 API，是线程安全的，CoreFoundation是开源的(<a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/CF/" >CoreFoundation 源码地址 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>)</p>
+<p><strong>2.runloop的运行逻辑</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/88556638-d6a59a80-d05b-11ea-8a9c-a4ab1a75a0af.png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/88557269-95fa5100-d05c-11ea-87a9-2aebc850f62b.png"
+                     
+                ></p>
+<h1 id="Runloop实际应用"><a href="#Runloop实际应用" class="headerlink" title="Runloop实际应用"></a>Runloop实际应用</h1>
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OCRunloop01：Runloop底层原理</li>
+        <li>Post author：张建</li>
+        <li>Create time：2020-07-29 23:26:45</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2020/07/29/OCRuntime&amp;Runloop/OCRunloop01：Runloop底层原理/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/iOS-OC/">#iOS-OC</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2020/08/01/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A014%EF%BC%9Acocoapods%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习14：cocoapods探索</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2020/07/26/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A017%EF%BC%9ABlock/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC：Block底层探索</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OCRunloop01：Runloop底层原理</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFRunloop"><span class="nav-text">什么是Runloop?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">Runloop的作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E5%AF%B9%E8%B1%A1"><span class="nav-text">Runloop对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%EF%BC%9AiOS%E4%B8%AD%E6%9C%892%E5%A5%97API%E6%9D%A5%E8%AE%BF%E9%97%AE%E5%92%8C%E4%BD%BF%E7%94%A8RunLoop"><span class="nav-text">对象：iOS中有2套API来访问和使用RunLoop</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E7%9B%B8%E5%85%B3%E7%9A%84%E7%B1%BB"><span class="nav-text">Runloop相关的类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E4%B8%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%9F"><span class="nav-text">Runloop与线程的关系？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#timer%E5%92%8Crunloop%EF%BC%9F"><span class="nav-text">timer和runloop？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Observer%E5%92%8Crunloop"><span class="nav-text">Observer和runloop</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-text">Runloop运行流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="nav-text">Runloop实际应用</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

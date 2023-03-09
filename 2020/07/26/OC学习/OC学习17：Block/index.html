@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2020/07/26/oc学习/oc学习17：block/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC：Block底层探索">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2020/07/26/OC学习/OC学习17：Block/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC：Block底层探索">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC：Block底层探索 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC：Block底层探索</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2020-07-26 02:22:36</span>
+        <span class="mobile">2020-07-26 02:22</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-10 03:18</span>
+            <span class="mobile">2023-03-10 03:18</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/iOS/">iOS</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="Block初探"><a href="#Block初探" class="headerlink" title="Block初探"></a>Block初探</h1><h2 id="什么是Block？"><a href="#什么是Block？" class="headerlink" title="什么是Block？"></a>什么是Block？</h2><p>Block是将函数及其上下文封装起来的对象。</p>
+<h2 id="什么是Block调用"><a href="#什么是Block调用" class="headerlink" title="什么是Block调用?"></a>什么是Block调用?</h2><p>Block调用即函数的调用。</p>
+<h2 id="Block的分类？"><a href="#Block的分类？" class="headerlink" title="Block的分类？"></a>Block的分类？</h2><p>根据内存分布</p>
+<ul>
+<li>全局Block(NSGlobalBlock):</li>
+</ul>
+<p>全局Block存储在已初始化静态(.data)区。</p>
+<p>例子1：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 全局block __NSGlobalBlock__</span><br><span class="line">void (^block)(void) = ^&#123;</span><br><span class="line">    NSLog(@&quot;张建&quot;);</span><br><span class="line">&#125;;</span><br><span class="line">block();</span><br><span class="line">NSLog(@&quot;%@&quot;,block);</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2020-08-01 23:57:47.626190+0800 OC-Block初探[14671:824715] &lt;__NSGlobalBlock__: 0x10556c038&gt;</span><br></pre></td></tr></table></figure></div>
+
+<p>例子2：在实际开发中往往是这样的</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[self testBlock:^(id data) &#123;</span><br><span class="line">    NSLog(@&quot;我来了&quot;);</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">- (void)testBlock:(void(^)(id data))block&#123;</span><br><span class="line">    NSLog(@&quot;%@&quot;,block);</span><br><span class="line">    if (block) &#123;</span><br><span class="line">        block(@&quot;zj&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>栈Block(NSStackBlock):<br>栈Block存储在栈(stack)区。</li>
+</ul>
+<p>例子：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 栈block __NSStackBlock__</span><br><span class="line">int b = 20;</span><br><span class="line">NSLog(@&quot;%@&quot;,^&#123;</span><br><span class="line">    NSLog(@&quot;%d&quot;,b);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></div>
+<p>打印结果:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 栈block __NSStackBlock__</span><br><span class="line">int b = 20;</span><br><span class="line">NSLog(@&quot;%@&quot;,^&#123;</span><br><span class="line">    NSLog(@&quot;%d&quot;,b);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>堆Block(NSMallocBlock):<br>堆Block存储在堆(heap)区。</li>
+</ul>
+<p>例子：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 堆block __NSMallocBlock__</span><br><span class="line">int a = 10;</span><br><span class="line">void (^ZJBlock)(void) = ^&#123;</span><br><span class="line">    NSLog(@&quot;%d&quot;,a);</span><br><span class="line">&#125;;</span><br><span class="line">ZJBlock();</span><br><span class="line">NSLog(@&quot;%@&quot;,ZJBlock);</span><br></pre></td></tr></table></figure></div>
+<p>打印结果</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2020-08-02 00:23:32.061735+0800 OC-Block初探[14930:847689] 10</span><br><span class="line">2020-08-02 00:23:34.873090+0800 OC-Block初探[14930:847689] &lt;__NSMallocBlock__: 0x6000029ef510&gt;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Block底层原理"><a href="#Block底层原理" class="headerlink" title="Block底层原理"></a>Block底层原理</h1><ol>
+<li>block的本质<br>block本质上是一个OC对象，它内部也有isa指针，这个对象封装了函数调用地址以及函数调用环境(函数参数、返回值、捕获的外部变量等)。当我们定义一个block，在编译后它的底层存储结构是怎样的呢？<br>下面我们来看一个例子，定义了一个block，并在block里面访问量block外面的变量age，它底层存储结构如下图所示，block底层就是一个结构体__main_block_impl_0。</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/89857411-90f5df80-dbce-11ea-9d8e-9fa1cdd0615e.png"
+                     
+                ></p>
+<ul>
+<li>impl-&gt;isa：就是isa指针，可见它就是一个OC对象。</li>
+<li>impl-&gt;FuncPtr：是一个函数指针，也就是底层将block中要执行的代码封装成了一个函数，然后用这个指针指向那个函数。</li>
+<li>Desc-&gt;Block_size：block占用的内存大小。</li>
+<li>age：捕获的外部变量age，可见block会捕获外部变量并将其存储在block的底层结构体中。</li>
+</ul>
+<p>当我们调用block时(block())，实际上就是通过函数指针FuncPtr找到封装的函数并将block的地址作为参数传给这个函数进行执行，把block传给函数是因为函数执行中需要用到的某些数据是存在block的结构体中的(比如捕获的外部变量)。如果定义的是带参数的block，调用block时是将block地址和block的参数一起传给封装好的函数。</p>
+<ol start="2">
+<li>block的变量捕获机制</li>
+</ol>
+<p>block外部的变量是可以被block捕获的，这样就可以在block内部使用外部的变量了。不同类型的变量的捕获机制是不一样的。下面我们来看一个示例：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">int c = 1000; // 全局变量</span><br><span class="line">static int d = 10000; // 静态全局变量</span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        int a = 10; // 局部变量</span><br><span class="line">        static int b = 100; // 静态局部变量</span><br><span class="line">        void (^block)(void) = ^&#123;</span><br><span class="line">             NSLog(@&quot;a = %d&quot;,a);</span><br><span class="line">             NSLog(@&quot;b = %d&quot;,b);</span><br><span class="line">             NSLog(@&quot;c = %d&quot;,c);</span><br><span class="line">             NSLog(@&quot;d = %d&quot;,d);</span><br><span class="line">         &#125;;</span><br><span class="line">         a = 20;</span><br><span class="line">         b = 200;</span><br><span class="line">         c = 2000;</span><br><span class="line">         d = 20000;</span><br><span class="line">         block();</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// ***************打印结果***************</span><br><span class="line">2020-07-07 15:08:37.541840+0800 CommandLine[70672:7611766] a = 10</span><br><span class="line">2020-07-07 15:08:37.542168+0800 CommandLine[70672:7611766] b = 200</span><br><span class="line">2020-07-07 15:08:37.542201+0800 CommandLine[70672:7611766] c = 2000</span><br><span class="line">2020-07-07 15:08:37.542222+0800 CommandLine[70672:7611766] d = 20000</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>关于运行结果我们后面再做讲解，我们先来看一下定义的这个block的在编译后底层存储结构是怎么样的呢？(可以在命令行运行xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m将这个main.m文件转成编译后的c&#x2F;c++文件，然后在这个文件搜索__main_block_impl_0就可以找到这个block的结构体)。<br>struct __main_block_impl_0 {<br>  struct __block_impl impl;<br>  struct __main_block_desc_0* Desc;<br>  int a;<br>  int *b;<br>};<br>我们可以发现，我定义了4个变量，结果只有2个局部变量被捕获了，而且2个局部变量的捕获方式还不一样。为什么会这样呢？下面来一一解释：</p>
+<p>2.1 全局变量的捕获<br>不管是普通全局变量还是静态全局变量，block都不会捕获。因为全局变量在哪里都可以访问，所以block内部不捕获也是可以直接访问全局变量的，所以外部更改全局变量的值时，block内部打印的就是最新更改的值。</p>
+<p>2.2 静态局部变量的捕获<br>我们发现定义的静态局部变量b被block捕获后，在block结构体里面是以int *b;的形式来存储的，也就是说block其实是捕获的变量b的地址，block内部是通过b的地址去获取或修改b的值，所以block外部更改b的值会影响block里面获取的b的值，block里面更改b的值也会影响block外面b的值。所以上面会打印b &#x3D; 200。</p>
+<p>2.3 普通局部变量的捕获<br>所谓的普通局部变量就是在一个函数或代码块中定义的类似int a &#x3D; 10;的变量，它其实是省略了auto关键字，等价于auto int a &#x3D; 10，所以也叫auto变量。和静态局部变量不同的是，普通局部变量被block捕获后再block底层结构体中是以int a;的形式存储，也就是说block捕获的其实是a的值(也就是10)，并且在block内部重新定义了一个变量来存储这个值，这个时候block外部和里面的a其实是2个不同的变量，所以外面更改a的值不会影响block里面的a。所以打印的结果是a &#x3D; 10。<br>那有人可能就有疑问了，为什么普通局部变量要捕获值，跟静态局部变量一样捕获地址不行吗？是的，不行。因为普通局部变量a在出了大括号后就会被释放掉了，这个时候如果我们在大括号外面调用这个block，block内部通过a的指针去访问a的值就会抛出异常，因为a已经被释放了。而静态局部变量的生命周期是和整个程序的生命周期是一样的，也就是说在整个程序运行过程中都不会释放b，所以不会出现这种情况。<br>那有人又有疑问了，既然静态局部变量一直都不会被释放，那block为什么还要捕获它，直接拿来用不就可以了吗？这是因为静态局部变量作用域只限制在这个大括号类，出了这个大括号，虽然它还存在，但是外面无法访问它。而前面已经介绍过，block里面的代码在底层是被封装成了一个函数，那这个函数肯定是在b所在的大括号外面，所以这个函数是无法直接访问到b的，所以block必须将其捕获。</p>
+<p>2.4 block捕获变量小结</p>
+<p>全局变量–不会捕获，是直接访问。<br>静态局部变量–是捕获变量地址。<br>普通局部变量–是捕获变量的值。</p>
+<p>所以我们判断一个变量是否会被block捕获关键就在于这个变量是局部变量还是全局变量。那我们来看一下以下几种情况中block是否会捕获self:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">- (void)blockTest&#123;</span><br><span class="line">    </span><br><span class="line">    // 第一种</span><br><span class="line">    void (^block1)(void) = ^&#123;</span><br><span class="line">        NSLog(@&quot;%p&quot;,self);</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    // 第二种</span><br><span class="line">    void (^block2)(void) = ^&#123;</span><br><span class="line">        self.name = @&quot;Jack&quot;;</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    // 第三种</span><br><span class="line">    void (^block3)(void) = ^&#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,_name);</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    // 第四种</span><br><span class="line">    void (^block4)(void) = ^&#123;</span><br><span class="line">        [self name];</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<p>要搞清楚这个问题，我们主要是要搞清楚self是局部变量还是全局变量。可能很多人以为它是全局变量，其实他是一个局部变量。再强调一遍，self是局部变量。那有人就疑惑了，它为什么是局部变量？它是在哪里定义的。要搞清楚这个问题，我们需要对OC的方法调用机制有一定了解。<br>OC中一个对象调用方法，其实就是给这个这个对象发送消息。比如我调用[self blockTest]，它转成C语言后就变成了objc_msgSend(self, @selector(blockTest))。OC的blockTest方法是没有参数的，但是转成objc_msgSend后就多出来了2个参数，一个就是self，是指向函数调用者的，另一个参数就是要调用的这个方法。所以对于所有的OC方法来说，它们都有这2个默认的参数，第一个参数就是self，所以self就是这么通过参数的形式传进来的，它的确是一个局部变量。<br>这个问题解决了，那上面几种情况就简单了，这4中情况下block都会捕获self。对第一、二、四这3种情况都好理解，第三种情况可能有人会有疑惑，block里面都没有用到self为什么还会捕获self呢。其实_name这种写法并不是没有self，它只是将self给省略了，它其实等同于self-&gt;_name，所以这种情况要格外注意。</p>
+<ol start="3">
+<li>block的类型</li>
+</ol>
+<p>block既然是一个OC对象,那它就有类，那它的类时什么呢？我们可以通过调用block的class方法或object_getClass()函数来得到block的类。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">- (void)test&#123;</span><br><span class="line">    int age = 10;</span><br><span class="line">    </span><br><span class="line">    void (^block1)(void) = ^&#123;</span><br><span class="line">        NSLog(@&quot;-----&quot;);</span><br><span class="line">    &#125;;</span><br><span class="line">    NSLog(@&quot;block1的类：%@&quot;,[block1 class]);</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;block2的类：%@&quot;,[^&#123;</span><br><span class="line">        NSLog(@&quot;----%d&quot;,age);</span><br><span class="line">    &#125; class]);</span><br><span class="line">    </span><br><span class="line">   NSLog(@&quot;block3的类：%@&quot;,[[^&#123;</span><br><span class="line">       NSLog(@&quot;----%d&quot;,age);</span><br><span class="line">   &#125; copy] class]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// ***************打印结果***************</span><br><span class="line">2020-07-08 09:07:46.253895+0800 AppTest[72445:7921459] block1的类：__NSGlobalBlock__</span><br><span class="line">2020-07-08 09:07:46.254027+0800 AppTest[72445:7921459] block2的类：__NSStackBlock__</span><br><span class="line">2020-07-08 09:07:46.254145+0800 AppTest[72445:7921459] block3的类：__NSMallocBlock__</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>block的类有三种，就是上面打印的结果：__NSGlobalBlock__、__NSStackBlock__、__NSMallocBlock__。有人可能会疑惑，打印第2和3这两个block时为不像block1那样先定义一个block1然后再打印block1。这是因为在ARC模式下，如果一个__NSStackBlock__类型的block被一个强指针指着，那系统会自动对这个block进行一次copy操作将这个block变成__NSMallocBlock__类型，这样会影响运行的结果。<br>下面我们一一介绍一下这三种类型的区别：</p>
+<ol start="3">
+<li>1__NSGlobalBlock__</li>
+</ol>
+<p>如果一个block里面没有访问普通局部变量(也就是说block里面没有访问任何外部变量或者访问的是静态局部变量或者访问的是全局变量)，那这个block就是__NSGlobalBlock__。__NSGlobalBlock__类型的block在内存中是存在数据区的(也叫全局区或静态区，全局变量和静态变量是存在这个区域的)。__NSGlobalBlock__类型的block调用copy方法的话什么都不会做。<br>下面我们再来看下__NSGlobalBlock__的继承链：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (void)test&#123;</span><br><span class="line">    void (^block)(void) = ^&#123;</span><br><span class="line">        NSLog(@&quot;-----&quot;);</span><br><span class="line">    &#125;;</span><br><span class="line">    NSLog(@&quot;--- %@&quot;,[block class]);</span><br><span class="line">    NSLog(@&quot;--- %@&quot;,[[block class] superclass]);</span><br><span class="line">    NSLog(@&quot;--- %@&quot;,[[[block class] superclass] superclass]);</span><br><span class="line">    NSLog(@&quot;--- %@&quot;,[[[[block class] superclass] superclass] superclass]);</span><br><span class="line">&#125;</span><br><span class="line">// ***************打印结果***************</span><br><span class="line">2020-07-08 11:03:34.331652+0800 AppTest[72667:7957820] --- __NSGlobalBlock__</span><br><span class="line">2020-07-08 11:03:34.331777+0800 AppTest[72667:7957820] --- __NSGlobalBlock</span><br><span class="line">2020-07-08 11:03:34.331883+0800 AppTest[72667:7957820] --- NSBlock</span><br><span class="line">2020-07-08 11:03:34.331950+0800 AppTest[72667:7957820] --- NSObject</span><br><span class="line">看了block最终也是继承自NSObject，__NSGlobalBlock__的继承链为：__NSGlobalBlock__ : __NSGlobalBlock : NSBlock : NSObject。</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>3.2__NSStackBlock__</p>
+<p>如果一个block里面访问了普通的局部变量，那它就是一个__NSStackBlock__，它在内存中存储在栈区，栈区的特点就是其释放不受开发者控制，都是由系统管理释放操作的，所以在调用__NSStackBlock__类型block时要注意，一定要确保它还没被释放。如果对一个__NSStackBlock__类型block做copy操作，那会将这个block从栈复制到堆上。<strong>NSStackBlock__的继承链是：__NSStackBlock</strong> : __NSStackBlock : NSBlock : NSObject。</p>
+<p>3.3__NSMallocBlock__</p>
+<p>一个__NSStackBlock__类型block做调用copy，那会将这个block从栈复制到堆上，堆上的这个block类型就是__NSMallocBlock__，所以__NSMallocBlock__类型的block是存储在堆区。如果对一个__NSMallocBlock__类型block做copy操作，那这个block的引用计数+1。<strong>NSMallocBlock__的继承链是：__NSMallocBlock</strong> : __NSMallocBlock : NSBlock : NSObject。</p>
+<p>在ARC环境下，编译器会根据情况，自动将栈上的block复制到堆上。有一下4种情况会将栈block复制到堆上：<br>a. block作为函数返回值时：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef void (^MyBlock)(void);</span><br><span class="line"></span><br><span class="line">- (MyBlock)createBlock&#123;</span><br><span class="line">    int a = 10;</span><br><span class="line">    return ^&#123;</span><br><span class="line">        NSLog(@&quot;******%d&quot;,a);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>b. 将block赋值给强指针时：<br>将定义的栈上的block赋值给强指针myBlock，就变成了堆block。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)test&#123;</span><br><span class="line">    int a = 10; // 局部变量</span><br><span class="line"></span><br><span class="line">    void (^myBlock)(void) = ^&#123;</span><br><span class="line">        NSLog(@&quot;a = %d&quot;,a);</span><br><span class="line">    &#125;;</span><br><span class="line">    block();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>c. 当block作为参数传给Cocoa API时：<br>比如：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[UIView animateWithDuration:1.0f animations:^&#123;</span><br><span class="line">        </span><br><span class="line">&#125;];</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>d. block作为GCD的API的参数时：<br>比如：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        </span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<p>另外在MRC环境下，定义block属性建议使用copy关键字，这样会将栈区的block复制到堆区。<br>@property (copy,nonatomic) void(^block)void;<br>在ARC环境下，定义block属性用copy或strong关键字都会将栈区block复制到堆上，所以这两种写法都可以。<br>@property (strong, nonatomic) void (^block)(void);<br>@property (copy, nonatomic) void (^block)(void);</p>
+<ol start="4">
+<li>block对对象型的局部变量的捕获<br>block对对象类型和对基本数据类型变量的捕获是不一样的，对象类型的变量涉及到强引用和弱引用的问题，强引用和弱引用在block底层是怎么处理的呢？<br>如果block是在栈上，不管捕获的对象时强指针还是弱指针，block内部都不会对这个对象产生强引用。所以我们主要来看下block在堆上的情况。<br>首先来看下强引用的对象被block捕获后在底层结构体中是如何存储的。这里用下面这条命令来将OC代码转成c&#x2F;c++代码：<br>xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc -fobjc-arc -fobjc-runtime&#x3D;ios-8.0.0 main.m</li>
+</ol>
+<p>&#x2F;&#x2F; OC代码</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line"></span><br><span class="line">        Person *person = [[Person alloc] init];</span><br><span class="line">        person.age = 20;</span><br><span class="line"></span><br><span class="line">        void (^block)(void) = ^&#123;</span><br><span class="line">            NSLog(@&quot;age--- %ld&quot;,person.age);</span><br><span class="line">         &#125;;</span><br><span class="line">        block();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 底层结构体</span><br><span class="line">struct __main_block_impl_0 &#123;</span><br><span class="line">  struct __block_impl impl;</span><br><span class="line">  struct __main_block_desc_0* Desc;</span><br><span class="line">  Person *__strong person;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<p>可以看到和基本数据类型不同的是，person对象被block捕获后，在结构体中多了一个修饰关键字__strong。<br>我们再来看下弱引用对象被捕获后是什么样的：<br>&#x2F;&#x2F; OC代码</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line"></span><br><span class="line">        Person *person = [[Person alloc] init];</span><br><span class="line">        person.age = 20;</span><br><span class="line"></span><br><span class="line">        __weak Person *weakPerson = person;</span><br><span class="line">        void (^block)(void) = ^&#123;</span><br><span class="line">            NSLog(@&quot;age--- %ld&quot;,weakPerson.age);</span><br><span class="line">         &#125;;</span><br><span class="line">        block();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 底层block</span><br><span class="line">struct __main_block_impl_0 &#123;</span><br><span class="line">  struct __block_impl impl;</span><br><span class="line">  struct __main_block_desc_0* Desc;</span><br><span class="line">  Person *__weak weakPerson;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<p>可见此时block中weakPerson的关键字变成了__weak。<br>在block中修饰被捕获的对象类型变量的关键字除了__strong、__weak外还有一个__unsafe_unretained。那这结果关键字起什么作用呢？<br>当block被拷贝到堆上时是调用的copy函数，copy函数内部会调用_Block_object_assign函数，_Block_object_assign函数就会根据这3个关键字来进行操作。</p>
+<p>如果关键字是__strong，那block内部就会对这个对象进行一次retain操作，引用计数+1，也就是block会强引用这个对象。也正是这个原因，导致在使用block时很容易造成循环引用。<br>如果关键字是__weak或__unsafe_unretained，那block对这个对象是弱引用，不会造成循环引用。所以我们通常在block外面定义一个__weak或__unsafe_unretained修饰的弱指针指向对象，然后在block内部使用这个弱指针来解决循环引用的问题。</p>
+<p>block从堆上移除时，则会调用block内部的dispose函数，dispose函数内部调用_Block_object_dispose函数会自动释放强引用的变量。</p>
+<ol start="4">
+<li>__block修饰符的作用<br>在介绍__block之前，我们先来看下下面这段代码：</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (void)test&#123;</span><br><span class="line">    int age = 10;</span><br><span class="line">    void (^block)(void) = ^&#123;</span><br><span class="line">        age = 20;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<p>这段代码有什么问题吗？编译器会直接报错，在block中不可以修改这个age的值。为什么呢？<br>因为age是一个局部变量，它的作用域和生命周期就仅限在是test方法里面，而前面也介绍过了，block底层会将大括号中的代码封装成一个函数，也就相当于现在是要在另外一个函数中访问test方法中的局部变量，这样肯定是不行的，所以会报错。<br>如果我想在block里面更改age的值要怎么做呢？我们可以将age定义成静态局部变量static int age &#x3D; 10;。虽然静态局部变量的作用域也是在test方法里面，但是它的生命周期是和程序一样的，而且block捕获静态局部变量实际是捕获的age的地址，所以block里面也是通过age的地址去更改age的值，所以是没有问题的。<br>但我们并不推荐这样做，因为静态局部变量在程序运行过程中是不会被释放的，所以还是要尽量少用。那还有什么别的方法来实现这个需求呢？这就是我们要讲的__block关键字。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)test1&#123;</span><br><span class="line">    __block int age = 10;</span><br><span class="line">    void (^block)(void) = ^&#123;</span><br><span class="line">        age = 20;</span><br><span class="line">    &#125;;</span><br><span class="line">    block();</span><br><span class="line">    NSLog(@&quot;%d&quot;,age);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>当我们用__block关键字修饰后，底层到底做了什么让我们能在block里面访问age呢？下面我们来看下上面代码转成c++代码后block的存储结构是什么样的。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct __main_block_impl_0 &#123;</span><br><span class="line">  struct __block_impl impl;</span><br><span class="line">  struct __main_block_desc_0* Desc;</span><br><span class="line">  __Block_byref_age_0 *age; // by ref</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct __Block_byref_age_0 &#123;</span><br><span class="line">  void *__isa; // isa指针</span><br><span class="line">__Block_byref_age_0 *__forwarding; // 如果这block是在堆上那么这个指针就是指向它自己，如果这个block是在栈上，那这个指针是指向它拷贝到堆上后的那个block</span><br><span class="line"> int __flags;</span><br><span class="line"> int __size; // 结构体大小</span><br><span class="line"> int age; // 真正捕获到的age</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+<p>我们可以看到，age用__block修饰后，在block的结构体中变成了__Block_byref_age_0 *age;，而__Block_byref_age_0是个结构体，里面有个成员int age;，这个才是真正捕获到的外部变量age，实际上外部的age的地址也是指向这里的，所以不管是外面还是block里面修改age时其实都是通过地址找到这里来修改的。<br>所以age用__block修饰后它就不再是一个test1方法内部的局部变量了，而是被包装成了一个对象，age就被存储在这个对象中。之所以说是包装成一个对象，是因为__Block_byref_age_0这个结构体的第一个成员就是isa指针。</p>
+<p>__block修饰变量的内存管理:<br>__block不管是修饰基础数据类型还是修饰对象数据类型，底层都是将它包装成一个对象(我这里取个名字叫__blockObj)，然后block结构体中有个指针指向__blockObj。既然是一个对象，那block内部如何对它进行内存管理呢？<br>当block在栈上时，block内部并不会对__blockObj产生强引用。<br>当block调用copy函数从栈拷贝到堆中时，它同时会将__blockObj也拷贝到堆上，并对__blockObj产生强引用。<br>当block从堆中移除时，会调用block内部的dispose函数，dispose函数内部又会调用<br>_Block_object_dispose函数来释放__blockObj。</p>
+<h1 id="Block循环引用"><a href="#Block循环引用" class="headerlink" title="Block循环引用"></a>Block循环引用</h1><h1 id="Block面试题"><a href="#Block面试题" class="headerlink" title="Block面试题"></a>Block面试题</h1><ul>
+<li><p>block既然是对象，那么用copy修饰还是strong修饰呢？<br>答：用copy和strong都可以，因为在ARC下有自动copy效果。</p>
+</li>
+<li><p>变量截取面试题<br>下面代码能正常编译吗？不能的话是那些代码不能通过编译呢？</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">int d = 1000; // 全局变量</span><br><span class="line">static int e = 10000; // 静态全局变量</span><br><span class="line">- (void)test&#123;</span><br><span class="line">    </span><br><span class="line">    int a = 10; // 局部变量</span><br><span class="line">    static int b = 100; // 静态局部变量</span><br><span class="line">    __block int c = 1000;</span><br><span class="line">    NSMutableArray *array1 = nil;</span><br><span class="line">    __block NSMutableArray *array2 = nil;</span><br><span class="line">    void (^block)(void) = ^&#123;</span><br><span class="line">        a = 20;</span><br><span class="line">        b = 200;</span><br><span class="line">        c = 2000;</span><br><span class="line">        d = 20000;</span><br><span class="line">        e = 200000;</span><br><span class="line">        array1 = [NSMutableArray array];</span><br><span class="line">        [array1 addObject:@&quot;111&quot;];</span><br><span class="line">        array2 = [NSMutableArray array];</span><br><span class="line">        [array2 addObject:@&quot;222&quot;];</span><br><span class="line">     &#125;;</span><br><span class="line">     </span><br><span class="line">     block();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p>解答：<br>1)a &#x3D; 20;无法通过编译，因为a是局部变量，其作用域和生命周期仅限于它所在的大括号内部，而block底层是将块中的代码封装到了一个函数中，在那个函数中修改a就相当于在一个函数中去修改另外一个函数中的局部变量，这样肯定是无法通过编译。</p>
+<p>2)array1 &#x3D; [NSMutableArray array];无法通过编译。原因和上面一样，array1是一个指针，这里是想在一个函数中去给另外一个函数中的变量重新赋值一个指针，所以无法通过编译。</p>
+<p>3)其它的都可以通过编译。</p>
+<p>4)全局变量在哪里都可以访问到，所以在block里面可以修改，实际上block并不会捕获全局变量存到block内部。</p>
+<p>5)__block修饰的变量(以变量c为例)是被包装成了一个对象，c就存储在对象中，block外面 的c的地址实际上就是这个对象中存储的c的地址，而block里面也存储着一个指针指向这个对象进而能访问到这个对象中的c，所以是可以直接修改的。</p>
+<p>6)[array1 addObject:@”111”];可以通过编译是因为block捕获了array1的值(也就是数组的地址)存储在block里面，这里是通过这个地址找到数组，然后对数组中的元素进行操作，所以是可以通过编译的。所以对于一个对象类型的变量，block内部只要不是想修改这个变量的值，都不需要用__block来修饰这个变量(比如增、删、修改集合类型对象里面的元素，或者修改一个实例对象的属性等都不需要用__block修饰)。</p>
+<ul>
+<li>睡眠有关<br>1.下面代码运行结果是什么？</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">- (void)test&#123;</span><br><span class="line">  </span><br><span class="line">    __block Person *person = [[Person alloc] init];</span><br><span class="line">    person.age = 20;</span><br><span class="line">    </span><br><span class="line">    __weak Person *weakPerson = person;</span><br><span class="line">    self.block = ^&#123;</span><br><span class="line">        NSLog(@&quot;block-begin:%@ age = %d&quot;,[NSThread currentThread],weakPerson.age);</span><br><span class="line">        [NSThread sleepForTimeInterval:1.0f];</span><br><span class="line">        NSLog(@&quot;block-eng:%@ age = %d&quot;,[NSThread currentThread],weakPerson.age);</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    dispatch_async(dispatch_get_global_queue(0, 0), ^&#123;</span><br><span class="line">        self.block();</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    [NSThread sleepForTimeInterval:0.2f];</span><br><span class="line">    NSLog(@&quot;test-end:%@&quot;,[NSThread currentThread]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// ***************打印结果***************</span><br><span class="line">2020-08-11 11:59:08.632317+0800 OC-Block变量截获的原理[32169:1868943] block-begin:&lt;NSThread: 0x60000324eec0&gt;&#123;number = 4, name = (null)&#125; age = 20</span><br><span class="line">2020-08-11 11:59:08.833335+0800 OC-Block变量截获的原理[32169:1868876] test-end:&lt;NSThread: 0x600003200200&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2020-08-11 11:59:09.635217+0800 OC-Block变量截获的原理[32169:1868943] block-eng:&lt;NSThread: 0x60000324eec0&gt;&#123;number = 4, name = (null)&#125; age = 0</span><br></pre></td></tr></table></figure></div>
+
+<p>weakPerson是一个弱指针，所以self.block对person是弱引用。然后在并发队列中通过异步函数添加一个任务来执行self.block();，所以是开启了一个子线程来执行这个任务，此时打印age值是20，然后子线程开始睡眠1秒钟。与此同时主线程也睡眠0.2秒，0.2秒后主线程执行完最后的打印操作，test函数就执行完了。而由于person是一个局部变量，而且self.block对它也是弱引用，所以在test函数执行完后person对象就被释放了。再过0.8秒钟，子线程结束睡眠，此时weakPerson所指向的对象已经变成了nil，所以打印的age是0。</p>
+<p>此时如果将主线程的睡眠时间改的比子线程睡眠时间长的话结果又不一样，因为子线程睡眠结束时主线程还在睡眠睡眠，也就是test方法还没执行完，那person对象就还存在，所以子线程睡眠前后打印的age都是20。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 主线程睡眠时间改为：[NSThread sleepForTimeInterval:1.2f];</span><br><span class="line"></span><br><span class="line">// ***************打印结果***************</span><br><span class="line">2020-08-11 12:00:01.276795+0800 OC-Block变量截获的原理[32192:1869873] block-begin:&lt;NSThread: 0x600003987680&gt;&#123;number = 6, name = (null)&#125; age = 20</span><br><span class="line">2020-08-11 12:00:02.277239+0800 OC-Block变量截获的原理[32192:1869873] block-eng:&lt;NSThread: 0x600003987680&gt;&#123;number = 6, name = (null)&#125; age = 20</span><br><span class="line">2020-08-11 12:00:02.476903+0800 OC-Block变量截获的原理[32192:1869745] test-end:&lt;NSThread: 0x6000039bc240&gt;&#123;number = 1, name = main&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<ul>
+<li>线程有关<br>1.下面代码运行结果是什么？</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">- (void)test&#123;</span><br><span class="line">    __block Person *person = [[Person alloc] init];</span><br><span class="line">    person.age = 20;</span><br><span class="line">    </span><br><span class="line">    __weak Person *weakPerson = person;</span><br><span class="line">    self.block = ^&#123;</span><br><span class="line">        __strong Person *strongPerson = weakPerson;</span><br><span class="line">        NSLog(@&quot;block-begin:%@ age = %d&quot;,[NSThread currentThread],strongPerson.age);</span><br><span class="line">        [NSThread sleepForTimeInterval:1.0f];</span><br><span class="line">        NSLog(@&quot;block-eng:%@ age = %d&quot;,[NSThread currentThread],strongPerson.age);</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    dispatch_async(dispatch_get_global_queue(0, 0), ^&#123;</span><br><span class="line">        [self test1];</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;test - end&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)test1&#123;</span><br><span class="line">    self.block();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// ***************打印结果***************</span><br><span class="line">2020-08-11 11:41:03.530846+0800 OC-Block变量截获的原理[32030:1857989] test - end</span><br><span class="line">2020-08-11 11:41:03.641728+0800 OC-Block变量截获的原理[32030:1857989] block-begin:&lt;NSThread: 0x6000025303c0&gt;&#123;number = 1, name = main&#125; age = 0</span><br><span class="line">2020-08-11 11:41:04.688181+0800 OC-Block变量截获的原理[32030:1857989] block-eng:&lt;NSThread: 0x6000025303c0&gt;&#123;number = 1, name = main&#125; age = 0</span><br></pre></td></tr></table></figure></div>
+
+<p>解释：<br>在并发队列中通过异步函数添加任务执行test1，是开启一个新线程来执行，而新线程是先睡眠0.1秒再执行test1，所以会先执行异步函数后面的代码，所以等到开始执行test1时，test已经执行结束了，所以在执行block之前person就已经被释放了，这种情况下__strong修饰符是不起作用的。</p>
+<p>2.如果我将并发队列换成串行队列会怎么样？</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">dispatch_async(dispatch_queue_create(&quot;testQueue&quot;, DISPATCH_QUEUE_SERIAL), ^&#123;</span><br><span class="line">        [NSThread sleepForTimeInterval:0.1f];</span><br><span class="line">        [self test1];</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">// ***************打印结果***************</span><br><span class="line">2020-08-11 11:51:06.899764+0800 OC-Block变量截获的原理[32094:1863643] test - end</span><br><span class="line">2020-08-11 11:51:07.000155+0800 OC-Block变量截获的原理[32094:1863824] block-begin:&lt;NSThread: 0x600000891040&gt;&#123;number = 4, name = (null)&#125; age = 0</span><br><span class="line">2020-08-11 11:51:08.001081+0800 OC-Block变量截获的原理[32094:1863824] block-eng:&lt;NSThread: 0x600000891040&gt;&#123;number = 4, name = (null)&#125; age = 0</span><br></pre></td></tr></table></figure></div>
+<p>其实这里不管是改成主队列还是自定义的串行队列结果都一样，只要保证是异步函数就行，异步函数不会阻塞当前线程，所以执行test1时test已经执行完了。</p>
+<p>3.这种情况下如果我将异步函数换成同步函数，其他地方不变：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">dispatch_sync(dispatch_get_global_queue(0, 0), ^&#123;</span><br><span class="line">        [NSThread sleepForTimeInterval:0.1f];</span><br><span class="line">        [self test1];</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">// ***************打印结果***************</span><br><span class="line">2020-08-11 11:52:16.707598+0800 OC-Block变量截获的原理[32121:1864960] block-begin:&lt;NSThread: 0x600002a346c0&gt;&#123;number = 1, name = main&#125; age = 20</span><br><span class="line">2020-08-11 11:52:17.709068+0800 OC-Block变量截获的原理[32121:1864960] block-eng:&lt;NSThread: 0x600002a346c0&gt;&#123;number = 1, name = main&#125; age = 20</span><br><span class="line">2020-08-11 11:52:17.709353+0800 OC-Block变量截获的原理[32121:1864960] test - end</span><br><span class="line">    </span><br></pre></td></tr></table></figure></div>
+
+<p>因为同步函数会阻塞当前线程，所以是等test1执行结束后，test才会继续执行后面的代码，所以person是在block执行结束后才被释放的。</p>
+<ul>
+<li>计时器有关<br>下面代码会造成什么上面后果：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">- (void)test&#123;</span><br><span class="line">    __block Person *person = [[Person alloc] init];</span><br><span class="line">    person.age = 20;</span><br><span class="line">    </span><br><span class="line">    __weak Person *weakPerson = person;</span><br><span class="line">    self.block = ^&#123;</span><br><span class="line">        __strong Person *strongPerson = weakPerson;</span><br><span class="line">        NSLog(@&quot;block-begin:%@ age = %d&quot;,[NSThread currentThread],strongPerson.age);</span><br><span class="line">        [NSThread sleepForTimeInterval:1.0f];</span><br><span class="line">        NSLog(@&quot;block-eng:%@ age = %d&quot;,[NSThread currentThread],strongPerson.age);</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    [self performSelector:@selector(test1) withObject:nil afterDelay:.0f];</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;test - end&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)test1&#123;</span><br><span class="line">    self.block();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// ***************打印结果***************</span><br><span class="line">2020-08-11 11:41:03.530846+0800 OC-Block变量截获的原理[32030:1857989] test - end</span><br><span class="line">2020-08-11 11:41:03.641728+0800 OC-Block变量截获的原理[32030:1857989] block-begin:&lt;NSThread: 0x6000025303c0&gt;&#123;number = 1, name = main&#125; age = 0</span><br><span class="line">2020-08-11 11:41:04.688181+0800 OC-Block变量截获的原理[32030:1857989] block-eng:&lt;NSThread: 0x6000025303c0&gt;&#123;number = 1, name = main&#125; age = 0</span><br></pre></td></tr></table></figure></div>
+
+<p>解释：</p>
+<p>performSelector:withObject:afterDelay这个方法底层实现实际上是将一个定时器添加到了runloop中，然后等时间到了后就执行test1方法。虽然这里最后一个参数传的是0，也就是等待0秒后执行test1，但它并不是立马执行，因为需要先唤醒runloop，这是要耗一定时间的，所以会先执行后面的方法。所以等到开始执行test1是test已经执行结束了，person已经释放</p>
+<ul>
+<li>内存泄漏<br>下面代码会造成什么上面后果：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (void)test&#123;</span><br><span class="line">    self.age = 20;</span><br><span class="line">    self.block = ^&#123;</span><br><span class="line">      NSLog(@&quot;%d&quot;,self.age);</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    self.block();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p>解答：</p>
+<p>会因循环引用而导致内存泄露。因为self通过一个强指针指向了block，而block内部又捕获了self而且用强指针指向self，所以self和block互相强引用对方而造成循环引用。</p>
+<p>解决这个问题很简单，只需要定义一个弱指针指向self，然后block内部就是用一个若指针指向self，所以结果是self强引用block，block弱引用self，所以不会造成循环引用。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)test&#123;</span><br><span class="line">    self.age = 20;</span><br><span class="line">    __weak typeof(self) weakSelf = self;</span><br><span class="line">    self.block = ^&#123;</span><br><span class="line">      NSLog(@&quot;%d&quot;,weakSelf.age);</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    self.block();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p>这里说明一点，我们判断会不会造成循环引用关键看block有没有捕获并强引用self。我们只需要记住以下下几点：<br>1.如果block内部使用到了某个变量，而且这个变量是局部变量，那么block会捕获这个变量并存储到block底层的结构体中。<br>2.如果捕获的这个变量是用__weak或__unsafe_unretained修饰的，那么block内部就是用弱指针指向这个变量(也就是block不持有这个对象)，否则block内部就是用强指针指向这个对象(也就是block持有这个对象)。<br>3.self是一个局部变量。因为self是所有OC方法的一个隐藏参数，所以它是一个局部变量。<br>如果self并不持有这个block，block内部怎么引用self都不会造成循环引用。</p>
+<ul>
+<li>循环引用面试题，<br>1.下面代码是否会造成循环引用：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (void)test&#123;</span><br><span class="line">    self.age = 20;</span><br><span class="line">    self.block = ^&#123;</span><br><span class="line">      NSLog(@&quot;%d&quot;,self.age);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p>解答：<br>会造成循环引用，这里虽然没有调用block，但并不影响它们相互引用的结果。</p>
+<p>2.下面代码是否会造成循环引用：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)test1&#123;</span><br><span class="line">    self.age = 20;</span><br><span class="line">    </span><br><span class="line">    self.block = ^&#123;</span><br><span class="line">      NSLog(@&quot;%d&quot;,_age);</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    self.block();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>解答：</p>
+<p>会造成循环引用。block里面虽然看不到self，实际上_age这种写法只是省略了self，完整写法是self-&gt;_age，所以是会造成循环引用的。这一点开发中要格外注意。</p>
+<p>3.下面代码是否会造成循环引用：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (void)test&#123;</span><br><span class="line">    self.block = ^&#123;</span><br><span class="line">        [self setAge:10];</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    self.block();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>解答：</p>
+<p>会造成循环引用。OC中调用方法就是给某个对象发送消息，所以调用方法时是需要用到self的，所以block会捕获self并强引用它。</p>
+<p>4.下面代码是否会造成循环引用：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dispatch_sync(dispatch_get_global_queue(0, 0), ^&#123;</span><br><span class="line">       NSLog(@&quot;%d&quot;,self.age);</span><br><span class="line">&#125;);</span><br><span class="line">    </span><br><span class="line">[UIView animateWithDuration:1.0f animations:^&#123;</span><br><span class="line">       NSLog(@&quot;%d&quot;,self.age);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure></div>
+<p>解答：</p>
+<p>不会造成循环引用。当block是某个函数的参数时，虽然block内部是对self强引用的，但self并不持有block，所以不会造成循环引用。</p>
+<p>5.下面代码是否会造成循环引用：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)test1&#123;</span><br><span class="line"></span><br><span class="line">    dispatch_sync(dispatch_get_global_queue(0, 0), ^&#123;</span><br><span class="line">        self.block = ^&#123;</span><br><span class="line">            NSLog(@&quot;%d&quot;,self.age);</span><br><span class="line">        &#125;;</span><br><span class="line">        self.block();</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p>解答：</p>
+<p>会造成循环引用。这是一个嵌套的block，虽然外层block不会循环引用，但是里面的block会造成循环引用。</p>
+<p>6.下面代码是否会造成循环引用：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">typedef void(^MyBlock)(void);</span><br><span class="line"></span><br><span class="line">- (void)test&#123;</span><br><span class="line"></span><br><span class="line">    dispatch_sync(dispatch_get_global_queue(0, 0), ^&#123;</span><br><span class="line">        self.age = [self testWithBlock:^&#123;</span><br><span class="line">           NSLog(@&quot;%d&quot;,self.age);</span><br><span class="line">        &#125;];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (int)testWithBlock:(MyBlock)myBlock&#123;</span><br><span class="line">    myBlock();</span><br><span class="line">    return 10;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>解答：</p>
+<p>不会造成循环引用。这也是嵌套的block。外层block并没有被self持有，所以不会造成循环引用。我们主要看下里面那个block，其实里面的block就是一个函数的参数，self并不持有它，所以不会造成循环引用。</p>
+<p>7.下面代码是否会造成循环引用：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- (void)test1&#123;</span><br><span class="line"></span><br><span class="line">    self.block = [self blockWithBlock:^&#123;</span><br><span class="line">       NSLog(@&quot;%d&quot;,self.age);</span><br><span class="line">    &#125;];</span><br><span class="line">    self.block();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (MyBlock)blockWithBlock:(MyBlock)myBlock&#123;</span><br><span class="line">    myBlock();</span><br><span class="line">    </span><br><span class="line">    return ^&#123;</span><br><span class="line">      NSLog(@&quot;block作为返回值&quot;);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p>解答：</p>
+<p>不会造成循环引用。这道题很具有迷惑性。有人会觉得self是持有block的，而block内部又强引用了self，所以会造成循环引用。其实仔细观察会发现这里有2个不同的block，self持有的是一个block，而强引用self的又是另外一个block，所以它们并不会造成循环引用。</p>
+<p>8.下面代码是否会造成循环引用：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (void)test1&#123;</span><br><span class="line">    self.block = [self blockWithBlock:^&#123;</span><br><span class="line">       NSLog(@&quot;作为参数的block&quot;);</span><br><span class="line">    &#125;];</span><br><span class="line">    self.block();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (MyBlock)blockWithBlock:(MyBlock)myBlock&#123;</span><br><span class="line">    myBlock();</span><br><span class="line">    </span><br><span class="line">    return ^&#123;</span><br><span class="line">      NSLog(@&quot;block作为返回值--%d&quot;,_age);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p>解答：</p>
+<p>会造成循环引用。这道题同样具有迷惑性。表面上看起来self持有的是一个block，作为参数的又是另外一个block，而且这个block里面也没有用到self。其实这里的关键在于第二个函数的返回值，它返回的就是一个block，这个block里面强引用了self，而且将这个block赋值给了self的block，所以self是强指针指向这个返回的block的。所以它们构成了循环引用。</p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC：Block底层探索</li>
+        <li>Post author：张建</li>
+        <li>Create time：2020-07-26 02:22:36</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2020/07/26/OC学习/OC学习17：Block/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/iOS/">#iOS</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2020/07/29/OCRuntime&amp;Runloop/OCRunloop01%EF%BC%9ARunloop%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OCRunloop01：Runloop底层原理</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2020/07/15/OCRuntime&amp;Runloop/OCRuntime03%EF%BC%9A%E6%96%B9%E6%B3%95%E7%9A%84%E6%9C%AC%E8%B4%A8/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OCRuntime03：方法的本质</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC：Block底层探索</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Block%E5%88%9D%E6%8E%A2"><span class="nav-text">Block初探</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFBlock%EF%BC%9F"><span class="nav-text">什么是Block？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFBlock%E8%B0%83%E7%94%A8"><span class="nav-text">什么是Block调用?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Block%E7%9A%84%E5%88%86%E7%B1%BB%EF%BC%9F"><span class="nav-text">Block的分类？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Block%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86"><span class="nav-text">Block底层原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Block%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8"><span class="nav-text">Block循环引用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Block%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-text">Block面试题</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

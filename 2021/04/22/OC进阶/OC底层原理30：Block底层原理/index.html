@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2021/04/22/oc进阶/oc底层原理30：block底层原理/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC底层原理30：Block底层原理">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2021/04/22/OC进阶/OC底层原理30：Block底层原理/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC底层原理30：Block底层原理">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC底层原理30：Block底层原理 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC底层原理30：Block底层原理</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2021-04-22 14:46:32</span>
+        <span class="mobile">2021-04-22 14:46</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2022-11-07 09:13:07</span>
+            <span class="mobile">2022-11-07 09:13</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/iOS-OC/">iOS-OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="Block类型"><a href="#Block类型" class="headerlink" title="Block类型"></a>Block类型</h1><p><code>block</code> 主要有三种类型： <code>全局区、堆区、栈区</code></p>
+<ul>
+<li><code>__NSGlobalBlock__</code> ：全局block，存储在 <code>全局区</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void(^block)(void) = ^&#123;</span><br><span class="line">    NSLog(@&quot;ZJ&quot;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<p>此时的block无参数，也无返回值，属于<code>全局block</code>，如下图所示：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/127948369-17bd73e0-625c-4012-95ad-59a190514565.png"
+                     
+                ></p>
+<ul>
+<li><code>__NSMallocBlock__</code> ：堆区block，因为block即是 <code>函数</code> ，也是 <code>对象</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (void)mallocBlock&#123;</span><br><span class="line">    int a = 10;</span><br><span class="line">    void(^ block)(void) = ^&#123;</span><br><span class="line">        NSLog(@&quot;ZJ - %d&quot;,a);</span><br><span class="line">    &#125;;</span><br><span class="line">    NSLog(@&quot;%@&quot;,block);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>此时的block会访问外部变量，即 <code>底层拷贝a</code> ，所以是 <code>堆区block</code> </p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2021-08-02 11:11:56.986272+0800 001---Block深入浅出[1126:696422] &lt;__NSMallocBlock__: 0x2800e3c00&gt;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>__NSStackBlock__</code> ：block本身默认是 <code>栈block</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 栈block</span><br><span class="line">- (void)stackBlock&#123;</span><br><span class="line">    __block int a = 10;</span><br><span class="line">    void(^block)(void) = ^&#123;</span><br><span class="line">        a = 20;</span><br><span class="line">        NSLog(@&quot;ZJ - %d&quot;,a);</span><br><span class="line">    &#125;;</span><br><span class="line">    NSLog(@&quot;%@&quot;,^&#123;</span><br><span class="line">        a = 20;</span><br><span class="line">        NSLog(@&quot;ZJ - %d&quot;,a);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>【小知识点】</strong>：当block内部需要修改或访问外部变量a时，外部变量需要额外用 <code>__block</code> 修饰，否则修改不了</p>
+<p>我们来看一下结果:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2021-08-02 11:15:47.243001+0800 001---Block深入浅出[1131:698266] &lt;__NSMallocBlock__: 0x28037a700&gt;</span><br></pre></td></tr></table></figure></div>
+
+<p>为什么？居然还是 <code>__NSMallocBlock__</code> ，堆区？<br>答：因为在 <code>ARC</code> 环境下，编译器自动帮我们加了 <code>copy</code> 操作。在 <code>局部变量a</code> 在没有处理（即没有 <code>拷贝</code> 之前）是 <code>栈区block</code>，处理之后（即 <code>拷贝</code> 之后）是 <code>堆区block</code>，目前的栈区block越来越少了。</p>
+<p>当我们关掉ARC如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/127952600-c96f2af4-58ed-4653-872c-a156ce508960.png"
+                     
+                ></p>
+<p>再来打印一下结果：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/127952732-80d98b33-8d37-4504-b2f7-9813bef0fd57.png"
+                     
+                ></p>
+<p><strong>【总结】</strong></p>
+<ul>
+<li><p>block直接存储在 <code>全局区</code></p>
+</li>
+<li><p>如果 <code>block访问外界变量</code> ，并进行block相应拷贝，即 <code>copy</code></p>
+<ul>
+<li>在 <code>ARC</code> 环境下，<code>存储在堆区</code></li>
+<li>在 <code>非ARC</code> 环境下，<code>存储在栈区</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="Block变量捕获"><a href="#Block变量捕获" class="headerlink" title="Block变量捕获"></a>Block变量捕获</h2><p>为了保证Block内部能够正常访问外部变量，block有个自动捕获外部变量的机制</p>
+<p><strong>1、<code>auto</code> 类型局部变量：局部变量截获 <code>是值截获</code>。</strong></p>
+<p><strong>例子：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">NSInteger num = 3;</span><br><span class="line">NSInteger(^block)(NSInteger) = ^NSInteger(NSInteger n)&#123;</span><br><span class="line">    // num = 4; // 编译器报错</span><br><span class="line">    return n*num;</span><br><span class="line">&#125;;</span><br><span class="line">num = 1;</span><br><span class="line">NSLog(@&quot;%zd&quot;,block(2));</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>查看打印结果：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这里的输出是6而不是2，原因就是对局部变量num的截获是值截获。</span><br><span class="line">同样，在block里如果修改变量num，也是无效的，甚至编译器会报错。</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>2、 <code>static</code> 类型局部变量：局部静态变量截获是 <code>指针截获</code></strong></p>
+<p><strong>例子：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 静态变量-指针捕获</span><br><span class="line">static int a = 10;</span><br><span class="line">NSInteger(^Sblock)(NSInteger) = ^NSInteger(NSInteger n)&#123;</span><br><span class="line">    return n*a;</span><br><span class="line">&#125;;</span><br><span class="line">a = 1;</span><br><span class="line">NSLog(@&quot;%zd&quot;,Sblock(2));</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>打印结果：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2020-08-02 00:49:30.467652+0800 OC-Block初探[15224:868821] 2</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>结论:</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">静态局部变量截获的是指针，在外部修改为1，对block有影响</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>3、__block修饰的变量: <code>__block</code> 变量截获是 <code>指针截获</code>,并且生成了一个新的结构体对象</strong></p>
+<p><strong>例子：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// __block修饰变量-指针捕获</span><br><span class="line">__block NSInteger n = 3;</span><br><span class="line">void(^Bblock)(void) = ^&#123;</span><br><span class="line">    NSLog(@&quot;%zd&quot;,n); // __block修饰变量</span><br><span class="line">&#125;;</span><br><span class="line">n = 4;</span><br><span class="line">Bblock();</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>打印结果:</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2020-08-02 01:01:44.760288+0800 OC-Block初探[15345:878899] 4</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>结论：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__block修饰的变量也是以指针形式截获的</span><br></pre></td></tr></table></figure></div>
+
+<p>解释：<code>__block</code> 是将外部变量包装成了一个对象并将 <code>n</code> 存在这个对象中，实际上block外面的 <code>n</code> 的地址也是指向这个对象中存储的 <code>n</code> 的，而block底层是有一个指针指向这个对象的，所以当外部更改n时，block里面通过指针找到这个对象进而找到n，然后获取到n的值，所以n发生了变化。</p>
+<p><strong>4、<code>全局变量、静态全局变量：不截获,直接取值</code></strong></p>
+<p><strong>例子:</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">NSInteger num1 = 3; // 全局变量</span><br><span class="line">static NSInteger num2 = 30; // 静态全局变量</span><br><span class="line">- (void)blockTest&#123;</span><br><span class="line">    void(^block)(void) = ^&#123;</span><br><span class="line">        NSLog(@&quot;%zd&quot;,num1); // 全局变量</span><br><span class="line">        NSLog(@&quot;%zd&quot;,num2); // 全局静态变量</span><br><span class="line">    &#125;;</span><br><span class="line">    num1 = 4;</span><br><span class="line">    num2 = 40;</span><br><span class="line">    </span><br><span class="line">    block();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>打印结果：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2020-08-02 01:01:44.760418+0800 OC-Block初探[15345:878899] 4</span><br><span class="line">2020-08-02 01:01:44.760514+0800 OC-Block初探[15345:878899] 40</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>结论：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">全局变量、静态全局变量是不截获,直接取值</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>5、<code>对象</code>：对象类型的也是一样的，值截取</strong></p>
+<p><strong>例子：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (void)blockTest1&#123;</span><br><span class="line">    // 局部对象</span><br><span class="line">    NSMutableArray * arr = [NSMutableArray arrayWithObjects:@1,@2, nil];</span><br><span class="line">    void(^block)(void) = ^&#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,arr);</span><br><span class="line">        [arr addObject:@(4)];</span><br><span class="line">        NSLog(@&quot;%@&quot;,arr);</span><br><span class="line">    &#125;;</span><br><span class="line">    [arr addObject:@3];</span><br><span class="line">    arr = nil;</span><br><span class="line">    block();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>查看打印结果:</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">2020-08-11 10:41:59.416461+0800 OC-Block变量截获的原理[31602:1829372] (</span><br><span class="line">    1,</span><br><span class="line">    2,</span><br><span class="line">    3</span><br><span class="line">)</span><br><span class="line">2020-08-11 10:41:59.416882+0800 OC-Block变量截获的原理[31602:1829372] (</span><br><span class="line">    1,</span><br><span class="line">    2,</span><br><span class="line">    3,</span><br><span class="line">    4</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>结论:</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">局部对象变量也是一样，截获的是值，而不是指针，在外部将其置为nil，对block没有影响，而该对象调用方法会影响</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Block循环引用"><a href="#Block循环引用" class="headerlink" title="Block循环引用"></a>Block循环引用</h1><ul>
+<li><p><code>正常释放</code>：是指A持有B的引用，当A调用dealloc方法，给B发送release信号，B收到release信号，如果此时B的retainCount（即引用计数）为0时，则调用B的dealloc方法</p>
+</li>
+<li><p><code>循坏引用</code>：A、B互相持有，所有导致A无法调用dealloc方法给B发送release信号，而B也无法接收到release信号，所以A、B此时都无法释放</p>
+</li>
+</ul>
+<p><strong>关系图如下：</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/127963640-38d55552-982b-4d57-82bc-e8e3dd1d8a1c.png"
+                     
+                ></p>
+<h1 id="Block循环引用解决"><a href="#Block循环引用解决" class="headerlink" title="Block循环引用解决"></a>Block循环引用解决</h1><h2 id="请问下面两段代码是否有循环引用？"><a href="#请问下面两段代码是否有循环引用？" class="headerlink" title="请问下面两段代码是否有循环引用？"></a>请问下面两段代码是否有循环引用？</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 代码一</span><br><span class="line">self.name = @&quot;ZJ&quot;;</span><br><span class="line">self.block = ^&#123;</span><br><span class="line">    NSLog(@&quot;%@&quot;,self.name);</span><br><span class="line">&#125;;</span><br><span class="line">    </span><br><span class="line">// 代码二</span><br><span class="line">[UIView animateWithDuration:1 animations:^&#123;</span><br><span class="line">    NSLog(@&quot;%@&quot;,self.name);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>【代码一】：发生了 <code>循环引用</code>，因为在 <code>block</code> 内部使用了 <code>外部变量name</code>，导致 <code>block持有了self</code>，而 <code>self</code> 原本是持有 <code>block</code> 的，所以导致 <code>self和block的相互持有</code>，即 <code>self -&gt; name -&gt; block -&gt; self</code>。</p>
+</li>
+<li><p>【代码二】：没发生 <code>循环引用</code> ，虽然使用了 <code>外部变量name</code>，但是 <code>self</code>并没有持有<code>animation</code> 的 <code>block</code>,仅仅只有 <code>block</code> 持有 <code>self</code> ，不构成互相持有，即 <code>block -&gt; self -&gt; name</code>。</p>
+</li>
+</ul>
+<h2 id="解决循环引用常见的几种方式"><a href="#解决循环引用常见的几种方式" class="headerlink" title="解决循环引用常见的几种方式"></a>解决循环引用常见的几种方式</h2><ul>
+<li><p><strong>【方式一】：</strong> <code>weak-strong-dance</code> 强弱共舞</p>
+</li>
+<li><p><strong>【方式二】：</strong> <code>__block</code> 修饰对象（需要注意的是在block内部需要 <code>置空</code> 对象，而且 <code>block必须调用</code>）</p>
+</li>
+<li><p><strong>【方式三】：</strong> 传递 <code>对象self</code> 作为block的参数，提供给block内部使用</p>
+</li>
+<li><p><strong>【方式四】：</strong> 使用 <code>NSProxy</code></p>
+</li>
+</ul>
+<p><strong>1、【方式一】：weak-strong-dance</strong></p>
+<ul>
+<li>如果block内部并未嵌套block，直接使用 <code>__weak</code> 修饰 <code>self</code> 即可：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef void(^ZJBlock)(void);</span><br><span class="line">...</span><br><span class="line">@property (nonatomic, copy) ZJBlock block;</span><br><span class="line">...</span><br><span class="line"> __weak typeof(self) weakSelf = self;</span><br><span class="line">self.block = ^&#123;</span><br><span class="line">    NSLog(@&quot;%@&quot;,weakSelf.name);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<p>此时的 <code>weakSelf</code> 和 <code>self</code> 指向同一片 <code>内存空间</code>，且使用 <code>__weak不会导致self的引用计数发生变化</code>，可以通过打印 <code>weakSelf</code> 和 <code>self</code> 的指针地址和引用计数来验证，如下所示：</p>
+<p><strong>运行下面的代码：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// block</span><br><span class="line">NSLog(@&quot;%ld&quot;,(long)CFGetRetainCount((__bridge CFTypeRef)(self)));</span><br><span class="line">__weak typeof(self) weakSelf = self;</span><br><span class="line">NSLog(@&quot;%ld&quot;,CFGetRetainCount((__bridge CFTypeRef)(self)));</span><br><span class="line">self.block = ^&#123;</span><br><span class="line">    NSLog(@&quot;%@&quot;,weakSelf.name);</span><br><span class="line">&#125;;</span><br><span class="line">NSLog(@&quot;%p - %p&quot;,weakSelf,self);</span><br><span class="line">NSLog(@&quot;%ld&quot;,(long)CFGetRetainCount((__bridge CFTypeRef)(self.block)));</span><br><span class="line">NSLog(@&quot;%ld&quot;,(long)CFGetRetainCount((__bridge CFTypeRef)(self)));</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>得到的结果如下：</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/127974858-7dc045e9-9d44-45ca-9263-0988b8cb7e1f.png"
+                     
+                ></p>
+<ul>
+<li>如果 <code>block</code> 内部嵌套 <code>block</code>，需要同时使用 <code>__weak</code> 和 <code>__strong</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">__weak typeof(self) weakSelf = self;</span><br><span class="line">self.block = ^&#123;</span><br><span class="line">    __strong typeof(weakSelf) strongSelf = weakSelf;</span><br><span class="line">    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,strongSelf.name);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br><span class="line">self.block();</span><br></pre></td></tr></table></figure></div>
+
+<p>其中 <code>strongSelf</code> 是一个 <code>临时变量</code> ，在block的作用域内，即内部 <code>block执行完</code> 就释放 <code>strongSelf</code></p>
+<p>这种方式属于 <code>打破self对block的强引用</code>，依赖于 <code>中介者模式</code>，属于自动置为 <code>nil</code>，即 <code>自动释放</code></p>
+<p><strong>2、【方式二】：__block修饰变量</strong></p>
+<p>这种方式同样依赖于 <code>中介者模式</code>，属于 <code>手动释放</code>，是通过 <code>__block</code> 修饰对象，主要是因为 <code>__block</code> 修饰的对象时可以改变的</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">__block ViewController * vc = self;</span><br><span class="line">self.block = ^&#123;</span><br><span class="line">    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,vc.name);</span><br><span class="line">        vc = nil;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br><span class="line">self.block();</span><br></pre></td></tr></table></figure></div>
+
+<p>需要注意的是这里的 <code>block必须调用</code>，如果不调用block，vc就不会被置空，那么依旧是循环引用，<code>self</code> 和 <code>block</code> 都不会被释放</p>
+<p><strong>3、【方式三】：对象self作为参数</strong></p>
+<p>主要是将 <code>对象self作为参数</code> ，提供给block内部使用，不会有引用计数问题：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">self.block = ^(BlockViewController * vc) &#123;</span><br><span class="line">    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,vc.name);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br><span class="line">self.block(self);</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>4、【方式四】：NSProxy虚拟类</strong></p>
+<ul>
+<li><p><code>oc</code> 是只能 <code>单继承</code> 的语言，但是它是 <code>基于运行时的机制</code>，所以通过 <code>NSProxy</code> 来实现 <code>伪多继承</code> ，填补了多继承的空白</p>
+</li>
+<li><p><code>NSProxy</code> 和 <code>NSObject</code> 是同级的一个类，也可以说是一个<code>虚拟类</code>，只是实现了<code>NSObject</code> 的协议</p>
+</li>
+<li><p><code>NSProxy</code> 其实是一个 <code>消息重定向封装的一个抽象类</code>，类似于一个 <code>代理人，中间件</code>，可以通过继承它，并重写两个方法来实现消息转发到另一个实例</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- (void)forwardInvocation:(NSInvocation *)invocation;</span><br><span class="line">- (nullable NSMethodSignature *)methodSignatureForSelector:(SEL)sel NS_SWIFT_UNAVAILABLE(&quot;NSInvocation and related APIs not available&quot;);</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>使用场景</strong></p>
+<p><code>NSProxy</code> 的使用场景主要有两种：</p>
+<ul>
+<li>实现 <code>多继承</code> 功能</li>
+<li>解决了 <code>NSTimer &amp; CADisplayLink</code> 创建时 <code>对self强引用</code> 的问题，参考 <code>YYKit</code> 的 <code>YYWeakProxy</code>。</li>
+</ul>
+<p><strong>循环引用解决原来</strong></p>
+<p>主要是通过自定义 <code>NSProxy</code> 类的对象来代替 <code>self</code>，并使用方法实现消息转发</p>
+<p>下面是 <code>NSProxy</code> 子类的实现以及使用的场景：</p>
+<p><strong>【场景一】：多继承</strong></p>
+<ul>
+<li>自定义一个 <code>NSProxy</code> 的子类 <code>ZJProxy</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJProxy : NSProxy</span><br><span class="line">- (id)transformObjc:(NSObject *)objc;</span><br><span class="line">+ (instancetype)proxyWithObjc:(id)objc;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface ZJProxy ()</span><br><span class="line">@property(nonatomic, weak, readonly) NSObject *objc;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJProxy</span><br><span class="line">- (id)transformObjc:(NSObject *)objc&#123;</span><br><span class="line">    _objc = objc;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (instancetype)proxyWithObjc:(id)objc&#123;</span><br><span class="line">    return  [[self alloc] transformObjc:objc];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 1.获取target类中的sel方法的方法签名</span><br><span class="line">- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel &#123;</span><br><span class="line">    return [self.objc methodSignatureForSelector:sel];</span><br><span class="line">&#125;</span><br><span class="line">// 2. 类似于方法重定向</span><br><span class="line">- (void)forwardInvocation:(NSInvocation *)invocation &#123;</span><br><span class="line">    // 判断objc是否实现了该方法</span><br><span class="line">    if ([self.objc respondsToSelector:invocation.selector]) &#123;</span><br><span class="line">        // 让objc调用该方法</span><br><span class="line">        [invocation invokeWithTarget:self.objc];</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        // 找不到该方法</span><br><span class="line">        [invocation doesNotRecognizeSelector:invocation.selector];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">- (BOOL)respondsToSelector:(SEL)aSelector&#123;</span><br><span class="line">    return [self.objc respondsToSelector:aSelector];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>自定义 <code>Cat</code> 和 <code>Dog</code> 类</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">//********Cat类********</span><br><span class="line">@interface Cat : NSObject</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Cat</span><br><span class="line">- (void)eat&#123;</span><br><span class="line">   NSLog(@&quot;猫吃鱼&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">//********Dog类********</span><br><span class="line">@interface Dog : NSObject</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Dog</span><br><span class="line">- (void)shut&#123;</span><br><span class="line">    NSLog(@&quot;狗叫&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>通过 <code>ZJProxy</code> 实现 <code>多继承</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Dog * dog = [[Dog alloc] init];</span><br><span class="line">Cat * cat = [[Cat alloc] init];</span><br><span class="line">ZJProxy *proxy = [ZJProxy alloc];</span><br><span class="line">    </span><br><span class="line">[proxy transformObjc:cat];</span><br><span class="line">[proxy performSelector:@selector(eat)];</span><br><span class="line">    </span><br><span class="line">[proxy transformObjc:dog];</span><br><span class="line">[proxy performSelector:@selector(shut)];</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>【场景二】：通过 <code>ZJProxy</code> 解决 <code>NSTimer计时器中self强引用</code> 问题</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">self.timer = [NSTimer timerWithTimeInterval:1 target:[ZJProxy proxyWithObjc:self] selector:@selector(print) userInfo:nil repeats:YES];</span><br><span class="line">[[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];</span><br></pre></td></tr></table></figure></div>
+
+<p>别忘了在 <code>dealloc</code> 中调用 <code>[self.timer invalidate]</code></p>
+<p><strong>【场景三】：通过 <code>ZJProxy</code> 解决 <code>CADisplayLink计时器中self强引用</code> 问题</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">self.link = [CADisplayLink displayLinkWithTarget:[ZJProxy proxyWithObjc:self] selector:@selector(linkMethod:)];</span><br><span class="line">[self.link addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];</span><br></pre></td></tr></table></figure></div>
+
+<p>同样，别忘了在 <code>dealloc</code> 中调用 <code>[self.link invalidate]</code></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>循环引用的解决方式，从根本上来说就两种，以 <code>self -&gt; block -&gt; self</code> 为例：</p>
+<ul>
+<li><p>打破 <code>self</code> 对 <code>block</code> 的强引用，可以block属性修饰符使用 <code>weak</code>，但是这样会导致blcok还没有创建完就释放了，所以从这里打破强引用行不通。</p>
+</li>
+<li><p>打破 <code>block</code> 对 <code>self</code> 的强引用，主要就是self的作用域和block的作用域的 <code>通讯</code>，通讯有 <code>代理、传值、通知、传参</code> 等几种方式，用于解决循环引用。</p>
+<ul>
+<li><code>weak-strong-dance</code></li>
+<li><code>__block（block内对象置空，且调用block）</code></li>
+<li>将对象 <code>self</code> 作为block的参数</li>
+<li>通过 <code>NSProxy</code> 子类代替 <code>self</code></li>
+</ul>
+</li>
+</ul>
+<h1 id="Block-底层本质"><a href="#Block-底层本质" class="headerlink" title="Block 底层本质"></a>Block 底层本质</h1><p>主要是通过 <code>clang、断点调试</code> 等方式分析Block底层</p>
+<p><strong>本质</strong></p>
+<ul>
+<li>定义 <code>block.c</code> 文件</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;stdio.h&quot;</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">    void(^block)(void) = ^&#123;</span><br><span class="line">        printf(&quot;ZJ&quot;);</span><br><span class="line">    &#125;;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>到 <code>block.c</code> 文件目录，通过 <code>xcrun -sdk iphonesimulator clang -arch x86_64 -rewrite-objc block.c</code>，将 <code>block.c</code> 编译成 <code>block.app</code>，其中block在底层被编译成了一下的形式：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int main()&#123;</span><br><span class="line">    void(*block)(void) = ((void (*)())&amp;__main_block_impl_0((void *)__main_block_func_0, &amp;__main_block_desc_0_DATA));</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>简化后：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 构造函数</span><br><span class="line">void(*block)(void) = __main_block_impl_0(__main_block_func_0, &amp;__main_block_desc_0_DATA));</span><br><span class="line"></span><br><span class="line">// block调用执行</span><br><span class="line">block-&gt;FuncPtr(block);</span><br></pre></td></tr></table></figure></div>
+
+<p>相当于 <code>block</code> 等于 <code>__main_block_impl_0</code>，是一个 <code>函数</code></p>
+<!--如果出现报错：xcrun: error: SDK "iphonesimulator" cannot be located:
+解决办法：Xcode -> Preferences -> Locations -> Command Line Tools：选择一下你现在用的版本即可
+-->
+
+<ul>
+<li>查看<code>__main_block_impl_0</code>，是一个 <code>结构体</code>，同时可以说明 <code>block</code> 是一个<code>__main_block_impl_0</code> 类型的 <code>对象</code>，这也是为什么 <code>block</code> 能够 <code>%@</code> 打印的原因</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// block代码块的结构体类型</span><br><span class="line">struct __main_block_impl_0 &#123;</span><br><span class="line">  struct __block_impl impl;</span><br><span class="line">  struct __main_block_desc_0* Desc;</span><br><span class="line">  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int flags=0) &#123;</span><br><span class="line">    impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">    impl.Flags = flags;</span><br><span class="line">    impl.FuncPtr = fp;</span><br><span class="line">    Desc = desc;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">// block_impl的结构体类型</span><br><span class="line">struct __block_impl &#123;</span><br><span class="line">  void *isa;</span><br><span class="line">  int Flags;</span><br><span class="line">  int Reserved;</span><br><span class="line">  void *FuncPtr;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>【总结】</strong>：<code>block</code> 的 <code>本质</code> 是 <code>对象、函数、结构体</code>，由于block函数没有名称，也被称为 <code>匿名函数</code></p>
+<p><code>block</code> 通过 <code>clang</code> 编译后的源码间的关系如下图所示：以 <code>block</code> 修饰的变量为例：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/128323860-4a3e3ea3-1e0a-417b-add6-3031b15a2920.png"
+                     
+                ></p>
+<p><strong>1、block为什么需要调用？</strong></p>
+<p>在底层block的类型 <code>__main_block_imp_0</code> 结构体，通过其同名构造函数创建，第一个传入的block内部实现代码块，即 <code>__main_block_func_0</code>，用 <code>fp</code> 表示，然后赋值给 <code>impl</code> 属性，然后在 <code>main</code> 中进行了调用，这也是block为什么需要调用的原因。如果不调用，block内部实现的代码块将无法执行，可以总结以下两点：</p>
+<ul>
+<li><p><code>函数声明</code>：即block内部实现声明了一个函数 <code>__main_block_func_0</code></p>
+</li>
+<li><p><code>执行具体的函数实现</code>：通过调用block的<code>FuncPstr</code>指针，调用<code>block</code></p>
+</li>
+</ul>
+<p><strong>2、block是如何获取外界变量的</strong></p>
+<ul>
+<li>定义一个变量，并在block中调用</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int main()&#123;</span><br><span class="line">    int a = 10;</span><br><span class="line">    void(^block)(void) = ^&#123;</span><br><span class="line">        printf(&quot;ZJ - %ld&quot;,a);</span><br><span class="line">    &#125;;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>底层编译后</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">struct __main_block_impl_0 &#123;</span><br><span class="line">  struct __block_impl impl;</span><br><span class="line">  struct __main_block_desc_0* Desc;</span><br><span class="line">  int a; // 编译时就自动生成了相应的变量</span><br><span class="line">  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int _a, int flags=0) : a(_a) &#123;</span><br><span class="line">    impl.isa = &amp;_NSConcreteStackBlock; // block的isa默认是stackBlock</span><br><span class="line">    impl.Flags = flags;</span><br><span class="line">    impl.FuncPtr = fp; // 函数指针赋值</span><br><span class="line">    Desc = desc;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">static void __main_block_func_0(struct __main_block_impl_0 *__cself) &#123;</span><br><span class="line">  int a = __cself-&gt;a; // bound by copy 值拷贝，即 a = 10，此时的a于传入的__cself的a并不是同一个</span><br><span class="line">        printf(&quot;ZJ - %ld&quot;,a);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">static struct __main_block_desc_0 &#123;</span><br><span class="line">  size_t reserved;</span><br><span class="line">  size_t Block_size;</span><br><span class="line">&#125; __main_block_desc_0_DATA = &#123; 0, sizeof(struct __main_block_impl_0)&#125;;</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">    int a = 10;</span><br><span class="line">    void(*block)(void) = ((void (*)())&amp;__main_block_impl_0((void *)__main_block_func_0, &amp;__main_block_desc_0_DATA, a));</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><code>__main_block_func_0</code> 中的 <code>a</code> 是 <code>值拷贝</code>，如果此时在block内部实现中做 <code>a++</code> 操作，是有问题的，会造成编译器的代码歧义，即此时的 <code>a</code> 是只读的</p>
+<p><strong>总结：</strong> block捕获外界变量时，在 <code>内部会自动生成同一个属性来保存</code></p>
+<h1 id="block的原理"><a href="#block的原理" class="headerlink" title="__block的原理"></a>__block的原理</h1><ul>
+<li>对 <code>a</code> 加一个 <code>__block</code>，然后在block中对 <code>a</code> 进行 <code>++</code> 操作</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">int main()&#123;</span><br><span class="line">    __block int a = 10;</span><br><span class="line">    void(^block)(void) = ^&#123;</span><br><span class="line">        a ++;</span><br><span class="line">        printf(&quot;ZJ - %ld&quot;,a);</span><br><span class="line">    &#125;;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>底层编译如下：</p>
+<ul>
+<li>main中的 <code>a</code> 是通过外界变量封装的 <code>对象</code></li>
+<li><code>__main_block_impl_0</code> 中，将 <code>对象a</code> 的地址 <code>&amp;a</code> 给构造函数</li>
+<li>在 <code>__main_block_func_0</code> 内部对a的处理是 <code>指针拷贝</code>，此时创建的对象a与传入对象的a <code>指向同一片内存空间</code></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">// __block修饰的外界变量结构体</span><br><span class="line">struct __Block_byref_a_0 &#123; </span><br><span class="line">  void *__isa;</span><br><span class="line">__Block_byref_a_0 *__forwarding;</span><br><span class="line"> int __flags;</span><br><span class="line"> int __size;</span><br><span class="line"> int a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// __block的结构体类型</span><br><span class="line">struct __main_block_impl_0 &#123; </span><br><span class="line">  struct __block_impl impl;</span><br><span class="line">  struct __main_block_desc_0* Desc;</span><br><span class="line">  __Block_byref_a_0 *a; // by ref</span><br><span class="line">  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, __Block_byref_a_0 *_a, int flags=0) : a(_a-&gt;__forwarding) &#123;</span><br><span class="line">    impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">    impl.Flags = flags;</span><br><span class="line">    impl.FuncPtr = fp;</span><br><span class="line">    Desc = desc;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// block内部实现</span><br><span class="line">static void __main_block_func_0(struct __main_block_impl_0 *__cself) &#123;</span><br><span class="line">  __Block_byref_a_0 *a = __cself-&gt;a; // bound by ref 指针拷贝，此时对象a 与 __cself对象的a指向同一片地址空间</span><br><span class="line">        // 等同于 外界的a++</span><br><span class="line">        (a-&gt;__forwarding-&gt;a) ++;</span><br><span class="line">        printf(&quot;ZJ - %ld&quot;,(a-&gt;__forwarding-&gt;a));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">    // __Block_byref_a_0 是结构体，a 等于 结构体的赋值，即外界变量a 封装成对象</span><br><span class="line">    // &amp;a 是外界变量a的地址</span><br><span class="line">    __attribute__((__blocks__(byref))) __Block_byref_a_0 a = &#123;(void*)0,(__Block_byref_a_0 *)&amp;a, 0, sizeof(__Block_byref_a_0), 10&#125;;</span><br><span class="line">    // _main_block_img_0中的第三个参数&amp;a，是封装对象a的地址</span><br><span class="line">    void(*block)(void) = ((void (*)())&amp;__main_block_impl_0((void *)__main_block_func_0, &amp;__main_block_desc_0_DATA, (__Block_byref_a_0 *)&amp;a, 570425344));</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>总结：</strong></p>
+<ul>
+<li><code>外界变量</code> 会生成 <code>__block_byref_a_0</code> 结构体</li>
+<li>结构体用来 <code>保存原始变量的指针和值</code></li>
+<li>将变量生成的 <code>结构体对象的指针地址，传递给block</code>，然后在block内部就可以对外界变量进行操作了</li>
+</ul>
+<p><strong>两种拷贝对比：</strong></p>
+<ul>
+<li><p><code>值拷贝</code>：-<code>深拷贝</code>，只是拷贝值，且拷贝的值不可以更改，指向不同的内存空间，案列中普通变量<code>a</code>就是<code>值拷贝</code></p>
+</li>
+<li><p><code>指针拷贝</code>：-<code>浅拷贝</code>，生成的对象指向同一片内存空间，案列中经过<code>__block</code>修饰的变量<code>a</code>就是 <code>指针拷贝</code></p>
+</li>
+</ul>
+<h1 id="block底层的真正类型"><a href="#block底层的真正类型" class="headerlink" title="block底层的真正类型"></a>block底层的真正类型</h1><p><strong>分析block源码所在位置</strong></p>
+<ul>
+<li>运行下面的代码，并开启 <code>Always Show Disassembly</code>反汇编</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int a = 10;</span><br><span class="line">void(^block)(void) = ^&#123;</span><br><span class="line">    NSLog(@&quot;ZJ = %d&quot;,a);</span><br><span class="line">&#125;;</span><br><span class="line">block();</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>通过在block处打断点，分析运行时的block</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/128460979-d5e44fb3-836e-4a67-adfd-4325e6de4fa6.png"
+                     
+                ></p>
+<ul>
+<li>加 <code>objc_retainBlock</code> 符号断点，发现会走到 <code>_Block_copy</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/128461677-621a5b62-43d6-4d20-9bb7-54843152f766.png"
+                     
+                ></p>
+<ul>
+<li>加 <code>_Block_copy</code> 符号断点，运行时在 <code>libsystem_blocks.dylib</code> 源码中</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/128461750-54867562-1cba-4a3b-a01a-8fe498ebb01b.png"
+                     
+                ></p>
+<p>可以到苹果开源网站下载最新的 <a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/source/libclosure/" >libcloseure-074 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 源码，通过查看 <code>_Block_copy</code> 的源码实现，发现block底层的真正类型是<code>_Block_layout</code></p>
+<h1 id="Block的真正类型"><a href="#Block的真正类型" class="headerlink" title="Block的真正类型"></a>Block的真正类型</h1><p>查看 <code>Block_layout</code> 类型的定义，是一个结构体：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// Block 结构体</span><br><span class="line">struct Block_layout &#123;</span><br><span class="line">    // 指向表明block类型的类</span><br><span class="line">    void *isa; // 8字节</span><br><span class="line">    // 用来作标识符的，类似于isa中的位域,按bit位表示一些block的附加信息</span><br><span class="line">    volatile int32_t flags; // contains ref count 4字节</span><br><span class="line">    // 保留信息，可以理解预留位置，用于存储block内部变量信息</span><br><span class="line">    int32_t reserved; // 4字节</span><br><span class="line">    // 函数指针，指向具体的block实现的调用地址</span><br><span class="line">    BlockInvokeFunction invoke;</span><br><span class="line">    // block的附加信息</span><br><span class="line">    struct Block_descriptor_1 *descriptor;</span><br><span class="line">    // imported variables</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p><code>isa</code>：指向表明block类型的类</p>
+</li>
+<li><p><code>flags</code>：标识符，按bit位表示一些block的附加信息，类似于isa中的位域，其中<code>flags</code> 的种类有以下几种，主要重点关注 <code>BLOCK_HAS_COPY_DISPOSE</code> 和 <code>BLOCK_HAS_SIGNATURE</code>。<code>BLOCK_HAS_COPY_DISPOSE</code> 决定是否有<code>Block_descriptor_2</code>。<code>BLOCK_HAS_SIGNATURE</code> 决定是否有<code>Block_descriptor_3</code>：</p>
+<ul>
+<li>第1 位 - <code>BLOCK_DEALLOCATING</code>，释放标记，-般常用 <code>BLOCK_NEEDS_FREE</code> 做 <code>位与</code> 操作，一同传入 <code>Flags</code> ， 告知该 <code>block</code> 可释放。 </li>
+<li>低16位 - <code>BLOCK_REFCOUNT_MASK</code>，存储引用计数的值;是一个可选用参数</li>
+<li>第24位 - <code>BLOCK_NEEDS_FREE</code>，低16是否有效的标志，程序根据它来决定是否增加或是减少引用计数位的 值;</li>
+<li>第25位 - <code>BLOCK_HAS_COPY_DISPOSE</code>，是否拥有拷贝辅助函数(a copy helper function);</li>
+<li>第26位 - <code>BLOCK_IS_GC</code>，是否拥有 <code>block</code> 析构函数;</li>
+<li>第27位，标志是否有垃圾回收; </li>
+<li>第28位 - <code>BLOCK_IS_GLOBAL</code>，标志是否是全局block;</li>
+<li>第30位 - <code>BLOCK_HAS_SIGNATURE</code>，与 <code>BLOCK_USE_STRET</code> 相对，判断当前 <code>block</code> 是否拥有一个签名。用于 <code>runtime</code> 时动态调用。</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">// 注释: flags 标识</span><br><span class="line">// Values for Block_layout-&gt;flags to describe block objects</span><br><span class="line">enum &#123;</span><br><span class="line">    // 释放标记，一般常用于BLOCK_BYREF_NEEDS_FREE做位与运算，一同传入flags，告知该block可释放</span><br><span class="line">    BLOCK_DEALLOCATING =      (0x0001),  // runtime</span><br><span class="line">    // 存储引用引用计数的 值，是一个可选用参数</span><br><span class="line">    BLOCK_REFCOUNT_MASK =     (0xfffe),  // runtime</span><br><span class="line">    // 低16位是否有效的标志，程序根据它来决定是否增加或者减少引用计数位的值</span><br><span class="line">    BLOCK_NEEDS_FREE =        (1 &lt;&lt; 24), // runtime</span><br><span class="line">    // 是否拥有拷贝辅助函数，（a copy helper function）决定block_description_2</span><br><span class="line">    BLOCK_HAS_COPY_DISPOSE =  (1 &lt;&lt; 25), // compiler</span><br><span class="line">    // 是否拥有block C++析构函数</span><br><span class="line">    BLOCK_HAS_CTOR =          (1 &lt;&lt; 26), // compiler: helpers have C++ code</span><br><span class="line">    // 标志是否有垃圾回收，OSX</span><br><span class="line">    BLOCK_IS_GC =             (1 &lt;&lt; 27), // runtime</span><br><span class="line">    // 标志是否是全局block</span><br><span class="line">    BLOCK_IS_GLOBAL =         (1 &lt;&lt; 28), // compiler</span><br><span class="line">    // 与BLOCK_HAS_SIGNATURE相对，判断是否当前block拥有一个签名，用于runtime时动态调用</span><br><span class="line">    BLOCK_USE_STRET =         (1 &lt;&lt; 29), // compiler: undefined if !BLOCK_HAS_SIGNATURE</span><br><span class="line">    // 是否有签名</span><br><span class="line">    BLOCK_HAS_SIGNATURE  =    (1 &lt;&lt; 30), // compiler</span><br><span class="line">    // 使用有拓展，决定block_description_3</span><br><span class="line">    BLOCK_HAS_EXTENDED_LAYOUT=(1 &lt;&lt; 31)  // compiler</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p><code>reserved</code>：保留信息，可以理解预留位置，猜测是用于存储block内部变量信息</p>
+</li>
+<li><p><code>invoke</code>：是一个函数指针，指向block的执行代码</p>
+</li>
+<li><p><code>descriptor：</code> block的附加信息，比如保留变量数、block的大小、进行copy或dispose的辅助函数指针。有三类：</p>
+<ul>
+<li><code>Block_descriptor_1</code> 是必选的</li>
+<li><code>Block_descriptor_2</code> 和 <code>Block_descriptor_3</code> 都是可选的</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#define BLOCK_DESCRIPTOR_1 1</span><br><span class="line">struct Block_descriptor_1 &#123;</span><br><span class="line">    uintptr_t reserved;//保留信息</span><br><span class="line">    uintptr_t size;//block大小</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">#define BLOCK_DESCRIPTOR_2 1</span><br><span class="line">struct Block_descriptor_2 &#123;</span><br><span class="line">    // requires BLOCK_HAS_COPY_DISPOSE</span><br><span class="line">    BlockCopyFunction copy;//拷贝函数指针</span><br><span class="line">    BlockDisposeFunction dispose;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">#define BLOCK_DESCRIPTOR_3 1</span><br><span class="line">struct Block_descriptor_3 &#123;</span><br><span class="line">    // requires BLOCK_HAS_SIGNATURE</span><br><span class="line">    const char *signature;//签名</span><br><span class="line">    const char *layout;     // contents depend on BLOCK_HAS_EXTENDED_LAYOUT 布局</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<p>以上关于 <code>descriptor</code> 的可以从其构造函数中体现，其中 <code>Block_descriptor_2</code> 和<code>Block_descriptor_3</code> 都是通过 <code>Block_descriptor_1</code> 的地址，经过内存平移得到的</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">static struct Block_descriptor_1 * _Block_descriptor_1(struct Block_layout *aBlock)</span><br><span class="line">&#123;</span><br><span class="line">    return aBlock-&gt;descriptor;//默认打印</span><br><span class="line">&#125;</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">// 注释:Block 的描述 : copy 和 dispose 函数</span><br><span class="line">static struct Block_descriptor_2 * _Block_descriptor_2(struct Block_layout *aBlock)</span><br><span class="line">&#123;</span><br><span class="line">    if (! (aBlock-&gt;flags &amp; BLOCK_HAS_COPY_DISPOSE)) return NULL;</span><br><span class="line">    uint8_t *desc = (uint8_t *)aBlock-&gt;descriptor;//descriptor_1的地址</span><br><span class="line">    desc += sizeof(struct Block_descriptor_1);//通过内存平移获取</span><br><span class="line">    return (struct Block_descriptor_2 *)desc;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 注释: Block 的描述 : 签名相关</span><br><span class="line">static struct Block_descriptor_3 * _Block_descriptor_3(struct Block_layout *aBlock)</span><br><span class="line">&#123;</span><br><span class="line">    if (! (aBlock-&gt;flags &amp; BLOCK_HAS_SIGNATURE)) return NULL;</span><br><span class="line">    uint8_t *desc = (uint8_t *)aBlock-&gt;descriptor;</span><br><span class="line">    desc += sizeof(struct Block_descriptor_1);</span><br><span class="line">    if (aBlock-&gt;flags &amp; BLOCK_HAS_COPY_DISPOSE) &#123;</span><br><span class="line">        desc += sizeof(struct Block_descriptor_2);</span><br><span class="line">    &#125;</span><br><span class="line">    return (struct Block_descriptor_3 *)desc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="block内存变化"><a href="#block内存变化" class="headerlink" title="block内存变化"></a>block内存变化</h1><p><strong>1、没有外部变量的 <code>block</code>:</strong></p>
+<ul>
+<li>打断点运行，走到 <code>objc_retainBlock</code>，block断点处读取寄存器 <code>x0</code>，此时 <code>block</code> 是 <code>全局block</code>，即 <code>__NSGlobalBlock__</code>：</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/128474915-09c6eacc-62da-4479-a39c-865dd09b1f99.png"
+                     
+                ></p>
+<p><strong>2、增加外部变量a的block：</strong></p>
+<ul>
+<li>同上，执行到符号断点 <code>objc_retainBlock</code>，得到的 <code>block</code> 是 <code>栈block</code>，即<code>__NSStackBlock</code>：</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/128475461-5b02492b-5d28-46d8-a161-b6118cd0140e.png"
+                     
+                ></p>
+<ul>
+<li>增加 <code>_Block_copy</code> 符号断点并断住，直接在最后的 <code>ret</code> 加断点，读取 <code>x0</code>，发现经过 <code>_Block_copy</code> 之后，变成了 <code>堆block</code>，即 <code>__NSMallocBlock__</code>，主要是因为block地址发生了改变，为堆 <code>block</code>:</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/128476618-ceecf044-162b-4084-9164-8fd07d474982.png"
+                     
+                ></p>
+<p><strong>调用情况</strong></p>
+<ul>
+<li>同样也可以通过断点来验证</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508769047375.jpg"
+                     
+                ></p>
+<ul>
+<li><p><code>register read x0</code> 读取x0，为堆block</p>
+</li>
+<li><p><code>register read x9</code> 读取x9</p>
+</li>
+<li><p><code>register read x11</code> ，此时是指向一片内存空间，用于存储 <code>_block_invoke</code></p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508769378666.jpg"
+                     
+                ></p>
+<ul>
+<li>按住 <code>control + step into</code>，进入 <code>_block_invoke</code>，可以得出是通过内存平移得到的block内部实现</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508769975300.jpg"
+                     
+                ></p>
+<p>前面提到的 <code>Block_layout</code> 的结构体源码,从源码中可以看出，有个属性 <code>invoke</code>，即block的执行者，是从 <code>isa</code> 的首地址平移 <code>16</code> 字节取到 <code>invoke</code>，然后进行调用执行的</p>
+<h1 id="签名"><a href="#签名" class="headerlink" title="签名"></a>签名</h1><ul>
+<li><p>继续操作，读取 <code>x0</code> 寄存器,看内存布局,通过 <code>内存平移 3*8</code> 就可获得 <code>Block_layout</code> 的属性 <code>descriptor</code>,主要是为了查看是否有 <code>Block_descriptor_2</code> 和 <code>Block_descriptor_3</code>，其中3中有block的签名</p>
+<ul>
+<li><code>register read x0</code>，读取寄存器x0</li>
+<li><code>po 0x00000002828a2160</code> ， 打印block</li>
+<li><code>x/8gx 0x00000002828a2160</code> ，即打印block内存情况</li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508771126805.jpg"
+                     
+                ></p>
+<ul>
+<li><code>x/8gx 0x00000001008a0010</code> ， 查看descriptor的内存情况，其中第三个<code>0x000000010089f395</code> 表示签名</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508771384080.jpg"
+                     
+                ></p>
+<ul>
+<li><p>判断是否有 <code>Block_descriptor_2</code>，即flags的 <code>BLOCK_HAS_COPY_DISPOSE</code>（拷贝辅助函数）是否有值</p>
+<ul>
+<li><code>p/x 1&lt;&lt;25</code> ，即1左移25位，其十六进制为 <code>0x2000000</code></li>
+<li><code>p 0x02000000 &amp; 0x00000000c1000002</code> ，即 <code>BLOCK_HAS_COPY_DISPOSE &amp; flags</code> ，等于0，表示没有 <code>Block_descriptor_2</code></li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508772073802.jpg"
+                     
+                ></p>
+<ul>
+<li><p>判断是否有 <code>Block_descriptor_3</code></p>
+<ul>
+<li><code>p/x 1&lt;&lt;30</code>，即1左移30位</li>
+<li><code>p 0x40000000 &amp; 0x00000000c1000002</code> ，即 <code>BLOCK_HAS_SIGNATURE &amp; flags</code> ，有值，说明有 <code>Block_descriptor_3</code></li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508772669653.jpg"
+                     
+                ></p>
+<ul>
+<li><code>p (char *)0x000000010089f395</code> – 获取 <code>Block_descriptor_3</code> 中的属性 <code>signature</code> 签名</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508772949416.jpg"
+                     
+                ></p>
+<ul>
+<li><code>po [NSMethodSignature signatureWithObjCTypes:&quot;v8@?0&quot;]</code> ，即打印签名</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508773252829.jpg"
+                     
+                ></p>
+<p><strong>其中签名的部分说明如下:</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//无返回值</span><br><span class="line">return value: -------- -------- -------- --------</span><br><span class="line">    type encoding (v) &#x27;v&#x27;</span><br><span class="line">    flags &#123;&#125;</span><br><span class="line">    modifiers &#123;&#125;</span><br><span class="line">    frame &#123;offset = 0, offset adjust = 0, size = 0, size adjust = 0&#125;</span><br><span class="line">    memory &#123;offset = 0, size = 0&#125;</span><br><span class="line">argument 0: -------- -------- -------- --------</span><br><span class="line">    //encoding = (@),类型是 @?</span><br><span class="line">    type encoding (@) &#x27;@?&#x27;</span><br><span class="line">    //@是isObject ，？是isBlock，代表 isBlockObject</span><br><span class="line">    flags &#123;isObject, isBlock&#125;</span><br><span class="line">    modifiers &#123;&#125;</span><br><span class="line">    frame &#123;offset = 0, offset adjust = 0, size = 8, size adjust = 0&#125;</span><br><span class="line">    //所在偏移位置是8字节</span><br><span class="line">    memory &#123;offset = 0, size = 8&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>block的签名信息类似于方法的签名信息，主要是体现block的返回值，参数以及类型等信息</p>
+<h1 id="block三次copy分析"><a href="#block三次copy分析" class="headerlink" title="block三次copy分析"></a>block三次copy分析</h1><p><strong>_Block_copy源码分析</strong></p>
+<p>进入 <code>_Block_copy</code> 源码，将 <code>block</code> 从栈区拷贝至堆区</p>
+<ul>
+<li><p>如果需要释放，则直接释放</p>
+</li>
+<li><p>如果是 <code>globalBlock</code> – 不需要copy，直接返回</p>
+</li>
+<li><p>反之，只有两种情况：<code>栈区block</code> or <code>堆区block</code>，由于堆区block需要申请空间，前面并没有申请空间的相关代码，所以只能是 <code>栈区block</code>:</p>
+<ul>
+<li><p>通过 <code>malloc</code> 申请内存空间用于接收block</p>
+</li>
+<li><p>通过 <code>memmove</code> 将block拷贝至新申请的内存中</p>
+</li>
+<li><p>设置block对象的类型为堆区block，即 <code>result-&gt;isa = _NSConcreteMallocBlock</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">// Copy, or bump refcount, of a block.  If really copying, call the copy helper if present.</span><br><span class="line">// 重点提示: 这里是核心重点 block的拷贝操作: 栈Block -&gt; 堆Block</span><br><span class="line">void *_Block_copy(const void *arg) &#123;</span><br><span class="line">    struct Block_layout *aBlock;</span><br><span class="line"></span><br><span class="line">    if (!arg) return NULL;</span><br><span class="line">    </span><br><span class="line">    // The following would be better done as a switch statement</span><br><span class="line">    aBlock = (struct Block_layout *)arg;//强转为Block_layout类型对象，防止对外界造成影响</span><br><span class="line">    if (aBlock-&gt;flags &amp; BLOCK_NEEDS_FREE) &#123;//是否需要释放</span><br><span class="line">        // latches on high</span><br><span class="line">        latching_incr_int(&amp;aBlock-&gt;flags);</span><br><span class="line">        return aBlock;</span><br><span class="line">    &#125;</span><br><span class="line">    else if (aBlock-&gt;flags &amp; BLOCK_IS_GLOBAL) &#123;//如果是全局block，直接返回</span><br><span class="line">        return aBlock;</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;//为栈block 或者 堆block，由于堆区需要申请内存，所以只可能是栈区</span><br><span class="line">        // Its a stack block.  Make a copy. 它是一个堆栈块block，拷贝。</span><br><span class="line">        struct Block_layout *result =</span><br><span class="line">            (struct Block_layout *)malloc(aBlock-&gt;descriptor-&gt;size);//申请空间并接收</span><br><span class="line">        if (!result) return NULL;</span><br><span class="line">        //通过memmove内存拷贝，将 aBlock 拷贝至result</span><br><span class="line">        memmove(result, aBlock, aBlock-&gt;descriptor-&gt;size); // bitcopy first</span><br><span class="line">#if __has_feature(ptrauth_calls)</span><br><span class="line">        // Resign the invoke pointer as it uses address authentication.</span><br><span class="line">        result-&gt;invoke = aBlock-&gt;invoke;//可以直接调起invoke</span><br><span class="line">#endif</span><br><span class="line">        // reset refcount</span><br><span class="line">        result-&gt;flags &amp;= ~(BLOCK_REFCOUNT_MASK|BLOCK_DEALLOCATING);    // XXX not needed 告知可释放</span><br><span class="line">        result-&gt;flags |= BLOCK_NEEDS_FREE | 2;  // logical refcount 1</span><br><span class="line">        _Block_call_copy_helper(result, aBlock);</span><br><span class="line">        // Set isa last so memory analysis tools see a fully-initialized object.</span><br><span class="line">        result-&gt;isa = _NSConcreteMallocBlock;//设置block对象类型为堆区block</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>_Block_ovject_assign分析</strong></p>
+<p>想要分析block的三层copy，首先需要知道外部变量的种类有哪些，其中用的最多的是 <code>BLOCK_FIELD_IS_OBJECT</code> 和 <code>BLOCK_FIELD_IS_BYREF</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 注释: Block 捕获的外界变量的种类</span><br><span class="line">// Runtime support functions used by compiler when generating copy/dispose helpers</span><br><span class="line"></span><br><span class="line">// Values for _Block_object_assign() and _Block_object_dispose() parameters</span><br><span class="line">enum &#123;</span><br><span class="line">    // see function implementation for a more complete description of these fields and combinations</span><br><span class="line">    //普通对象，即没有其他的引用类型</span><br><span class="line">    BLOCK_FIELD_IS_OBJECT   =  3,  // id, NSObject, __attribute__((NSObject)), block, ...</span><br><span class="line">    //block类型作为变量</span><br><span class="line">    BLOCK_FIELD_IS_BLOCK    =  7,  // a block variable</span><br><span class="line">    //经过__block修饰的变量</span><br><span class="line">    BLOCK_FIELD_IS_BYREF    =  8,  // the on stack structure holding the __block variable</span><br><span class="line">    //weak 弱引用变量</span><br><span class="line">    BLOCK_FIELD_IS_WEAK     = 16,  // declared __weak, only used in byref copy helpers</span><br><span class="line">    //返回的调用对象 - 处理block_byref内部对象内存会加的一个额外标记，配合flags一起使用</span><br><span class="line">    BLOCK_BYREF_CALLER      = 128, // called from __block (byref) copy/dispose support routines.</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<p>而 <code>_Block_object_assign</code> 是在底层编译代码中，外部变量拷贝时调用的方法就是它</p>
+<ul>
+<li><p>进入 <code>_Block_object_assign</code> 源码</p>
+<ul>
+<li><p>如果是普通对象，则交给 <code>系统arc处理</code>，并拷贝 <code>对象指针</code>，即 <code>引用计数+1</code>，所以外界变量不能释放</p>
+</li>
+<li><p>如果是 <code>block类型</code> 的变量，则通过 <code>_Block_copy</code> 操作，将block从栈区拷贝到堆区</p>
+</li>
+<li><p>如果是 <code>__block修饰</code> 的变量，调用 <code>_Block_byref_copy</code> 函数 进行内存拷贝以及常规处理</p>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">static struct Block_byref *_Block_byref_copy(const void *arg) &#123;</span><br><span class="line">    </span><br><span class="line">    //强转为Block_byref结构体类型，保存一份</span><br><span class="line">    struct Block_byref *src = (struct Block_byref *)arg;</span><br><span class="line"></span><br><span class="line">    if ((src-&gt;forwarding-&gt;flags &amp; BLOCK_REFCOUNT_MASK) == 0) &#123;</span><br><span class="line">        // src points to stack 申请内存</span><br><span class="line">        struct Block_byref *copy = (struct Block_byref *)malloc(src-&gt;size);</span><br><span class="line">        copy-&gt;isa = NULL;</span><br><span class="line">        // byref value 4 is logical refcount of 2: one for caller, one for stack</span><br><span class="line">        copy-&gt;flags = src-&gt;flags | BLOCK_BYREF_NEEDS_FREE | 4;</span><br><span class="line">        // block内部持有的Block_byref 和 外界的Block_byref 所持有的对象是同一个，这也是为什么__block修饰的变量具有修改能力</span><br><span class="line">        // copy 和 scr 的地址指针达到了完美的同一份拷贝，目前只有持有能力</span><br><span class="line">        copy-&gt;forwarding = copy; // patch heap copy to point to itself</span><br><span class="line">        src-&gt;forwarding = copy;  // patch stack to point to heap copy</span><br><span class="line">        copy-&gt;size = src-&gt;size;</span><br><span class="line">        // 如果有copy能力</span><br><span class="line">        if (src-&gt;flags &amp; BLOCK_BYREF_HAS_COPY_DISPOSE) &#123;</span><br><span class="line">            // Trust copy helper to copy everything of interest</span><br><span class="line">            // If more than one field shows up in a byref block this is wrong XXX</span><br><span class="line">            //Block_byref_2是结构体，__block修饰的可能是对象，对象通过byref_keep保存，在合适的时机进行调用</span><br><span class="line">            struct Block_byref_2 *src2 = (struct Block_byref_2 *)(src+1);</span><br><span class="line">            struct Block_byref_2 *copy2 = (struct Block_byref_2 *)(copy+1);</span><br><span class="line">            copy2-&gt;byref_keep = src2-&gt;byref_keep;</span><br><span class="line">            copy2-&gt;byref_destroy = src2-&gt;byref_destroy;</span><br><span class="line"></span><br><span class="line">            if (src-&gt;flags &amp; BLOCK_BYREF_LAYOUT_EXTENDED) &#123;</span><br><span class="line">                struct Block_byref_3 *src3 = (struct Block_byref_3 *)(src2+1);</span><br><span class="line">                struct Block_byref_3 *copy3 = (struct Block_byref_3*)(copy2+1);</span><br><span class="line">                copy3-&gt;layout = src3-&gt;layout;</span><br><span class="line">            &#125;</span><br><span class="line">            // 等价于 __Block_byref_id_object_copy</span><br><span class="line">            (*src2-&gt;byref_keep)(copy, src);</span><br><span class="line">        &#125;</span><br><span class="line">        else &#123;</span><br><span class="line">            // Bitwise copy.</span><br><span class="line">            // This copy includes Block_byref_3, if any.</span><br><span class="line">            memmove(copy+1, src+1, src-&gt;size - sizeof(*src));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    // already copied to heap</span><br><span class="line">    else if ((src-&gt;forwarding-&gt;flags &amp; BLOCK_BYREF_NEEDS_FREE) == BLOCK_BYREF_NEEDS_FREE) &#123;</span><br><span class="line">        latching_incr_int(&amp;src-&gt;forwarding-&gt;flags);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return src-&gt;forwarding;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>进入 <code>_Block_byref_copy</code> 源码</p>
+<ul>
+<li><p>将传入的对象，强转为 <code>Block_byref</code> 结构体类型对象，保存一份</p>
+</li>
+<li><p>没有将外界变量拷贝到堆，需要申请内存，其进行拷贝</p>
+</li>
+<li><p>如果已经拷贝过了，则进行处理并返回</p>
+</li>
+<li><p>其中 <code>copy</code> 和src的 <code>forwarding</code> 指针都指向同一片内存，这也是为什么__block修饰的对象具有修改能力的原因</p>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">static struct Block_byref *_Block_byref_copy(const void *arg) &#123;</span><br><span class="line">    </span><br><span class="line">    //强转为Block_byref结构体类型，保存一份</span><br><span class="line">    struct Block_byref *src = (struct Block_byref *)arg;</span><br><span class="line"></span><br><span class="line">    if ((src-&gt;forwarding-&gt;flags &amp; BLOCK_REFCOUNT_MASK) == 0) &#123;</span><br><span class="line">        // src points to stack 申请内存</span><br><span class="line">        struct Block_byref *copy = (struct Block_byref *)malloc(src-&gt;size);</span><br><span class="line">        copy-&gt;isa = NULL;</span><br><span class="line">        // byref value 4 is logical refcount of 2: one for caller, one for stack</span><br><span class="line">        copy-&gt;flags = src-&gt;flags | BLOCK_BYREF_NEEDS_FREE | 4;</span><br><span class="line">        //block内部持有的Block_byref 和 外界的Block_byref 所持有的对象是同一个，这也是为什么__block修饰的变量具有修改能力</span><br><span class="line">        //copy 和 scr 的地址指针达到了完美的同一份拷贝，目前只有持有能力</span><br><span class="line">        copy-&gt;forwarding = copy; // patch heap copy to point to itself</span><br><span class="line">        src-&gt;forwarding = copy;  // patch stack to point to heap copy</span><br><span class="line">        copy-&gt;size = src-&gt;size;</span><br><span class="line">        //如果有copy能力</span><br><span class="line">        if (src-&gt;flags &amp; BLOCK_BYREF_HAS_COPY_DISPOSE) &#123;</span><br><span class="line">            // Trust copy helper to copy everything of interest</span><br><span class="line">            // If more than one field shows up in a byref block this is wrong XXX</span><br><span class="line">            //Block_byref_2是结构体，__block修饰的可能是对象，对象通过byref_keep保存，在合适的时机进行调用</span><br><span class="line">            struct Block_byref_2 *src2 = (struct Block_byref_2 *)(src+1);</span><br><span class="line">            struct Block_byref_2 *copy2 = (struct Block_byref_2 *)(copy+1);</span><br><span class="line">            copy2-&gt;byref_keep = src2-&gt;byref_keep;</span><br><span class="line">            copy2-&gt;byref_destroy = src2-&gt;byref_destroy;</span><br><span class="line"></span><br><span class="line">            if (src-&gt;flags &amp; BLOCK_BYREF_LAYOUT_EXTENDED) &#123;</span><br><span class="line">                struct Block_byref_3 *src3 = (struct Block_byref_3 *)(src2+1);</span><br><span class="line">                struct Block_byref_3 *copy3 = (struct Block_byref_3*)(copy2+1);</span><br><span class="line">                copy3-&gt;layout = src3-&gt;layout;</span><br><span class="line">            &#125;</span><br><span class="line">            //等价于 __Block_byref_id_object_copy</span><br><span class="line">            (*src2-&gt;byref_keep)(copy, src);</span><br><span class="line">        &#125;</span><br><span class="line">        else &#123;</span><br><span class="line">            // Bitwise copy.</span><br><span class="line">            // This copy includes Block_byref_3, if any.</span><br><span class="line">            memmove(copy+1, src+1, src-&gt;size - sizeof(*src));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    // already copied to heap</span><br><span class="line">    else if ((src-&gt;forwarding-&gt;flags &amp; BLOCK_BYREF_NEEDS_FREE) == BLOCK_BYREF_NEEDS_FREE) &#123;</span><br><span class="line">        latching_incr_int(&amp;src-&gt;forwarding-&gt;flags);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return src-&gt;forwarding;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>代码调试</strong></p>
+<ul>
+<li>定义一个 <code>__block</code> 修饰的 <code>NSString对象</code>：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> __block NSString * zj_name = [NSString stringWithFormat:@&quot;ZJ&quot;];</span><br><span class="line">void (^block1)(void) = ^&#123; // block_copy</span><br><span class="line">    zj_name = @&quot;ZJ&quot;;</span><br><span class="line">    NSLog(@&quot;ZJ - %@&quot;,zj_name);</span><br><span class="line">    </span><br><span class="line">    // block 内存</span><br><span class="line">&#125;;</span><br><span class="line">block1();</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>xcrun编译结果如下：</p>
+<ul>
+<li><p>编译后的 <code>zj_name</code> 比普通变量多了 <code>__Block_byref_id_object_copy_131</code> 和 <code>__Block_byref_id_object_dispose_131</code></p>
+</li>
+<li><p><code>__Block_byref_zj_name_0</code> 结构体中多了 <code>__Block_byref_id_object_copy</code> 和 <code>__Block_byref_id_object_dispose</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">//********编译后的zj_name********</span><br><span class="line"> __Block_byref_zj_name_0 zj_name =</span><br><span class="line">        &#123;(void*)0,</span><br><span class="line">            (__Block_byref_zj_name_0 *)&amp;zj_name,</span><br><span class="line">            33554432,</span><br><span class="line">            sizeof(__Block_byref_zj_name_0),</span><br><span class="line">            __Block_byref_id_object_copy_131,</span><br><span class="line">            __Block_byref_id_object_dispose_131,</span><br><span class="line">            ((NSString * _Nonnull (*)(id, SEL, NSString * _Nonnull, ...))(void *)objc_msgSend)((id)objc_getClass(&quot;NSString&quot;), sel_registerName(&quot;stringWithFormat:&quot;), (NSString *)&amp;__NSConstantStringImpl__var_folders_hr_l_56yp8j4y11491njzqx6f880000gn_T_main_9f330d_mi_0)&#125;;</span><br><span class="line">            </span><br><span class="line">//********__Block_byref_zj_name_0结构体********</span><br><span class="line">struct __Block_byref_zj_name_0 &#123;</span><br><span class="line">  void *__isa;</span><br><span class="line">__Block_byref_zj_name_0 *__forwarding;</span><br><span class="line"> int __flags;</span><br><span class="line"> int __size;</span><br><span class="line"> void (*__Block_byref_id_object_copy)(void*, void*);</span><br><span class="line"> void (*__Block_byref_id_object_dispose)(void*);  // 5*8 = 40</span><br><span class="line"> NSString *zj_name;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"> //********__Block_byref_id_object_copy_131********</span><br><span class="line"> //block自身拷贝（_Block_copy） -- __block bref结构体拷贝(_Block_object_assign) -- _Block_object_assign中对外部变量（存储在bref）拷贝一份到内存</span><br><span class="line">static void __Block_byref_id_object_copy_131(void *dst, void *src) &#123;</span><br><span class="line">    // dst 外部捕获的变量，即结构体 - 5*8 = 40，然后就找到了zj_name(zj_name在bref初始化时就赋值了)</span><br><span class="line">    _Block_object_assign((char*)dst + 40, *(void * *) ((char*)src + 40), 131);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> //********__Block_byref_id_object_dispose_131********</span><br><span class="line">static void __Block_byref_id_object_dispose_131(void *src) &#123;</span><br><span class="line"> _Block_object_dispose(*(void * *) ((char*)src + 40), 131);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>通过 <code>libclosure-74</code> 可编译源码断点调试，关键方法的执行顺序为：<code>_Block_copy -&gt; _Block_byref_copy -&gt; _Block_object_assign</code>,正好对应上述的三层copy</li>
+</ul>
+<p>综上所述，block是如何取到 <code>zj_name</code> 的？</p>
+<ul>
+<li><p>通过 <code>_Block_copy</code> 方法，将block拷贝一份至堆区</p>
+</li>
+<li><p>通过 <code>_Block_object_assign</code> 方法正常拷贝，因为__block修饰的外界变量在底层是 <code>Block_byref</code> 结构体</p>
+</li>
+<li><p>发现外部变量还存有一个对象，<code>从bref中取出相应对象zj_name</code>，拷贝至block空间，才能使用（相同空间才能使用，不同则不能使用）。最后通过 <code>内存平移</code> 就得到了 <code>zj_name</code>，此时的zj_name 和 外界的zj_name是同一片内存空间（从<code>_Block_object_assign</code> 方法中的 <code>*dest = object</code> 看出）</p>
+</li>
+</ul>
+<p><strong>三层copy总结</strong></p>
+<p>总上所述，block三层拷贝是指以下三层：</p>
+<ul>
+<li><p>【第一层】通过 <code>_Block_copy</code> 实现对象的 <code>自身拷贝</code>，从 <code>栈区</code> 拷贝到 <code>堆区</code></p>
+</li>
+<li><p>【第二层】通过 <code>_Block_byref_copy</code> 方法，将对象拷贝为 <code>Block_byref</code> 结构体类型</p>
+</li>
+<li><p>【第三层】通过 <code>_Block_object_assign</code> 方法，对 <code>__block</code> 修饰的 <code>当前变量的拷贝</code></p>
+</li>
+</ul>
+<p>注：只有 <code>__block修饰</code> 的对象，block即copy才有三层</p>
+<p><strong>_Block_object_dispose分析</strong></p>
+<p>同一般的 <code>retain</code> 和 <code>release</code> 一样，<code>_Block_object_dispose</code> 其本质主要是 <code>retain</code>，所以对应的还有一个 <code>release</code>，即 <code>_Block_object_dispose</code> 方法，其源码实现如下，也是通过区分block种类，进行不同释放操作</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">// When Blocks or Block_byrefs hold objects their destroy helper routines call this entry point</span><br><span class="line">// to help dispose of the contents 当Blocks或Block_byrefs持有对象时，其销毁助手例程将调用此入口点以帮助处置内容</span><br><span class="line">void _Block_object_dispose(const void *object, const int flags) &#123;</span><br><span class="line">    switch (os_assumes(flags &amp; BLOCK_ALL_COPY_DISPOSE_FLAGS)) &#123;</span><br><span class="line">      case BLOCK_FIELD_IS_BYREF | BLOCK_FIELD_IS_WEAK:</span><br><span class="line">      case BLOCK_FIELD_IS_BYREF://__block修饰的变量，即bref类型的</span><br><span class="line">        // get rid of the __block data structure held in a Block</span><br><span class="line">        _Block_byref_release(object);</span><br><span class="line">        break;</span><br><span class="line">      case BLOCK_FIELD_IS_BLOCK://block类型的变量</span><br><span class="line">        _Block_release(object) ;</span><br><span class="line">        break;</span><br><span class="line">      case BLOCK_FIELD_IS_OBJECT://普通对象</span><br><span class="line">        _Block_release_object(object);</span><br><span class="line">        break;</span><br><span class="line">      case BLOCK_BYREF_CALLER | BLOCK_FIELD_IS_OBJECT:</span><br><span class="line">      case BLOCK_BYREF_CALLER | BLOCK_FIELD_IS_BLOCK:</span><br><span class="line">      case BLOCK_BYREF_CALLER | BLOCK_FIELD_IS_OBJECT | BLOCK_FIELD_IS_WEAK:</span><br><span class="line">      case BLOCK_BYREF_CALLER | BLOCK_FIELD_IS_BLOCK  | BLOCK_FIELD_IS_WEAK:</span><br><span class="line">        break;</span><br><span class="line">      default:</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>进入 <code>_Block_byref_release</code> 源码，主要就是对象、变量的释放销毁</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">static void _Block_byref_release(const void *arg) &#123;</span><br><span class="line">    //对象强转为Block_byref类型结构体</span><br><span class="line">    struct Block_byref *byref = (struct Block_byref *)arg;</span><br><span class="line"></span><br><span class="line">    // dereference the forwarding pointer since the compiler isn&#x27;t doing this anymore (ever?)</span><br><span class="line">    byref = byref-&gt;forwarding;//取消指针引用</span><br><span class="line">    </span><br><span class="line">    if (byref-&gt;flags &amp; BLOCK_BYREF_NEEDS_FREE) &#123;</span><br><span class="line">        int32_t refcount = byref-&gt;flags &amp; BLOCK_REFCOUNT_MASK;</span><br><span class="line">        os_assert(refcount);</span><br><span class="line">        if (latching_decr_int_should_deallocate(&amp;byref-&gt;flags)) &#123;</span><br><span class="line">            if (byref-&gt;flags &amp; BLOCK_BYREF_HAS_COPY_DISPOSE) &#123;//是否有拷贝辅助函数</span><br><span class="line">                struct Block_byref_2 *byref2 = (struct Block_byref_2 *)(byref+1);</span><br><span class="line">                (*byref2-&gt;byref_destroy)(byref);//销毁拷贝对象</span><br><span class="line">            &#125;</span><br><span class="line">            free(byref);//释放</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>所以，综上所述，Block的 <code>三层copy</code> 的流程如下图所示：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508774872343.png"
+                     
+                ></p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC底层原理30：Block底层原理</li>
+        <li>Post author：张建</li>
+        <li>Create time：2021-04-22 14:46:32</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2021/04/22/OC进阶/OC底层原理30：Block底层原理/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/iOS-OC/">#iOS-OC</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2021/04/29/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8631%EF%BC%9ALLVM%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B-Cland%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理31：LLVM编译流程&amp;Cland插件开发</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2021/04/10/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8629%EF%BC%9A%E9%94%81%E7%9A%84%E5%8E%9F%E7%90%86/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理29：锁的原理</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC底层原理30：Block底层原理</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Block%E7%B1%BB%E5%9E%8B"><span class="nav-text">Block类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Block%E5%8F%98%E9%87%8F%E6%8D%95%E8%8E%B7"><span class="nav-text">Block变量捕获</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Block%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8"><span class="nav-text">Block循环引用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Block%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E8%A7%A3%E5%86%B3"><span class="nav-text">Block循环引用解决</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B7%E9%97%AE%E4%B8%8B%E9%9D%A2%E4%B8%A4%E6%AE%B5%E4%BB%A3%E7%A0%81%E6%98%AF%E5%90%A6%E6%9C%89%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%EF%BC%9F"><span class="nav-text">请问下面两段代码是否有循环引用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E5%B8%B8%E8%A7%81%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-text">解决循环引用常见的几种方式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Block-%E5%BA%95%E5%B1%82%E6%9C%AC%E8%B4%A8"><span class="nav-text">Block 底层本质</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#block%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-text">__block的原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#block%E5%BA%95%E5%B1%82%E7%9A%84%E7%9C%9F%E6%AD%A3%E7%B1%BB%E5%9E%8B"><span class="nav-text">block底层的真正类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Block%E7%9A%84%E7%9C%9F%E6%AD%A3%E7%B1%BB%E5%9E%8B"><span class="nav-text">Block的真正类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#block%E5%86%85%E5%AD%98%E5%8F%98%E5%8C%96"><span class="nav-text">block内存变化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AD%BE%E5%90%8D"><span class="nav-text">签名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#block%E4%B8%89%E6%AC%A1copy%E5%88%86%E6%9E%90"><span class="nav-text">block三次copy分析</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-10 02:25:58</span>
-            <span class="mobile">2023-03-10 02:25</span>
+            <span class="pc">2023-03-10 03:45:30</span>
+            <span class="mobile">2023-03-10 03:45</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -325,7 +325,125 @@
             
 
             <div class="article-content markdown-body">
-                
+                <h1 id="你了解线程么？谈谈你对进程和线程的理解？"><a href="#你了解线程么？谈谈你对进程和线程的理解？" class="headerlink" title="你了解线程么？谈谈你对进程和线程的理解？"></a>你了解线程么？谈谈你对进程和线程的理解？</h1><ul>
+<li><p>进程是 <code>系统进行资源分配和调度的基本单位</code>，是操作系统结构的基础，进程是程序的实体。</p>
+</li>
+<li><p>线程是 <code>独立调度和分派的基本单位</code>，一条线程是进程中一个单一顺序的控制流。</p>
+</li>
+<li><p>同一进程中多条线程共享进程中的全部系统资源，一个进程有很多线程，一个进程可以并发多个线程。</p>
+</li>
+</ul>
+<h1 id="iOS中，有哪些实现多线程的方式？"><a href="#iOS中，有哪些实现多线程的方式？" class="headerlink" title="iOS中，有哪些实现多线程的方式？"></a>iOS中，有哪些实现多线程的方式？</h1><blockquote>
+<p>Pthread<br>   特点：C语言。跨平台，可移植，使用难度大。生命周期：自己管理。<br>NSThread<br>  特点：OC语言。面向对象，简单易用，可直接操作线程。生命周期：自己管理。<br>GCD<br>  特点：替代NSThread，充分利用多核的技术。生命周期：系统管理。<br>NSOperaton<br>  特点：基于GCD的封装。比GCD多了一些简单实用的功能。生命周期：系统管理。</p>
+</blockquote>
+<h1 id="请说一下多线程中-GCD-和-NSOperation-的区别？"><a href="#请说一下多线程中-GCD-和-NSOperation-的区别？" class="headerlink" title="请说一下多线程中 GCD 和 NSOperation 的区别？"></a>请说一下多线程中 GCD 和 NSOperation 的区别？</h1><p><strong>GCD：</strong></p>
+<ul>
+<li><p><code>提供了一次性执行的代码 dispatch_once</code> ，也就是说保证了一段代码在程序执行的过程中只被执行一次，并且是线程安全的！，实现的单例。</p>
+</li>
+<li><p>提供了 <code>延迟执行</code> 的简便方法 <code>dispatch_after</code>。</p>
+</li>
+<li><p>提供了 <code>调度组</code> 的使用，监听一些列异步方法之行结束之后，我们得到统一的通知</p>
+<ul>
+<li>dispatch_group</li>
+<li>dispatch_group_async</li>
+<li>dispatch_group_notify</li>
+<li>dispatch_group_enter&#x2F;dispatch_group_leave</li>
+</ul>
+</li>
+<li><p>提供了 <code>快速迭代的方式dispatch_apply</code>。按照指定的次序将制定的任务追加到指定的队列中，并等待全部队列执行结束！</p>
+</li>
+<li><p>提供了信号量 <code>dispatch_semaphore_t</code>，使用信号量可以实现安全的多线程！（加锁的一种方式）</p>
+</li>
+<li><p>提供了栅栏函数 <code>dispatch_barrier_async</code>，使用栅栏函数可以实现线程的多度单写！</p>
+</li>
+</ul>
+<p><strong>​​​​​​NSOpearion：</strong></p>
+<ul>
+<li><p>NSOperatoin是对GCD更高层次的封装</p>
+</li>
+<li><p>NSOperation可以设置两个操作之间的依赖关系。</p>
+</li>
+<li><p>NSOperation是个抽象类，开发中使用它的两个子类，NSBlockOperation&#x2F;NSInvocationOperation。</p>
+</li>
+<li><p>使用KVO，观察NSOperation的各种状态（isExecuted是否正在执行，isFinished是否结束，isCancled是否取消）。无法判断GCD的状态。</p>
+</li>
+<li><p>NSOperation可以设置操作的优先级。</p>
+</li>
+<li><p>NSoperation可以方便的取消一个操作的执行</p>
+</li>
+<li><p>可以重写NSOperation的main和start函数。</p>
+</li>
+</ul>
+<h1 id="dispatch-once-是怎么保证线程安全的？"><a href="#dispatch-once-是怎么保证线程安全的？" class="headerlink" title="dispatch_once 是怎么保证线程安全的？"></a>dispatch_once 是怎么保证线程安全的？</h1><h1 id="dispatch-after延迟执行，执行时间是准确的吗？"><a href="#dispatch-after延迟执行，执行时间是准确的吗？" class="headerlink" title="dispatch_after延迟执行，执行时间是准确的吗？"></a>dispatch_after延迟执行，执行时间是准确的吗？</h1><p>dispatch_after的延迟执行时间不是准确的，因为dispatch_after是在指定时间之后将任务添加到主队列，并不是在指定时间之后开始执行处理！</p>
+<h1 id="说说你对-dispatch-apply-的理解？"><a href="#说说你对-dispatch-apply-的理解？" class="headerlink" title="说说你对 dispatch_apply 的理解？"></a>说说你对 dispatch_apply 的理解？</h1><ul>
+<li><p><code>dispatch_apply</code> 是GCD提供的一种快速迭代的函数，按照指定的次数将指定的任务追加到指定的队列中，并等待全部任务结束。</p>
+</li>
+<li><p>如果用在串行队列，就和for循环一样，按顺序同步执行。</p>
+</li>
+<li><p>如果用在并发队列，别追加到队列的任务会异步执行，并且等待全部任务结束！</p>
+</li>
+</ul>
+<h1 id="说说你对dispatch-group的理解？"><a href="#说说你对dispatch-group的理解？" class="headerlink" title="说说你对dispatch_group的理解？"></a>说说你对dispatch_group的理解？</h1><ul>
+<li><p>GCD提供的队列组，有两种使用方式 <code>dispatch_group_async</code> 和 <code>dispatch_group_enter/dispatch_group_leave</code>，使用过程中要根据任务类型选择使用哪种方式。</p>
+</li>
+<li><p>如果任务类型是同步任务，使用 <code>dispatch_group_async</code> 和 <code>dispatch_group_enter/dispatch_group_leave</code> 是同样的，可以实现相同的功能。</p>
+</li>
+<li><p>如果任务类型是异步任务，比如（AF）网络请求，使用dispatch_group_async不能等到所有异步任务执行完成，再去之执行dispatch_group_notify中的代码，使用dispatch_group_enter&#x2F;dispatch_group_leave可以实现执行完添加的异步任务，最后执行dispatch_group_notify中的代码</p>
+</li>
+<li><p>如果你要实现这样一个功能，请求网络A和B,然后根据A&#x2F;B返回的内容去刷新页面，如果使用dispatch_group，那么只能使用 dispatch_grouo_enter&#x2F;dispatch_grouo_leave！！！使用dispatch_group_async是不能实现这个功能的！</p>
+</li>
+</ul>
+<h1 id="说说你项目中的哪些功能使用了dispatch-semaphore-t，解决了什么问题？"><a href="#说说你项目中的哪些功能使用了dispatch-semaphore-t，解决了什么问题？" class="headerlink" title="说说你项目中的哪些功能使用了dispatch_semaphore_t，解决了什么问题？"></a>说说你项目中的哪些功能使用了dispatch_semaphore_t，解决了什么问题？</h1><p>使用信号量（dispatch_semaphore_t）可以实现异步任务的顺序执行（也就是将异步任务转换为同步任务执行）不要阻塞主线程！。也是多线程加锁的一种实现方式，保证线程安全。</p>
+<ul>
+<li><p>dispatch_semaphore_create(intptr_t value) 创建一个队列组，传入得值&gt;&#x3D;0，传入的值控制控制并发线程的数量！！！，如果我们传入2，那么就表示当前最多有两个线程同时执行。</p>
+</li>
+<li><p>dispatch_semaphore_signal(dispatch_semaphore_t dsema) 增加信号量，使信号量的值加1！</p>
+</li>
+<li><p>dispatch_semaphore_wait(dispatch_semaphore_t dsema, dispatch_time_t timeout) 等待当前线程，直到某个时间释放！！！</p>
+</li>
+</ul>
+<p>【面试题】：如果在工作中有这样一个需求，使用AFNetworking请求A接口拿到A接口返回的id_a，用id_a作为参数去请求B接口，拿到B网络返回的name_b去查数据库，然后刷新页面。该怎么实现呢？</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, assign) dispatch_semaphore_t semaphore;</span><br><span class="line">@property (nonatomic, assign) dispatch_queue_t queue;</span><br><span class="line"> </span><br><span class="line">- (void)viewDidLoad&#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    //：测试</span><br><span class="line">    [self semaphoreSync];</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">- (void)semaphoreSync&#123;</span><br><span class="line">    // 创建信号量，传入参数0</span><br><span class="line">    self.semaphore = dispatch_semaphore_create(0);</span><br><span class="line">    // 创建队列，这里串行和并发并无区别</span><br><span class="line">    self.queue = dispatch_queue_create(&quot;queue&quot;, DISPATCH_QUEUE_SERIAL);</span><br><span class="line">    // 开启一个新线程，</span><br><span class="line">    // 这里之所以要创建一个新线程，而不是在当前（主线程）执行，是因为，AF的网络请求返回默认是在主线程中执行，如果我们在当前线程执行一下操作，会发生线程死锁的现象，</span><br><span class="line">    dispatch_async(self.queue, ^&#123;</span><br><span class="line">        // 任务A</span><br><span class="line">        int ida = [self requestA];</span><br><span class="line">        // 任务B</span><br><span class="line">        NSString *name = [self requestB:ida];</span><br><span class="line">        // 任务C</span><br><span class="line">        NSDictionary *res = [self queryDB:name];</span><br><span class="line">        NSLog(@&quot;%@&quot;, res);</span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">            // 刷新页面</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">- (int)requestA&#123;</span><br><span class="line">    __block int ida = 0;</span><br><span class="line">    // AF</span><br><span class="line">    NSArray *paths = @[@(self.currentPage), @(pageNum), @(100)];</span><br><span class="line">    [[ZJNetWorkManager shareManager] GetWithUrlString:TC_API(GetCourseList) paths:paths successedBlock:^(BOOL successed, id  _Nonnull jsonObject) &#123;</span><br><span class="line">        ida = 1;</span><br><span class="line">        // 释放信号量，信号量加1，释放当前线程，然后执行return操作</span><br><span class="line">        dispatch_semaphore_signal(self.semaphore);</span><br><span class="line">    &#125; failedBlock:^(NSError * _Nonnull error) &#123;</span><br><span class="line">        dispatch_semaphore_signal(self.semaphore);</span><br><span class="line">    &#125;];</span><br><span class="line">    // 信号量减1，阻塞当前线程</span><br><span class="line">    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);</span><br><span class="line"> </span><br><span class="line">    return ida;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">- (NSString *)requestB:(int)ida&#123;</span><br><span class="line">    __block NSString *name;</span><br><span class="line">    NSArray *paths = @[@(self.currentPage), @(pageNum), @(100), @(ida)];</span><br><span class="line">    [[ZJNetWorkManager shareManager] GetWithUrlString:TC_API(GetCourseList) paths:paths successedBlock:^(BOOL successed, id  _Nonnull jsonObject) &#123;</span><br><span class="line">        name = @&quot;你好👋&quot;;</span><br><span class="line">        dispatch_semaphore_signal(self.semaphore);</span><br><span class="line">    &#125; failedBlock:^(NSError * _Nonnull error) &#123;</span><br><span class="line">        dispatch_semaphore_signal(self.semaphore);</span><br><span class="line">    &#125;];</span><br><span class="line">        </span><br><span class="line">    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);</span><br><span class="line"> </span><br><span class="line">    return name;</span><br><span class="line">&#125; </span><br><span class="line">- (NSDictionary *)queryDB:(NSString *)name&#123;</span><br><span class="line">    //查询数据库，返回结果</span><br><span class="line">    return @&#123;@&quot;name&quot;:@&quot;name&quot;&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="请实现一个多读单写的功能？"><a href="#请实现一个多读单写的功能？" class="headerlink" title="请实现一个多读单写的功能？"></a>请实现一个多读单写的功能？</h1><p>我们可以用 <code>dispatch_barrier_async</code> 实现</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+<h1 id="说说你对NSOperation-x2F-NSOperationQueue的使用和理解？"><a href="#说说你对NSOperation-x2F-NSOperationQueue的使用和理解？" class="headerlink" title="说说你对NSOperation&#x2F;NSOperationQueue的使用和理解？"></a>说说你对NSOperation&#x2F;NSOperationQueue的使用和理解？</h1><ol>
+<li><p>NSOperation&#x2F;NSOperationQueue 是系统提供的一套多线程实现方案。实际上NSOperation&#x2F;NSOperationQueue是基于GCD更高层次的封装，完全面向对象，比GCD简单易用，代码可读性更高。</p>
+</li>
+<li><p>使用步骤：</p>
+</li>
+</ol>
+<ul>
+<li><p>创建操作，将操作封装到NSOperation对象中,执行的顺序取决于操作之间的相对优先级，操作执行结束的顺序，取决于操作本身！</p>
+</li>
+<li><p>创建队列 NSOperationQueue，将操作添加到队列中，一个队列中同时能并发执行的最大操作数由maxConcurrentOperationCount 决定，也就是一个操作队列中的操作是串行还是并发执行，由maxConcurrentOperationCount它决定！</p>
+<ul>
+<li>maxConcurrentOperationCount &#x3D; -1，默认，并发执行</li>
+<li>maxConcurrentOperationCount &#x3D; 1，串行执行</li>
+<li>maxConcurrentOperationCount &#x3D; 3，并发执行</li>
+</ul>
+</li>
+<li><p>系统会将队列中的操作取出，在新线程中执行操作。</p>
+</li>
+<li><p>操作有几种状态</p>
+<ul>
+<li>op1.isReady; 是否准备就绪</li>
+<li>op1.isExecuting; 是否正在执行</li>
+<li>op1.isCancelled; 是否已经取消</li>
+<li>op1.isFinished; 是否执行完成</li>
+</ul>
+</li>
+<li><p>取消操作和队列</p>
+<ul>
+<li>[op1 cancel]; 取消操作，实际上是标记isCancelled状态</li>
+<li>[queue cancelAllOperations]; 取消队列</li>
+</ul>
+</li>
+</ul>
+<h1 id="你是否在定义过NSOperation"><a href="#你是否在定义过NSOperation" class="headerlink" title="你是否在定义过NSOperation?"></a>你是否在定义过NSOperation?</h1><p>自定义NSOperation可以通过重写main或者start方法。重写main方法，不需要管理操作的状态属性isExecuting和isFinished。重写start方法需要管理操作的状态属性。</p>
+
             </div>
 
             
@@ -406,7 +524,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC面试题：多线程</div>
-        
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%A0%E4%BA%86%E8%A7%A3%E7%BA%BF%E7%A8%8B%E4%B9%88%EF%BC%9F%E8%B0%88%E8%B0%88%E4%BD%A0%E5%AF%B9%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%90%86%E8%A7%A3%EF%BC%9F"><span class="nav-text">你了解线程么？谈谈你对进程和线程的理解？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iOS%E4%B8%AD%EF%BC%8C%E6%9C%89%E5%93%AA%E4%BA%9B%E5%AE%9E%E7%8E%B0%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%96%B9%E5%BC%8F%EF%BC%9F"><span class="nav-text">iOS中，有哪些实现多线程的方式？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%B7%E8%AF%B4%E4%B8%80%E4%B8%8B%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD-GCD-%E5%92%8C-NSOperation-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">请说一下多线程中 GCD 和 NSOperation 的区别？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dispatch-once-%E6%98%AF%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%EF%BC%9F"><span class="nav-text">dispatch_once 是怎么保证线程安全的？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dispatch-after%E5%BB%B6%E8%BF%9F%E6%89%A7%E8%A1%8C%EF%BC%8C%E6%89%A7%E8%A1%8C%E6%97%B6%E9%97%B4%E6%98%AF%E5%87%86%E7%A1%AE%E7%9A%84%E5%90%97%EF%BC%9F"><span class="nav-text">dispatch_after延迟执行，执行时间是准确的吗？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%B4%E8%AF%B4%E4%BD%A0%E5%AF%B9-dispatch-apply-%E7%9A%84%E7%90%86%E8%A7%A3%EF%BC%9F"><span class="nav-text">说说你对 dispatch_apply 的理解？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%B4%E8%AF%B4%E4%BD%A0%E5%AF%B9dispatch-group%E7%9A%84%E7%90%86%E8%A7%A3%EF%BC%9F"><span class="nav-text">说说你对dispatch_group的理解？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%B4%E8%AF%B4%E4%BD%A0%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E5%93%AA%E4%BA%9B%E5%8A%9F%E8%83%BD%E4%BD%BF%E7%94%A8%E4%BA%86dispatch-semaphore-t%EF%BC%8C%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-text">说说你项目中的哪些功能使用了dispatch_semaphore_t，解决了什么问题？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%B7%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%A4%9A%E8%AF%BB%E5%8D%95%E5%86%99%E7%9A%84%E5%8A%9F%E8%83%BD%EF%BC%9F"><span class="nav-text">请实现一个多读单写的功能？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%B4%E8%AF%B4%E4%BD%A0%E5%AF%B9NSOperation-x2F-NSOperationQueue%E7%9A%84%E4%BD%BF%E7%94%A8%E5%92%8C%E7%90%86%E8%A7%A3%EF%BC%9F"><span class="nav-text">说说你对NSOperation&#x2F;NSOperationQueue的使用和理解？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%A0%E6%98%AF%E5%90%A6%E5%9C%A8%E5%AE%9A%E4%B9%89%E8%BF%87NSOperation"><span class="nav-text">你是否在定义过NSOperation?</span></a></li></ol>
 
     </div>
 </div>
