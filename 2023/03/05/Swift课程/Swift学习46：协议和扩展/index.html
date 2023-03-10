@@ -9,18 +9,18 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/05/swift课程/swift学习46：扩展/"/>
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/05/swift课程/swift学习46：协议和扩展/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="Swift学习37：扩展">
+    <meta property="og:title" content="Swift学习46：协议和扩展">
     <meta property="og:description" content="我是小J，关注我">
-    <meta property="og:url" content="https://www.bboyzj.cn2023/03/05/Swift课程/Swift学习46：扩展/">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/03/05/Swift课程/Swift学习46：协议和扩展/">
     <meta property="og:image" content="/images/redefine-logo.svg">
     <meta property="og:site_name" content="BboyZJ">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Swift学习37：扩展">
+    <meta name="twitter:title" content="Swift学习46：协议和扩展">
     <meta name="twitter:description" content="我是小J，关注我">
     <meta name="twitter:image" content="/images/redefine-logo.svg">
     <!--- Icon Part-->
@@ -31,7 +31,7 @@
     
     <title>
         
-            Swift学习37：扩展 -
+            Swift学习46：协议和扩展 -
         
         BboyZJ
     </title>
@@ -249,7 +249,7 @@
             
             
                 <div class="article-title">
-                    <h1 class="article-title-regular">Swift学习37：扩展</h1>
+                    <h1 class="article-title-regular">Swift学习46：协议和扩展</h1>
                 </div>
             
                 
@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-09 23:54:51</span>
-            <span class="mobile">2023-03-09 23:54</span>
+            <span class="pc">2023-03-10 14:21:53</span>
+            <span class="mobile">2023-03-10 14:21</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -325,79 +325,74 @@
             
 
             <div class="article-content markdown-body">
-                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本篇将详细总结介绍Swift扩展的用法：</p>
-<ul>
-<li><p>扩展就是<code> 为现有的类、结构体、枚举类型或者协议类型添加新功能</code></p>
+                <h1 id="在扩展里添加协议遵循"><a href="#在扩展里添加协议遵循" class="headerlink" title="在扩展里添加协议遵循"></a>在扩展里添加协议遵循</h1><ul>
+<li><p>你可以扩展一个 <code>已存在的类</code> 来遵循一个新的协议</p>
 </li>
-<li><p>这也包括了为无访问权限的源代码扩展类型的能力(即逆向建模)</p>
-</li>
-<li><p>扩展和 <code>Objective-C</code> 中的 <code>category</code> 类似，与 <code>Objective-C</code> 不同的是扩展 <code>没有名字</code></p>
+<li><p>扩展可以添加新的 <code>属性、方法和下标</code> 到已存在的类型，并且允许你添加协议的任何需要</p>
 </li>
 </ul>
-<h1 id="extension-的能力"><a href="#extension-的能力" class="headerlink" title="extension 的能力"></a>extension 的能力</h1><ul>
-<li>添加 <code>计算型实例属性</code> 和 <code>计算型类型属性</code>。</li>
-<li>定义 <code>实例方法和类型方法</code></li>
-<li>添加 <code>新初始化器</code></li>
-<li>定义下标 </li>
-<li>使现有的类型尊徐某协议</li>
-<li>扩展可以向一个类型添加新的方法，但是不能重写已有的方法</li>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">protocol TextRepresentable &#123;</span><br><span class="line">    var textDesc: String &#123; get &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 扩展已存在类遵循新协议</span><br><span class="line">extension Dice: TextRepresentable &#123;</span><br><span class="line">    var textDesc: String &#123;</span><br><span class="line">        return &quot;zhangjian&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="有条件的遵循协议"><a href="#有条件的遵循协议" class="headerlink" title="有条件的遵循协议"></a>有条件的遵循协议</h1><ul>
+<li><p><code>泛型</code> 可能只在某些情况下满足一个 <code>协议</code> 的要求</p>
+</li>
+<li><p>当 <code>类</code> 的 <code>泛型形式参数</code> 遵循协议时。你可以通过 <code>扩展</code> 列出限制 <code>泛型</code> 有条件的遵循某协议。在协议名字后面写泛型 <code>where</code> 关键字</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="使用扩展声明协议"><a href="#使用扩展声明协议" class="headerlink" title="使用扩展声明协议"></a>使用扩展声明协议</h1><ul>
+<li>如果一个 <code>类型（类、结构体、枚举）</code> 已经遵循了协议的所有需求，但还没有 声明它采纳这个协议，你可以通过 <code>扩展来让它声明并采纳</code> 这个协议</li>
 </ul>
 <blockquote>
-<p>使用注意：</p>
+<p>定义协议：</p>
 </blockquote>
-<ul>
-<li>不可以添加 <code>存储属性</code>，也不可以为已有属性添加属性观察器</li>
-<li>扩展中不能为类添加新的 <code>指定构造器</code>，因为 <code>指定构造器和析构器</code> 必须由原始的类来实现</li>
-</ul>
-<h1 id="添加计算属性"><a href="#添加计算属性" class="headerlink" title="添加计算属性"></a>添加计算属性</h1><ul>
-<li>扩展 <code>不可以添加存储型属性，也不可以为已有属性添加属性观察器</code></li>
-</ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">extension Double&#123;</span><br><span class="line">    // 注意：扩展不能扩展存储型属性</span><br><span class="line">    // var km: Double = 0.0 //报错</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 定义协议</span><br><span class="line">protocol TextRepresentable &#123;</span><br><span class="line">    var textDesc: String &#123; get &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16783717667666.jpg"
-                     
-                ></p>
-<ul>
-<li>扩展可以添加新的计算型属性</li>
-</ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">extension Double &#123;</span><br><span class="line">    // 注意：扩展不能添加存储属性</span><br><span class="line">    //    var km: Double = 0.0</span><br><span class="line">    // 计算属性</span><br><span class="line">    var km: Double &#123; return self * 1_000.0&#125;</span><br><span class="line">    var m: Double &#123; return self &#125;</span><br><span class="line">    var cm: Double &#123; return self / 100.0 &#125;</span><br><span class="line">    var mm: Double &#123; return self / 1_000.0 &#125;</span><br><span class="line">    var ft: Double &#123; return self / 3.28084 &#125;</span><br><span class="line">&#125;</span><br><span class="line">let oneInch = 25.4</span><br><span class="line">print(&quot;one inch is \(oneInch) meters&quot;)</span><br><span class="line"></span><br><span class="line">=====</span><br><span class="line">one inch is 25.4 meters</span><br></pre></td></tr></table></figure></div>
+<blockquote>
+<p>定义结构体类型：</p>
+</blockquote>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct Hamster &#123;</span><br><span class="line">    var name: String</span><br><span class="line">    // 实现了 遵循协议的所有要求</span><br><span class="line">    var textDesc: String &#123;</span><br><span class="line">        return &quot;a hamster named \(name)&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-<h1 id="添加初始化器"><a href="#添加初始化器" class="headerlink" title="添加初始化器"></a>添加初始化器</h1><ul>
-<li><p>扩展能为类 <code>添加新的初始化器</code></p>
+<blockquote>
+<p>可以通过 扩展 来让 Hamster 遵循 协议：</p>
+</blockquote>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">extension Hamster: TextRepresentable &#123;&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<h1 id="协议本身扩展"><a href="#协议本身扩展" class="headerlink" title="协议本身扩展"></a>协议本身扩展</h1><ul>
+<li>协议可以通过 <code>扩展</code> 来提供 <code>属性、方法</code>，即 协议本身支持扩展</li>
+</ul>
+<p>示例：</p>
+<p>【第一步】：定义一个随机数协议</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 定义协议</span><br><span class="line">protocol RandomNumberGenerator &#123;</span><br><span class="line">    func random() -&gt; Double</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>【第二步】：生成随机数</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 生成随机数</span><br><span class="line">class LinearCongruentialGenerator: RandomNumberGenerator &#123;</span><br><span class="line">    var lastRandom = 42.0</span><br><span class="line">    let m = 139968.0</span><br><span class="line">    let a = 3877.0</span><br><span class="line">    let c = 29573.0</span><br><span class="line">    func random() -&gt; Double &#123;</span><br><span class="line">        lastRandom = ((lastRandom * a + c).truncatingRemainder(dividingBy:m))</span><br><span class="line">        return lastRandom / m</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>【第三步】：让协议本身扩展</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 协议本身支持扩展</span><br><span class="line">extension RandomNumberGenerator &#123;</span><br><span class="line">    func randomBool() -&gt; Bool &#123;</span><br><span class="line">        return random() &gt; 0.5</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>【最后】：调用</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">let generator = LinearCongruentialGenerator()</span><br><span class="line">print(&quot;here is random number \(generator.random())&quot;)</span><br><span class="line">print(&quot;and here is random bool \(generator.randomBool())&quot;)</span><br><span class="line"></span><br><span class="line">==========</span><br><span class="line">here is random number 0.3746499199817101</span><br><span class="line">and here is random bool true</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="提供默认实现"><a href="#提供默认实现" class="headerlink" title="提供默认实现"></a>提供默认实现</h1><ul>
+<li><p>可以使用 <code>协议扩展</code> 给协议的 <code>属性或方法</code> 提供默认实现。</p>
 </li>
-<li><p>扩展能为类 <code>添加新的便捷初始化器</code></p>
-</li>
-<li><p>不能为类添加 <code>指定初始化器或反初始化器</code>，指定初始化器或反初始化器 <code>必须由原来的类实现提供</code></p>
+<li><p>如果遵循协议的 <code>类型</code> 提供了自己的实现，会 <code>替代协议扩展中的实现</code></p>
 </li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">extension Rect&#123;</span><br><span class="line">    // 便捷初始化器</span><br><span class="line">    init(center:Point, size:Size) &#123;</span><br><span class="line">        let origin_x = center.x - size.width/2</span><br><span class="line">        let origin_y = center.y - size.height/2</span><br><span class="line">        // 便捷初始化器必须调用指定初始化器</span><br><span class="line">        self.init(origin:Point(x: origin_x, y: origin_y),size:size)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let rect3 = Rect(center: Point(x:200, y:200), size: Size(width: 100, height: 100))</span><br></pre></td></tr></table></figure></div>
+<h1 id="给集合类和其中的元素添加-协议扩展"><a href="#给集合类和其中的元素添加-协议扩展" class="headerlink" title="给集合类和其中的元素添加 协议扩展"></a>给集合类和其中的元素添加 协议扩展</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// 有条件的遵循协议</span><br><span class="line">protocol TextRepresentable &#123;</span><br><span class="line">    var textDesc: String &#123; get &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 定义一个结构体 Person</span><br><span class="line">struct Person &#123;</span><br><span class="line">    var name:String = &quot;&quot;</span><br><span class="line">&#125;</span><br><span class="line">// 扩展 Person 遵循协议</span><br><span class="line">extension Person: TextRepresentable&#123;</span><br><span class="line">    var textDesc: String &#123;</span><br><span class="line">        return &quot;name \(name)&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 扩展数组元素都遵循协议</span><br><span class="line">extension Array: TextRepresentable where Element: TextRepresentable &#123;</span><br><span class="line">    var textDesc: String &#123;</span><br><span class="line">        let items = self.map &#123; $0.textDesc &#125;</span><br><span class="line">        return items.joined(separator: &quot;,&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let array = [Person(name: &quot;zj&quot;),Person(name: &quot;wxy&quot;)]</span><br><span class="line">print(array.textDesc)</span><br><span class="line"></span><br><span class="line">==========</span><br><span class="line">name zj,name wxy</span><br></pre></td></tr></table></figure></div>
 
-<h1 id="添加方法"><a href="#添加方法" class="headerlink" title="添加方法"></a>添加方法</h1><ul>
-<li>扩展可以为已有的类型添加新的 <code>实例方法和类方法</code></li>
+<h1 id="给-协议扩展-添加限制"><a href="#给-协议扩展-添加限制" class="headerlink" title="给 协议扩展 添加限制"></a>给 协议扩展 添加限制</h1><ul>
+<li>在 <code>扩展协议后</code> 面用 <code>where</code> 来写这些限制</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 添加方法</span><br><span class="line">extension Int &#123;</span><br><span class="line">    func repetions(task: () -&gt; Void) &#123;</span><br><span class="line">        for _ in 0..&lt;self &#123;</span><br><span class="line">            task()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">3.repetions &#123;</span><br><span class="line">    print(&quot;hello&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">======</span><br><span class="line">hello</span><br><span class="line">hello</span><br><span class="line">hello</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<p>将上面的 <code>Array</code> 改成 <code>Collection协议</code>，查看打印结果</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 扩展数组元素都遵循协议</span><br><span class="line">extension Collection where Iterator.Element: TextRepresentable &#123;</span><br><span class="line">    var textDesc: String &#123;</span><br><span class="line">        let items = self.map &#123; $0.textDesc &#125;</span><br><span class="line">        return items.joined(separator: &quot;,&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">==========</span><br><span class="line">name zj,name wxy</span><br></pre></td></tr></table></figure></div>
 
-<h1 id="添加异变方法"><a href="#添加异变方法" class="headerlink" title="添加异变方法"></a>添加异变方法</h1><ul>
-<li>通过 <code>mutationg</code> 关键字，可以 <code>修改实例方法本身</code></li>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li>除了可以给具体的 <code>类、结构体</code> 扩展以外，还可以 <code>扩展协议本身</code></li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">extension Int &#123;</span><br><span class="line">    mutating func square() &#123;</span><br><span class="line">        self = self * self</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">var someInt = 3</span><br><span class="line">someInt.square()</span><br><span class="line">print(someInt)</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">9</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="添加下标"><a href="#添加下标" class="headerlink" title="添加下标"></a>添加下标</h1><ul>
-<li>扩展可以为已有类型添加新下标。</li>
-</ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">extension Int &#123;</span><br><span class="line">    subscript(index: Int) -&gt; Int &#123;</span><br><span class="line">        var base = 1</span><br><span class="line">        for i in 0..&lt;index &#123;</span><br><span class="line">            base *= 10</span><br><span class="line">        &#125;</span><br><span class="line">        return (self / base) % 10</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">print(746381295[0])</span><br><span class="line">print(746381295[1])</span><br><span class="line">print(746381295[2])</span><br><span class="line"></span><br><span class="line">=============</span><br><span class="line">5</span><br><span class="line">9</span><br><span class="line">2</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="添加内嵌类型"><a href="#添加内嵌类型" class="headerlink" title="添加内嵌类型"></a>添加内嵌类型</h1><ul>
-<li>扩展可以为已有的 <code>类、结构体和枚举添加新的嵌套类型</code>。</li>
-</ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// 添加内嵌类型</span><br><span class="line">extension Int &#123;</span><br><span class="line">    enum Kind &#123;</span><br><span class="line">        // 负数 0 正数</span><br><span class="line">        case neg,zero,pos</span><br><span class="line">    &#125;</span><br><span class="line">    var kind: Kind &#123;</span><br><span class="line">        switch self &#123;</span><br><span class="line">        case 0:</span><br><span class="line">            return .zero</span><br><span class="line">        case let x where x &gt; 0:</span><br><span class="line">            return .pos</span><br><span class="line">        default:</span><br><span class="line">            return .neg</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">print(8.kind)</span><br><span class="line">print(0.kind)</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">pos</span><br><span class="line">zero</span><br></pre></td></tr></table></figure></div>
-
-
-
-
 
             </div>
 
@@ -405,11 +400,11 @@
                 <div class="post-copyright-info">
                     <div class="article-copyright-info-container">
     <ul>
-        <li>Post title：Swift学习37：扩展</li>
+        <li>Post title：Swift学习46：协议和扩展</li>
         <li>Post author：张建</li>
         <li>Create time：2023-03-05 17:05:03</li>
         <li>
-            Post link：https://redefine.ohevan.com/2023/03/05/Swift课程/Swift学习46：扩展/
+            Post link：https://redefine.ohevan.com/2023/03/05/Swift课程/Swift学习46：协议和扩展/
         </li>
         <li>
             Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
@@ -438,13 +433,13 @@
                         <div class="article-prev">
                             <a class="prev"
                             rel="prev"
-                            href="/BboyZJ.github.io/2023/03/05/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A039%EF%BC%9A%E4%B8%BA%E7%B1%BB-%E7%BB%93%E6%9E%84%E4%BD%93-%E6%9E%9A%E4%B8%BE%E6%B7%BB%E5%8A%A0%E5%B1%9E%E6%80%A7%E5%92%8C%E6%96%B9%E6%B3%95/"
+                            href="/BboyZJ.github.io/2023/03/05/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A042%EF%BC%9A%E7%B1%BB&amp;%E7%BB%93%E6%9E%84%E4%BD%93%EF%BC%9A%E4%B8%8B%E6%A0%87%E5%92%8C%E4%B8%8B%E6%A0%87%E9%87%8D%E8%BD%BD/"
                             >
                                 <span class="left arrow-icon flex-center">
                                     <i class="fa-solid fa-chevron-left"></i>
                                 </span>
                                 <span class="title flex-center">
-                                    <span class="post-nav-title-item">Swift学习39：为类&amp;结构体&amp;枚举添加属性和方法</span>
+                                    <span class="post-nav-title-item">Swift学习40：类&amp;结构体&amp;枚举：下标和下标重载</span>
                                     <span class="post-nav-item">Prev posts</span>
                                 </span>
                             </a>
@@ -454,10 +449,10 @@
                         <div class="article-next">
                             <a class="next"
                             rel="next"
-                            href="/BboyZJ.github.io/2023/03/05/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A045%EF%BC%9A%E5%8D%8F%E8%AE%AE/"
+                            href="/BboyZJ.github.io/2023/03/05/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A045%EF%BC%9A%E6%89%A9%E5%B1%95/"
                             >
                                 <span class="title flex-center">
-                                    <span class="post-nav-title-item">Swift学习37：协议</span>
+                                    <span class="post-nav-title-item">Swift学习45：扩展</span>
                                     <span class="post-nav-item">Next posts</span>
                                 </span>
                                 <span class="right arrow-icon flex-center">
@@ -478,8 +473,8 @@
                 <div class="post-toc-wrap">
     <div class="post-toc">
         <div class="toc-title">On this page</div>
-        <div class="page-title">Swift学习37：扩展</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#extension-%E7%9A%84%E8%83%BD%E5%8A%9B"><span class="nav-text">extension 的能力</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7"><span class="nav-text">添加计算属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%88%9D%E5%A7%8B%E5%8C%96%E5%99%A8"><span class="nav-text">添加初始化器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%96%B9%E6%B3%95"><span class="nav-text">添加方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%BC%82%E5%8F%98%E6%96%B9%E6%B3%95"><span class="nav-text">添加异变方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E4%B8%8B%E6%A0%87"><span class="nav-text">添加下标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%86%85%E5%B5%8C%E7%B1%BB%E5%9E%8B"><span class="nav-text">添加内嵌类型</span></a></li></ol>
+        <div class="page-title">Swift学习46：协议和扩展</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8%E6%89%A9%E5%B1%95%E9%87%8C%E6%B7%BB%E5%8A%A0%E5%8D%8F%E8%AE%AE%E9%81%B5%E5%BE%AA"><span class="nav-text">在扩展里添加协议遵循</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%89%E6%9D%A1%E4%BB%B6%E7%9A%84%E9%81%B5%E5%BE%AA%E5%8D%8F%E8%AE%AE"><span class="nav-text">有条件的遵循协议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%89%A9%E5%B1%95%E5%A3%B0%E6%98%8E%E5%8D%8F%E8%AE%AE"><span class="nav-text">使用扩展声明协议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%8F%E8%AE%AE%E6%9C%AC%E8%BA%AB%E6%89%A9%E5%B1%95"><span class="nav-text">协议本身扩展</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8F%90%E4%BE%9B%E9%BB%98%E8%AE%A4%E5%AE%9E%E7%8E%B0"><span class="nav-text">提供默认实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%99%E9%9B%86%E5%90%88%E7%B1%BB%E5%92%8C%E5%85%B6%E4%B8%AD%E7%9A%84%E5%85%83%E7%B4%A0%E6%B7%BB%E5%8A%A0-%E5%8D%8F%E8%AE%AE%E6%89%A9%E5%B1%95"><span class="nav-text">给集合类和其中的元素添加 协议扩展</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%99-%E5%8D%8F%E8%AE%AE%E6%89%A9%E5%B1%95-%E6%B7%BB%E5%8A%A0%E9%99%90%E5%88%B6"><span class="nav-text">给 协议扩展 添加限制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol>
 
     </div>
 </div>

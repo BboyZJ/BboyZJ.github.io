@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/05/swift课程/swift学习40：枚举/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Swift学习40：枚举">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/03/05/Swift课程/Swift学习40：枚举/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Swift学习40：枚举">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            Swift学习40：枚举 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">Swift学习40：枚举</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-03-05 17:04:28</span>
+        <span class="mobile">2023-03-05 17:04</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-11 04:37:08</span>
+            <span class="mobile">2023-03-11 04:37</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h1><ul>
+<li><p><code>枚举</code> 是一种 <code>数据类型</code>，只包含自定义的特定数据</p>
+</li>
+<li><p>枚举 <code>是一组有共同特性的数据集合</code>，使你可以在你的代码中以 <code>类型安全</code> 的方式来使用这些值。</p>
+</li>
+</ul>
+<h1 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h1><p>在 <code>OC</code> 相比，枚举只支持 <code>整数型</code>；而在 <code>Swift</code> 中枚举有很多功能：</p>
+<ul>
+<li><p>可以定义 <code>成员类型</code>，支持 <code>Int、Double、String等基础类型</code>，也有 <code>默认枚举值</code></p>
+</li>
+<li><p>可以 <code>定义构造函数</code>（initializers）来提供一个初始成员值，可以在原始的实现基础上扩展他们的功能</p>
+</li>
+<li><p>可以 <code>关联枚举值</code></p>
+</li>
+<li><p><code>可以遵守协议（protocol）</code> 来 <code>提供标准化功能</code>。</p>
+</li>
+<li><p>可以 <code>嵌套枚举</code></p>
+</li>
+</ul>
+<h1 id="枚举的语法"><a href="#枚举的语法" class="headerlink" title="枚举的语法"></a>枚举的语法</h1><ul>
+<li><p>用 <code>enum</code> 关键字来定义一个枚举，然后将其所有的定义内容放在一个大括号 <code>&#123;&#125;</code> 中</p>
+</li>
+<li><p>多个成员值可以出现在同一行中，用逗号隔开</p>
+</li>
+<li><p>每个枚举都定义了一个全新的类型。正如swift中其它类型那样，它的名称（例如： ComP）需要首字母大写。给枚举类型起一个单数的而不是复数的名字，从而使得他们能够顾名思义</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">// 写法一</span><br><span class="line">// 不需要逗号隔开</span><br><span class="line">enum ComP &#123;</span><br><span class="line">    case east</span><br><span class="line">    case south</span><br><span class="line">    case west</span><br><span class="line">    case north</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 写法二</span><br><span class="line">// 也可以直接一个case，然后逗号隔开</span><br><span class="line">enum ComP2 &#123;</span><br><span class="line">    case east, south, west, north</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 定义一个枚举变量</span><br><span class="line">var comp = ComP.east</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">String类型的enum</span><br><span class="line">- =左边的值是枚举值，例如 MON</span><br><span class="line">- =右边的值在swift中称为 RawValue（原始值），例如 &quot;MON&quot;</span><br><span class="line">- 两者的关系为：case 枚举值 = rawValue原始值</span><br><span class="line">*/</span><br><span class="line">enum Week: String &#123;</span><br><span class="line">    case MON = &quot;MON&quot;</span><br><span class="line">    case TUE = &quot;TUE&quot;</span><br><span class="line">    case WED = &quot;WED&quot;</span><br><span class="line">    case THU = &quot;THU&quot;</span><br><span class="line">    case FRI = &quot;FRI&quot;</span><br><span class="line">    case SAT = &quot;SAT&quot;</span><br><span class="line">    case SUN = &quot;SUN&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>如果不想写枚举后的字符串，也可以使用 <code>隐士RawValue</code> 分配</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">enum Week: String&#123;</span><br><span class="line">    case MON, TUE, WED, THU, FRI, SAT, SUN</span><br><span class="line">&#125;</span><br><span class="line">var w = Week.MON.rawValue</span><br><span class="line">print(w)</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">MON</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="使用-Switch-语句来匹配枚举值"><a href="#使用-Switch-语句来匹配枚举值" class="headerlink" title="使用 Switch 语句来匹配枚举值"></a>使用 Switch 语句来匹配枚举值</h1><ul>
+<li>你可以用 <code>switch</code> 语句来匹配每一个单独的枚举值</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// switch 访问枚举</span><br><span class="line">let week = Week.MON</span><br><span class="line">switch week &#123;</span><br><span class="line">case .TUE:</span><br><span class="line">    print(&quot;TUE&quot;)</span><br><span class="line">case .WED:</span><br><span class="line">    print(&quot;WED&quot;)</span><br><span class="line">case .THU:</span><br><span class="line">    print(&quot;TUE&quot;)</span><br><span class="line">case .FRI:</span><br><span class="line">    print(&quot;FRI&quot;)</span><br><span class="line">case .SAT:</span><br><span class="line">    print(&quot;SAT&quot;)</span><br><span class="line">case .SUN:</span><br><span class="line">    print(&quot;SUN&quot;)</span><br><span class="line">case .MON:</span><br><span class="line">    print(&quot;MON&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">======</span><br><span class="line">MON</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>CaseIterable协议</code> 通常用于没有关联值的枚举，只需要遵守 <code>CaseIterable</code> 协议来 <code>允许枚举被遍历</code>，写法：在枚举名后面写 <code>:CaseIterable</code>，然后通过 <code>allCases</code> 获取所有枚举值，如下：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 遍历枚举</span><br><span class="line">enum Direction : CaseIterable&#123;</span><br><span class="line">    case east</span><br><span class="line">    case south</span><br><span class="line">    case west</span><br><span class="line">    case north</span><br><span class="line">&#125;</span><br><span class="line">for direction in Direction.allCases &#123;</span><br><span class="line">    print(direction)</span><br><span class="line">&#125;</span><br><span class="line">或 高阶函数</span><br><span class="line">Direction.allCases.map &#123; print($0) &#125;</span><br><span class="line"></span><br><span class="line">=========</span><br><span class="line">east</span><br><span class="line">south</span><br><span class="line">west</span><br><span class="line">north</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>string 类型</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// string 类型</span><br><span class="line">enum Direction2: String &#123;</span><br><span class="line">    case east, south, west, north</span><br><span class="line">&#125;</span><br><span class="line">extension Direction2: CaseIterable &#123;&#125;</span><br><span class="line">Direction2.allCases.map&#123; print( $0 ) &#125;</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">east</span><br><span class="line">south</span><br><span class="line">west</span><br><span class="line">north</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="关联值枚举"><a href="#关联值枚举" class="headerlink" title="关联值枚举"></a>关联值枚举</h1><ul>
+<li>如果希望用枚举表示复杂的含义，关联更多的信息，就需要使用关联值了。</li>
+<li>他与普通类型的枚举不同：<code>没有rawValue，没有rawValue的getter方法；没有初始化init方法</code>。</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 关联值</span><br><span class="line">//注：当使用了关联值后，就没有RawValue了</span><br><span class="line">//因为：case可以用一组值来表示，而rawValue是单个的值</span><br><span class="line">enum Shape&#123;</span><br><span class="line">    // case枚举值后括号内的就是关联值，如 radius</span><br><span class="line">    case circle(radius: Double)</span><br><span class="line">    case rectangle(width: Int,height: Int)</span><br><span class="line">&#125;</span><br><span class="line">// 实例化</span><br><span class="line">var circle = Shape.circle(radius: 10.0)</span><br><span class="line">print(circle)</span><br><span class="line">//重新分配</span><br><span class="line">circle = Shape.rectangle(width: 10, height: 10)</span><br><span class="line">print(circle)</span><br><span class="line"></span><br><span class="line">==============</span><br><span class="line">circle(radius: 10.0)</span><br><span class="line">rectangle(width: 10, height: 10)</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="模式匹配"><a href="#模式匹配" class="headerlink" title="模式匹配"></a>模式匹配</h1><p><code>enum</code> 中的模式匹配其实就是 <code>匹配case枚举值</code>，根据枚举类型，分为2种：</p>
+<p>1、<code>简单类型</code> 的枚举的模式匹配；<br>2、<code>自定义类型</code> 的枚举（关联值）的模式匹配。</p>
+<ul>
+<li>简单enum的模式匹配</li>
+</ul>
+<p>注：swift中的enum模式匹配需要将所有情况都列举，或者使用 <code>default</code> 表示默认情况，否则会报错</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 模式匹配</span><br><span class="line">enum Week: String&#123;</span><br><span class="line">    case MON, TUE, WED, THU, FRI, SAT, SUN</span><br><span class="line">&#125;</span><br><span class="line">var current: Week?</span><br><span class="line">switch current &#123;</span><br><span class="line">    case .MON: print(Week.MON.rawValue)</span><br><span class="line">    case .TUE: print(Week.TUE.rawValue)</span><br><span class="line">    default: print(&quot;unknow day&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">======</span><br><span class="line">unknow day</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>关联值类型的模式匹配</li>
+</ul>
+<p>关联值类型的模式匹配有两种方式：</p>
+<p>1、<code>switch - case</code>， 匹配所有case；<br>2、<code>if - case</code>， 匹配单个case</p>
+<p><strong>switch - case</strong></p>
+<p>定义关联值枚举：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">enum Shape&#123;</span><br><span class="line">    case circle(radius: Double)</span><br><span class="line">    case rectangle(width: Int, height: Int)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>可以 <code>let、var</code> 修饰关联值的入参：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">/ 定义关联值枚举</span><br><span class="line">enum Shape&#123;</span><br><span class="line">    // case枚举值后括号内的就是关联值，如 radius</span><br><span class="line">    case circle(radius: Double)</span><br><span class="line">    case rectangle(width: Int,height: Int)</span><br><span class="line">&#125;</span><br><span class="line">// 定义枚举变量</span><br><span class="line">let shape = Shape.circle(radius: 10.0)</span><br><span class="line">switch shape &#123;</span><br><span class="line">    // 关联外部</span><br><span class="line">    case let .circle(radius):</span><br><span class="line">        print(&quot;circle radius: \(radius)&quot;)</span><br><span class="line">    // 关联内部</span><br><span class="line">    case .rectangle(let width,var height):</span><br><span class="line">        height += 1</span><br><span class="line">        print(&quot;rectangle width: \(width) height: \(height)&quot;)</span><br><span class="line">&#125;</span><br><span class="line">let shape2 = Shape.rectangle(width: 1, height: 2)</span><br><span class="line">switch shape2 &#123;</span><br><span class="line">    case let .circle(radius):</span><br><span class="line">        print(&quot;circle radius: \(radius)&quot;)</span><br><span class="line">    case .rectangle(let width,var height):</span><br><span class="line">        height += 10</span><br><span class="line">    print(&quot;rectangle width: \(width) height: \(height)&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">circle radius: 10.0</span><br><span class="line">rectangle width: 1 height: 12</span><br></pre></td></tr></table></figure></div>
+
+<p>通过 <code>if-case</code> 匹配单个case，如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 单个匹配</span><br><span class="line">let circle = Shape.circle(radius: 5.0)</span><br><span class="line">if case let Shape.circle(radius) = circle &#123;</span><br><span class="line">    print(&quot;circle radius: \(radius)&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">=====</span><br><span class="line">circle radius: 5.0</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>如果我们只关心 <code>不同case的相同关联值(即关心不同case的某一个值)</code>，需要使用 <code>同一个参数</code>。<br>例如，案例中的x，如果分别使用x、y, 编译器会报错：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">enum Shape&#123;</span><br><span class="line">    case circle(radius: Double)</span><br><span class="line">    case rectangle(width: Double, height: Double)</span><br><span class="line">    case square(width: Double, height: Double)</span><br><span class="line">&#125;</span><br><span class="line">let shape = Shape.circle(radius: 10)</span><br><span class="line">switch shape&#123;</span><br><span class="line">    case let .circle(x), let .square(20, x):</span><br><span class="line">        print(x)</span><br><span class="line">    default:</span><br><span class="line">        break</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">====</span><br><span class="line">10.0</span><br></pre></td></tr></table></figure></div>
+
+<p>也可以使用 <code>通配符_（表示匹配一切）</code> 的方式：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">enum Shape&#123;</span><br><span class="line">    case circle(radius: Double)</span><br><span class="line">    case rectangle(width: Double, height: Double)</span><br><span class="line">    case square(width: Double, height: Double)</span><br><span class="line">&#125;</span><br><span class="line">let shape = Shape.rectangle(width: 2.0, height: 2.0)</span><br><span class="line">switch shape &#123;</span><br><span class="line">case let .rectangle(x, _), let .square(_,x):</span><br><span class="line">    print(&quot;square：\(x * x)&quot;)</span><br><span class="line">default:</span><br><span class="line">    break</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">=========</span><br><span class="line">square：4.0</span><br></pre></td></tr></table></figure></div>
+
+<p>注：枚举使用过程中 <code>不关心某一个关联值</code>，可以使用 <code>通配符_</code> 表示。OC 只能调用 swift 中 <code>Int类型</code> 的枚举。</p>
+<h1 id="属性-amp-函数"><a href="#属性-amp-函数" class="headerlink" title="属性 &amp; 函数"></a>属性 &amp; 函数</h1><ul>
+<li><code>enum</code> 中可以包含 <code>成员类型、计算属性、类型属性</code>，不能包含 <code>存储属性</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">enum Direct: Int &#123;</span><br><span class="line">    case up</span><br><span class="line">    case down</span><br><span class="line">    case left</span><br><span class="line">    case right</span><br><span class="line">    </span><br><span class="line">    // 计算属性</span><br><span class="line">    var desc: String &#123;</span><br><span class="line">        switch self &#123;</span><br><span class="line">        case .up:</span><br><span class="line">            return &quot;up&quot;</span><br><span class="line">        case .down:</span><br><span class="line">            return &quot;down&quot;</span><br><span class="line">        default:</span><br><span class="line">            return &quot;这是self&quot;</span><br><span class="line">        &#125;</span><br><span class="line">       </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 存储属性：编译器报错，Enums must not contain stored properties</span><br><span class="line">    // var radius: Double</span><br><span class="line">    </span><br><span class="line">    // 类型属性</span><br><span class="line">    static let height = 20.0</span><br><span class="line">    </span><br><span class="line">    // 函数</span><br><span class="line">    func printSelf() &#123;</span><br><span class="line">        print(desc)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 异变函数</span><br><span class="line">    mutating func nextDay() &#123;</span><br><span class="line">        if self == .up &#123;</span><br><span class="line">            self = Direct(rawValue: 1)!</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            self = Direct(rawValue: self.rawValue+1)!</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Direct.down.printSelf()</span><br><span class="line">// 打印结果：down</span><br><span class="line"></span><br><span class="line">var direct = Direct.left</span><br><span class="line">direct.nextDay()</span><br><span class="line">// 打印结果是 right</span><br><span class="line">direct.printSelf()</span><br><span class="line">// 打印结果是 right</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>为什么 <code>struct</code> 或 <code>class</code> 中可以放 <code>存储属性</code>，而 <code>enum</code> 不可以？<br><code>struct</code> 中可以包含存储属性，是因为其大小就是 <code>存储属性的大小</code>。而 <code>enum</code> 是不一样的（请查阅后文的enum大小讲解），<code>enum枚举的大小是取决于case的个数的</code>，如果没有超过255，enum的大小就是1字节（8位）</p>
+</blockquote>
+<ul>
+<li>可以在 <code>enum</code> 中定义 <code>实例方法、static修饰的方法</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">enum Week: Int &#123;</span><br><span class="line">    case MON, TUE, WED, THU, FRI, SAT, SUN</span><br><span class="line">    </span><br><span class="line">    // 实例方法</span><br><span class="line">    mutating func nextDay() &#123;</span><br><span class="line">        if self == .SUN &#123;</span><br><span class="line">            self = Week(rawValue: 0)!</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            self = Week(rawValue: self.rawValue+1)!</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 使用</span><br><span class="line">var w = Week.MON</span><br><span class="line">w.nextDay()</span><br><span class="line">print(w)</span><br><span class="line"></span><br><span class="line">=========</span><br><span class="line">TUE</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="枚举的嵌套"><a href="#枚举的嵌套" class="headerlink" title="枚举的嵌套"></a>枚举的嵌套</h1><p>枚举的嵌套主要用于以下场景：<br>1、<code>枚举嵌套枚举</code>：一个复杂枚举是由一个或多个枚举组成；<br>2、<code>结构体嵌套枚举</code>：enum是不对外公开的，即是 <code>私有</code> 的。</p>
+<ul>
+<li>enum 嵌套 enum</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">enum CombineDirect &#123;</span><br><span class="line">    // 枚举中嵌套枚举</span><br><span class="line">    enum BaseDirect &#123;</span><br><span class="line">        case up,down,lett,right</span><br><span class="line">    &#125;</span><br><span class="line">    // 通过内部枚举组合的枚举值</span><br><span class="line">    case leftUp(baseDirect1: BaseDirect,baseDirect2: BaseDirect)</span><br><span class="line">    case leftDown(baseDirect1: BaseDirect,baseDirect2: BaseDirect)</span><br><span class="line">    case rightUp(baseDirect1: BaseDirect,baseDirect2: BaseDirect)</span><br><span class="line">    case rightDown(baseDirect1: BaseDirect,baseDirect2: BaseDirect)</span><br><span class="line">&#125;</span><br><span class="line">// 使用</span><br><span class="line">let direct = CombineDirect.leftUp(baseDirect1: CombineDirect.BaseDirect.lett, baseDirect2: CombineDirect.BaseDirect.up)</span><br><span class="line">print(direct)</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>结构体 嵌套 enum</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">struct Skill &#123;</span><br><span class="line">    // 结构体嵌套枚举</span><br><span class="line">    enum KeyType &#123;</span><br><span class="line">        case up,down,lett,right</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 存储属性</span><br><span class="line">    let key: KeyType</span><br><span class="line">    </span><br><span class="line">    // 函数</span><br><span class="line">    func launchSkill() &#123;</span><br><span class="line">        switch key &#123;</span><br><span class="line">        case .lett, .right:</span><br><span class="line">            print(&quot;left,right&quot;)</span><br><span class="line">        case .up, .down:</span><br><span class="line">            print(&quot;up,down&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="枚举的递归"><a href="#枚举的递归" class="headerlink" title="枚举的递归"></a>枚举的递归</h1><ul>
+<li>枚举的递归：<code>indirect</code></li>
+</ul>
+<p><code>递归枚举</code> 是一种枚举类型，它有一个或多个枚举成员使用该枚举类型的实例作为关联值。使用递归枚举时，编译器会插入一个间接层。你可以在枚举成员前加上 <code>indirect</code> 来表示该成员可递归。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 一、用枚举表示链表结构</span><br><span class="line">enum List&lt;T&gt; &#123;</span><br><span class="line">    case end</span><br><span class="line">    // 表示case是用引用来存储</span><br><span class="line">    indirect case node(T,next: List&lt;T&gt;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 二、也可以将indirect放在enum前</span><br><span class="line">// 表示整个enum是用引用来存储</span><br><span class="line">indirect enum List&lt;T&gt;&#123;</span><br><span class="line">    case end</span><br><span class="line">    case node(T, next: List&lt;T&gt;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>第一种写法，如果没有关键字 <code>indirect</code>，编译报错。原因是使用该枚举时，<code>enum的大小需要case来确定</code>，而case的大小又需要使用到enum大小。所以无法计算enmu的大小，于是报错！<br>根据编译器提示，需要使用 <code>关键字indirect</code>，意思就是将该枚举标记位递归，同时也支持标记单个case。</p>
+<p><code>indirect关键字</code> 其实就是通知编译器，我当前的enum是递归的，大小是不确定的，需要 <code>分配一块堆区的内存空间</code>，用来存放enum。</p>
+<h1 id="swift-和-oc-混编-enum"><a href="#swift-和-oc-混编-enum" class="headerlink" title="swift 和 oc 混编 enum"></a>swift 和 oc 混编 enum</h1><p>在 <code>Swift</code> 中 <code>enum</code> 非常强大，而在 <code>OC</code> 中，<code>enum</code> 仅仅只是一个 <code>整数型</code>。<br>因此，OC调用Swift枚举，必须具备2个条件：①、<code>用@objc关键字标记enum</code>；②、<code>当前enum应该是Int类型。</code></p>
+<ul>
+<li><code>OC</code> 中使用 <code>Swift</code> 枚举</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 枚举</span><br><span class="line">@objc enum Weak: Int &#123;</span><br><span class="line">    case MON, TUE, WED, THU, FRI, SAT, SUN</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// OC 使用</span><br><span class="line">// 1. 用@objc关键字标记enum,当前enum应该是Int类型。</span><br><span class="line">// 2. 导入头文件 xxx-Swift.h</span><br><span class="line">- (void)testEnum&#123;</span><br><span class="line">    Weak mon = WeakMON;</span><br><span class="line">    NSLog(@&quot;mon:%ld&quot;,(long)mon);</span><br><span class="line">    // 打印结果 0</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>Swift 使用 <code>OC</code> 枚举，OC 中的枚举会自动转换成 <code>swift中的enum</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// OC定义1：NS_ENUM</span><br><span class="line">NS_ENUM(NSInteger,ENUM_OC_TYPE)&#123;</span><br><span class="line">    Value1,</span><br><span class="line">    Value2</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// OC定义2：typedef enum</span><br><span class="line">typedef enum&#123;</span><br><span class="line">    Num1,</span><br><span class="line">    num2</span><br><span class="line">&#125;OCEnumType;</span><br><span class="line"></span><br><span class="line">// Swift 中使用 OC 枚举</span><br><span class="line">// 1. 将OC头文件导入桥接文件 xxx-Bridging-Header.h</span><br><span class="line">#import &quot;xxx.h&quot;</span><br><span class="line">// 2. 使用</span><br><span class="line">let ocEnum1 = ENUM_OC_TYPE.Value1.rawValue;</span><br><span class="line">let ocEnum2 = OCEnumType.init(rawValue: 0)</span><br><span class="line">print(&quot;\(ocEnum1)\n\(ocEnum2.rawValue)&quot;)</span><br></pre></td></tr></table></figure></div>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：Swift学习40：枚举</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-03-05 17:04:28</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/03/05/Swift课程/Swift学习40：枚举/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">#Swift-课程篇</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/03/05/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A039%EF%BC%9A%E7%BB%93%E6%9E%84%E4%BD%93/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习39：结构体</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/03/05/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A035%EF%BC%9A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8swift%E4%B8%AD%E7%9A%84%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习35：如何使用swift中的高阶函数</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">Swift学习40：枚举</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%9A%E4%B8%BE"><span class="nav-text">枚举</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8"><span class="nav-text">作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%9A%E4%B8%BE%E7%9A%84%E8%AF%AD%E6%B3%95"><span class="nav-text">枚举的语法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-Switch-%E8%AF%AD%E5%8F%A5%E6%9D%A5%E5%8C%B9%E9%85%8D%E6%9E%9A%E4%B8%BE%E5%80%BC"><span class="nav-text">使用 Switch 语句来匹配枚举值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E8%81%94%E5%80%BC%E6%9E%9A%E4%B8%BE"><span class="nav-text">关联值枚举</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D"><span class="nav-text">模式匹配</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7-amp-%E5%87%BD%E6%95%B0"><span class="nav-text">属性 &amp; 函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%9A%E4%B8%BE%E7%9A%84%E5%B5%8C%E5%A5%97"><span class="nav-text">枚举的嵌套</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9E%9A%E4%B8%BE%E7%9A%84%E9%80%92%E5%BD%92"><span class="nav-text">枚举的递归</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift-%E5%92%8C-oc-%E6%B7%B7%E7%BC%96-enum"><span class="nav-text">swift 和 oc 混编 enum</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

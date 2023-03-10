@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-10 00:26:09</span>
-            <span class="mobile">2023-03-10 00:26</span>
+            <span class="pc">2023-03-11 05:10:13</span>
+            <span class="mobile">2023-03-11 05:10</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -335,20 +335,97 @@
 <h1 id="swift类型？Swiift-值类型-和-引用类型的区别？特点？"><a href="#swift类型？Swiift-值类型-和-引用类型的区别？特点？" class="headerlink" title="swift类型？Swiift 值类型 和 引用类型的区别？特点？"></a>swift类型？Swiift 值类型 和 引用类型的区别？特点？</h1><ul>
 <li><p>swift的类型分为 <code>值类型</code> 和 <code>引用类型</code>。</p>
 <ul>
-<li><p>值类型：在swift中定义的很多类型都是值类型：如 <code>struct、enum、Int、Float、Bool、String、Array、Dictionary、String</code> 等都是 <code>值类型</code>。</p>
-</li>
-<li><p>引用类型： <code>class类型、closure闭包、函数</code> 为引用类型</p>
-</li>
+<li>值类型：在swift中定义的很多类型都是值类型：如 <code>struct、enum、Int、Float、Bool、String、Array、Dictionary、String</code> 等都是 <code>值类型</code>。</li>
+<li>引用类型： <code>class类型、closure闭包、函数</code> 为引用类型</li>
 </ul>
 </li>
 <li><p>区别</p>
 <ul>
-<li><p>值类型：<code>传递和赋值</code> 是一个 <code>副本</code>，使用过程中不会影响 <code>源数据</code></p>
-</li>
-<li><p>引用类型：<code>传递和赋值</code> 是 <code>本身（内存地址）</code>，使用过程中会影响源数据</p>
-</li>
+<li>值类型：<code>传递和赋值</code> 是一个 <code>副本</code>，使用过程中不会影响 <code>源数据</code></li>
+<li>引用类型：<code>传递和赋值</code> 是 <code>本身（内存地址）</code>，使用过程中会影响源数据</li>
 </ul>
 </li>
+</ul>
+<h1 id="struct-和-class-区别？-重点"><a href="#struct-和-class-区别？-重点" class="headerlink" title="struct 和 class 区别？ 重点"></a>struct 和 class 区别？ <strong>重点</strong></h1><p>struct 和 class 有很多共同点：</p>
+<ul>
+<li>定义 <code>属性</code> 用于 <code>存储值</code></li>
+<li>定义 <code>方法</code> 用于 <code>提供功能</code></li>
+<li>定义 <code>下标脚本</code> 用于访问值</li>
+<li>定义 <code>构造器</code> 用于 <code>生成初始化值</code></li>
+<li>通过 <code>扩展</code> 以 <code>增加默认实现的功能</code></li>
+<li>符合 <code>协议</code> 以 <code>提供标准功能</code></li>
+</ul>
+<p>struct 和 class 不同点：</p>
+<ul>
+<li>class 定义 <code>属性</code>，必须赋值或包装成Optional。struct 定义属性不需要要赋值</li>
+<li>class 是 <code>引用类型</code>，浅拷贝。struct 是 <code>值类型</code>，深拷贝。</li>
+<li>class <code>可以继承</code>。struct <code>不能继承</code>。</li>
+<li>class 有 <code>引用计数</code>，可以 <code>多次引用</code>。struct 没有引用计数</li>
+<li>class 有 <code>类型转换</code>，允许在 <code>运行时检查和解释一个类实例的类型</code>。struct 没有</li>
+<li>class 有 <code>解构器</code> 允许一个 <code>类实例释放任何其所被分配的资源</code></li>
+<li>struct 分配在 <code>栈</code> 中，系统分配是否内存。class 分配在 <code>堆</code> 中，动态分配释放内存</li>
+<li>struct 比 class 更轻量级，<code>栈</code> 只访问一次拿到数据，<code>堆</code> 访问两次拿到数据（第一次获取指针，第二次获取数据）</li>
+</ul>
+<h1 id="什么是协议？"><a href="#什么是协议？" class="headerlink" title="什么是协议？"></a>什么是协议？</h1><ul>
+<li>协议 <code>规定了用来实现某一特定功能所必须的属性和方法</code>，这个属性指 <code>实例属性或类属性</code>，而不用指定是 <code>存储属性或计算属性</code></li>
+<li><code>类、结构体、枚举</code> 都可以遵循协议，<code>提供具体的实现</code> 来完成协议定义的 <code>属性和方法</code></li>
+</ul>
+<h1 id="swift-协议-和-oc-协议有啥区别？-重点"><a href="#swift-协议-和-oc-协议有啥区别？-重点" class="headerlink" title="swift 协议 和 oc 协议有啥区别？ 重点"></a>swift 协议 和 oc 协议有啥区别？ <strong>重点</strong></h1><p>swift 协议：</p>
+<ul>
+<li>可以定义 <code>属性和方法</code>， 定义 <code>属性</code> 必须明确是 <code>可读的/可读可写 &#123; set get &#125;</code></li>
+<li>协议可以 <code>继承</code> 其他协议</li>
+<li>可以定义 <code>指定初始化器或便捷初始化器</code></li>
+<li><code>协议本身支持扩展</code>。</li>
+<li>可以用于 <code>值类型，结构体，枚举</code></li>
+</ul>
+<p>oc 协议：</p>
+<ul>
+<li>受限于委托代理，多用于不同类之间的传值和回调</li>
+</ul>
+<h1 id="swift-枚举-和-oc-枚举的区别？"><a href="#swift-枚举-和-oc-枚举的区别？" class="headerlink" title="swift 枚举 和 oc 枚举的区别？"></a>swift 枚举 和 oc 枚举的区别？</h1><p>swift 枚举：数据类型</p>
+<ul>
+<li><p>可以 <code>定义计算属性、类型属性，不能包含存储属性</code></p>
+</li>
+<li><p>定义 <code>方法</code></p>
+</li>
+<li><p>可以 <code>遵守协议</code> 来 <code>提供标准化功能</code></p>
+</li>
+<li><p><code>可以定义扩展</code></p>
+</li>
+<li><p>可以定义构造函数</p>
+</li>
+<li><p>可以声明在类中</p>
+</li>
+<li><p>可以 <code>递归枚举</code></p>
+</li>
+<li><p>可以定义 <code>关联值枚举、关联值绑定</code></p>
+</li>
+</ul>
+<p>oc 枚举：typedef NS_ENUM(NSInteger,Direction) 数据类型 别名</p>
+<ul>
+<li>整型的别名，很弱</li>
+</ul>
+<h1 id="闭包是什么？闭包作用？"><a href="#闭包是什么？闭包作用？" class="headerlink" title="闭包是什么？闭包作用？"></a>闭包是什么？闭包作用？</h1><ul>
+<li><p>可以传递和引用的代码块</p>
+</li>
+<li><p>可以捕获和存储上下文的常量和变量</p>
+</li>
+<li><p>全局函数和内嵌函数时 <code>特殊的闭包</code></p>
+</li>
+</ul>
+<h1 id="闭包的类型"><a href="#闭包的类型" class="headerlink" title="闭包的类型"></a>闭包的类型</h1><p><code>函数和闭包</code> 都是 <code>引用类型</code></p>
+<ul>
+<li><p>尾随闭包：闭包作为函数最后一个参数</p>
+</li>
+<li><p>逃逸闭包：函数返回之后调用 <code>@escaping</code></p>
+</li>
+<li><p>自动闭包：延迟执行 <code>@autoclosure</code></p>
+</li>
+</ul>
+<h1 id="什么是扩展？作用？"><a href="#什么是扩展？作用？" class="headerlink" title="什么是扩展？作用？"></a>什么是扩展？作用？</h1><ul>
+<li>扩展就是向一个 <code>已有类、结构体或枚举</code> 添加新功能</li>
+<li>扩展可以向一个 <code>类型</code> 添加新的功能，不能重写已有的功能</li>
+<li>添加 <code>属性（存储、计算），方法（实例方法、类方法），构造器，下标脚本，嵌套类型，协议</code>等。</li>
 </ul>
 <h1 id="方法的调用？"><a href="#方法的调用？" class="headerlink" title="方法的调用？"></a>方法的调用？</h1><ul>
 <li>struct&#x2F;extension：值类型，方法调用是 <code>静态派发</code>，直接调用 <code>地址</code></li>
@@ -363,28 +440,14 @@
 <li>mutaing：结构体中内嵌函数想要修改存储属性，需要加上 mutaing</li>
 </ul>
 <h1 id="Swift的静态派发"><a href="#Swift的静态派发" class="headerlink" title="Swift的静态派发"></a>Swift的静态派发</h1><ul>
-<li><p>OC 中的方法都是 <code>动态派发(方法调用)</code>，wift 中的方法分为 <code>静态派发和动态派发</code>.</p>
-</li>
-<li><p>动态派发:指的是方法在 <code>运行时才找具体实现</code>。Swift 中的动态派发和 OC 中的动态派发是一样的.</p>
-</li>
-<li><p>静态派发:静态派发是指在运行时调用方法不需要查表,直接跳转到方法的代码中执行.</p>
-</li>
-<li><p>静态派发的特点:</p>
-<ul>
+<li>OC 中的方法都是 <code>动态派发(方法调用)</code>，wift 中的方法分为 <code>静态派发和动态派发</code>.</li>
+<li>动态派发:指的是方法在 <code>运行时才找具体实现</code>。Swift 中的动态派发和 OC 中的动态派发是一样的.</li>
+<li>静态派发:静态派发是指在运行时调用方法不需要查表,直接跳转到方法的代码中执行.</li>
+<li>静态派发的特点:<ul>
 <li>静态派发更高效,因为静态派发免去了查表操作.</li>
 <li>静态派发的条件是方法内部的代码必须对编译器透明,且在运行时不能被更改,这样编译器才能帮助我们.</li>
 <li>Swift 中的值类型不能被继承,也就是说值类型的方法实现不能被修改或者被复写,因此值类型的方法满足静态派发.</li>
 </ul>
-</li>
-</ul>
-<h1 id="struct-和-class-区别？"><a href="#struct-和-class-区别？" class="headerlink" title="struct 和 class 区别？"></a>struct 和 class 区别？</h1><ul>
-<li><p><code>struct</code> 是 <code>值类型</code>，<code>class</code> 是 <code>引用类型</code></p>
-</li>
-<li><p><code>struct</code> 是 <code>值拷贝</code>，<code>class</code> 是 <code>引用拷贝</code></p>
-</li>
-<li><p><code>struct</code> 不 <code>可以继承</code>，<code>class</code> <code>可以继承</code></p>
-</li>
-<li><p><code>struct</code> 分配在栈中，<code>class</code> 分配在堆中</p>
 </li>
 </ul>
 <h1 id="swift-是面向对象还是函数式编程？"><a href="#swift-是面向对象还是函数式编程？" class="headerlink" title="swift 是面向对象还是函数式编程？"></a>swift 是面向对象还是函数式编程？</h1><ul>
@@ -395,33 +458,8 @@
 <li><p>swift面向函数式编程，是因为swift支持 <code>map、reduce、filter、flatmap</code> 这类去除中间状态、数学函数式方法，更加强调运算结果而不是中间过程。</p>
 </li>
 </ul>
-<h1 id="Swift为什么将String-Array-Dictionary设计成值类型？"><a href="#Swift为什么将String-Array-Dictionary设计成值类型？" class="headerlink" title="Swift为什么将String,Array,Dictionary设计成值类型？"></a>Swift为什么将String,Array,Dictionary设计成值类型？</h1><ul>
-<li><p>值类型相比引用类型，最大的优势在于 <code>内存使用的高效</code>，值类型在栈上操作,引用类型在堆上操作，栈上的操作仅仅是单个指针的上下移动,而堆上的操作则牵涉到合并、移位、重新链接等，也就是说Swift这样设计,大幅减少了堆上的内存分配和回收的次数，同时写时复制又将值传递和复制的开销降到了最低.</p>
-</li>
-<li><p>String,Array,Dictionary设计成 值类型,也是为了 <code>线程安全考虑</code>，通过Swift的let设置,使得这些数据达到了真正意义上的“不变”,它也从根本上解决了 <code>多线程中内存访问和操作顺序的问题</code>，设计成值类型还可以提升API的灵活度.</p>
-</li>
-</ul>
-<h1 id="Swift-mutating关键字的使用？"><a href="#Swift-mutating关键字的使用？" class="headerlink" title="Swift mutating关键字的使用？"></a>Swift mutating关键字的使用？</h1><p><code>异变</code> 关键字，默认情况下,struct中不能在实例方法中修改值类型的属性，若在实例方法中使用 <code>mutating</code> 关键字,不仅可以在实例方法中修改值类型的属性,而且会在方法实现结束时将其写回到原始结构.</p>
-<h1 id="Optional-可选型-是什么-Optional-可选型-解决方式？"><a href="#Optional-可选型-是什么-Optional-可选型-解决方式？" class="headerlink" title="Optional(可选型)是什么?Optional(可选型)解决方式？"></a>Optional(可选型)是什么?Optional(可选型)解决方式？</h1><ul>
-<li><p>Optional是一个 <code>可选型枚举</code>，Optional 类型表示: <code>有值 / 没有值</code></p>
-</li>
-<li><p>强行打开 ! 不安全。可选绑定 - 安全 .</p>
-</li>
-</ul>
 <h1 id="swift中-如何阻止方法-属性-下标被子类改写"><a href="#swift中-如何阻止方法-属性-下标被子类改写" class="headerlink" title="swift中,如何阻止方法,属性,下标被子类改写?"></a>swift中,如何阻止方法,属性,下标被子类改写?</h1><p>在类的定义中使用 <code>final</code> 关键字 <code>声明类、属性、方法和下标</code>，<code>final</code> 声明的类不能被继承，final 声明的属性、方法和下标不能被重写。</p>
-<h1 id="inout-的作用？"><a href="#inout-的作用？" class="headerlink" title="inout 的作用？"></a>inout 的作用？</h1><h2 id="输入输出形式参数"><a href="#输入输出形式参数" class="headerlink" title="输入输出形式参数"></a>输入输出形式参数</h2><ul>
-<li><p>可变形式参数只能在函数的内部做改变。如果你 <code>想函数能修改一个形式参数的值</code>，而且这些改变在函数结束之后依然生效，那么就需要将形式参数定义为输入输出形式参数</p>
-</li>
-<li><p>输入输出形式参数：在形式参数前边加 <code>inout</code> 关键字。</p>
-</li>
-<li><p>只能把 <code>变量</code> 作为输入输出形式参数的 <code>实际参数</code>，在将变量作为实际参数传入给输入输出形式参数时，在它前边添加一个符号 <code>&amp;</code> 来明确可以被函数修改</p>
-</li>
-<li><p>输入输出形式参数不能有默认值，可变形式参数不能被标记为 <code>inout</code></p>
-</li>
-</ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 输入输出形式参数</span><br><span class="line">func swapTwoInt(_ a: inout Int, _ b: inout Int) &#123;</span><br><span class="line">    let temp = a</span><br><span class="line">    a = b</span><br><span class="line">    b = temp</span><br><span class="line">&#125;</span><br><span class="line">var one = 10</span><br><span class="line">var two = 20</span><br><span class="line">swapTwoInt(&amp;one,&amp;two)</span><br><span class="line">print(&quot;\(one) \(two)&quot;)</span><br><span class="line"></span><br><span class="line">=========</span><br><span class="line">20 10</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="8、权限修饰符"><a href="#8、权限修饰符" class="headerlink" title="8、权限修饰符"></a>8、权限修饰符</h1><ul>
+<h1 id="权限修饰符"><a href="#权限修饰符" class="headerlink" title="权限修饰符"></a>权限修饰符</h1><ul>
 <li><p>open ：<code>修饰的属性或者方法</code> 在其他作用域既可以被访问也可以被继承或重载 override。</p>
 </li>
 <li><p>public ：<code>修饰的属性或者方法</code> 可以在 <code>其他作用域被</code> 访问，但不能被重载，也不能在继承方法中的 Extension 中被访问。</p>
@@ -521,9 +559,6 @@
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct SomeOption: OptionSet &#123;</span><br><span class="line">    let rawValue: Int</span><br><span class="line">    static let option1 = SomeOption(rawValue: 1 &lt;&lt; 0)</span><br><span class="line">    static let option2 =  SomeOption(rawValue:1 &lt;&lt; 1)</span><br><span class="line">    static let option3 =  SomeOption(rawValue:1 &lt;&lt; 2)</span><br><span class="line">&#125;</span><br><span class="line">let options: SomeOption = [.option1, .option2]</span><br></pre></td></tr></table></figure></div>
 
-<h1 id="lazy"><a href="#lazy" class="headerlink" title="lazy"></a>lazy</h1><p>lazy懒加载,oc中实利用get方法实现,swift利用闭包实现</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">private lazy var navLeftButton = &#123; () -&gt; UIButton in</span><br><span class="line">        let btn = UIButton(type: .custom)</span><br><span class="line">        btn.frame = CGRect(x: 0, y: 0, width: 50, height: 30)</span><br><span class="line">        btn.setImage(UIImage(named:&quot;back&quot;), for: .normal)</span><br><span class="line">        btn.addTarget(self, action: #selector(self.back), for: .touchUpInside)</span><br><span class="line">        return btn</span><br><span class="line">    &#125;()</span><br></pre></td></tr></table></figure></div>
-
 <h1 id="常用的关键字"><a href="#常用的关键字" class="headerlink" title="常用的关键字"></a>常用的关键字</h1><ul>
 <li><p>final：</p>
 <ul>
@@ -533,64 +568,34 @@
 </li>
 <li><p>inout：输入输出形式参数</p>
 <ul>
-<li><code>将函数的参数由 值类型 转为 引用类型</code></li>
+<li>可变形式参数只能在函数的内部做改变。如果你 <code>想函数能修改一个形式参数的值</code>，而且这些改变在函数结束之后依然生效，那么就需要将形式参数定义为输入输出形式参数</li>
+<li>输入输出形式参数：在形式参数前边加 <code>inout</code> 关键字。</li>
+<li>只能把 <code>变量</code> 作为输入输出形式参数的 <code>实际参数</code>，在将变量作为实际参数传入给输入输出形式参数时，在它前边添加一个符号 <code>&amp;</code> 来明确可以被函数修改</li>
+<li>输入输出形式参数不能有默认值，可变形式参数不能被标记为 <code>inout</code></li>
 </ul>
 </li>
-<li><p>mutating：异变方法</p>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 输入输出形式参数</span><br><span class="line">func swapTwoInt(_ a: inout Int, _ b: inout Int) &#123;</span><br><span class="line">    let temp = a</span><br><span class="line">    a = b</span><br><span class="line">    b = temp</span><br><span class="line">&#125;</span><br><span class="line">var one = 10</span><br><span class="line">var two = 20</span><br><span class="line">swapTwoInt(&amp;one,&amp;two)</span><br><span class="line">print(&quot;\(one) \(two)&quot;)</span><br><span class="line"></span><br><span class="line">=========</span><br><span class="line">20 10</span><br></pre></td></tr></table></figure></div>
+
 <ul>
-<li>默认情况下结构体和枚举，不允许修改属性，可以在 <code>func</code> 前加 <code>mutating</code> 指定可以修改属性</li>
+<li>mutating：异变方法<ul>
+<li><code>异变</code> 关键字，默认情况下,struct中不能在实例方法中修改值类型的属性，若在实例方法中使用 <code>mutating</code> 关键字,不仅可以在实例方法中修改值类型的属性,而且会在方法实现结束时将其写回到原始结构.</li>
 </ul>
 </li>
-<li><p>#available</p>
-<ul>
+<li>#available<ul>
 <li>用来判断平台和操作系统</li>
 </ul>
 </li>
-<li><p>@available</p>
-<ul>
+<li>@available<ul>
 <li>用于修饰 方法、属性、协议、扩展，用来表达它的可用性</li>
 </ul>
 </li>
 </ul>
-<h1 id="闭包是什么？闭包作用？"><a href="#闭包是什么？闭包作用？" class="headerlink" title="闭包是什么？闭包作用？"></a>闭包是什么？闭包作用？</h1><ul>
-<li><p>可以传递和引用的代码块</p>
-</li>
-<li><p>可以捕获和存储上下文的常量和变量</p>
-</li>
-<li><p>全局函数和内嵌函数时 <code>特殊的闭包</code></p>
-</li>
-</ul>
-<h1 id="闭包的类型"><a href="#闭包的类型" class="headerlink" title="闭包的类型"></a>闭包的类型</h1><p>函数和闭包都是 <code>引用类型</code></p>
-<ul>
-<li><p>尾随闭包：闭包作为函数最后一个参数</p>
-</li>
-<li><p>逃逸闭包：函数返回之后调用 @escaping</p>
-</li>
-<li><p>自动闭包：延迟执行 @autoclosure</p>
-</li>
-</ul>
-<h1 id="属性观察者"><a href="#属性观察者" class="headerlink" title="属性观察者"></a>属性观察者</h1><ul>
-<li><p>willSet：会在该值被存储之前被调用，<code>newValue</code></p>
-</li>
-<li><p>didSet：会在一个新值被存储之后被调用，<code>oldValue</code></p>
-</li>
-</ul>
-<h1 id="什么是扩展？作用？"><a href="#什么是扩展？作用？" class="headerlink" title="什么是扩展？作用？"></a>什么是扩展？作用？</h1><ul>
-<li>扩展就是向一个 <code>已有类、结构体或枚举</code> 添加新功能</li>
-<li>扩展可以向一个 <code>类型</code> 添加新的功能，不能重写已有的功能</li>
-<li>添加 <code>属性（存储、计算），方法（实例方法、类方法），构造器，下标脚本，嵌套类型，协议</code>等。</li>
-</ul>
-<h1 id="什么是协议？作用？"><a href="#什么是协议？作用？" class="headerlink" title="什么是协议？作用？"></a>什么是协议？作用？</h1><ul>
-<li>协议规定了 <code>用来实现某一特定功能所必须的方法和属性</code></li>
-<li><code>类、结构体、枚举</code> 都可以遵循协议，提供具体的实现来完成协议定义的方法和功能</li>
-<li>协议用于指定特定的 <code>实例属性或类属性</code>，而不用指定是 <code>存储属性或计算属性</code>，必须指定是只读还是可读可写</li>
-</ul>
 <h1 id="常用的三方框架"><a href="#常用的三方框架" class="headerlink" title="常用的三方框架"></a>常用的三方框架</h1><ul>
 <li>Alamofire：网络加载</li>
-<li>SwiftyJSON：JSON解析</li>
+<li>HandyJson：JSON数据解析</li>
 <li>R.swift：使用资源文件</li>
 <li>Snapkit：自动布局</li>
-<li>MonkeyKing：将内容分享到社交平台</li>
 <li>Kingfisher：网络图片加载和缓存</li>
 </ul>
 
@@ -674,7 +679,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">iOS面试题：Swift</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#swift-%E5%92%8C-oc-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">swift 和 oc 的区别？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift%E7%B1%BB%E5%9E%8B%EF%BC%9FSwiift-%E5%80%BC%E7%B1%BB%E5%9E%8B-%E5%92%8C-%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F%E7%89%B9%E7%82%B9%EF%BC%9F"><span class="nav-text">swift类型？Swiift 值类型 和 引用类型的区别？特点？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8%EF%BC%9F"><span class="nav-text">方法的调用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#final%E3%80%81-objc%E3%80%81dynamic%E3%80%81inout%E3%80%81mutaing%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-text">final、@objc、dynamic、inout、mutaing关键字</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Swift%E7%9A%84%E9%9D%99%E6%80%81%E6%B4%BE%E5%8F%91"><span class="nav-text">Swift的静态派发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#struct-%E5%92%8C-class-%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">struct 和 class 区别？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift-%E6%98%AF%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%98%E6%98%AF%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%EF%BC%9F"><span class="nav-text">swift 是面向对象还是函数式编程？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Swift%E4%B8%BA%E4%BB%80%E4%B9%88%E5%B0%86String-Array-Dictionary%E8%AE%BE%E8%AE%A1%E6%88%90%E5%80%BC%E7%B1%BB%E5%9E%8B%EF%BC%9F"><span class="nav-text">Swift为什么将String,Array,Dictionary设计成值类型？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Swift-mutating%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E4%BD%BF%E7%94%A8%EF%BC%9F"><span class="nav-text">Swift mutating关键字的使用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Optional-%E5%8F%AF%E9%80%89%E5%9E%8B-%E6%98%AF%E4%BB%80%E4%B9%88-Optional-%E5%8F%AF%E9%80%89%E5%9E%8B-%E8%A7%A3%E5%86%B3%E6%96%B9%E5%BC%8F%EF%BC%9F"><span class="nav-text">Optional(可选型)是什么?Optional(可选型)解决方式？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift%E4%B8%AD-%E5%A6%82%E4%BD%95%E9%98%BB%E6%AD%A2%E6%96%B9%E6%B3%95-%E5%B1%9E%E6%80%A7-%E4%B8%8B%E6%A0%87%E8%A2%AB%E5%AD%90%E7%B1%BB%E6%94%B9%E5%86%99"><span class="nav-text">swift中,如何阻止方法,属性,下标被子类改写?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#inout-%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">inout 的作用？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0"><span class="nav-text">输入输出形式参数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8%E3%80%81%E6%9D%83%E9%99%90%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="nav-text">8、权限修饰符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dynamic-framework-%E5%92%8C-static-framework-%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">dynamic framework 和 static framework 的区别是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Swift-%E4%B8%AD%E7%9A%84-KVC-%E5%92%8C-KVO"><span class="nav-text">Swift 中的 KVC 和 KVO</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#associatedtype-%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">associatedtype 的作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift%E4%B8%AD%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0map%E3%80%81filter%E3%80%81reduce"><span class="nav-text">swift中高阶函数map、filter、reduce</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#map-%E4%B8%8E-flatmap-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">map 与 flatmap 的区别？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#defer%E3%80%81guard%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">defer、guard的作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#throws-%E5%92%8C-rethrows-%E7%9A%84%E7%94%A8%E6%B3%95%E4%B8%8E%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">throws 和 rethrows 的用法与作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%95%B0%E7%BB%84%E7%B4%A2%E5%BC%95%E8%B6%8A%E7%95%8C%E4%BC%9A%E5%B4%A9%E6%BA%83%EF%BC%8C%E8%80%8C%E5%AD%97%E5%85%B8%E7%94%A8%E4%B8%8B%E6%A0%87%E5%8F%96%E5%80%BC%E6%97%B6-key-%E6%B2%A1%E6%9C%89%E5%AF%B9%E5%BA%94%E5%80%BC%E7%9A%84%E8%AF%9D%E8%BF%94%E5%9B%9E%E7%9A%84%E6%98%AF-nil-%E4%B8%8D%E4%BC%9A%E5%B4%A9%E6%BA%83%E3%80%82"><span class="nav-text">为什么数组索引越界会崩溃，而字典用下标取值时 key 没有对应值的话返回的是 nil 不会崩溃。</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%99-%E9%9B%86%E5%90%88%E4%B8%AD%E5%85%83%E7%B4%A0%E6%98%AF%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E7%B1%BB%E5%9E%8B-%E5%A2%9E%E5%8A%A0%E4%B8%80%E4%B8%AA%E6%89%A9%E5%B1%95%E6%96%B9%E6%B3%95%EF%BC%8C%E5%BA%94%E8%AF%A5%E6%80%8E%E4%B9%88%E5%A3%B0%E6%98%8E%EF%BC%9F"><span class="nav-text">给 集合中元素是字符串的类型 增加一个扩展方法，应该怎么声明？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0%E7%B1%BB%E5%9E%8B%E5%8F%AA%E8%A6%81%E6%98%AF%E6%95%B0%E5%AD%97%EF%BC%88Int%E3%80%81Float%EF%BC%89%E9%83%BD%E5%8F%AF%E4%BB%A5%EF%BC%8C%E8%A6%81%E6%80%8E%E4%B9%88%E8%A1%A8%E7%A4%BA%E3%80%82"><span class="nav-text">一个函数的参数类型只要是数字（Int、Float）都可以，要怎么表示。</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%B1%BB%E5%9E%8B%E8%A1%A8%E7%A4%BA%E9%80%89%E9%A1%B9%EF%BC%8C%E5%8F%AF%E4%BB%A5%E5%90%8C%E6%97%B6%E8%A1%A8%E7%A4%BA%E6%9C%89%E5%87%A0%E4%B8%AA%E9%80%89%E9%A1%B9%E9%80%89%E4%B8%AD%EF%BC%88%E7%B1%BB%E4%BC%BC-UIViewAnimationOptions-%EF%BC%89%EF%BC%8C%E7%94%A8%E4%BB%80%E4%B9%88%E7%B1%BB%E5%9E%8B%E8%A1%A8%E7%A4%BA%EF%BC%9F"><span class="nav-text">一个类型表示选项，可以同时表示有几个选项选中（类似 UIViewAnimationOptions ），用什么类型表示？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lazy"><span class="nav-text">lazy</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-text">常用的关键字</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E9%97%AD%E5%8C%85%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">闭包是什么？闭包作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">闭包的类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E8%A7%82%E5%AF%9F%E8%80%85"><span class="nav-text">属性观察者</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%89%A9%E5%B1%95%EF%BC%9F%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">什么是扩展？作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8D%8F%E8%AE%AE%EF%BC%9F%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">什么是协议？作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B6"><span class="nav-text">常用的三方框架</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#swift-%E5%92%8C-oc-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">swift 和 oc 的区别？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift%E7%B1%BB%E5%9E%8B%EF%BC%9FSwiift-%E5%80%BC%E7%B1%BB%E5%9E%8B-%E5%92%8C-%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F%E7%89%B9%E7%82%B9%EF%BC%9F"><span class="nav-text">swift类型？Swiift 值类型 和 引用类型的区别？特点？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#struct-%E5%92%8C-class-%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">struct 和 class 区别？ 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8D%8F%E8%AE%AE%EF%BC%9F"><span class="nav-text">什么是协议？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift-%E5%8D%8F%E8%AE%AE-%E5%92%8C-oc-%E5%8D%8F%E8%AE%AE%E6%9C%89%E5%95%A5%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">swift 协议 和 oc 协议有啥区别？ 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift-%E6%9E%9A%E4%B8%BE-%E5%92%8C-oc-%E6%9E%9A%E4%B8%BE%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">swift 枚举 和 oc 枚举的区别？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E9%97%AD%E5%8C%85%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">闭包是什么？闭包作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">闭包的类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%89%A9%E5%B1%95%EF%BC%9F%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">什么是扩展？作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8%EF%BC%9F"><span class="nav-text">方法的调用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#final%E3%80%81-objc%E3%80%81dynamic%E3%80%81inout%E3%80%81mutaing%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-text">final、@objc、dynamic、inout、mutaing关键字</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Swift%E7%9A%84%E9%9D%99%E6%80%81%E6%B4%BE%E5%8F%91"><span class="nav-text">Swift的静态派发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift-%E6%98%AF%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%98%E6%98%AF%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%EF%BC%9F"><span class="nav-text">swift 是面向对象还是函数式编程？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift%E4%B8%AD-%E5%A6%82%E4%BD%95%E9%98%BB%E6%AD%A2%E6%96%B9%E6%B3%95-%E5%B1%9E%E6%80%A7-%E4%B8%8B%E6%A0%87%E8%A2%AB%E5%AD%90%E7%B1%BB%E6%94%B9%E5%86%99"><span class="nav-text">swift中,如何阻止方法,属性,下标被子类改写?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="nav-text">权限修饰符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dynamic-framework-%E5%92%8C-static-framework-%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">dynamic framework 和 static framework 的区别是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Swift-%E4%B8%AD%E7%9A%84-KVC-%E5%92%8C-KVO"><span class="nav-text">Swift 中的 KVC 和 KVO</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#associatedtype-%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">associatedtype 的作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift%E4%B8%AD%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0map%E3%80%81filter%E3%80%81reduce"><span class="nav-text">swift中高阶函数map、filter、reduce</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#map-%E4%B8%8E-flatmap-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">map 与 flatmap 的区别？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#defer%E3%80%81guard%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">defer、guard的作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#throws-%E5%92%8C-rethrows-%E7%9A%84%E7%94%A8%E6%B3%95%E4%B8%8E%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">throws 和 rethrows 的用法与作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%95%B0%E7%BB%84%E7%B4%A2%E5%BC%95%E8%B6%8A%E7%95%8C%E4%BC%9A%E5%B4%A9%E6%BA%83%EF%BC%8C%E8%80%8C%E5%AD%97%E5%85%B8%E7%94%A8%E4%B8%8B%E6%A0%87%E5%8F%96%E5%80%BC%E6%97%B6-key-%E6%B2%A1%E6%9C%89%E5%AF%B9%E5%BA%94%E5%80%BC%E7%9A%84%E8%AF%9D%E8%BF%94%E5%9B%9E%E7%9A%84%E6%98%AF-nil-%E4%B8%8D%E4%BC%9A%E5%B4%A9%E6%BA%83%E3%80%82"><span class="nav-text">为什么数组索引越界会崩溃，而字典用下标取值时 key 没有对应值的话返回的是 nil 不会崩溃。</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%99-%E9%9B%86%E5%90%88%E4%B8%AD%E5%85%83%E7%B4%A0%E6%98%AF%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E7%B1%BB%E5%9E%8B-%E5%A2%9E%E5%8A%A0%E4%B8%80%E4%B8%AA%E6%89%A9%E5%B1%95%E6%96%B9%E6%B3%95%EF%BC%8C%E5%BA%94%E8%AF%A5%E6%80%8E%E4%B9%88%E5%A3%B0%E6%98%8E%EF%BC%9F"><span class="nav-text">给 集合中元素是字符串的类型 增加一个扩展方法，应该怎么声明？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0%E7%B1%BB%E5%9E%8B%E5%8F%AA%E8%A6%81%E6%98%AF%E6%95%B0%E5%AD%97%EF%BC%88Int%E3%80%81Float%EF%BC%89%E9%83%BD%E5%8F%AF%E4%BB%A5%EF%BC%8C%E8%A6%81%E6%80%8E%E4%B9%88%E8%A1%A8%E7%A4%BA%E3%80%82"><span class="nav-text">一个函数的参数类型只要是数字（Int、Float）都可以，要怎么表示。</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%B1%BB%E5%9E%8B%E8%A1%A8%E7%A4%BA%E9%80%89%E9%A1%B9%EF%BC%8C%E5%8F%AF%E4%BB%A5%E5%90%8C%E6%97%B6%E8%A1%A8%E7%A4%BA%E6%9C%89%E5%87%A0%E4%B8%AA%E9%80%89%E9%A1%B9%E9%80%89%E4%B8%AD%EF%BC%88%E7%B1%BB%E4%BC%BC-UIViewAnimationOptions-%EF%BC%89%EF%BC%8C%E7%94%A8%E4%BB%80%E4%B9%88%E7%B1%BB%E5%9E%8B%E8%A1%A8%E7%A4%BA%EF%BC%9F"><span class="nav-text">一个类型表示选项，可以同时表示有几个选项选中（类似 UIViewAnimationOptions ），用什么类型表示？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-text">常用的关键字</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B6"><span class="nav-text">常用的三方框架</span></a></li></ol>
 
     </div>
 </div>
