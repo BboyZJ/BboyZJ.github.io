@@ -9,18 +9,18 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/12/swift课程/swift47：多态和类型转换/"/>
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/12/swift课程/swift学习47-多线程/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="Swift47：多态和类型转换">
+    <meta property="og:title" content="Swift学习47:多线程">
     <meta property="og:description" content="我是小J，关注我">
-    <meta property="og:url" content="https://www.bboyzj.cn2023/03/12/Swift课程/Swift47：多态和类型转换/">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/03/12/Swift课程/Swift学习47-多线程/">
     <meta property="og:image" content="/images/redefine-logo.svg">
     <meta property="og:site_name" content="BboyZJ">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Swift47：多态和类型转换">
+    <meta name="twitter:title" content="Swift学习47:多线程">
     <meta name="twitter:description" content="我是小J，关注我">
     <meta name="twitter:image" content="/images/redefine-logo.svg">
     <!--- Icon Part-->
@@ -31,7 +31,7 @@
     
     <title>
         
-            Swift47：多态和类型转换 -
+            Swift学习47:多线程 -
         
         BboyZJ
     </title>
@@ -249,7 +249,7 @@
             
             
                 <div class="article-title">
-                    <h1 class="article-title-regular">Swift47：多态和类型转换</h1>
+                    <h1 class="article-title-regular">Swift学习47:多线程</h1>
                 </div>
             
                 
@@ -271,15 +271,15 @@
                             <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="pc">2023-03-12 22:36:21</span>
-        <span class="mobile">2023-03-12 22:36</span>
+        <span class="pc">2023-03-12 22:52:33</span>
+        <span class="mobile">2023-03-12 22:52</span>
         <span class="hover-info">Created</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-12 22:49:38</span>
-            <span class="mobile">2023-03-12 22:49</span>
+            <span class="pc">2023-03-13 00:07:03</span>
+            <span class="mobile">2023-03-13 00:07</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -325,26 +325,112 @@
             
 
             <div class="article-content markdown-body">
-                <h1 id="向下类型转换"><a href="#向下类型转换" class="headerlink" title="向下类型转换"></a>向下类型转换</h1><ul>
-<li><p>类型的常量或变量实际上是子类的实例，你可以用 <code>as?</code> 或 <code>as!</code> 向下类型转换至子类类型</p>
-</li>
-<li><p>向下类型转换可能失败，<code>as？</code> 返回的值是 <code>可选类型</code>，<code>as！</code> 返回的是 <code>强制类型</code></p>
-</li>
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>为什么几乎所有的GUI框架都是单线程的？：处理问题代价大于收益</p>
+<h1 id="多线程可以做什么"><a href="#多线程可以做什么" class="headerlink" title="多线程可以做什么"></a>多线程可以做什么</h1><ul>
+<li>网络请求</li>
+<li>IO：读写文件</li>
+<li>计算</li>
+<li>数据模型转换</li>
+<li>….</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">// 基类</span><br><span class="line">class MediaItem &#123;</span><br><span class="line">    var name: String</span><br><span class="line">    init(name: String) &#123;</span><br><span class="line">        self.name = name</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 子类</span><br><span class="line">class Movie: MediaItem &#123;</span><br><span class="line">    var director: String</span><br><span class="line">    init(name: String, director: String) &#123;</span><br><span class="line">        // 安全检查</span><br><span class="line">        self.director = director</span><br><span class="line">        super.init(name: name)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 子类</span><br><span class="line">class Song: MediaItem &#123;</span><br><span class="line">    var artist: String</span><br><span class="line">    init(name: String,artist: String) &#123;</span><br><span class="line">        self.artist = artist</span><br><span class="line">        super.init(name: name)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let arr = [Movie(name: &quot;1&quot;, director: &quot;2&quot;),</span><br><span class="line">           Song(name: &quot;3&quot;, artist: &quot;4&quot;),</span><br><span class="line">           Movie(name: &quot;5&quot;, director: &quot;6&quot;)]</span><br><span class="line">print(type(of: arr))</span><br><span class="line">for item in arr &#123;</span><br><span class="line">    // 向下类型转换</span><br><span class="line">    if let realItem = item as? Movie &#123;</span><br><span class="line">        print(realItem.director)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-<h1 id="Any-和-AnyObject"><a href="#Any-和-AnyObject" class="headerlink" title="Any 和 AnyObject"></a>Any 和 AnyObject</h1><p>swift 为不确定的类型提供了两种特殊的类型别名：</p>
+<h1 id="多线程编程的方式"><a href="#多线程编程的方式" class="headerlink" title="多线程编程的方式"></a>多线程编程的方式</h1><ul>
+<li>Thread</li>
+<li>Operation 和 OperationQueue</li>
+<li>GCD</li>
+</ul>
+<h1 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a>Thread</h1><ul>
+<li>三种中最轻量级的，自己管理线程的生命周期和线程同步</li>
+<li>线程同步对数据加锁有一定的系统开销</li>
+</ul>
+<p>1、快捷方式创建</p>
 <ul>
-<li><p>AnyObject：表示任何类类型</p>
-</li>
-<li><p>Any：表示任何类型，包括函数类型</p>
-</li>
+<li>detachNewThread(_ block: @escaping @Sendable () -&gt; Void)</li>
 </ul>
-<h1 id="嵌套类型"><a href="#嵌套类型" class="headerlink" title="嵌套类型"></a>嵌套类型</h1><ul>
-<li><p>swift 中 <code>类、结构体、枚举</code> 可以进行嵌套</p>
-</li>
-<li><p>嵌套类型能够访问它外部的成员</p>
-</li>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import Foundation</span><br><span class="line">import PlaygroundSupport</span><br><span class="line"></span><br><span class="line">// 不希望程代码在主线完成后退出，因为很多线程需要异步操作</span><br><span class="line">PlaygroundPage.current.needsIndefiniteExecution = true</span><br><span class="line"></span><br><span class="line">for i in 0...10 &#123;</span><br><span class="line">    Thread.detachNewThread &#123;</span><br><span class="line">        print(i)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>detachNewThreadSelector(_ selector: Selector, toTarget target: Any, with argument: Any?)</li>
+</ul>
+<p>2、初始化器</p>
+<ul>
+<li>Thread(target:  selector: , object: )</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import Foundation</span><br><span class="line">import PlaygroundSupport</span><br><span class="line"></span><br><span class="line">// 不希望程代码在主线完成后退出，因为很多线程需要异步操作</span><br><span class="line">PlaygroundPage.current.needsIndefiniteExecution = true</span><br><span class="line"></span><br><span class="line">class ObjectThread &#123;</span><br><span class="line">    func threadTest() &#123;</span><br><span class="line">        let thread = Thread(target: self, selector: #selector(threadMethod), object: nil)</span><br><span class="line">        // 手动开启</span><br><span class="line">        thread.start()</span><br><span class="line">    &#125;</span><br><span class="line">    @objc func threadMethod() &#123;</span><br><span class="line">        print(&quot;threadMethod&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 实例</span><br><span class="line">let obj = ObjectThread()</span><br><span class="line">obj.threadTest()</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Operation-和-OperationQueue-概述"><a href="#Operation-和-OperationQueue-概述" class="headerlink" title="Operation 和 OperationQueue 概述"></a>Operation 和 OperationQueue 概述</h1><ul>
+<li>面向对象</li>
+<li>Operation + OperationQueue</li>
+<li>取消、依赖、任务优先级、复杂逻辑、保存业务状态、子类化</li>
+</ul>
+<h1 id="Operation"><a href="#Operation" class="headerlink" title="Operation"></a>Operation</h1><ul>
+<li>Operation：抽象类，任务</li>
+<li>BlockOperation</li>
+</ul>
+<p>1、状态：</p>
+<ul>
+<li>isReady：准备好了，可以执行了</li>
+<li>isExecuting：执行中</li>
+<li>isFinished：执行完成</li>
+<li>isCancelled：取消执行</li>
+</ul>
+<p>2、同步、异步</p>
+<ul>
+<li>sync</li>
+<li>async</li>
+</ul>
+<p>3、添加依赖</p>
+<h1 id="OperationQueue"><a href="#OperationQueue" class="headerlink" title="OperationQueue"></a>OperationQueue</h1><ul>
+<li><code>OperationQueue</code> 队列，可以加入很多 <code>Operation</code>，</li>
+<li>底层使用 <code>GCD</code></li>
+<li><code>maxConcurrentOperationCount</code>：可以设置最大并发数</li>
+<li><code>defaultMaxConcurrentOperationCount</code>：根据当前系统条件动态确定的最大并发数，建议使用这个</li>
+<li>可以取消所有的 <code>Operation</code>，但是当前正在执行的不会取消</li>
+<li>所有 <code>Operation</code> 执行完毕后退出销毁</li>
+</ul>
+<h1 id="BlockOperation"><a href="#BlockOperation" class="headerlink" title="BlockOperation"></a>BlockOperation</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class ObjectOperation &#123;</span><br><span class="line">    func test() &#123;</span><br><span class="line">        let operation = BlockOperation&#123; [weak self] in</span><br><span class="line">            self?.threadMethod()</span><br><span class="line">        &#125;</span><br><span class="line">        let queue = OperationQueue()</span><br><span class="line">        queue.addOperation(operation)</span><br><span class="line">    &#125;</span><br><span class="line">    @objc func threadMethod() &#123;</span><br><span class="line">        sleep(1)</span><br><span class="line">        print(&quot;threadMethod&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let op = ObjectOperation()</span><br><span class="line">op.test()</span><br><span class="line">print(&quot;after invoke test&quot;)</span><br><span class="line"></span><br><span class="line">=====</span><br><span class="line">after invoke test</span><br><span class="line">threadMethod</span><br></pre></td></tr></table></figure></div>
+
+<p>由打印结果可知，异步执行了</p>
+<h1 id="继承-Operation"><a href="#继承-Operation" class="headerlink" title="继承 Operation"></a>继承 Operation</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">class ObjectOperation &#123;</span><br><span class="line">    func test() &#123;</span><br><span class="line">        let operation = MyOpetation()</span><br><span class="line">        let queue = OperationQueue()</span><br><span class="line">        queue.addOperation(operation)</span><br><span class="line">    &#125;</span><br><span class="line">    @objc func threadMethod() &#123;</span><br><span class="line">        sleep(1)</span><br><span class="line">        print(&quot;threadMethod&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class MyOpetation: Operation &#123;</span><br><span class="line">    override func main() &#123;</span><br><span class="line">        sleep(1)</span><br><span class="line">        print(&quot;myOperation main&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let op = ObjectOperation()</span><br><span class="line">op.test()</span><br><span class="line">print(&quot;after invoke test&quot;)</span><br><span class="line"></span><br><span class="line">========</span><br><span class="line">after invoke test</span><br><span class="line">myOperation main</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Operation-完成的回调"><a href="#Operation-完成的回调" class="headerlink" title="Operation 完成的回调"></a>Operation 完成的回调</h1><ul>
+<li>completionBlock</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">operation.completionBlock = &#123; () -&gt; Void in</span><br><span class="line">    print(&quot;completionBlock&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">========</span><br><span class="line">after invoke test</span><br><span class="line">myOperation main</span><br><span class="line">completionBlock</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="GCD"><a href="#GCD" class="headerlink" title="GCD"></a>GCD</h1><ul>
+<li>任务 + 队列</li>
+<li>易用</li>
+<li>效率</li>
+<li>性能</li>
+</ul>
+<h1 id="GCD功能"><a href="#GCD功能" class="headerlink" title="GCD功能"></a>GCD功能</h1><ul>
+<li>创建管理Queue</li>
+<li>提交Job</li>
+<li>Dispatch Group</li>
+<li>管理Dispatch Object</li>
+<li>信号量Semaphore</li>
+<li>队里屏障Barrier</li>
+<li>Dispatch Source</li>
+<li>Queue Context数据</li>
+<li>Dispatch I&#x2F;O Channel</li>
+<li>Dispatch Data 对象</li>
+</ul>
+<h1 id="GCD队列"><a href="#GCD队列" class="headerlink" title="GCD队列"></a>GCD队列</h1><ul>
+<li>主队列：任务在主线程执行</li>
+<li>并行队列：任务会以先进先出的顺序入列和出列，但是因为多个任务可以并行执行，所以顺序是不一定的</li>
+<li>串行队列：任务会以先进先出的顺序入列和出列，但是同一时刻只会执行一个任务</li>
+</ul>
+<h1 id="GCD-队列API"><a href="#GCD-队列API" class="headerlink" title="GCD-队列API"></a>GCD-队列API</h1><ul>
+<li>Dispatch.main</li>
+<li>Dispatch.global</li>
+<li>DispatchQueue</li>
+<li>queue.label</li>
+<li>setTarget</li>
+</ul>
+<h1 id="GCD-基本操作"><a href="#GCD-基本操作" class="headerlink" title="GCD 基本操作"></a>GCD 基本操作</h1><ul>
+<li>sync</li>
+<li>async</li>
+<li>asyncAfter</li>
 </ul>
 
             </div>
@@ -353,11 +439,11 @@
                 <div class="post-copyright-info">
                     <div class="article-copyright-info-container">
     <ul>
-        <li>Post title：Swift47：多态和类型转换</li>
+        <li>Post title：Swift学习47:多线程</li>
         <li>Post author：张建</li>
-        <li>Create time：2023-03-12 22:36:21</li>
+        <li>Create time：2023-03-12 22:52:33</li>
         <li>
-            Post link：https://redefine.ohevan.com/2023/03/12/Swift课程/Swift47：多态和类型转换/
+            Post link：https://redefine.ohevan.com/2023/03/12/Swift课程/Swift学习47-多线程/
         </li>
         <li>
             Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
@@ -383,29 +469,14 @@
             
                 <div class="article-nav">
                     
-                        <div class="article-prev">
-                            <a class="prev"
-                            rel="prev"
-                            href="/BboyZJ.github.io/2023/03/12/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A047-%E5%A4%9A%E7%BA%BF%E7%A8%8B/"
-                            >
-                                <span class="left arrow-icon flex-center">
-                                    <i class="fa-solid fa-chevron-left"></i>
-                                </span>
-                                <span class="title flex-center">
-                                    <span class="post-nav-title-item">Swift学习47:多线程</span>
-                                    <span class="post-nav-item">Prev posts</span>
-                                </span>
-                            </a>
-                        </div>
-                    
                     
                         <div class="article-next">
                             <a class="next"
                             rel="next"
-                            href="/BboyZJ.github.io/2023/03/12/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A042%EF%BC%9A%E5%88%9D%E5%A7%8B%E5%8C%96%E5%99%A8/"
+                            href="/BboyZJ.github.io/2023/03/12/Swift%E8%AF%BE%E7%A8%8B/Swift47%EF%BC%9A%E5%A4%9A%E6%80%81%E5%92%8C%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/"
                             >
                                 <span class="title flex-center">
-                                    <span class="post-nav-title-item">Swift学习42：初始化器</span>
+                                    <span class="post-nav-title-item">Swift47：多态和类型转换</span>
                                     <span class="post-nav-item">Next posts</span>
                                 </span>
                                 <span class="right arrow-icon flex-center">
@@ -426,8 +497,8 @@
                 <div class="post-toc-wrap">
     <div class="post-toc">
         <div class="toc-title">On this page</div>
-        <div class="page-title">Swift47：多态和类型转换</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%91%E4%B8%8B%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="nav-text">向下类型转换</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Any-%E5%92%8C-AnyObject"><span class="nav-text">Any 和 AnyObject</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97%E7%B1%BB%E5%9E%8B"><span class="nav-text">嵌套类型</span></a></li></ol>
+        <div class="page-title">Swift学习47:多线程</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%8F%AF%E4%BB%A5%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-text">多线程可以做什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="nav-text">多线程编程的方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Thread"><span class="nav-text">Thread</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Operation-%E5%92%8C-OperationQueue-%E6%A6%82%E8%BF%B0"><span class="nav-text">Operation 和 OperationQueue 概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Operation"><span class="nav-text">Operation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OperationQueue"><span class="nav-text">OperationQueue</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BlockOperation"><span class="nav-text">BlockOperation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%A7%E6%89%BF-Operation"><span class="nav-text">继承 Operation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Operation-%E5%AE%8C%E6%88%90%E7%9A%84%E5%9B%9E%E8%B0%83"><span class="nav-text">Operation 完成的回调</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD"><span class="nav-text">GCD</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD%E5%8A%9F%E8%83%BD"><span class="nav-text">GCD功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD%E9%98%9F%E5%88%97"><span class="nav-text">GCD队列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD-%E9%98%9F%E5%88%97API"><span class="nav-text">GCD-队列API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD-%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-text">GCD 基本操作</span></a></li></ol>
 
     </div>
 </div>
