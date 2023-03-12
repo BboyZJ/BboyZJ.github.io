@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-12 05:12:34</span>
-            <span class="mobile">2023-03-12 05:12</span>
+            <span class="pc">2023-03-12 21:49:05</span>
+            <span class="mobile">2023-03-12 21:49</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -402,7 +402,7 @@
 <ul>
 <li>可以定义 <code>成员类型、计算属性、类型属性（不能定义存储属性）、方法</code></li>
 <li>可以定义 <code>下标脚本</code> 用于 <code>获取值</code></li>
-<li>可以定义 <code>构造器</code> 用于 <code>生成初始化值</code></li>
+<li>可以定义 <code>初始化器</code> 用于 <code>生成初始化值</code></li>
 <li>可以 <code>扩展</code> <code>增加默认实现的功能</code></li>
 <li>可以 <code>遵守协议（protocol）</code> 来 <code>提供标准化功能</code>。</li>
 <li>可以 <code>嵌套枚举、递归枚举</code></li>
@@ -415,7 +415,7 @@
 <li>定义 <code>属性</code> 用于 <code>存储值</code></li>
 <li>定义 <code>方法</code> 用于 <code>提供功能</code></li>
 <li>定义 <code>下标脚本</code> 用于访问值</li>
-<li>定义 <code>构造器</code> 用于 <code>生成初始化值</code></li>
+<li>定义 <code>初始化器</code> 用于 <code>生成初始化值</code></li>
 <li>通过 <code>扩展</code> 以 <code>增加默认实现的功能</code></li>
 <li>符合 <code>协议</code> 以 <code>提供标准功能</code></li>
 </ul>
@@ -426,7 +426,7 @@
 <li>class <code>可以继承</code>。struct <code>不能继承</code>。</li>
 <li>class 有 <code>引用计数</code>，可以 <code>多次引用</code>。struct 没有引用计数</li>
 <li>class 有 <code>类型转换</code>，允许在 <code>运行时检查和解释一个类实例的类型</code>。struct 没有</li>
-<li>class 有 <code>解构器</code> 允许一个 <code>类实例释放任何其所被分配的资源</code></li>
+<li>class 有 <code>反初始化器</code> 在 <code>类实例释放时调用</code></li>
 <li>struct 分配在 <code>栈</code> 中，系统分配是否内存。class 分配在 <code>堆</code> 中，动态分配释放内存</li>
 <li>struct 比 class <code>更轻量级</code>，<code>栈</code> 只访问一次拿到数据，<code>堆</code> 访问两次拿到数据（第一次获取指针，第二次获取数据）</li>
 </ul>
@@ -452,8 +452,22 @@
 <ul>
 <li>受限于委托代理，多用于不同类之间的传值和回调</li>
 </ul>
-<h1 id="什么是扩展？作用？"><a href="#什么是扩展？作用？" class="headerlink" title="什么是扩展？作用？"></a>什么是扩展？作用？</h1><ul>
-<li>扩展可以向一个 <code>类型</code> 添加新的功能，<code>不能重写已有的功能</code></li>
+<h1 id="什么是扩展？作用？"><a href="#什么是扩展？作用？" class="headerlink" title="什么是扩展？作用？"></a>什么是扩展？作用？</h1><p>1、扩展可以向一个已有的 <code>类型、结构体、枚举、协议</code> 添加新的功能，</p>
+<p>2、作用：</p>
+<ul>
+<li>可以添加 <code>计算型实例属性</code> 和 <code>计算型类型属性</code>。</li>
+<li>可以添加 <code>实例方法和类型方法</code></li>
+<li>可以添加 <code>新的初始化器</code></li>
+<li>可以添加 <code>下标脚本</code> </li>
+<li>可以使现有的 <code>类型遵循某协议</code></li>
+<li>定义和使用 <code>新内嵌类型</code></li>
+<li>扩展 <code>可以向一个类型添加新的方法</code>，但是<code>不能重写已有的方法</code></li>
+</ul>
+<blockquote>
+<p>使用注意：</p>
+</blockquote>
+<ul>
+<li>不可以添加 <code>存储属性</code>，也不可以为已有属性添加属性观察器</li>
 </ul>
 <h1 id="泛型的作用？"><a href="#泛型的作用？" class="headerlink" title="泛型的作用？"></a>泛型的作用？</h1><p><code>解决代码的复用性和抽象能力</code></p>
 <h1 id="associatedtype-关键字作用？"><a href="#associatedtype-关键字作用？" class="headerlink" title="associatedtype 关键字作用？"></a>associatedtype 关键字作用？</h1><ul>

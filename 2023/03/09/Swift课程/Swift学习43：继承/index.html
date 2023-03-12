@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-09 21:13:50</span>
-            <span class="mobile">2023-03-09 21:13</span>
+            <span class="pc">2023-03-12 22:32:43</span>
+            <span class="mobile">2023-03-12 22:32</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -331,21 +331,49 @@
 <li>没有继承任何父类的类是基类，但其实它是有一个父类的，叫 <code>_SwiftObject</code></li>
 <li>被 <code>final</code> 修饰的 <code>属性、方法、下标</code> 禁止被 <code>重写</code>，禁止被 <code>继承</code></li>
 </ul>
-<h1 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h1><ul>
-<li>swift中的继承与其他语言类似，主要是 <code>子类继承父类</code> 的 <code>属性、方法、下标</code> 及其他的特征</li>
-<li>子类可以 <code>调用和访问</code> 父类的 <code>属性、方法、下标</code></li>
-<li>子类可以 <code>重写</code> 父类的 <code>属性、方法、下标</code></li>
-</ul>
-<h1 id="继承的基本使用"><a href="#继承的基本使用" class="headerlink" title="继承的基本使用"></a>继承的基本使用</h1><ul>
-<li>定义一个基类</li>
-</ul>
-<h1 id="重写的基本使用"><a href="#重写的基本使用" class="headerlink" title="重写的基本使用"></a>重写的基本使用</h1><ul>
-<li><p>重写父类的 <code>属性、方法、下标</code> 用关键字 <code>override</code> ，编译器会根据此关键字进行检查父类是不是有提供相应的声明</p>
+<h1 id="定义基类"><a href="#定义基类" class="headerlink" title="定义基类"></a>定义基类</h1><ul>
+<li><p>不继承任何类的类是 <code>基类</code></p>
 </li>
-<li><p>重写的 <code>属性、方法、下标</code> 想要访问父类用 <code>super</code> 关键字，如果 <code>super.someProperty、someMethod、some[someIndex]</code></p>
+<li><p>没有指定特定的父类的类都以基类的形式创建</p>
 </li>
 </ul>
-<h2 id="属性重写"><a href="#属性重写" class="headerlink" title="属性重写"></a>属性重写</h2><h2 id="方法重写"><a href="#方法重写" class="headerlink" title="方法重写"></a>方法重写</h2><h2 id="下标重写"><a href="#下标重写" class="headerlink" title="下标重写"></a>下标重写</h2><h2 id="属性观察器重写"><a href="#属性观察器重写" class="headerlink" title="属性观察器重写"></a>属性观察器重写</h2><h1 id="禁止重写"><a href="#禁止重写" class="headerlink" title="禁止重写"></a>禁止重写</h1><ul>
+<p>示例</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 基类</span><br><span class="line">class Person &#123;</span><br><span class="line">    var name: String = &quot;ZJ&quot;</span><br><span class="line">    func test() &#123;</span><br><span class="line">        print(&quot;hello&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="子类"><a href="#子类" class="headerlink" title="子类"></a>子类</h1><ul>
+<li><p><code>子类</code> 是基于 <code>父类</code> 创建的新类</p>
+</li>
+<li><p>子类写在父类前面，用 <code>:</code> 分割</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class Teacher: Person &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="重写"><a href="#重写" class="headerlink" title="重写"></a>重写</h1><ul>
+<li>子类可以定义自己的 <code>属性、方法、下标</code> 及其他的特征，可一级从 <code>父类继承</code>，就是所谓的 <code>重写</code></li>
+<li>子类可以 <code>继承</code> 父类的 <code>属性、方法、下标</code>，前面加 <code>override</code> 关键字</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 基类</span><br><span class="line">class Person &#123;</span><br><span class="line">    var name: String = &quot;ZJ&quot;</span><br><span class="line">    var desc: String&#123;</span><br><span class="line">        return name</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 子类</span><br><span class="line">class Student: Person &#123;</span><br><span class="line">    // 重写</span><br><span class="line">    override var desc: String&#123;</span><br><span class="line">        return super.desc + &quot;hello&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let s = Student()</span><br><span class="line">print(s.desc)</span><br><span class="line"></span><br><span class="line">=====</span><br><span class="line">ZJ hello</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="访问父类的-属性、方法、下标"><a href="#访问父类的-属性、方法、下标" class="headerlink" title="访问父类的 属性、方法、下标"></a>访问父类的 属性、方法、下标</h1><ul>
+<li>通过使用 <code>super</code> 前缀访问父类的、<code>属性、方法、下标脚本</code></li>
+</ul>
+<blockquote>
+<p>super.someMethod() 重写父类的方法<br>super.someProperty 重写父类的属性<br>super[someIndex] 重写父类的下标脚本</p>
+</blockquote>
+<h1 id="重写方法"><a href="#重写方法" class="headerlink" title="重写方法"></a>重写方法</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class Teacher: Person &#123;</span><br><span class="line">    override func test() &#123;</span><br><span class="line">        print(&quot;呜呼！&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let t = Teacher()</span><br><span class="line">t.test()</span><br><span class="line"></span><br><span class="line">======</span><br><span class="line">呜呼！</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="重写属性的getter和setter方法"><a href="#重写属性的getter和setter方法" class="headerlink" title="重写属性的getter和setter方法"></a>重写属性的getter和setter方法</h1><p>可以自定义一个gett或setter来重写父类继承的属性</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class Person &#123;</span><br><span class="line">    var desc: String = &quot;ZJ&quot;</span><br><span class="line">&#125;</span><br><span class="line">class Teacher: Person &#123;</span><br><span class="line">    var age: Int = 0</span><br><span class="line">    override var desc: String &#123;</span><br><span class="line">        return super.desc + &quot;is \(age)&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let t = Teacher()</span><br><span class="line">age = 32</span><br><span class="line">print(t.desc)</span><br><span class="line"></span><br><span class="line">======</span><br><span class="line">ZJ is 32</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="重写属性观察器"><a href="#重写属性观察器" class="headerlink" title="重写属性观察器"></a>重写属性观察器</h1><ul>
+<li><p>可以为继承的属性添加属性观察器</p>
+</li>
+<li><p>不可以为继承的 <code>常量存储属性或只读</code> 的计算属性添加属性观察器</p>
+</li>
+<li><p>不能为同一个属性同时提供重写 <code>setter和属性观察器</code></p>
+</li>
+</ul>
+<h1 id="禁止重写"><a href="#禁止重写" class="headerlink" title="禁止重写"></a>禁止重写</h1><ul>
 <li>可以用 <code>final</code> 关键字禁止被 <code>继承</code></li>
 <li>禁止继承属性： final var（变量属性）、final let（常量属性）</li>
 <li>禁止继承方法：final func（实例方法）、final class（类方法）、</li>
@@ -432,7 +460,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">Swift学习：继承</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%A7%E6%89%BF"><span class="nav-text">继承</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%A7%E6%89%BF%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-text">继承的基本使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E5%86%99%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-text">重写的基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E9%87%8D%E5%86%99"><span class="nav-text">属性重写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E9%87%8D%E5%86%99"><span class="nav-text">方法重写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E6%A0%87%E9%87%8D%E5%86%99"><span class="nav-text">下标重写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E8%A7%82%E5%AF%9F%E5%99%A8%E9%87%8D%E5%86%99"><span class="nav-text">属性观察器重写</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A6%81%E6%AD%A2%E9%87%8D%E5%86%99"><span class="nav-text">禁止重写</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E5%9F%BA%E7%B1%BB"><span class="nav-text">定义基类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%90%E7%B1%BB"><span class="nav-text">子类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E5%86%99"><span class="nav-text">重写</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E7%88%B6%E7%B1%BB%E7%9A%84-%E5%B1%9E%E6%80%A7%E3%80%81%E6%96%B9%E6%B3%95%E3%80%81%E4%B8%8B%E6%A0%87"><span class="nav-text">访问父类的 属性、方法、下标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E5%86%99%E6%96%B9%E6%B3%95"><span class="nav-text">重写方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E5%86%99%E5%B1%9E%E6%80%A7%E7%9A%84getter%E5%92%8Csetter%E6%96%B9%E6%B3%95"><span class="nav-text">重写属性的getter和setter方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E5%86%99%E5%B1%9E%E6%80%A7%E8%A7%82%E5%AF%9F%E5%99%A8"><span class="nav-text">重写属性观察器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A6%81%E6%AD%A2%E9%87%8D%E5%86%99"><span class="nav-text">禁止重写</span></a></li></ol>
 
     </div>
 </div>
