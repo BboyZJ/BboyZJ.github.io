@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -332,7 +332,12 @@
 <li>实战项目优化</li>
 </ul>
 <h1 id="界面卡顿"><a href="#界面卡顿" class="headerlink" title="界面卡顿"></a>界面卡顿</h1><p>通常来说，计算机中的显示过程是下面这样的，通过 <code>CPU、GPU、显示器</code> 协同工作来将图片显示到屏幕上的</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/162383391-72571ac3-d00a-44bc-bd32-3a044288ce11.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162383391-72571ac3-d00a-44bc-bd32-3a044288ce11.png"
+                     
+                ></p>
 <ul>
 <li><p><code>CPU</code> 计算好显示的 <code>内容</code>，提交到 <code>GPU</code></p>
 </li>
@@ -350,7 +355,12 @@
 <p>下面我们来说说，屏幕卡顿的原因</p>
 <p>在 <code>VSync</code> 信号到来后，<code>系统图形服务</code> 会通过 <code>CADisplayLink</code> 等机制通知 <code>App</code>，App 主线程开始在 <code>CPU</code> 中计算显示内容，随后CPU会将计算好的内容提交到GPU去。由GPU进行变换、合成、渲染。随后 <code>GPU</code> 会把渲染结果提交到 <code>帧缓冲区</code> 去，等待下一次 <code>VSync</code> 信号到来时显示到屏幕上。由于垂直同步信号的机制，<code>如果在一个VSync时间内，CPU后者GPU没有完成内容提交，则那一帧就会被丢弃，等待下一次机会再显示</code>，而这时显示屏会保留之前的内容不改变。所以可以简单理解 <code>掉帧</code> 为 <code>过时不候</code></p>
 <p>如下图所示，是一个显示过程，第1个在VSync到来期间，GPU渲染提前完成，正常显示；第2个在VSync期间，仍在处理中，此时屏幕不刷新，依旧显示第1帧；第3个VSync期间，切换到另一个FrameBuffer，让CPU渲染；此时就出现了 <code>掉帧2</code> 情况，渲染时就会出现明显的 <code>卡顿现象</code></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/162383478-8a64cad7-9e0f-4939-8a08-fff88a2889a6.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162383478-8a64cad7-9e0f-4939-8a08-fff88a2889a6.png"
+                     
+                ></p>
 <p>从图中可以看出，CPU和GPU不论是哪个阻碍了显示流程，都会造成 <code>掉帧</code> 现象，所以为了给用户提供更好的体验，在开发中，我们需要进行 <code>卡顿检测</code> 以及相应的 <code>优化</code></p>
 <h1 id="卡顿监控"><a href="#卡顿监控" class="headerlink" title="卡顿监控"></a>卡顿监控</h1><p>卡顿监控的方案一般有三种：</p>
 <ul>
@@ -746,6 +756,10 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

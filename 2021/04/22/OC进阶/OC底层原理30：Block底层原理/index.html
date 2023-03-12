@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -332,7 +332,12 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void(^block)(void) = ^&#123;</span><br><span class="line">    NSLog(@&quot;ZJ&quot;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
 
 <p>此时的block无参数，也无返回值，属于<code>全局block</code>，如下图所示：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/127948369-17bd73e0-625c-4012-95ad-59a190514565.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/127948369-17bd73e0-625c-4012-95ad-59a190514565.png"
+                     
+                ></p>
 <ul>
 <li><code>__NSMallocBlock__</code> ：堆区block，因为block即是 <code>函数</code> ，也是 <code>对象</code></li>
 </ul>
@@ -352,9 +357,19 @@
 
 <p>为什么？居然还是 <code>__NSMallocBlock__</code> ，堆区？<br>答：因为在 <code>ARC</code> 环境下，编译器自动帮我们加了 <code>copy</code> 操作。在 <code>局部变量a</code> 在没有处理（即没有 <code>拷贝</code> 之前）是 <code>栈区block</code>，处理之后（即 <code>拷贝</code> 之后）是 <code>堆区block</code>，目前的栈区block越来越少了。</p>
 <p>当我们关掉ARC如下：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/127952600-c96f2af4-58ed-4653-872c-a156ce508960.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/127952600-c96f2af4-58ed-4653-872c-a156ce508960.png"
+                     
+                ></p>
 <p>再来打印一下结果：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/127952732-80d98b33-8d37-4504-b2f7-9813bef0fd57.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/127952732-80d98b33-8d37-4504-b2f7-9813bef0fd57.png"
+                     
+                ></p>
 <p><strong>【总结】</strong></p>
 <ul>
 <li><p>block直接存储在 <code>全局区</code></p>
@@ -422,7 +437,12 @@
 </li>
 </ul>
 <p><strong>关系图如下：</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/127963640-38d55552-982b-4d57-82bc-e8e3dd1d8a1c.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/127963640-38d55552-982b-4d57-82bc-e8e3dd1d8a1c.png"
+                     
+                ></p>
 <h1 id="Block循环引用解决"><a href="#Block循环引用解决" class="headerlink" title="Block循环引用解决"></a>Block循环引用解决</h1><h2 id="请问下面两段代码是否有循环引用？"><a href="#请问下面两段代码是否有循环引用？" class="headerlink" title="请问下面两段代码是否有循环引用？"></a>请问下面两段代码是否有循环引用？</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 代码一</span><br><span class="line">self.name = @&quot;ZJ&quot;;</span><br><span class="line">self.block = ^&#123;</span><br><span class="line">    NSLog(@&quot;%@&quot;,self.name);</span><br><span class="line">&#125;;</span><br><span class="line">    </span><br><span class="line">// 代码二</span><br><span class="line">[UIView animateWithDuration:1 animations:^&#123;</span><br><span class="line">    NSLog(@&quot;%@&quot;,self.name);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure></div>
 
 <ul>
@@ -452,7 +472,12 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// block</span><br><span class="line">NSLog(@&quot;%ld&quot;,(long)CFGetRetainCount((__bridge CFTypeRef)(self)));</span><br><span class="line">__weak typeof(self) weakSelf = self;</span><br><span class="line">NSLog(@&quot;%ld&quot;,CFGetRetainCount((__bridge CFTypeRef)(self)));</span><br><span class="line">self.block = ^&#123;</span><br><span class="line">    NSLog(@&quot;%@&quot;,weakSelf.name);</span><br><span class="line">&#125;;</span><br><span class="line">NSLog(@&quot;%p - %p&quot;,weakSelf,self);</span><br><span class="line">NSLog(@&quot;%ld&quot;,(long)CFGetRetainCount((__bridge CFTypeRef)(self.block)));</span><br><span class="line">NSLog(@&quot;%ld&quot;,(long)CFGetRetainCount((__bridge CFTypeRef)(self)));</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>得到的结果如下：</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/127974858-7dc045e9-9d44-45ca-9263-0988b8cb7e1f.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/127974858-7dc045e9-9d44-45ca-9263-0988b8cb7e1f.png"
+                     
+                ></p>
 <ul>
 <li>如果 <code>block</code> 内部嵌套 <code>block</code>，需要同时使用 <code>__weak</code> 和 <code>__strong</code></li>
 </ul>
@@ -553,7 +578,12 @@
 
 <p><strong>【总结】</strong>：<code>block</code> 的 <code>本质</code> 是 <code>对象、函数、结构体</code>，由于block函数没有名称，也被称为 <code>匿名函数</code></p>
 <p><code>block</code> 通过 <code>clang</code> 编译后的源码间的关系如下图所示：以 <code>block</code> 修饰的变量为例：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/128323860-4a3e3ea3-1e0a-417b-add6-3031b15a2920.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/128323860-4a3e3ea3-1e0a-417b-add6-3031b15a2920.png"
+                     
+                ></p>
 <p><strong>1、block为什么需要调用？</strong></p>
 <p>在底层block的类型 <code>__main_block_imp_0</code> 结构体，通过其同名构造函数创建，第一个传入的block内部实现代码块，即 <code>__main_block_func_0</code>，用 <code>fp</code> 表示，然后赋值给 <code>impl</code> 属性，然后在 <code>main</code> 中进行了调用，这也是block为什么需要调用的原因。如果不调用，block内部实现的代码块将无法执行，可以总结以下两点：</p>
 <ul>
@@ -613,15 +643,30 @@
 <ul>
 <li>通过在block处打断点，分析运行时的block</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/128460979-d5e44fb3-836e-4a67-adfd-4325e6de4fa6.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/128460979-d5e44fb3-836e-4a67-adfd-4325e6de4fa6.png"
+                     
+                ></p>
 <ul>
 <li>加 <code>objc_retainBlock</code> 符号断点，发现会走到 <code>_Block_copy</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/128461677-621a5b62-43d6-4d20-9bb7-54843152f766.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/128461677-621a5b62-43d6-4d20-9bb7-54843152f766.png"
+                     
+                ></p>
 <ul>
 <li>加 <code>_Block_copy</code> 符号断点，运行时在 <code>libsystem_blocks.dylib</code> 源码中</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/128461750-54867562-1cba-4a3b-a01a-8fe498ebb01b.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/128461750-54867562-1cba-4a3b-a01a-8fe498ebb01b.png"
+                     
+                ></p>
 <p>可以到苹果开源网站下载最新的 <a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/source/libclosure/" >libcloseure-074 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 源码，通过查看 <code>_Block_copy</code> 的源码实现，发现block底层的真正类型是<code>_Block_layout</code></p>
 <h1 id="Block的真正类型"><a href="#Block的真正类型" class="headerlink" title="Block的真正类型"></a>Block的真正类型</h1><p>查看 <code>Block_layout</code> 类型的定义，是一个结构体：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// Block 结构体</span><br><span class="line">struct Block_layout &#123;</span><br><span class="line">    // 指向表明block类型的类</span><br><span class="line">    void *isa; // 8字节</span><br><span class="line">    // 用来作标识符的，类似于isa中的位域,按bit位表示一些block的附加信息</span><br><span class="line">    volatile int32_t flags; // contains ref count 4字节</span><br><span class="line">    // 保留信息，可以理解预留位置，用于存储block内部变量信息</span><br><span class="line">    int32_t reserved; // 4字节</span><br><span class="line">    // 函数指针，指向具体的block实现的调用地址</span><br><span class="line">    BlockInvokeFunction invoke;</span><br><span class="line">    // block的附加信息</span><br><span class="line">    struct Block_descriptor_1 *descriptor;</span><br><span class="line">    // imported variables</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
@@ -665,21 +710,41 @@
 <ul>
 <li>打断点运行，走到 <code>objc_retainBlock</code>，block断点处读取寄存器 <code>x0</code>，此时 <code>block</code> 是 <code>全局block</code>，即 <code>__NSGlobalBlock__</code>：</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/128474915-09c6eacc-62da-4479-a39c-865dd09b1f99.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/128474915-09c6eacc-62da-4479-a39c-865dd09b1f99.png"
+                     
+                ></p>
 <p><strong>2、增加外部变量a的block：</strong></p>
 <ul>
 <li>同上，执行到符号断点 <code>objc_retainBlock</code>，得到的 <code>block</code> 是 <code>栈block</code>，即<code>__NSStackBlock</code>：</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/128475461-5b02492b-5d28-46d8-a161-b6118cd0140e.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/128475461-5b02492b-5d28-46d8-a161-b6118cd0140e.png"
+                     
+                ></p>
 <ul>
 <li>增加 <code>_Block_copy</code> 符号断点并断住，直接在最后的 <code>ret</code> 加断点，读取 <code>x0</code>，发现经过 <code>_Block_copy</code> 之后，变成了 <code>堆block</code>，即 <code>__NSMallocBlock__</code>，主要是因为block地址发生了改变，为堆 <code>block</code>:</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/128476618-ceecf044-162b-4084-9164-8fd07d474982.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/128476618-ceecf044-162b-4084-9164-8fd07d474982.png"
+                     
+                ></p>
 <p><strong>调用情况</strong></p>
 <ul>
 <li>同样也可以通过断点来验证</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16508769047375.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508769047375.jpg"
+                     
+                ></p>
 <ul>
 <li><p><code>register read x0</code> 读取x0，为堆block</p>
 </li>
@@ -688,11 +753,21 @@
 <li><p><code>register read x11</code> ，此时是指向一片内存空间，用于存储 <code>_block_invoke</code></p>
 </li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16508769378666.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508769378666.jpg"
+                     
+                ></p>
 <ul>
 <li>按住 <code>control + step into</code>，进入 <code>_block_invoke</code>，可以得出是通过内存平移得到的block内部实现</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16508769975300.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508769975300.jpg"
+                     
+                ></p>
 <p>前面提到的 <code>Block_layout</code> 的结构体源码,从源码中可以看出，有个属性 <code>invoke</code>，即block的执行者，是从 <code>isa</code> 的首地址平移 <code>16</code> 字节取到 <code>invoke</code>，然后进行调用执行的</p>
 <h1 id="签名"><a href="#签名" class="headerlink" title="签名"></a>签名</h1><ul>
 <li><p>继续操作，读取 <code>x0</code> 寄存器,看内存布局,通过 <code>内存平移 3*8</code> 就可获得 <code>Block_layout</code> 的属性 <code>descriptor</code>,主要是为了查看是否有 <code>Block_descriptor_2</code> 和 <code>Block_descriptor_3</code>，其中3中有block的签名</p>
@@ -703,11 +778,21 @@
 </ul>
 </li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16508771126805.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508771126805.jpg"
+                     
+                ></p>
 <ul>
 <li><code>x/8gx 0x00000001008a0010</code> ， 查看descriptor的内存情况，其中第三个<code>0x000000010089f395</code> 表示签名</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16508771384080.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508771384080.jpg"
+                     
+                ></p>
 <ul>
 <li><p>判断是否有 <code>Block_descriptor_2</code>，即flags的 <code>BLOCK_HAS_COPY_DISPOSE</code>（拷贝辅助函数）是否有值</p>
 <ul>
@@ -716,7 +801,12 @@
 </ul>
 </li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16508772073802.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508772073802.jpg"
+                     
+                ></p>
 <ul>
 <li><p>判断是否有 <code>Block_descriptor_3</code></p>
 <ul>
@@ -725,15 +815,30 @@
 </ul>
 </li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16508772669653.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508772669653.jpg"
+                     
+                ></p>
 <ul>
 <li><code>p (char *)0x000000010089f395</code> – 获取 <code>Block_descriptor_3</code> 中的属性 <code>signature</code> 签名</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16508772949416.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508772949416.jpg"
+                     
+                ></p>
 <ul>
 <li><code>po [NSMethodSignature signatureWithObjCTypes:&quot;v8@?0&quot;]</code> ，即打印签名</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16508773252829.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508773252829.jpg"
+                     
+                ></p>
 <p><strong>其中签名的部分说明如下:</strong></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//无返回值</span><br><span class="line">return value: -------- -------- -------- --------</span><br><span class="line">    type encoding (v) &#x27;v&#x27;</span><br><span class="line">    flags &#123;&#125;</span><br><span class="line">    modifiers &#123;&#125;</span><br><span class="line">    frame &#123;offset = 0, offset adjust = 0, size = 0, size adjust = 0&#125;</span><br><span class="line">    memory &#123;offset = 0, size = 0&#125;</span><br><span class="line">argument 0: -------- -------- -------- --------</span><br><span class="line">    //encoding = (@),类型是 @?</span><br><span class="line">    type encoding (@) &#x27;@?&#x27;</span><br><span class="line">    //@是isObject ，？是isBlock，代表 isBlockObject</span><br><span class="line">    flags &#123;isObject, isBlock&#125;</span><br><span class="line">    modifiers &#123;&#125;</span><br><span class="line">    frame &#123;offset = 0, offset adjust = 0, size = 8, size adjust = 0&#125;</span><br><span class="line">    //所在偏移位置是8字节</span><br><span class="line">    memory &#123;offset = 0, size = 8&#125;</span><br></pre></td></tr></table></figure></div>
 
@@ -844,7 +949,12 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">static void _Block_byref_release(const void *arg) &#123;</span><br><span class="line">    //对象强转为Block_byref类型结构体</span><br><span class="line">    struct Block_byref *byref = (struct Block_byref *)arg;</span><br><span class="line"></span><br><span class="line">    // dereference the forwarding pointer since the compiler isn&#x27;t doing this anymore (ever?)</span><br><span class="line">    byref = byref-&gt;forwarding;//取消指针引用</span><br><span class="line">    </span><br><span class="line">    if (byref-&gt;flags &amp; BLOCK_BYREF_NEEDS_FREE) &#123;</span><br><span class="line">        int32_t refcount = byref-&gt;flags &amp; BLOCK_REFCOUNT_MASK;</span><br><span class="line">        os_assert(refcount);</span><br><span class="line">        if (latching_decr_int_should_deallocate(&amp;byref-&gt;flags)) &#123;</span><br><span class="line">            if (byref-&gt;flags &amp; BLOCK_BYREF_HAS_COPY_DISPOSE) &#123;//是否有拷贝辅助函数</span><br><span class="line">                struct Block_byref_2 *byref2 = (struct Block_byref_2 *)(byref+1);</span><br><span class="line">                (*byref2-&gt;byref_destroy)(byref);//销毁拷贝对象</span><br><span class="line">            &#125;</span><br><span class="line">            free(byref);//释放</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>所以，综上所述，Block的 <code>三层copy</code> 的流程如下图所示：</p>
-<p><img src="/BboyZJ.github.io/assets/16508774872343.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16508774872343.png"
+                     
+                ></p>
 
             </div>
 
@@ -1136,6 +1246,10 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

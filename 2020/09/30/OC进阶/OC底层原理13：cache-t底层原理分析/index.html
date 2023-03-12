@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -374,7 +374,12 @@
 </ul>
 <p><strong>【总结】</strong></p>
 <p>通过上面几个结构体分析，我们可以得出一个如下的结构图：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/96363367-6db75580-1166-11eb-9331-a1daecd5fb9c.png" alt="w250"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96363367-6db75580-1166-11eb-9331-a1daecd5fb9c.png"
+                      alt="w250"
+                ></p>
 <h1 id="【补充知识】sel-amp-imp-的关系"><a href="#【补充知识】sel-amp-imp-的关系" class="headerlink" title="【补充知识】sel &amp; imp 的关系"></a>【补充知识】sel &amp; imp 的关系</h1><p>我们知道，每一个方法都有一个 <code>sel</code> 和 <code>imp</code>，<code>sel</code> 就是 <code>方法编号</code>，<code>imp</code> 就是 <code>函数指针(方法实现)</code>，我们在查找方法的时候是一个非常漫长的过程，<code>oc</code> 的 <code>函数实现</code> 是通过 <code>下层c/c++</code> 来实现的，<code>oc上层</code> 的 <code>sel</code> 和 <code>imp</code> 起始是 <code>对下层</code> 的 <code>封装</code></p>
 <p><strong>【方法的组成】:</strong></p>
 <ul>
@@ -389,7 +394,12 @@
 <li>通过页码去定位具体的内容</li>
 </ul>
 <p>下面用一张图表示：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95676103-5ae4d400-0bee-11eb-9762-59f6497c62f5.png" alt="w250"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95676103-5ae4d400-0bee-11eb-9762-59f6497c62f5.png"
+                      alt="w250"
+                ></p>
 <h1 id="cache中查找sel-imp"><a href="#cache中查找sel-imp" class="headerlink" title="cache中查找sel-imp"></a>cache中查找sel-imp</h1><p><code>cache_t</code> 中查找存储的 <code>sel-imp</code>，有以下两种方式</p>
 <ul>
 <li>通过源码查找</li>
@@ -408,12 +418,22 @@
 <ul>
 <li>在 <code>main.m</code> 中定义 <code>ZJPerson</code> 类的 <code>对象p</code>，并调用其中的 <code>3个实例方法</code>，在第一个方法处加两个 <code>断点</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/96364523-955dec00-116d-11eb-9eb9-c57c7c6fa8ed.png" alt="w250"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96364523-955dec00-116d-11eb-9eb9-c57c7c6fa8ed.png"
+                      alt="w250"
+                ></p>
 <p><code>【通过源码查找】</code></p>
 <ul>
 <li>运行执行，断在 <code>[p sayHello];</code> 部分，此时执行以下lldb调试流程：</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/96365462-4f0b8b80-1173-11eb-8594-4baa031fae9f.png" alt="w250"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96365462-4f0b8b80-1173-11eb-8594-4baa031fae9f.png"
+                      alt="w250"
+                ></p>
 <p>由上面的调式流程可知：</p>
 <ul>
 <li><p><code>cache属性</code> 的获取，需要通过 <code>pClass</code> 的 <code>首地址平移16字节</code>，即 <code>首地址 + 0x10</code> 获取 <code>cache的地址</code></p>
@@ -426,13 +446,28 @@
 <p>由上图可知，在没有执行方法调用之前，此时 <code>cache</code> 是没有缓存的，执行调用了一次之后，<code>cache</code> 中就 <code>缓存</code> 了 <code>一次</code>，即调用一次方法就会缓存一次。</p>
 <p>我们在前面了解了如何获取 <code>cache</code> 中 <code>sel-imp</code>，那么如何验证打印的<code>sel-imp</code> 就是我们调用的呢？可以通过 <code>machoView</code> 打开 <code>target</code> 的可执行文件，在方法列表中查看其 <code>imp</code> 的值 <code>是否是一致</code> 的，如下所示，发现是一致的，所以打印的这个 <code>sel-imp</code> 就是 <code>ZJPerson</code> 的实例方法：</p>
 <p><strong>【machoView图】：</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/96365694-0e147680-1175-11eb-96a8-2118cc073e87.png" alt="w250"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96365694-0e147680-1175-11eb-96a8-2118cc073e87.png"
+                      alt="w250"
+                ></p>
 <p><strong>【imp截图：】</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/96365715-2b494500-1175-11eb-8a60-1f4cf17407d3.png" alt="w250"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96365715-2b494500-1175-11eb-8a60-1f4cf17407d3.png"
+                      alt="w250"
+                ></p>
 <ul>
 <li>接着上面的 <code>LLDB</code> 调试步骤，我们再调一个方法，其 <code>LLDB</code> 调试如下图：</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/96365992-4452f580-1177-11eb-9496-57b30db5353c.png" alt="w250"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96365992-4452f580-1177-11eb-9496-57b30db5353c.png"
+                      alt="w250"
+                ></p>
 <p>第一个调用方法的存储获取很简单，直接通过 <code>_buckets</code> 的 <code>首地址</code> 调用对应的方法即可，那么获取第二个呢？在之前的 <a href="https://www.bboyzj.cn/2020/09/24/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8610%EF%BC%9A%E7%B1%BB%20&%20%E7%B1%BB%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90/">OC底层原理10：类 &amp; 类结构分析</a> 文章中，曾提及过一个概念 <code>指针偏移</code>，所以我们这里可以通过 <code>_buckets</code> 属性的 <code>首地址偏移</code>，即 <code>p *($9+1)</code> 即可获取第二个方法的 <code>sel 和 imp</code></p>
 <p>如果有多个方法需要获取，以此类推，例如 <code>p *($9+i)</code></p>
 <p><strong>【脱离源码通过项目查找】</strong></p>
@@ -446,11 +481,21 @@
 <ul>
 <li>这里有个问题需要注意，在源码中，<code>objc_class</code> 的 <code>ISA</code> 属性时继承自 <code>objc_object</code> 的，但在我们将其拷贝过来时，去掉了 <code>objc_class</code> 的继承关系，需要将这个属性明确，否则打印的结果是有问题的，如下图所示：</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506161124201.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506161124201.jpg"
+                     
+                ></p>
 <ul>
 <li>加上 <code>ISA</code> 属性后，其正确的打印结果如下：</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506161617054.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506161617054.jpg"
+                     
+                ></p>
 <p>针对上面的打印结果，有以下几个疑问？</p>
 <ul>
 <li><code>_mask</code> 是什么？</li>
@@ -464,29 +509,59 @@
 <h1 id="cache-t-底层原理分析"><a href="#cache-t-底层原理分析" class="headerlink" title="cache_t 底层原理分析"></a>cache_t 底层原理分析</h1><ul>
 <li>首先，从 <code>cache_t</code> 中的 <code>_mask</code> 属性开始分析，找 <code>cache_t</code> 中引起变化的函数，发现了 <code>incrementOccupied()</code> 函数</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506175409306.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506175409306.jpg"
+                     
+                ></p>
 <p>该函数的具体实现为</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void incrementOccupied(); //Occupied自增</span><br><span class="line"></span><br><span class="line">//👇具体实现</span><br><span class="line">void cache_t::incrementOccupied() </span><br><span class="line">&#123;</span><br><span class="line">    _occupied++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>源码中，全局搜索 <code>incrementOccupied()</code> 函数，发现只在 <code>cache_t</code> 的 <code>insert</code> 方法有调用</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506176699882.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506176699882.png"
+                     
+                ></p>
 <ul>
 <li><code>insert</code> 方法，理解为 <code>cache_t</code> 的插入，而 <code>cache</code> 中存储的就是 <code>sel-imp</code>，所以 <code>cache</code> 的原理从 <code>insert</code> 方法开始分析，以下是 <code>cache</code> 原理分析的流程图</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506177129298.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506177129298.png"
+                     
+                ></p>
 <ul>
 <li>全局搜索 <code>insert(</code> 方法，发现只有 <code>cache_fill</code> 方法中的调用符合</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506177819433.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506177819433.png"
+                     
+                ></p>
 <ul>
 <li>全局搜索 <code>cache_fill</code>，发现在写入之前，还有一步操作，即 <code>cache</code> 读取，即查找 <code>sel-imp</code>，如下所示</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506178147151.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506178147151.png"
+                     
+                ></p>
 <p>但本文的重点还是分析 <code>cache</code> 存储的原理，接下来根据 <code>cache_t</code> 写入的流程图，着重分析 <code>insert</code> 方法</p>
 <h1 id="insert-方法分析"><a href="#insert-方法分析" class="headerlink" title="insert 方法分析"></a>insert 方法分析</h1><p>在 <code>insert</code> 方法中，其源码实现如下</p>
-<p><img src="/BboyZJ.github.io/assets/16506178813685.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506178813685.png"
+                     
+                ></p>
 <p>主要分为以下几部分：</p>
 <ul>
 <li>【第一步】<code>计算</code> 出当前的 <code>缓存占用量</code></li>
@@ -524,7 +599,12 @@
 
 <p><strong>【realloc方法：开辟空间】</strong></p>
 <p>该方法，在 <code>第一次创建</code> 以及 <code>两倍扩容</code> 时，都会使用，其源码实现如图所示</p>
-<p><img src="/BboyZJ.github.io/assets/16506185309016.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506185309016.png"
+                     
+                ></p>
 <p>主要有以下几步：</p>
 <ul>
 <li><p><code>allocateBuckets</code> 方法：向系统 <code>申请开辟内存</code>，即开辟 <code>bucket</code>，此时的bucket只是一个临时变量</p>
@@ -535,20 +615,40 @@
 </ul>
 </li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506186391406.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506186391406.png"
+                     
+                ></p>
 <ul>
 <li>如果 <code>不是真机</code>，<code>正常存储bucket和mask</code>，并将 <code>occupied</code> 占用设置为 <code>0</code></li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506186864056.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506186864056.png"
+                     
+                ></p>
 <ul>
 <li>如果有旧的buckets，需要清理之前的缓存，即调用 <code>cache_collect_free</code> 方法，其源码实现如下</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506187036345.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506187036345.png"
+                     
+                ></p>
 <p>该方法的实现主要有以下几步：</p>
 <ul>
 <li><code>_garbage_make_room</code> 方法：创建垃圾回收空间</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506187497909.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506187497909.png"
+                     
+                ></p>
 <ul>
 <li><p>如果是 <code>第一次</code>，需要 <code>分配回收空间</code></p>
 </li>
@@ -559,7 +659,12 @@
 <li><p><code>cache_collect</code> 方法：垃圾回收，清理旧的bucket</p>
 </li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506187497909.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506187497909.png"
+                     
+                ></p>
 <p><strong>【第三步】针对需要存贮的bucket进行内部imp和sel赋值</strong></p>
 <p>这部分主要是根据 <code>cache_hash</code> 方法，即 <code>哈希算法</code> ，计算 <code>sel-imp</code> 存储的 <code>哈希下标</code>，分为以下三种情况：</p>
 <ul>
@@ -893,6 +998,10 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

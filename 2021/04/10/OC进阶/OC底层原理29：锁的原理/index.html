@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -327,7 +327,12 @@
             <div class="article-content markdown-body">
                 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文主要介绍常见的锁，以及 <code>synchronized、NSLock、递归锁、条件锁</code> 的底层分析</p>
 <h1 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h1><p>借鉴一张锁的性能数据对比图，如下所示</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/162384806-7de609e9-b21f-4647-82db-7725dcf59ab4.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162384806-7de609e9-b21f-4647-82db-7725dcf59ab4.jpg"
+                     
+                ></p>
 <p>可以看出，图中锁的性能从高到底依次是：<code>OSSPinLock(自旋锁) -&gt; dispatch_semaphone(信号量) -&gt; ptread_mutex(互斥锁) -&gt; OSSPinLock(自旋锁) -&gt; NSCondition(条件锁) -&gt; pthread_mutex(recusive 互斥锁) -&gt; NSRecursiveLock(递归锁) -&gt; NSConditionLock(条件锁) -&gt; synchronized(互斥锁)</code> </p>
 <p>图中大致分为以下几类：</p>
 <ul>
@@ -387,15 +392,30 @@
 <h2 id="synchronized-互斥递归锁"><a href="#synchronized-互斥递归锁" class="headerlink" title="synchronized(互斥递归锁)"></a>synchronized(互斥递归锁)</h2><ul>
 <li>开启汇编模式，发现 <code>@synchronized</code> 在执行过程中，会走底层的 <code>objc_sync_enter</code> 和 <code>objc_sync_exit</code> 方法</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/162385051-568d26bd-bdca-42b8-bee0-c19df0e24650.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162385051-568d26bd-bdca-42b8-bee0-c19df0e24650.jpg"
+                     
+                ></p>
 <ul>
 <li>也可以通过 <code>clang</code>，查看底层编译代码</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/162385128-79078c6e-06eb-4504-81bf-6d9bd853d64e.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162385128-79078c6e-06eb-4504-81bf-6d9bd853d64e.jpg"
+                     
+                ></p>
 <ul>
 <li>通过对 <code>objc_sync_enter</code> 方法符号断点，查看底层所在的源码库，通过断点发现在objc源码中，即 <code>libpbjc.A.dylib</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/162385206-77e55e7f-a364-4e91-979f-74fe56505b3c.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162385206-77e55e7f-a364-4e91-979f-74fe56505b3c.jpg"
+                     
+                ></p>
 <h3 id="objc-sync-enter-amp-objc-sync-exit-分析"><a href="#objc-sync-enter-amp-objc-sync-exit-分析" class="headerlink" title="objc_sync_enter &amp; objc_sync_exit 分析"></a>objc_sync_enter &amp; objc_sync_exit 分析</h3><ul>
 <li><p>进入 <code>objc_sync_enter</code> 源码实现</p>
 <ul>
@@ -404,7 +424,12 @@
 </ul>
 </li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/162385270-d991739c-6f16-4117-b269-1de19800106d.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162385270-d991739c-6f16-4117-b269-1de19800106d.jpg"
+                     
+                ></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">int objc_sync_enter(id obj)</span><br><span class="line">&#123;</span><br><span class="line">    int result = OBJC_SYNC_SUCCESS;</span><br><span class="line"></span><br><span class="line">    if (obj) &#123; // 传入不为nil</span><br><span class="line">        SyncData* data = id2data(obj, ACQUIRE); // 重点</span><br><span class="line">        ASSERT(data);</span><br><span class="line">        data-&gt;mutex.lock(); // 加锁</span><br><span class="line">    &#125; else &#123; // 传入nil</span><br><span class="line">        // @synchronized(nil) does nothing</span><br><span class="line">        if (DebugNilSync) &#123;</span><br><span class="line">            _objc_inform(&quot;NIL SYNC DEBUG: @synchronized(nil); set a breakpoint on objc_sync_nil to debug&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        objc_sync_nil();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
@@ -490,7 +515,12 @@
 </li>
 </ul>
 <h3 id="tls和cache表结构"><a href="#tls和cache表结构" class="headerlink" title="tls和cache表结构"></a>tls和cache表结构</h3><p>  针对tls和cache缓存，底层的表结构如下所示</p>
-<p>  <img src="https://user-images.githubusercontent.com/25925248/162385336-7498d9db-3f35-4e35-81e0-d499019ca308.jpg"></p>
+<p>  <img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162385336-7498d9db-3f35-4e35-81e0-d499019ca308.jpg"
+                     
+                ></p>
 </li>
 <li><p><code>哈希表</code> 结构中通过 <code>SyncList</code> 结构来组装 <code>多线程</code> 的情况</p>
 </li>
@@ -504,11 +534,21 @@
 <h3 id="synchronized-坑点"><a href="#synchronized-坑点" class="headerlink" title="@synchronized 坑点"></a>@synchronized 坑点</h3><p>下面代码这样写，会有什么问题？</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> - (void)zj_testSync&#123;</span><br><span class="line">    _testArray = [NSMutableArray array];</span><br><span class="line">    for (int i = 0; i &lt; 200000; i++) &#123;</span><br><span class="line">        dispatch_async(dispatch_get_global_queue(0, 0), ^&#123;</span><br><span class="line">            @synchronized (self.testArray) &#123;</span><br><span class="line">                self.testArray = [NSMutableArray array];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 <p>运行结果发现，运行就崩溃</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/162385390-988c981b-e27a-4513-96df-eb52ecc624a2.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162385390-988c981b-e27a-4513-96df-eb52ecc624a2.jpg"
+                     
+                ></p>
 <p>崩溃的主要原因是 <code>testArray</code> 在某一瞬间变成了nil，从@synchronized底层流程可知，如果 <code>加锁的对象成了nil，是锁不住的</code>，相当于下面这种情况，block内部不停的retain、release，会在某一瞬间 <code>上一个未release</code>，<code>下一个已经准备release</code>，这样会导致 <code>野指针</code> 的产生</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (void)zj_crash&#123;</span><br><span class="line">    _testArray = [NSMutableArray array];</span><br><span class="line">    for (int i = 0; i &lt; 200000; i++) &#123;</span><br><span class="line">        dispatch_async(dispatch_get_global_queue(0, 0), ^&#123;</span><br><span class="line">            _testArray = [NSMutableArray array];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 <p>可以根据上面的代码，打开 edit scheme -&gt; run -&gt; Diagnostics 中勾选 Zombie Objects，来查看是否存在僵尸对象，结果如下所示</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/162385433-ed10895f-0a52-44be-9544-79cfb4eae6a0.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162385433-ed10895f-0a52-44be-9544-79cfb4eae6a0.jpg"
+                     
+                ></p>
 <p>我们一般使用 <code>@synchronized(self)</code>，主要是因为 <code>_testArray</code> 的持有者是 <code>self</code></p>
 <p><strong>注意：野指针 vs 过度释放</strong></p>
 <ul>
@@ -540,11 +580,21 @@
 <h2 id="NSLock底层分析"><a href="#NSLock底层分析" class="headerlink" title="NSLock底层分析"></a>NSLock底层分析</h2><ul>
 <li>通过加符号断点 <code>lock</code> 分析，发现其源码在 <code>Foundation</code> 框架中</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/162385488-881745a9-4c48-47bb-aa64-0d73612e032c.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162385488-881745a9-4c48-47bb-aa64-0d73612e032c.jpg"
+                     
+                ></p>
 <ul>
 <li>由于OC的 <code>Foundation</code> 框架不开源，所以这里借助 <code>Swift</code> 的开源框架 <code>Foundation</code> 来分析 <code>NSLock</code> 的底层实现，其原理与OC是大致相同的</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/162385542-717dcf74-31a0-458c-a917-d88299104e46.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162385542-717dcf74-31a0-458c-a917-d88299104e46.jpg"
+                     
+                ></p>
 <p>通过源码实现可以看出，底层是通过 pthread_mutex 互斥锁实现的，并且在init方法中，还做了一些其他操作，所以在使用NSLock时需要使用init初始化</p>
 <p>回到前文的性能图中，可以看出 <code>NSLock</code> 的性能仅次于 <code>pthread_mutex（互斥锁）</code>，非常接近</p>
 <h2 id="使用弊端"><a href="#使用弊端" class="headerlink" title="使用弊端"></a>使用弊端</h2><p>请问下面block嵌套block的代码中，会有什么问题？</p>
@@ -553,7 +603,12 @@
 <ul>
 <li>在未加锁之前，其中current打印的结果数据混乱，主要原因是多线程导致的</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/162385589-9fda7c62-63d9-4eb2-a14a-c3d1a48fe7da.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162385589-9fda7c62-63d9-4eb2-a14a-c3d1a48fe7da.jpg"
+                     
+                ></p>
 <ul>
 <li>如果像下面这样加锁，会有什么问题？</li>
 </ul>
@@ -581,9 +636,19 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 导入头文件</span><br><span class="line">#import &lt;tphread.j&gt;</span><br><span class="line"></span><br><span class="line">// 全局声明互斥锁</span><br><span class="line">phread_mutex_t _lock;</span><br><span class="line"></span><br><span class="line">// 初始化互斥锁</span><br><span class="line">pthread_mutex_init(&amp;_lock, NULL);</span><br><span class="line"></span><br><span class="line">// 加锁</span><br><span class="line">pthread_mutex_lock(&amp;_lock);</span><br><span class="line"></span><br><span class="line">// 这里需要线程安全操作</span><br><span class="line">// 解锁</span><br><span class="line">pthread_mutex_unlock(&amp;_lock);</span><br><span class="line"></span><br><span class="line">// 释放锁</span><br><span class="line">pthread_mutex_destroy(&amp;_lock);</span><br></pre></td></tr></table></figure></div>
 
 <h1 id="NSRecursiveLock"><a href="#NSRecursiveLock" class="headerlink" title="NSRecursiveLock"></a>NSRecursiveLock</h1><p><code>NSRecursiveLock</code> 在底层也是对 <code>pthread_mutex</code> 的封装，可以通过 <code>swift</code> 的 <code>Foundation</code> 源码查看</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/162385659-c67c46ec-a724-4195-99bf-7986671d0d14.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162385659-c67c46ec-a724-4195-99bf-7986671d0d14.jpg"
+                     
+                ></p>
 <p>对比 <code>NSLock</code> 和 <code>NSRecursiveLock</code>，其底层实现几乎一模一样，区别在于init时，<code>NSRecursiveLock</code> 有一个标识 <code>PTHREAD_MUTEX_RECURSIVE</code> ，而 <code>NSLock</code> 是默认的</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/162385711-4cb86066-2d52-45c3-bf7b-de3b71ed1dbc.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162385711-4cb86066-2d52-45c3-bf7b-de3b71ed1dbc.jpg"
+                     
+                ></p>
 <p><code>递归锁</code> 主要是用于 <code>解决一些嵌套形式</code>，其中循环嵌套居多</p>
 <h1 id="NSCondition"><a href="#NSCondition" class="headerlink" title="NSCondition"></a>NSCondition</h1><p><code>NSCondition</code> 是一个 <code>条件锁</code>，在日常开发中使用较少，与信号量有点相似：<code>线程1</code> 需要满足条件才会往下走，否则会堵塞等待，直到条件满足，经典模型是 <code>生产消费者模型</code></p>
 <p><code>NSCondition的对象</code> 实际上作为一个 <code>锁</code> 和一个 <code>线程检查器</code></p>
@@ -624,7 +689,12 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">- (void)zj_testConditonLock&#123;</span><br><span class="line">    // 信号量</span><br><span class="line">    NSConditionLock * conditionLock = [[NSConditionLock alloc] initWithCondition:2];</span><br><span class="line">    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^&#123;</span><br><span class="line">        [conditionLock lockWhenCondition:1]; // conditoion = 1 内部 Condition 匹配</span><br><span class="line">        NSLog(@&quot;线程 1&quot;);</span><br><span class="line">        [conditionLock unlockWithCondition:0];</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^&#123;</span><br><span class="line">        [conditionLock lockWhenCondition:2];</span><br><span class="line">        sleep(0.1);</span><br><span class="line">        NSLog(@&quot;线程 2&quot;);</span><br><span class="line">        [conditionLock unlockWithCondition:1]; // _value = 2 -&gt; 1</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    dispatch_async(dispatch_get_global_queue(0, 0), ^&#123;</span><br><span class="line">       [conditionLock lock];</span><br><span class="line">       NSLog(@&quot;线程 3&quot;);</span><br><span class="line">       [conditionLock unlock];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>查看打印结果</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/162385782-0d67fa4a-eac2-457a-988f-6dfeebfe6831.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/162385782-0d67fa4a-eac2-457a-988f-6dfeebfe6831.jpg"
+                     
+                ></p>
 <p><strong>打印结果分析</strong></p>
 <ul>
 <li><p><code>线程1</code> 调用 <code>[conditionLock lockWhenCondition:1]</code>，此时因为不满足条件，所以会 <code>进入waiting状态</code>，当进入到waiting时，会释放当前的互斥锁</p>
@@ -961,6 +1031,10 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

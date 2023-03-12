@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -432,7 +432,12 @@
 </ul>
 <h1 id="dyld-2-工作流程"><a href="#dyld-2-工作流程" class="headerlink" title="dyld 2 工作流程"></a>dyld 2 工作流程</h1><p>dyld 2是纯粹的in-process，即在程序进程内执行的，也就意味着只有当应用程序被启动时，dyld 2才能开始执行任务</p>
 <p>以下是dyld 2的工作流程图示</p>
-<p><img src="/BboyZJ.github.io/assets/16773573816475.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773573816475.png"
+                     
+                ></p>
 <ul>
 <li>1、dyld的初始化，主要代码在dyldbootstrap::start，接着执行dyld::_main，dyld::_main代码较多，是dyld加载的核心部分；</li>
 <li>2、检查并准备环境，例如获取二进制路径、检查环境配置，解析主二进制的image header等信息</li>
@@ -495,10 +500,20 @@
 </ul>
 <p><strong>dyld 2 改进和优化</strong></p>
 <p>以下是dyld 2 向 dyld 3 的一些改变，主要是将安全敏感的部分 和 占用大量资源的部分移动到上层，然后将一个closure写入磁盘进行缓存，然后我们在程序进程中使用closure。以下是图示</p>
-<p><img src="/BboyZJ.github.io/assets/16773575713620.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773575713620.png"
+                     
+                ></p>
 <p><strong>dyld 3 组成部分&#x2F;工作流程</strong></p>
 <p>dyld 3的工作流程主要分为3部分，如下所示</p>
-<p><img src="/BboyZJ.github.io/assets/16773575862753.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773575862753.png"
+                     
+                ></p>
 <p><strong>第一部分：out-of-process ：mach-o parser</strong></p>
 <p>进程外的mach-o分析器和编译器，是普通的后台程序，用于提高测试基础架构的性能。</p>
 <p>第一部分主要在App进程之外做以下工作：</p>
@@ -866,6 +881,10 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

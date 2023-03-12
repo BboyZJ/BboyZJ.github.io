@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -329,7 +329,12 @@
 <p>本文主要继上一章 <code>objc_msgSend</code> 引申，<code>objc_msgSend</code> 是用汇编写的，因为性能好、速度快</p>
 <p>汇编的特性：快 + 动态性（不确定）</p>
 <h1 id="objc-msgSend-汇编查找流程分析"><a href="#objc-msgSend-汇编查找流程分析" class="headerlink" title="objc_msgSend 汇编查找流程分析"></a>objc_msgSend 汇编查找流程分析</h1><p>在 <code>objc4-781源码</code> 中，搜索 <code>objc_msgSend</code>，由于我们日常开发的都是架构 <code>arm64</code>，所以需要找到 <code>objc-msgSend-arm64.s</code> 文件， <code>objc_msgSend</code> 源码实现的入口是在 <code>ENTRY _objc_msgSend</code> 这个文件下，发现是 <code>汇编实现</code>。</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/160737139-a34e0ae9-0234-4702-9a76-111cf695c1de.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160737139-a34e0ae9-0234-4702-9a76-111cf695c1de.png"
+                     
+                ></p>
 <ul>
 <li>objc_msgSend 汇编源码</li>
 </ul>
@@ -416,7 +421,12 @@
 </li>
 </ul>
 <p>以下是整个 <code>快速查找</code> 过程 <code>值的变化</code> 过程</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/160737068-7204e3d9-2849-4267-a0c4-632c6afefe48.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160737068-7204e3d9-2849-4267-a0c4-632c6afefe48.png"
+                     
+                ></p>
 <h1 id="objc-msgSend通过伪代码实现"><a href="#objc-msgSend通过伪代码实现" class="headerlink" title="objc_msgSend通过伪代码实现"></a>objc_msgSend通过伪代码实现</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">// 查找 imp imp存储在 cache 的 bucket 下</span><br><span class="line">[person sayNB]  -&gt; imp ( cache -&gt; bucket (sel imp))</span><br><span class="line"></span><br><span class="line">// 获取当前的对象</span><br><span class="line">id person = 0x10000</span><br><span class="line">// 获取isa</span><br><span class="line">isa_t isa = 0x000000</span><br><span class="line">// isa -&gt; class -&gt; cache</span><br><span class="line">cache_t cache = isa + 16字节</span><br><span class="line"></span><br><span class="line">// arm64</span><br><span class="line">// mask|buckets 在一起的</span><br><span class="line">buckets = cache &amp; 0x0000ffffffffffff</span><br><span class="line">// 获取mask</span><br><span class="line">mask = cache LSR #48</span><br><span class="line">// 下标 = mask &amp; sel</span><br><span class="line">index = mask &amp; p1</span><br><span class="line"></span><br><span class="line">// bucket 从 buckets 遍历的开始 (起始查询的bucket)</span><br><span class="line">bucket = buckets + index * 16 (sel imp = 16)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int count = 0</span><br><span class="line">// CheckMiss $0</span><br><span class="line">do&#123;</span><br><span class="line"></span><br><span class="line">    if ((bucket == buckets) &amp;&amp; (count == 0))&#123; // 进入第二层判断</span><br><span class="line">        // bucket == 第一个元素</span><br><span class="line">        // bucket人为设置到最后一个元素</span><br><span class="line">        bucket = buckets + mask * 16</span><br><span class="line">        count++;</span><br><span class="line">        </span><br><span class="line">    &#125;else if (count == 1) goto CheckMiss</span><br><span class="line">        </span><br><span class="line">    // &#123;imp, sel&#125; = *--bucket</span><br><span class="line">    // 缓存的查找的顺序是: 向前查找</span><br><span class="line">    bucket--;</span><br><span class="line">    imp = bucket.imp;</span><br><span class="line">    sel = bucket.sel;</span><br><span class="line">    </span><br><span class="line">&#125;while (bucket.sel != _cmd)  //  // bucket里面的sel 是否匹配_cmd</span><br><span class="line"></span><br><span class="line">// CacheHit $0</span><br><span class="line">return imp</span><br><span class="line"></span><br><span class="line">CheckMiss:</span><br><span class="line">    CheckMiss(normal)</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><ul>
@@ -723,6 +733,10 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

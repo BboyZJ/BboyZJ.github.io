@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -335,7 +335,12 @@
 * MachOView 二进制文件分析工具（注：分析时可能出现无法分析的情况，可以通过CMD + O打开）
 </code></pre>
 <p><code>Mach-O</code> 文件中主要看 <code>load Commands（即加载命令集）</code>，从这里可以看出动态库的加载等，其中大部分格式为：LC_LOAD_DYLIB（xxx），是在指定路径下加载xxx，如下所示</p>
-<p><img src="/BboyZJ.github.io/assets/16443094108857.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16443094108857.jpg"
+                     
+                ></p>
 <p>所以，综上所述，如果需要注入代码，是 <code>以动态库的形式注入</code></p>
 <h1 id="方式一：Framework手动注入"><a href="#方式一：Framework手动注入" class="headerlink" title="方式一：Framework手动注入"></a>方式一：Framework手动注入</h1><ol>
 <li>第一步：动态库进入App包，即Framework注入</li>
@@ -343,7 +348,12 @@
 <ul>
 <li>创建一个 <code>Framework</code>，命令为ZJHook（创建位置：<code>target -&gt; + -&gt; ios -&gt; Framework</code>）</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16443096456885.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16443096456885.jpg"
+                     
+                ></p>
 <ul>
 <li>在 ZJHook中创建 <code>inject</code> 文件，在声明周期方法load函数中写注入代码</li>
 </ul>
@@ -352,7 +362,12 @@
 <ul>
 <li>编译工程<code>Demo</code>（注：这里的工程依然需要重签名），然后查看工程的可执行文件Demo，查找其中的<code>Frameworks</code>，从这里可以看到<code>ZJHook</code>，但是此时并不会执行其中的load函数</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16443110052513.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16443110052513.jpg"
+                     
+                ></p>
 <p><code>load不会执行的原因</code>：查看此时的Mach-O文件中的 Load Commands，并没有发现ZJHook，随意此时是不会执行其中的load函数的</p>
 <ol start="2">
 <li>第二步：yololib手动注入，修改Mach-O字段</li>
@@ -665,6 +680,10 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

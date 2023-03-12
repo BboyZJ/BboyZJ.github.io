@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -329,26 +329,66 @@
 <h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p><strong>1、下载<a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/" >objc4-781 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>源码。</strong></p>
 <p><strong>2、编译源码，可参考<a href="https://www.bboyzj.cn/2020/09/04/iOS-OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8602%EF%BC%9AObjc4%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/">iOS-OC底层原理02：Objc4源码编译</a></strong></p>
 <h1 id="NSObject调用alloc探索"><a href="#NSObject调用alloc探索" class="headerlink" title="NSObject调用alloc探索"></a>NSObject调用alloc探索</h1><p><strong>1、第一步：在main函数中实现下面的代码，并下断点：</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92984910-7c17af00-f4e0-11ea-9be5-bb9c4127e431.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92984910-7c17af00-f4e0-11ea-9be5-bb9c4127e431.png"
+                     
+                ></p>
 <p><strong>2、第二步：到源码下断点到 <code>+ (id)alloc</code>，先 <code>取消断点</code>，等程序运行到目标行在去<code>跟踪断点</code>，原因在前面<a href="https://www.bboyzj.cn/2020/09/12/iOS-OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8601-%E6%9F%A5%E6%89%BE%E6%BA%90%E7%A0%81%E6%9C%89%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">查找源码</a>已经讲过，在此不在说明：</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92984974-0fe97b00-f4e1-11ea-9633-e48599470125.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92984974-0fe97b00-f4e1-11ea-9633-e48599470125.png"
+                     
+                ></p>
 <p>我们发现并没有进来，我滴天呐，说明调用的不是 <code>alloc</code></p>
 <p><strong>3、第三步：我们换一种方式去查看源码，打开<code>Debug-&gt;Debug WorkFlow-&gt;Debug-&gt;Debug Workflow-&gt;Alway Show Disassembly</code>查看汇编：</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92985022-75d60280-f4e1-11ea-88b1-098d6072e648.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92985022-75d60280-f4e1-11ea-88b1-098d6072e648.png"
+                     
+                ></p>
 <p>我们发现底层源码调用的是 <code>objc_alloc</code> ，到底是不是呢？接下来我们 <code>二次验证</code> 一下</p>
 <p>**4、第四步:二次验证-&gt;先取消Debug查看方式，到源码中下断点到 <code>objc_alloc</code> **</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92985110-33f98c00-f4e2-11ea-8820-44a33b9de454.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92985110-33f98c00-f4e2-11ea-8820-44a33b9de454.png"
+                     
+                ></p>
 <p>我们发现 <code>Class cls</code> 这个类确实是 <code>NSObject</code> ,验证了我们上面的调用过程</p>
 <p><strong>5、第五步：继续往下走，<code>callAlloc</code> 内部调用流程</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92985464-41fcdc00-f4e5-11ea-80c8-44297ed31268.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92985464-41fcdc00-f4e5-11ea-80c8-44297ed31268.png"
+                     
+                ></p>
 <p>我们发现 <code>callAlloc</code> 内部最终调用的是 <code>_objc_rootAllocWithZone</code></p>
 <p>最终和<a href="https://www.bboyzj.cn/2020/09/12/iOS-OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8603%EF%BC%9Aalloc&init&new%E6%8E%A2%E7%B4%A2/">iOS-OC底层原理03：alloc&amp;init&amp;new探索</a>alloc调用流程不谋而合</p>
 <p><strong>6、结论：我们用流程图去表达一下调用流程</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92985929-af127080-f4e9-11ea-99c2-b8a21e321e72.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92985929-af127080-f4e9-11ea-99c2-b8a21e321e72.png"
+                     
+                ></p>
 <h1 id="继承类ZPerson调用alloc真实调用流程"><a href="#继承类ZPerson调用alloc真实调用流程" class="headerlink" title="继承类ZPerson调用alloc真实调用流程"></a>继承类ZPerson调用alloc真实调用流程</h1><p><strong>1、第一步：在 <code>main</code> 函数中实现 <code>ZJPerson</code> 类的 <code>alloc</code> 方法进入alloc方法，并下断点：</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/93693180-d04d0f80-fb2e-11ea-9574-846fe98b654b.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/93693180-d04d0f80-fb2e-11ea-9574-846fe98b654b.png"
+                     
+                ></p>
 <p><strong>2、第二步：打开 <code>Debug-&gt;Debug WorkFlow-&gt;Debug-&gt;Debug Workflow-&gt;Alway Show Disassembly</code> 查看汇编：</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/93693170-b01d5080-fb2e-11ea-9e35-41902386346a.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/93693170-b01d5080-fb2e-11ea-9e35-41902386346a.png"
+                     
+                ></p>
 <p><strong>3、第三步：通过在源码中下断点 <code>objc_alloc</code> 和 <code>alloc</code> 去跟踪具体先执行过程：</strong></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">跳转至objc_alloc的源码实现</span><br><span class="line">// Calls [cls alloc].</span><br><span class="line">id</span><br><span class="line">objc_alloc(Class cls)</span><br><span class="line">&#123;</span><br><span class="line">    return callAlloc(cls, true/*checkNil*/, false/*allocWithZone*/);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
@@ -363,7 +403,12 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+ (id)alloc &#123;</span><br><span class="line">    return _objc_rootAlloc(self);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>7、第七步：跳转至 <code>_objc_rootAlloc</code> 源码实现，我们可以验证 <code>cls</code> 是<code>ZJPerson</code></strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92986292-074a7200-f4ec-11ea-9876-1aaddc3c3269.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92986292-074a7200-f4ec-11ea-9876-1aaddc3c3269.png"
+                     
+                ></p>
 <p><strong>8、第八步：跳转至 <code>_objc_rootAllocWithZone</code> 源码实现</strong></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// Call [cls alloc] or [cls allocWithZone:nil], with appropriate </span><br><span class="line">// shortcutting optimizations.</span><br><span class="line">static ALWAYS_INLINE id</span><br><span class="line">callAlloc(Class cls, bool checkNil, bool allocWithZone=false)</span><br><span class="line">&#123;</span><br><span class="line">#if __OBJC2__</span><br><span class="line">    // checkNil:true</span><br><span class="line">    if (slowpath(checkNil &amp;&amp; !cls)) return nil;</span><br><span class="line">    if (fastpath(!cls-&gt;ISA()-&gt;hasCustomAWZ())) &#123;</span><br><span class="line">        // cls NSObject</span><br><span class="line">        return _objc_rootAllocWithZone(cls, nil);</span><br><span class="line">    &#125;</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">    // No shortcuts available.</span><br><span class="line">    // allocWithZone : false</span><br><span class="line">    if (allocWithZone) &#123;</span><br><span class="line">        return ((id(*)(id, SEL, struct _NSZone *))objc_msgSend)(cls, @selector(allocWithZone:), nil);</span><br><span class="line">    &#125;</span><br><span class="line">    return ((id(*)(id, SEL))objc_msgSend)(cls, @selector(alloc));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
@@ -372,7 +417,12 @@
 
 <p><strong>10、第十步：内部调用 <code>cls-&gt;instanceSize、calloc、obj-&gt;initInstanceIsa(cls, hasCxxDtor)、return obj</code> 方法返回对象，具体流程不再赘述</strong></p>
 <p><strong>11、总结:ZJPerson的alloc调用流程图:</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92986898-a2dde180-f4f0-11ea-8d07-670fde84cff2.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92986898-a2dde180-f4f0-11ea-8d07-670fde84cff2.png"
+                     
+                ></p>
 <h1 id="ZJPerson的alloc和NSObject的alloc区别"><a href="#ZJPerson的alloc和NSObject的alloc区别" class="headerlink" title="ZJPerson的alloc和NSObject的alloc区别"></a>ZJPerson的alloc和NSObject的alloc区别</h1><ul>
 <li><p><code>ZJPerson</code> 会走两次 <code>objc_alloc -&gt; alloc</code></p>
 </li>
@@ -670,6 +720,10 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

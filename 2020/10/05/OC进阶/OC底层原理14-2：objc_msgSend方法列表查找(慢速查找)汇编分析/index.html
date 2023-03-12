@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -345,15 +345,30 @@
 <ul>
 <li>在 <code>main</code> 中，例如 <code>[person sayNB]</code> 对象方法调用处加一个断点，并且开启汇编调试 <code>Debug -&gt; Debug workflow -&gt; 勾选 Always show Disassembly</code>，运行程序</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16773270692128.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773270692128.jpg"
+                     
+                ></p>
 <ul>
 <li>汇编中 <code>objc_msgSend</code> 加一个断点，执行断住，按住 <code>control + stepinto</code>，进入 <code>objc_msgSend</code> 的汇编</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16773484995345.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773484995345.jpg"
+                     
+                ></p>
 <ul>
 <li>在 <code>_objc_msgSend_uncached</code> 加一个断点，执行断住，按住 <code>control + stepinto</code>，进入汇编</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16773485313190.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773485313190.jpg"
+                     
+                ></p>
 <p>从上面可以看出最后走到的就是 <code>lookUpImpOrForward</code> ，此时并不是汇编实现</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">注：</span><br><span class="line">1、C/C++中调用汇编，去查找汇编时，C/C++调用的方法需要 `多加一个下划线`</span><br><span class="line">2、汇编中调用C/C++方法时，去查找C/C++方法，需要将汇编调用的 `方法去掉一个下划线`</span><br></pre></td></tr></table></figure></div>
 
@@ -363,7 +378,12 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">IMP lookUpImpOrForward(id inst, SEL sel, Class cls, int behavior)</span><br><span class="line">&#123;</span><br><span class="line">    // 定义的消息转发</span><br><span class="line">    const IMP forward_imp = (IMP)_objc_msgForward_impcache;</span><br><span class="line">    IMP imp = nil;</span><br><span class="line">    Class curClass;</span><br><span class="line"></span><br><span class="line">    runtimeLock.assertUnlocked();</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     快速查找，如果找到则直接返回imp</span><br><span class="line">     目的：防止多线程操作时，刚好调用函数，此时缓存进来了</span><br><span class="line">     */</span><br><span class="line">    if (fastpath(behavior &amp; LOOKUP_CACHE)) &#123;</span><br><span class="line">        imp = cache_getImp(cls, sel);</span><br><span class="line">        if (imp) goto done_nolock;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 加锁，目的是保证读取的线程安全</span><br><span class="line">    runtimeLock.lock();</span><br><span class="line"></span><br><span class="line">    // 判断是否是一个已知的类：判断当前类是否已经被认可的类，即已经加载的类</span><br><span class="line">    checkIsKnownClass(cls);</span><br><span class="line"></span><br><span class="line">    // 判断类是否实现，如果没有，需要先实现，此时的目的是为了确保父类链，方法后续的循环</span><br><span class="line">    if (slowpath(!cls-&gt;isRealized())) &#123;</span><br><span class="line">        cls = realizeClassMaybeSwiftAndLeaveLocked(cls, runtimeLock);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 判断类是否初始化，如果没有，需要先初始化</span><br><span class="line">    if (slowpath((behavior &amp; LOOKUP_INITIALIZE) &amp;&amp; !cls-&gt;isInitialized())) &#123;</span><br><span class="line">        cls = initializeAndLeaveLocked(cls, inst, runtimeLock);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    runtimeLock.assertLocked();</span><br><span class="line">    curClass = cls;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     查找类的缓存</span><br><span class="line">     unreasonableClassCount 表示类的迭代上限</span><br><span class="line">     猜测这里递归的原因是attempts在第一次循环时做了减一操作，然后再次循环时</span><br><span class="line">     仍在上限范围内，所以可以继续递归</span><br><span class="line">     */</span><br><span class="line">    for (unsigned attempts = unreasonableClassCount();;) &#123;</span><br><span class="line">        // 当前类方法列表（采用二分查找算法），如果找到，则返回，将方法缓存到cache中</span><br><span class="line">        Method meth = getMethodNoSuper_nolock(curClass, sel);</span><br><span class="line">        if (meth) &#123;</span><br><span class="line">            imp = meth-&gt;imp;</span><br><span class="line">            goto done;</span><br><span class="line">        &#125;</span><br><span class="line">        // 当前类 = 当前类的父类，并判断父类是否为nil</span><br><span class="line">        if (slowpath((curClass = curClass-&gt;superclass) == nil)) &#123;</span><br><span class="line">            // 未找到方法实现，方法解析器也不行，使用转发</span><br><span class="line">            imp = forward_imp;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // 如果父类链中存在循环，则停止</span><br><span class="line">        if (slowpath(--attempts == 0)) &#123;</span><br><span class="line">            _objc_fatal(&quot;Memory corruption in class list.&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // 父类缓存</span><br><span class="line">        imp = cache_getImp(curClass, sel);</span><br><span class="line">        if (slowpath(imp == forward_imp)) &#123;</span><br><span class="line">            // 如果在父类中找到了forward，则停止查找，且不缓存，首先调用此类的方法解析器</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">        if (fastpath(imp)) &#123;</span><br><span class="line">            // 如果在父类中，找到了此方法，将其存储到cache中</span><br><span class="line">            goto done;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 如果没找到方法，尝试一次方法解析</span><br><span class="line">    if (slowpath(behavior &amp; LOOKUP_RESOLVER)) &#123;</span><br><span class="line">        // 动态方法决议的控制条件，便是流程只走一次</span><br><span class="line">        behavior ^= LOOKUP_RESOLVER;</span><br><span class="line">        return resolveMethod_locked(inst, sel, cls, behavior);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> done:</span><br><span class="line">    // 存储到缓存</span><br><span class="line">    log_and_fill_cache(cls, imp, sel, inst, curClass);</span><br><span class="line">    // 解锁</span><br><span class="line">    runtimeLock.unlock();</span><br><span class="line"> done_nolock:</span><br><span class="line">    if (slowpath((behavior &amp; LOOKUP_NIL) &amp;&amp; imp == forward_imp)) &#123;</span><br><span class="line">        return nil;</span><br><span class="line">    &#125;</span><br><span class="line">    return imp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>其整体的慢速查找流程如下图：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/160737577-4f61e4bd-e246-4a8f-843d-71f2eb401cfc.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160737577-4f61e4bd-e246-4a8f-843d-71f2eb401cfc.png"
+                     
+                ></p>
 <p>主要有以下几步：</p>
 <ul>
 <li><p>【第一步】<code>cache</code> 缓存中进行查找，即 <code>快速查找</code>，找到则直接返回 <code>imp</code>，反之，则进入【第二步】</p>
@@ -408,16 +428,36 @@
 </li>
 </ul>
 <h1 id="getMethodNoSuper-nolock-方法：二分查找方法流程"><a href="#getMethodNoSuper-nolock-方法：二分查找方法流程" class="headerlink" title="getMethodNoSuper_nolock 方法：二分查找方法流程"></a>getMethodNoSuper_nolock 方法：二分查找方法流程</h1><p>查找方法列表流程：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/160737643-28c5dd1a-ecf2-40eb-8cc2-0ad59276f9e0.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160737643-28c5dd1a-ecf2-40eb-8cc2-0ad59276f9e0.png"
+                     
+                ></p>
 <p>其 <code>二分查找</code> 核心的源码如下：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">ALWAYS_INLINE static method_t *</span><br><span class="line">findMethodInSortedMethodList(SEL key, const method_list_t *list)</span><br><span class="line">&#123;</span><br><span class="line">    ASSERT(list);</span><br><span class="line"></span><br><span class="line">    const method_t * const first = &amp;list-&gt;first;</span><br><span class="line">    const method_t *base = first;</span><br><span class="line">    const method_t *probe;</span><br><span class="line">    uintptr_t keyValue = (uintptr_t)key; // key 等于 say666</span><br><span class="line">    uint32_t count;</span><br><span class="line">    // base相当于low，count是max了，probe是middle，这就是二分</span><br><span class="line">    for (count = list-&gt;count; count != 0; count &gt;&gt;= 1) &#123;</span><br><span class="line">        // 从首地址+下标 -&gt; 移动到中间位置（count &gt;&gt; 1 右移1位 count/2 = 4）</span><br><span class="line">        probe = base + (count &gt;&gt; 1);</span><br><span class="line">        </span><br><span class="line">        uintptr_t probeValue = (uintptr_t)probe-&gt;name;</span><br><span class="line">        </span><br><span class="line">        // 如果查找的key是keyVal 等于中间位置（probe）的probeValue，则直接返回中间位置</span><br><span class="line">        if (keyValue == probeValue) &#123;</span><br><span class="line">            // while 平移 排除分类重名方法</span><br><span class="line">            while (probe &gt; first &amp;&amp; keyValue == (uintptr_t)probe[-1].name) &#123;</span><br><span class="line">                /*</span><br><span class="line">                 排除分类重名方法（方法的存储是先存储方法，再存储分类，按照先进后出的原则，分类方法最先出，</span><br><span class="line">                 而我们要取的类方法，所以需要先排除分类方法</span><br><span class="line">                 如果是两个分类，就看谁先进行加载）</span><br><span class="line">                 */</span><br><span class="line">                probe--;</span><br><span class="line">            &#125;</span><br><span class="line">            return (method_t *)probe;</span><br><span class="line">        &#125;</span><br><span class="line">        // 如果keyValue 大于 probeValue，就往probe即中间位置的右边查找</span><br><span class="line">        if (keyValue &gt; probeValue) &#123;</span><br><span class="line">            base = probe + 1;</span><br><span class="line">            count--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return nil;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p><code>算法原理</code> 简述：从第一次查找开始，每次都取 <code>中间位置</code>，与想查找的 <code>key的value的值</code> 作比较，如果 <code>相等</code>，则需要 <code>排除分类方法</code>，然后将查询到的位置的方法实现返回，如果 <code>不相等</code>，则需要 <code>继续二分查找</code>，如果循环至 <code>count=0</code> 还是 <code>没有找到</code>，则直接返回 <code>nil</code>，如下图所示：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/160737692-aebad7b7-fecc-46ef-951d-2d23b9fdf8a9.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160737692-aebad7b7-fecc-46ef-951d-2d23b9fdf8a9.png"
+                     
+                ></p>
 <p>以查找 <code>ZJPerson</code> 类的 <code>sayNB实例方法</code> 为例，其二分查找过程如下：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/160737702-6e1a43b0-3784-49c2-8732-de92c29f0c87.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160737702-6e1a43b0-3784-49c2-8732-de92c29f0c87.png"
+                     
+                ></p>
 <h1 id="cache-getImp方法：父类缓存查找"><a href="#cache-getImp方法：父类缓存查找" class="headerlink" title="cache_getImp方法：父类缓存查找"></a>cache_getImp方法：父类缓存查找</h1><p><code>cache_getImp</code> 方法是通过 <code>汇编_cache_getImp实现</code>，传入 <code>$0</code> 是 <code>GETIMP</code>，如下所示：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/160737716-c79325bc-e5fd-41ee-9105-c7939757c7b5.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160737716-c79325bc-e5fd-41ee-9105-c7939757c7b5.png"
+                     
+                ></p>
 <ul>
 <li><p>如果 <code>父类缓存</code> 中找到了方法实现，则跳转至 <code>CacheHit</code> 即命中，则直接 <code>返回imp</code></p>
 </li>
@@ -436,7 +476,12 @@
 </li>
 </ul>
 <h1 id="常见方法未实现报错源码"><a href="#常见方法未实现报错源码" class="headerlink" title="常见方法未实现报错源码"></a>常见方法未实现报错源码</h1><p>如果在 <code>快速查找、慢速查找、方法解析流程中</code>，均没有找到方法实现，则使用消息转发，其流程如下：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/160737730-2203f52c-5019-4974-8126-84a91d462f2a.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160737730-2203f52c-5019-4974-8126-84a91d462f2a.png"
+                     
+                ></p>
 <p><strong>消息转发的实现</strong></p>
 <ul>
 <li>其中 <code>_objc_msgForward_impcache</code> 是汇编实现，会跳转至 <code>__objc_msgForward</code>，其核心是 <code>__objc_forward_handler</code></li>
@@ -742,6 +787,10 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

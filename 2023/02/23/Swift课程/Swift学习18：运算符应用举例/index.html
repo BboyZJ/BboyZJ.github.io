@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -330,14 +330,24 @@
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var a  = 1</span><br><span class="line">var b = 2</span><br><span class="line">a = a ^ b</span><br><span class="line">b = a ^ b</span><br><span class="line">a = a ^ b</span><br><span class="line">print(a)</span><br><span class="line">print(b)</span><br></pre></td></tr></table></figure></div>
 
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031839972.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031839972.png"
+                     
+                ></p>
 <h1 id="求无符号整数二进制中-1-的个数"><a href="#求无符号整数二进制中-1-的个数" class="headerlink" title="求无符号整数二进制中 1 的个数"></a>求无符号整数二进制中 1 的个数</h1><ul>
 <li>给定一个无符号整型 <code>UInt</code> 变量，求其二进制表中 <code>1</code> 的个数，要求算法执行效率尽可能的高</li>
 </ul>
 <p>思路：看一个八位整数 <code>10 100 001</code> ，先判断最后一位是否为 <code>1</code> ，而 <code>与</code> 操作可以达到目前。可以把这个 <code>八位数字</code> 与 <code>00 0000 01</code> 进行 <code>与</code> 操作，如果结果为 <code>1</code>，则表示当前八位数的最后一位为 <code>1</code>，否则为 <code>0 </code>。怎么判断第 <code>二</code> 位呢？向右移位，再延续前面的判断即可</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 有几个 1</span><br><span class="line">func countsOfOnes(num:UInt) -&gt; UInt &#123;</span><br><span class="line">    var count:UInt = 0</span><br><span class="line">    var temp = num</span><br><span class="line">    while temp != 0 &#123;</span><br><span class="line">        // 如果都是位 1 才累加</span><br><span class="line">        count += temp &amp; 1</span><br><span class="line">        // 右移</span><br><span class="line">        temp = temp &gt;&gt; 1</span><br><span class="line">    &#125;</span><br><span class="line">    return count</span><br><span class="line">&#125;</span><br><span class="line">countsOfOnes(num: 8)</span><br></pre></td></tr></table></figure></div>
 
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031841462.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031841462.png"
+                     
+                ></p>
 <ul>
 <li>如果整数的二进制中有较多的 <code>0</code>，那么我们每一次右移做判断会很浪费，怎么改进前面的算法呢？有没有办法让算法的复杂度只有与 <code>1</code> 的个数有关？</li>
 </ul>
@@ -349,7 +359,12 @@
 <p>10 000 000 &amp; 01 111 111 &#x3D; 0（消去第8位的1）</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func countsOfOnes2(num:UInt) -&gt; UInt &#123;</span><br><span class="line">    var count:UInt = 0</span><br><span class="line">    var temp = num</span><br><span class="line">    while temp != 0 &#123;</span><br><span class="line">        count += 1</span><br><span class="line">        temp = temp &amp; (temp - 1)</span><br><span class="line">    &#125;</span><br><span class="line">    return count</span><br><span class="line">&#125;</span><br><span class="line">countsOfOnes2(num: 3)</span><br></pre></td></tr></table></figure></div>
 
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031844480.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031844480.png"
+                     
+                ></p>
 <h1 id="引申：如果判断一个征收为2的整数次幂"><a href="#引申：如果判断一个征收为2的整数次幂" class="headerlink" title="引申：如果判断一个征收为2的整数次幂"></a>引申：如果判断一个征收为2的整数次幂</h1><ul>
 <li><p>给定一个无符号整型 <code>UInt</code> 变量，判断是否为 <code>2</code> 的整数次幂</p>
 </li>
@@ -358,21 +373,36 @@
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 2的整数次幂</span><br><span class="line">func isPowerTwo(num:UInt) -&gt; Bool &#123;</span><br><span class="line">    return (num &amp; (num - 1)) == 0</span><br><span class="line">&#125;</span><br><span class="line">isPowerTwo(num: 18)</span><br></pre></td></tr></table></figure></div>
 
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031845987.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031845987.png"
+                     
+                ></p>
 <h1 id="缺失的数字"><a href="#缺失的数字" class="headerlink" title="缺失的数字"></a>缺失的数字</h1><ul>
 <li>很多成对出现的正整数保存在磁盘文件中，注意成对数字不一定是相邻的，如果 <code>2、3、4、3、4、2、..</code>，由于意外有一个数字消失了，如何尽快找到是哪个数字消失了？</li>
 </ul>
 <p>思路：考虑 <code>^</code> 异或操作的定义，当两个操作的数对应位不相同时，改数的对应位就为1。也就是说如果是相等的两个数 <code>^异或</code>，得到的结果就是 <code>0</code>，而 <code>0</code> 与任何数字 <code>^异或</code>，得到的是那个数字本身。所以我们考虑将所有的数字做 <code>^异或操作</code>，因为只有一个数字消失，那么其他俩俩出现的数字 <code>^异或后为0</code>，0与仅有的一个的数字做 <code>^异或</code>，我们就得到了消失的数字是哪个？</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 缺失的数字</span><br><span class="line">func findLostNum(nums:[UInt]) -&gt; UInt &#123;</span><br><span class="line">    var lostNum:UInt = 0</span><br><span class="line">    for num in nums &#123;</span><br><span class="line">        lostNum = lostNum ^ num</span><br><span class="line">    &#125;</span><br><span class="line">    return lostNum</span><br><span class="line">&#125;</span><br><span class="line">findLostNum(nums: [1,3,2,4,2,1,3])</span><br></pre></td></tr></table></figure></div>
 
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031851072.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031851072.png"
+                     
+                ></p>
 <ul>
 <li>如果有两个数字意外丢失了（丢失的不是相等的数字），改如何找到丢失的两个数字？</li>
 </ul>
 <p>思路：<br>假设题目中这两个只出现1次的数字分别是A和B，如果能将A，B分开到二个数组中，那显然符合 异或 解法的关键点了，因此这个题目的关键点事将A和B分开到二个数组中。<br>由于A，B肯定是不相等的，因此在二进制上肯定有一位是不同的。根据这一位是 0 还是 1 可以将A和B分开到A组合B组。<br>而这个数组中其它数字那么就属于A组，要么就属于B组。再对A组 和 B组 分别执行 异或 解法，就可以得到A,B了。<br>而要判断A，B在哪一位上不相同，只要根据 A ^ B 的结果就可以知道了，这个结果在二进制上为 1 的位都说明 A，B在这一位上是不同的</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">// 丢失的两个不同数</span><br><span class="line">func findTwoLostNum(nums:[UInt]) -&gt; (UInt,UInt) &#123;</span><br><span class="line">    var lostNum1:UInt = 0</span><br><span class="line">    var lostNum2:UInt = 0</span><br><span class="line">    var temp:UInt = 0</span><br><span class="line">    // 计算两个数的异或结果</span><br><span class="line">    for num in nums &#123;</span><br><span class="line">        temp = temp ^ num</span><br><span class="line">    &#125;</span><br><span class="line">    // 找到第一个为 1 的位</span><br><span class="line">    var flag:UInt = 1</span><br><span class="line">    while ((flag &amp; temp) == 0) &#123;</span><br><span class="line">        flag = flag &lt;&lt; 1</span><br><span class="line">    &#125;</span><br><span class="line">    // 找到两个丢失的数字</span><br><span class="line">    for num in nums &#123;</span><br><span class="line">        if (num &amp; flag) == 0 &#123;</span><br><span class="line">            lostNum1 = lostNum1 ^ num</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            lostNum2 = lostNum2 ^ num</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return (lostNum1,lostNum2)</span><br><span class="line">&#125;</span><br><span class="line">findTwoLostNum(nums: [1,2,3,4,2,1])</span><br></pre></td></tr></table></figure></div>
 
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031851154.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303031851154.png"
+                     
+                ></p>
 
             </div>
 
@@ -664,6 +694,10 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 
