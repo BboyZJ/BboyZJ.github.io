@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -395,12 +395,7 @@
 </li>
 </ul>
 <p>综上所述，KVC通过 <code>seValue:forKey</code> 方法设值的流程，以ZJPerson的对象person的属性name为例，如下图所示：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/126090941-c91a337c-21e4-432c-b027-35d4ef9a73f4.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/126090941-c91a337c-21e4-432c-b027-35d4ef9a73f4.png"></p>
 <h1 id="KVC取值底层原理"><a href="#KVC取值底层原理" class="headerlink" title="KVC取值底层原理"></a>KVC取值底层原理</h1><p>同样的，我们可以通过官方文档分析KVC取值的底层原理</p>
 <p>当调用 <code>valueForKey</code> 时，其底层的执行流程如下：</p>
 <ul>
@@ -445,12 +440,7 @@
 </li>
 </ul>
 <p>综上所述，<code>KVC通过 valueForKey:</code> 方法取值的流程以设值 <code>ZJPerson</code> 的对象person的属性 <code>name</code> 为例，如下图所示：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/126091940-46a9e40f-7ca7-4b71-8a81-2137826a1683.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/126091940-46a9e40f-7ca7-4b71-8a81-2137826a1683.png"></p>
 <h1 id="自定义KVC"><a href="#自定义KVC" class="headerlink" title="自定义KVC"></a>自定义KVC</h1><p>原理：通过给 <code>NSObject</code> 添加 <code>分类ZJKVC</code>，实现自定义的 <code>zj_setValue：forKey：</code> 和 <code>zj_valueForKey：</code> 方法，根据苹果官方文档提供的查找规则进行实现：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@interface NSObject (ZJKVC)</span><br><span class="line">// 设值</span><br><span class="line">- (void)zj_setValue:(nullable id)value forKey:(NSString *)key;</span><br><span class="line">// 取值</span><br><span class="line">- (nullable id)zj_valueForKey:(NSString *)key;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
@@ -831,10 +821,6 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
-
-
-    
-<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

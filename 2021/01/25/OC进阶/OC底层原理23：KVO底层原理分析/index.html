@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -362,12 +362,7 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[self.person removeObserver:self forKeyPath:@&quot;name&quot; context:NULL];</span><br></pre></td></tr></table></figure></div>
 
 <h2 id="context-使用"><a href="#context-使用" class="headerlink" title="context 使用"></a>context 使用</h2><p>在官方文档中，针对 <code>参数context</code> 有如下说明：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160746846-6937a586-15d2-4d2c-ace8-dad2e559d00e.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160746846-6937a586-15d2-4d2c-ace8-dad2e559d00e.png"></p>
 <p>大致含义就是：<code>addObserver:forKeyPath:option:context:</code> 方法中的 <code>上下文context</code> 指针包含任意数据，这些数据将在响应的更改通知中传递回观察者。可以通过 <code>指定context为NULL</code>，从而 <code>依靠keyPath</code> 即 <code>键路径字符串</code> 传来的确定更改通知的来源，但是这种方法可能导致对象的父类由于不同的原因也观察到相同的键路径而导致问题。所以可以为每个观察到的 <code>keyPath</code> 创建一个不同的 <code>context</code>，从而 <code>完全不需要进行字符串比较</code>，从而可以更有效地进行通知解析</p>
 <p>通俗的讲，<code>context上下文</code> 主要是用于 <code>区分不同对象的同名属性</code>，从而在KVO回调方法中可以 <code>直接使用context进行区分，可以大大提高性能，以及代码的可读性，并且更加安全</code></p>
 <p><strong>context使用总结</strong></p>
@@ -386,12 +381,7 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// 定义context</span><br><span class="line">static void * PersonNickContext = &amp;PersonNickContext;</span><br><span class="line">static void * PersonNameContext = &amp;PersonNameContext;</span><br><span class="line"></span><br><span class="line">// 注册观察者</span><br><span class="line">[self.person addObserver:self forKeyPath:@&quot;nick&quot; options:NSKeyValueObservingOptionNew context:PersonNickContext];</span><br><span class="line">[self.person addObserver:self forKeyPath:@&quot;name&quot; options:NSKeyValueObservingOptionNew context:PersonNameContext];</span><br><span class="line">    </span><br><span class="line">// KVO回调</span><br><span class="line">- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary&lt;NSKeyValueChangeKey,id&gt; *)change context:(void *)context&#123;</span><br><span class="line">    if (context == PersonNickContext) &#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,change);</span><br><span class="line">    &#125;else if (context == PersonNameContext)&#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,change);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// KVO移除</span><br><span class="line">[self.person removeObserver:self forKeyPath:@&quot;name&quot;];</span><br><span class="line">[self.person removeObserver:self forKeyPath:@&quot;nick&quot;];</span><br></pre></td></tr></table></figure></div>
 
 <h2 id="移除KVO通知的必要性"><a href="#移除KVO通知的必要性" class="headerlink" title="移除KVO通知的必要性"></a>移除KVO通知的必要性</h2><p>在官方文档中，针对 <code>KVO移除</code> 有以下几点说明：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160746851-ed7e0343-880b-445c-8aff-0c4ab592de47.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160746851-ed7e0343-880b-445c-8aff-0c4ab592de47.png"></p>
 <p>删除观察者时，请记住以下几点：</p>
 <ul>
 <li><p>要求被移除为观察者（如果尚未注册为观察者）会导致 <code>NSRangeException</code>，您可以对 <code>removeObserver:forKeyPath:context:</code> 进行一次调用，以对应对 <code>addObserver:forKeyPath:option:context:</code> 的调用，或者如果在您的应用中不可行，则将 <code>removeObserver:forKeyPath:context:</code> 调用在 <code>try/catch块</code> 内处理潜在的异常</p>
@@ -402,12 +392,7 @@
 </li>
 </ul>
 <p>所以，总的来说，<code>KVO注册观察者和移除观察者时需要成对出现的</code>，如果 <code>只注册不移除</code>，<code>会出现类似野指针的崩溃（EXC_BAD_ACCESS）</code>，如下图所示：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160746861-ac7dcc0b-5307-4cf7-bc71-45e0792c0dd3.jpg"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160746861-ac7dcc0b-5307-4cf7-bc71-45e0792c0dd3.jpg"></p>
 <p>崩溃的原因是，由于 <code>第一次注册KVO观察者没有移除</code>，再次进入页面，会 <code>第二次注册KVO观察者</code>，导致 <code>KVO观察者的重复注册</code>，而且第一次的通知对象还在内存中，没有进行释放，此时接收到属性值变化的通知，会出现 <code>找不到原有的通知对象，只能找到现有的通知对象</code>，即第二次KVO注册的观察者，所以 <code>导致了类似野指针的崩溃</code>，即一直保持着一个 <code>野通知</code>，且一直在监听</p>
 <p>注：这里的崩溃案例是通过 <code>单例对象</code> 实现（崩溃有很大的几率，不是每次必现），因为单例对象在内存是常驻的，针对一般的类对象，貌似不移除也是可以的，但是为了防止线上意外，建议还是移除比较好</p>
 <h2 id="KVO的自动触发与手动触发"><a href="#KVO的自动触发与手动触发" class="headerlink" title="KVO的自动触发与手动触发"></a>KVO的自动触发与手动触发</h2><p>KVO观察者的 <code>开启和关闭</code> 有两种方式：<code>自动和手动</code></p>
@@ -447,12 +432,7 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 可变数组</span><br><span class="line">self.person.mArr = [NSMutableArray arrayWithCapacity:1];</span><br><span class="line">[self.person addObserver:self forKeyPath:@&quot;mArr&quot; options:NSKeyValueObservingOptionNew context:NULL];</span><br><span class="line"></span><br><span class="line">- (void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event&#123;</span><br><span class="line">    // 可变数组</span><br><span class="line">    [self.person.mArr addObject:@&quot;1&quot;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark -KVO回调</span><br><span class="line">- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary&lt;NSKeyValueChangeKey,id&gt; *)change context:(void *)context&#123;</span><br><span class="line">    // 可变数组</span><br><span class="line">    NSLog(@&quot;%@&quot;,change);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)dealloc&#123;</span><br><span class="line">    // 可变数组</span><br><span class="line">    [self.person removeObserver:self forKeyPath:@&quot;mArr&quot;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>在 KVC官方文档中，针对 <code>可变数组的集合</code> 类型，有如下说明，即访问集合对象需要通过 <code>mutableArrayValueForKey</code> 方法，这样才能 <code>将元素添加到可变数组中</code></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160746894-fceaad2c-bd75-417a-b9a2-7937ead83d1f.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160746894-fceaad2c-bd75-417a-b9a2-7937ead83d1f.png"></p>
 <p>因此，需要将上面 <code>可变数组</code> 添加元素的方法，改为如下：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event&#123;</span><br><span class="line">    // 可变数组</span><br><span class="line">    [[self.person mutableArrayValueForKey:@&quot;mArr&quot;] addObject:@&quot;1&quot;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
@@ -466,29 +446,14 @@
 <ul>
 <li><code>属性</code> 的 <code>kind</code> 一般是 <code>设值</code></li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160746909-b6aff51a-7aee-48b7-aa13-ccd04482ac3c.jpg"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160746909-b6aff51a-7aee-48b7-aa13-ccd04482ac3c.jpg"></p>
 <ul>
 <li><code>可变数组</code> 的 <code>kind</code> 一般是 <code>插入</code></li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160746915-1745aa00-450c-4ae7-9e1c-c767fbba828e.jpg"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160746915-1745aa00-450c-4ae7-9e1c-c767fbba828e.jpg"></p>
 <h1 id="KVO的底层原理探索"><a href="#KVO的底层原理探索" class="headerlink" title="KVO的底层原理探索"></a>KVO的底层原理探索</h1><p>官方文档说明</p>
 <p>在KVO的官方文档使用指南中，有如下说明</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160746922-6b230564-1bc2-4a3a-839a-15abde252490.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160746922-6b230564-1bc2-4a3a-839a-15abde252490.png"></p>
 <ul>
 <li><p><code>KVO</code> 是使用 <code>isa-swizzling</code> 的技术实现的</p>
 </li>
@@ -528,70 +493,35 @@
 <ul>
 <li>注册观察者之前： <code>实例对象person</code> 的 <code>isa</code> 指针指向 <code>ZJPerson</code></li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160746946-a965acac-9bed-432f-b9d9-6c14a22d17b5.jpg"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160746946-a965acac-9bed-432f-b9d9-6c14a22d17b5.jpg"></p>
 <ul>
 <li>注册观察者之后：<code>实例对象person</code> 的 <code>isa</code> 指针指向 <code>NSKVONotifing_ZJPerson</code></li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160746974-2227abf4-5850-4b8f-a73c-64c2c1856eaa.jpg"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160746974-2227abf4-5850-4b8f-a73c-64c2c1856eaa.jpg"></p>
 <p>综上所述，在注册观察者后，<code>实例对象</code> 的 <code>isa</code> 指针 <code>指向</code> 由 <code>ZJPerson类</code> 变为了 <code>NSKVONotifying_ZJPerson中间类</code>，即实例对象的 <code>isa</code> 指针指向发生了变化</p>
 <h2 id="判断中间类是否是-派生类-即-子类？"><a href="#判断中间类是否是-派生类-即-子类？" class="headerlink" title="判断中间类是否是 派生类 即 子类？"></a>判断中间类是否是 <code>派生类</code> 即 子类？</h2><p>那么这个动态生成的中间类 <code>NSKVONotifying_ZJPerson</code> 和 <code>ZJPerson</code> 有什么关系？下面通过代码来验证</p>
 <p>可以通过下面封装的方法，获取ZJPerson的相关类</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">// 添加KVO之前</span><br><span class="line">[self printClasses:[ZJPerson class]];</span><br><span class="line">    </span><br><span class="line">// 添加观察者</span><br><span class="line">[self.person addObserver:self forKeyPath:@&quot;name&quot; options:NSKeyValueObservingOptionNew context:NULL];</span><br><span class="line">[self.person addObserver:self forKeyPath:@&quot;nick&quot; options:NSKeyValueObservingOptionNew context:NULL];</span><br><span class="line">    </span><br><span class="line">// 添加KVO之后</span><br><span class="line">[self printClasses:[ZJPerson class]];</span><br><span class="line"></span><br><span class="line">#pragma mark -遍历类以及子类</span><br><span class="line">- (void)printClasses:(Class)cls&#123;</span><br><span class="line">    // 注册类的总数</span><br><span class="line">    int count = objc_getClassList(NULL, 0);</span><br><span class="line">    // 创建一个数组， 其中包含给定对象</span><br><span class="line">    NSMutableArray * mArr = [NSMutableArray arrayWithObject:cls];</span><br><span class="line">    // 获取所有已注册的类</span><br><span class="line">    Class * classes = (Class*)malloc(sizeof(Class)*count);</span><br><span class="line">    objc_getClassList(classes, count);</span><br><span class="line">    for (int i = 0; i &lt; count; i ++) &#123;</span><br><span class="line">        if (cls == class_getSuperclass(classes[i])) &#123;</span><br><span class="line">            [mArr addObject:classes[i]];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    free(classes);</span><br><span class="line">    NSLog(@&quot;classes = %@&quot;, mArr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>打印结果如下：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160747000-ede43dee-9514-4387-aeb3-e73220fffaef.jpg"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160747000-ede43dee-9514-4387-aeb3-e73220fffaef.jpg"></p>
 <p>从打印结果可以得出，<code>NSKVONotifying_ZJPerson</code> 是 <code>ZJPerson</code> 的子类</p>
 <h2 id="中间类中有什么？"><a href="#中间类中有什么？" class="headerlink" title="中间类中有什么？"></a>中间类中有什么？</h2><p>可以通过下面的方法获取 <code>NSKVONotifying_ZJPerson</code> 类中的所有方法</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 遍历方法</span><br><span class="line">[self printClassAllMethod:objc_getClass(&quot;NSKVONotifying_ZJPerson&quot;)];</span><br><span class="line">    </span><br><span class="line">#pragma mark -遍历方法</span><br><span class="line">- (void)printClassAllMethod:(Class)cls&#123;</span><br><span class="line">    unsigned int count = 0;</span><br><span class="line">    // 获取一个类中的所有实例方法</span><br><span class="line">    Method * methodList = class_copyMethodList(cls, &amp;count);</span><br><span class="line">    for (int i = 0; i &lt; count; i ++) &#123;</span><br><span class="line">        // 获取单个方法</span><br><span class="line">        Method method = methodList[i];</span><br><span class="line">        // 方法编号</span><br><span class="line">        SEL sel = method_getName(method);</span><br><span class="line">        // 方法实现</span><br><span class="line">        IMP imp = class_getMethodImplementation(cls, sel);</span><br><span class="line">        NSLog(@&quot;%@ - %p&quot;,NSStringFromSelector(sel),imp);</span><br><span class="line">    &#125;</span><br><span class="line">    free(methodList);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>查看打印结果</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160747013-29f9e86f-4641-4f75-8d7a-4ec033f7c1d7.jpg"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160747013-29f9e86f-4641-4f75-8d7a-4ec033f7c1d7.jpg"></p>
 <p>从结果中可以看出有四个方法，分别是 <code>setNick、class、dealloc、_isKVOA</code>，这些方法是 <code>继承</code> 还是 <code>重写</code>？</p>
 <ul>
 <li>在 <code>ZJStudent(继承自ZJPerson)</code> 中重写 <code>setNick</code> 方法，获取 <code>ZJStudent</code> 类的所有方法</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160747029-cb6389e3-faae-4fb8-b248-67c4ce185378.jpg"
-                     
-                ></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160747037-0c297291-98a3-4e8e-bff7-e84db481aafd.jpg"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160747029-cb6389e3-faae-4fb8-b248-67c4ce185378.jpg"></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160747037-0c297291-98a3-4e8e-bff7-e84db481aafd.jpg"></p>
 <p>由打印结果可知，如果是继承那么 <code>NSKVONotifying_ZJPerson</code> 打印的方法应该与 <code>ZJPerson</code> 打印的结果一致</p>
 <ul>
 <li>获取 <code>ZJPerson</code> 和 <code>NSKVONotifying_ZJPerson</code> 的方法列表进行对比</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160747047-7900c4b7-e62d-40a6-9811-ff63be5ca592.jpg"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160747047-7900c4b7-e62d-40a6-9811-ff63be5ca592.jpg"></p>
 <p><strong>【结论】</strong> 综上所述，有如下结论：</p>
 <ul>
 <li><p><code>NSKVONotifying_ZJPerson</code> 中间类 <code>重写</code> 了 <code>父类ZJPerson</code> 的 <code>setNick</code> 方法</p>
@@ -606,31 +536,16 @@
 <h2 id="dealloc中移除观察者后，isa指向谁，以及中间类是否会销毁？"><a href="#dealloc中移除观察者后，isa指向谁，以及中间类是否会销毁？" class="headerlink" title="dealloc中移除观察者后，isa指向谁，以及中间类是否会销毁？"></a>dealloc中移除观察者后，isa指向谁，以及中间类是否会销毁？</h2><ul>
 <li>移除观察者前：<code>实例对象的isa</code> 指向仍是 <code>NSKVONotifying_ZJPerson中间类</code></li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160747072-cbfc301c-f0e9-448c-a502-999ab225df54.jpg"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160747072-cbfc301c-f0e9-448c-a502-999ab225df54.jpg"></p>
 <ul>
 <li>移除观察者之后：实例对象的isa指针指向更改为 <code>ZJPerson类</code></li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160747086-afb0048f-be74-4a27-b1cf-c7f77d426307.jpg"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160747086-afb0048f-be74-4a27-b1cf-c7f77d426307.jpg"></p>
 <p>所以，在 <code>移除KVO观察者后</code>，<code>isa</code> 的指向由 <code>KSKVONotifying_ZJPerson</code> 变成了 <code>ZJPerson</code></p>
 <h2 id="那么中间类从创建后，到dealloc方法中移除观察者之后，KSKVONotifying-ZJPerson-是否还存在？"><a href="#那么中间类从创建后，到dealloc方法中移除观察者之后，KSKVONotifying-ZJPerson-是否还存在？" class="headerlink" title="那么中间类从创建后，到dealloc方法中移除观察者之后，KSKVONotifying_ZJPerson 是否还存在？"></a>那么中间类从创建后，到dealloc方法中移除观察者之后，KSKVONotifying_ZJPerson 是否还存在？</h2><ul>
 <li>在上一个界面打印 <code>ZJPerson</code> 的子类情况，用于判断中间类是否销毁</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/160747103-6f0b7570-53a5-45f7-b76f-f2c7fceb7712.jpg"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/160747103-6f0b7570-53a5-45f7-b76f-f2c7fceb7712.jpg"></p>
 <p>通过子类的打印结果可以看出，中间类一旦生成，没有移除，没有销毁，还在内存中，主要是考虑 <code>重用</code> 的想法，即 <code>中间类注册到内存中，为了考虑后续的重用问题，所以中间类一直存在</code></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>综上所述，关于 中间类，有如下说明：</p>
 <ul>
@@ -1010,10 +925,6 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
-
-
-    
-<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

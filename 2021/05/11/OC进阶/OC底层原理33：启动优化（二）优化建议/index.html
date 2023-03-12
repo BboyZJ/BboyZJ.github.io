@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -345,26 +345,11 @@
 <p>所以， <code>pre-main() + main()</code> 的过程就是从用户点击App图标到用户能看到主界面的过程，即需要优化的部分。</p>
 <h1 id="pre-main-启动优化"><a href="#pre-main-启动优化" class="headerlink" title="pre-main()启动优化"></a>pre-main()启动优化</h1><p>我们在前面 <a href="">OC底层原理15：dyld源码分析</a> 中，已经了解了dyld的加载流程，<code>pre-main()</code> 阶段的 <code>启动时间</code> 就是 <code>dyld加载过程的时间</code></p>
 <p>针对 <code>pre-main()</code> 阶段的启动时间，苹果提供了APP启动时间检测方法，在 <code>Product -&gt; Scheme -&gt; Edit Scheme -&gt; Environment Variables</code> 点击 <code>+</code> 号添加环境变量 <code>DYLD_PRINT_STATISTICS</code> 设为 <code>1</code>，如下图：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/116049036-68ecd480-a6a8-11eb-9064-adbe420d5acc.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/116049036-68ecd480-a6a8-11eb-9064-adbe420d5acc.png"></p>
 <p>然后运行，以下是 <code>手机型号iPhone11 14.4.2</code> 启动的我目前正在开发的电商项目的<code>pre-main()</code>时间：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/116048789-23c8a280-a6a8-11eb-83bf-393c03c9ba57.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/116048789-23c8a280-a6a8-11eb-83bf-393c03c9ba57.png"></p>
 <p>如果想要更加详细的信息，就设置 <code>DYLD_PRINT_STATISTICS_DETAILS</code> 为 <code>1</code>，得到以下信息：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/116049978-8a9a8b80-a6a9-11eb-9d04-f67980e50376.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/116049978-8a9a8b80-a6a9-11eb-9d04-f67980e50376.png"></p>
 <p><strong>说明</strong><br><code>pre-main</code> 阶段总共用时 <code>1.3s</code></p>
 <ul>
 <li><p><code>dylib loading time</code> (动态库耗时)：主要是加载动态库，用时 <code>336.24ms</code></p>
@@ -704,10 +689,6 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
-
-
-    
-<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -343,12 +343,7 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (void)blockTimer&#123;</span><br><span class="line">    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">        NSLog(@&quot;timer fire - %@&quot;,timer);</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>现在，我们从底层来深入研究，为什么 <code>B</code> 页面有了 <code>timer</code> 之后，导致 <code>B</code> 页面释放不掉，即不会走到 <code>dealloc</code> 方法，我们可以通过官方文档查看 <code>timerWithTimeInterval:target:selector:userInfo:repeats:</code> 方法中对target的描述</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16497482156978.jpg"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16497482156978.jpg"></p>
 <p>从文档中可以看出，timer对传入的target具有強持有，即 <code>timer</code> 持有 <code>self</code>。由于timer是定义在B页面中，所以 <code>self也持有timer</code>，因此 <code>self- &gt; timer -&gt; self</code> 构成了 <code>循环引用</code></p>
 <p>在 <a href="https://www.bboyzj.cn/2021/04/22/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8630%EF%BC%9ABlock%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">OC底层原理30：Block底层原理</a> 文章中，针对循环引用提供了几种解决方式，我们可以尝试通过 <code>__weak</code> 即 <code>弱引用</code> 来解决，代码修改如下：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">__weak typeof(self) weakSelf = self;</span><br><span class="line">self.timer = [NSTimer timerWithTimeInterval:1 target:weakSelf selector:@selector(fireHome) userInfo:nil repeats:YES];</span><br><span class="line">    [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];</span><br></pre></td></tr></table></figure></div>
@@ -357,19 +352,9 @@
 <ul>
 <li>我们使用 <code>__weak</code> 虽然打破了 <code>self -&gt; timer -&gt; self</code> 之前的循环引用，即引用链变成了 <code>self -&gt; timer -&gt; weakSelf -&gt; self</code>。但是在这里我们分析的并不全面，此时还有一个 <code>Runloop对timer的強持有</code>，因为 <code>Runloop</code> 的 <code>生命周期</code> 比 <code>B</code> 页面 <code>更长</code>，所以导致了 <code>timer无法释放</code>，同时也导致了 <code>B</code> 页面的 <code>self也无法释放</code>。所以，<code>最初引用链</code> 应该是这样的：</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16497487564959.png"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16497487564959.png"></p>
 <p>加上 <code>weakSelf</code> 之后，变成了这样</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16497487783801.png"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16497487783801.png"></p>
 <p><strong>weakSelf 与 self</strong></p>
 <p>对于 <code>weakSelf</code> 和 <code>self</code> ，主要有以下两个疑问？</p>
 <ul>
@@ -380,12 +365,7 @@
 <li><p>带着疑问，我们在 <code>weakSelf</code> 前后打印 <code>self</code> 的引用计数</p>
 </li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16497490452738.jpg"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16497490452738.jpg"></p>
 <p>因此可以得出一个结论：<code>weakSelf没有对内存进行+1操作</code></p>
 <ul>
 <li>继续打印 <code>weakSelf</code> 和 <code>self</code> 对象，以及指针地址</li>
@@ -393,19 +373,9 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">po weakSelf</span><br><span class="line">po self</span><br><span class="line"></span><br><span class="line">p &amp;weakSelf</span><br><span class="line">p &amp;self</span><br></pre></td></tr></table></figure></div>
 
 <p>打印结果如下</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16497495278213.jpg"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16497495278213.jpg"></p>
 <p>从打印结果可以看出，当前 <code>self</code> 取地址和 <code>weakSelf</code> 取地址的值是不一样的。意味着 <code>两个指针地址，指向的是同一片内存空间</code>，即 <code>weakSelf和self的内存地址是不一样的，都指向同一片内存空间</code> 的</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16497496531731.jpg"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16497496531731.jpg"></p>
 <ul>
 <li><p>从上面打印可以看出，此时 <code>timer</code> 捕获的是 <code>&lt;LGTimerViewController: 0x102c04dd0&gt;</code> ，是一个 <code>对象</code>，所以 <code>无法通过weakSelf来解决強持有</code>。即引用链关系为 ：<code>NSRunloop -&gt; timer -&gt; weakSelf(&lt;LGTimerViewController: 0x102c04dd0&gt;)</code> 。所以 <code>RunLoop对整个对象的空间有強持有</code>，runloop没停，<code>timer</code> 和 <code>weakSelf</code> 是无法释放的</p>
 </li>
@@ -436,23 +406,13 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// 1.定义成其他对象</span><br><span class="line">@property (nonatomic, strong)id target;</span><br><span class="line"></span><br><span class="line">// 2.修改target</span><br><span class="line">self.target = [[NSObject alloc] init];</span><br><span class="line">class_addMethod([NSObject class],@selector(fireHome),(IMP)fireHomeObjc,&quot;v@:&quot;);</span><br><span class="line">self.timer = [];</span><br><span class="line"></span><br><span class="line">// 3.imp</span><br><span class="line">- (void)fireHome&#123;</span><br><span class="line">    num++;</span><br><span class="line">    NSLog(@&quot;hello word - %d&quot;,num);</span><br><span class="line">&#125;</span><br><span class="line">void fireHomeObjc(id obj)&#123;</span><br><span class="line">    NSLog(@&quot;%s -- %@&quot;,__func__,obj);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 4.dealloc</span><br><span class="line">- (void)dealloc&#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>查看运行结果如下</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16498168708118.jpg"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16498168708118.jpg"></p>
 <p>运行发现执行 <code>dealloc</code> 之后，timer还是会继续执行。原因是 <code>解决了中介者的释放</code>，但是 <code>没有解决中介者的回收</code>，即 <code>self.target的回收</code>。所以这种方式 <code>有缺陷</code></p>
 <p>可以通过在 dealloc 方法中，取消定时器来解决，代码如下：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (void)dealloc&#123;</span><br><span class="line">    [self.timer invalidate];</span><br><span class="line">    self.timer = nil;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>运行代码查看结果如下，发现 pop 之后，timer释放，从而中介者也会进行回收释放</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16498170423914.jpg"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16498170423914.jpg"></p>
 <h2 id="思路三：自定义封装timer"><a href="#思路三：自定义封装timer" class="headerlink" title="思路三：自定义封装timer"></a>思路三：自定义封装timer</h2><p>这种方式是根据思路二的原理，自定义封装timer，其步骤如下：</p>
 <ul>
 <li><p>自定义<code>timerWapper</code></p>
@@ -478,12 +438,7 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 定义</span><br><span class="line">self.timerWapper = [[ZJTimerWapper alloc] zj_initWithTimeInterval:1 target:self selector:@selector(fireHome) userInfo:nil repeats:YES];</span><br><span class="line"></span><br><span class="line">// 释放</span><br><span class="line">- (void)dealloc&#123;</span><br><span class="line">     [self.timerWapper zj_invalidate];</span><br><span class="line">     NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>运行结果如下</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16498214951972.jpg"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16498214951972.jpg"></p>
 <p>这种方式看起来比较繁琐，步骤很多，而且针对 <code>timerWapper</code>，需要不断的添加method，需要进行一系列的处理</p>
 <h2 id="思路四：利用NSProxy虚基类的子类"><a href="#思路四：利用NSProxy虚基类的子类" class="headerlink" title="思路四：利用NSProxy虚基类的子类"></a>思路四：利用NSProxy虚基类的子类</h2><p>下面来介绍一种 <code>timer</code> 強引用 <code>最常用</code> 的处理方式：<code>NSProxy子类</code></p>
 <p>可以通过 <code>NSProxy</code> 虚基类，可以交给其子类实现，NSproxy的介绍在前面的文章已经介绍过了，这里不再重复</p>
@@ -800,10 +755,6 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
-
-
-    
-<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -328,12 +328,7 @@
                 <h1 id="什么是Runloop"><a href="#什么是Runloop" class="headerlink" title="什么是Runloop?"></a>什么是Runloop?</h1><ol>
 <li>runloop不仅仅是一个运行循环，还是一个对象，这个对象管理其需要处理的事件和消息，并提供了一个入口函数，通过这个入口函数，程序进入do…while循环，保证程序持续运行，不会退出。</li>
 </ol>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/88535378-5ae82580-d03c-11ea-8664-f0380cc8f6b8.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/88535378-5ae82580-d03c-11ea-8664-f0380cc8f6b8.png"></p>
 <ol start="2">
 <li>验证：<a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/CF/" >下载源码 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>,查看CFRunloop.c文件，找到CFRunLoopRun源码可知：确实是do…while循环。</li>
 </ol>
@@ -372,12 +367,7 @@
 <p><strong>3.CFRunloopModeRef：</strong></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct __CFRunLoopMode *CFRunLoopModeRef;</span><br><span class="line">struct __CFRunLoopMode &#123;</span><br><span class="line">    CFMutableSetRef _sources0;</span><br><span class="line">    CFMutableSetRef _sources1;</span><br><span class="line">    CFMutableArrayRef _observers;</span><br><span class="line">    CFMutableArrayRef _timers;</span><br></pre></td></tr></table></figure></div>
 
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/88552900-364d7700-d057-11ea-8e52-51056b6536a4.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/88552900-364d7700-d057-11ea-8e52-51056b6536a4.png"></p>
 <p>由上述源码和图可知:</p>
 <ol>
 <li>CFRunLoopModeRef代表RunLoop的运行模式，一个RunLoop包含若干个Mode，每个Mode又包含若干个Source0&#x2F;Source1&#x2F;Timer&#x2F;Observer，RunLoop启动时只能选择其中一个Mode，作为currentMode，如果需要切换Mode，只能退出当前Loop，再重新选择一个Mode进入，不同组的Source0&#x2F;Source1&#x2F;Timer&#x2F;Observer能分隔开来，互不影响，如果Mode里没有任何Source0&#x2F;Source1&#x2F;Timer&#x2F;Observer，RunLoop会立马退出。</li>
@@ -392,24 +382,14 @@
 <li>GSEventReceiveRunLoopMode</li>
 </ul>
 <p><strong>4.CFRunloopSourceRef：</strong><br>触摸事件：source0</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/88558928-c8a54900-d05e-11ea-826c-6c21a0a943d9.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/88558928-c8a54900-d05e-11ea-826c-6c21a0a943d9.png"></p>
 <p>由上面的截图可知：runloop处理source0事件是调用的*<strong>CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION</strong>*函数。<br>我们来看一下源码：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">static void __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__() __attribute__((noinline));</span><br><span class="line">static void __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__(void (*perform)(void *), void *info) &#123;</span><br><span class="line">    if (perform) &#123;</span><br><span class="line">        perform(info);</span><br><span class="line">    &#125;</span><br><span class="line">    asm __volatile__(&quot;&quot;); // thwart tail-call optimization</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>5.CFRunloopTimerRef：</strong><br>timer类型:</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">        NSLog(@&quot;小老弟&quot;);</span><br><span class="line">    &#125;];</span><br></pre></td></tr></table></figure></div>
 
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/88558179-c989ab00-d05d-11ea-9d3b-5f0e0121c66c.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/88558179-c989ab00-d05d-11ea-9d3b-5f0e0121c66c.png"></p>
 <p>由上面的截图可知：runloop处理timer事件是调用的__CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION__*函数进行事件处理：<br>再看一下源码：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">static void __CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION__() __attribute__((noinline));</span><br><span class="line">static void __CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION__(CFRunLoopTimerCallBack func, CFRunLoopTimerRef timer, void *info) &#123;</span><br><span class="line">    if (func) &#123;</span><br><span class="line">        func(timer, info);</span><br><span class="line">    &#125;</span><br><span class="line">    asm __volatile__(&quot;&quot;); // thwart tail-call optimization</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
@@ -432,12 +412,7 @@
 <h1 id="Runloop与线程的关系？"><a href="#Runloop与线程的关系？" class="headerlink" title="Runloop与线程的关系？"></a>Runloop与线程的关系？</h1><ol>
 <li>每一条线程都有一个与之对应runloop对象。</li>
 </ol>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/88561601-3606a900-d062-11ea-8775-1fc03400c90c.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/88561601-3606a900-d062-11ea-8775-1fc03400c90c.png"></p>
 <p>查看源码验证，线程和runloop是一一对应的关系:</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CFRunLoopRef CFRunLoopGetMain(void) &#123;</span><br><span class="line">    CHECK_FOR_FORK();</span><br><span class="line">    static CFRunLoopRef __main = NULL; // no retain needed</span><br><span class="line">    if (!__main) __main = _CFRunLoopGet0(pthread_main_thread_np()); // no CAS needed</span><br><span class="line">    return __main;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
@@ -474,18 +449,8 @@
 
 <h1 id="Observer和runloop"><a href="#Observer和runloop" class="headerlink" title="Observer和runloop"></a>Observer和runloop</h1><h1 id="Runloop运行流程"><a href="#Runloop运行流程" class="headerlink" title="Runloop运行流程"></a>Runloop运行流程</h1><p><strong>1.NSRunLoop:</strong><br> 是基于 CFRunLoopRef 的OC封装，提供了面向对象的 API，但不是线程安全的，CFRunLoopRef 是在 CoreFoundation 框架内的，它提供了纯 C 函数的 API，是线程安全的，CoreFoundation是开源的(<a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/CF/" >CoreFoundation 源码地址 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>)</p>
 <p><strong>2.runloop的运行逻辑</strong></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/88556638-d6a59a80-d05b-11ea-8a9c-a4ab1a75a0af.png"
-                     
-                ></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/88557269-95fa5100-d05c-11ea-87a9-2aebc850f62b.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/88556638-d6a59a80-d05b-11ea-8a9c-a4ab1a75a0af.png"></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/88557269-95fa5100-d05c-11ea-87a9-2aebc850f62b.png"></p>
 <h1 id="Runloop实际应用"><a href="#Runloop实际应用" class="headerlink" title="Runloop实际应用"></a>Runloop实际应用</h1>
             </div>
 
@@ -777,10 +742,6 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
-
-
-    
-<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

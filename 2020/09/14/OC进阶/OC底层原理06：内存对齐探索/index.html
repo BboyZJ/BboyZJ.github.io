@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -331,12 +331,7 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">@property (nonatomic, copy) NSString *name;</span><br><span class="line">@property (nonatomic, assign) int age;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 内存对齐</span><br><span class="line">ZJPerson * p = [ZJPerson alloc];</span><br><span class="line">p.name = @&quot;ZJ&quot;;  // NSString</span><br><span class="line">p.age = 30; // int</span><br><span class="line">    </span><br><span class="line">NSLog(@&quot;%@&quot;,p);</span><br></pre></td></tr></table></figure></div>
 
 <p>2）通过LLDB编译命令查看内存情况：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/92987563-16362200-f4f6-11ea-8f34-49785fab2912.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/92987563-16362200-f4f6-11ea-8f34-49785fab2912.png"></p>
 <ul>
 <li><code>x 0x100867a60</code> ：以16进制打印当前地址的内存情况，查看不方便</li>
 <li><code>x/4gx 0x100867a60</code>：以16进制形式打印4个地址，查看方便</li>
@@ -346,12 +341,7 @@
 <li><code>0x0000000100001010</code>：ZJ</li>
 </ul>
 <p>3）那么 <code>0x100867a60、0x102038770</code> 和 <code>0x001d80010000220d 0x000000000000001e 0x0000000100001010 0x0000000000000000</code><br>有什么关系呢？我们用一张图来表示一下：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/92987594-82b12100-f4f6-11ea-89cc-c106d7d79318.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/92987594-82b12100-f4f6-11ea-89cc-c106d7d79318.png"></p>
 <p>4）如果有一个 <code>double/float</code> 类型的 <code>height</code> 呢？</p>
 <p>我们来分析一下：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, assign) double height;</span><br><span class="line"></span><br><span class="line">p.height = 170; // double</span><br></pre></td></tr></table></figure></div>
@@ -381,12 +371,7 @@
 <li><p>结构体总体大小，必须是其内部最大成员的整数倍，不足要补齐</p>
 </li>
 </ul>
-<h1 id="数据类型所占字节"><a href="#数据类型所占字节" class="headerlink" title="数据类型所占字节"></a>数据类型所占字节</h1><p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/92480517-94a17400-f217-11ea-9dc4-8b27214158a2.png"
-                     
-                ></p>
+<h1 id="数据类型所占字节"><a href="#数据类型所占字节" class="headerlink" title="数据类型所占字节"></a>数据类型所占字节</h1><p><img src="https://user-images.githubusercontent.com/25925248/92480517-94a17400-f217-11ea-9dc4-8b27214158a2.png"></p>
 <h1 id="获取内存的三个方法"><a href="#获取内存的三个方法" class="headerlink" title="获取内存的三个方法"></a>获取内存的三个方法</h1><ul>
 <li><p><code>sizeof</code> 是运算符，编译的时候就替换为常数，返回的是 <code>一个类型所占内存的大小</code></p>
 </li>
@@ -396,19 +381,9 @@
 </li>
 </ul>
 <h1 id="对象属性内存对齐"><a href="#对象属性内存对齐" class="headerlink" title="对象属性内存对齐"></a>对象属性内存对齐</h1><p><strong>1、首先通过一个类的内存段来分析</strong></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/92477729-af71e980-f213-11ea-8ab4-4e3438dca409.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/92477729-af71e980-f213-11ea-8ab4-4e3438dca409.png"></p>
 <p><strong>2、然后我们下断点，分析一下对象的内存情况</strong></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/92478059-31faa900-f214-11ea-9936-65f3dfb689a0.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/92478059-31faa900-f214-11ea-9936-65f3dfb689a0.png"></p>
 <ul>
 <li><p><code>po p</code>：查看当前的对象信息&lt;ZJPerson: 0x60000072f870&gt;</p>
 <ul>
@@ -442,12 +417,7 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 普通结构体</span><br><span class="line">struct ZJStruct1 &#123;</span><br><span class="line">    double a;   // 占8个字节 起始位置(0-7)</span><br><span class="line">    char b;     // 占1个字节 8是1的整数倍[8 1] 起始位置(8)</span><br><span class="line">    int c;      // 占4个字节 9不是4的整数倍，往下找[9 4] 9 10 11 起始位置(12 13 14 15)</span><br><span class="line">    short d;    // 占2个字节 16是2的整数倍[16 2] 起始位置(16 17)</span><br><span class="line">&#125;struct1;</span><br><span class="line">// 内部需要的大小为: 17个字节</span><br><span class="line">// 最大属性 : 8个字节</span><br><span class="line">// 结构体整数倍: 最大成员的整数倍 8*3 = 24个字节</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <p>我们通过图来分析一下struct1的内存存储情况：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/92988578-4f26c480-f4ff-11ea-8d8d-ea99fcc5534a.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/92988578-4f26c480-f4ff-11ea-8d8d-ea99fcc5534a.png"></p>
 <p>根据内存对齐规则，分析ZJStruct1的内存计算：</p>
 <ul>
 <li><code>变量a</code>：占<code>8</code>个字节，从<code>0</code>开始，此时 <code>0</code> 存储 <code>a</code></li>
@@ -460,12 +430,7 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 普通结构体</span><br><span class="line">struct ZJStruct2 &#123;</span><br><span class="line">    char a;     //占1个字节 起始位置(0)</span><br><span class="line">    int b;      //占4个字节 1不是4的整数倍 起始位置(4~7)</span><br><span class="line">    short c;    //占2个字节 8是2的倍数，起始位置(8 9)</span><br><span class="line">    double c;     //占8个字节 10不是8的倍数 起始位置(16~23)</span><br><span class="line">    </span><br><span class="line">&#125;struct2;</span><br><span class="line">// 内部需要的大小为：23个字节</span><br><span class="line">// 最大属性：8个字节</span><br><span class="line">// 结构体整数倍：8*3 = 24个字节</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <p>我们通过图来分析一下struct1的内存存储情况：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/92989153-b09d6200-f504-11ea-9d85-f13a43580f5e.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/92989153-b09d6200-f504-11ea-9d85-f13a43580f5e.png"></p>
 <p>根据内存对齐规则，分析ZJStruct2的内存计算：</p>
 <ul>
 <li><code>变量a</code>：占<code>1</code>个字节，从<code>0</code>开始，此时 <code>0</code> 存储 <code>a</code></li>
@@ -478,12 +443,7 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// 嵌套结构体</span><br><span class="line">struct ZJStruct3 &#123;</span><br><span class="line">    char a; //占1个字节</span><br><span class="line">    int b; //占4个字节</span><br><span class="line">    short c; //占2个字节</span><br><span class="line">&#125;struct3;</span><br><span class="line">struct ZJStruct4 &#123;</span><br><span class="line">    double a; //占8个字节 起始位置(0~7)</span><br><span class="line">    int b; //占4个字节 8是4的整数倍[8 4] 起始位置(8 9 10 11)</span><br><span class="line">    struct ZJStruct3 s3; // char(12) int(16,17,18,19) short(20,21) 结构体内部要对齐（4*3=12）补22,23</span><br><span class="line">    short c; //占2个字节 24是2的整数倍 (24,25)</span><br><span class="line">&#125;struct4;</span><br><span class="line">// 内部需要的大小：25个字节</span><br><span class="line">// 最大属性：8个字节</span><br><span class="line">// 结构体整数倍：8*4 = 32个字节</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <p>我们通过图来分析一下struct3的内存存储情况：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/93211572-02a7e700-f794-11ea-8d12-56396f3f238a.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/93211572-02a7e700-f794-11ea-8d12-56396f3f238a.png"></p>
 <p>根据内存对齐规则，分析ZJStruct3的内存计算：</p>
 <ul>
 <li><code>变量a</code>：占<code>8</code>个字节，从<code>0</code>开始，此时 <code>0-7</code> 存储 <code>a</code></li>
@@ -519,19 +479,9 @@
 <ul>
 <li>当我们向通过 <code>0x0000001e00006261</code> 地址找出 <code>age</code> 等数据时，发现是 <code>乱码</code>，这里无法找出值的原因是苹果中针对 <code>age、c1、c2</code> 属性的内存进行了重排，因为 <code>age</code> 类型占 <code>4</code> 个字节，<code>c1</code> 和 <code>c2</code> 类型 <code>char</code> 分别占 <code>1</code> 个字节，通过 <code>4+1+1</code> 的方式，按照 <code>8</code> 字节对齐，不足补齐的方式存储在同一块内存中</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/93021660-6dcbaf00-f616-11ea-9aae-8dd7c500cd7f.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/93021660-6dcbaf00-f616-11ea-9aae-8dd7c500cd7f.png"></p>
 <ul>
-<li>我们通过<code>po 0x000000010d671058</code>找出<code>name</code>的值<code>ZJ</code>，通过<code>po 0x000000010d671078</code>找出<code>nickName</code>的值<code>小J</code><br><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/!%5B%5D(https:/user-images.githubusercontent.com/25925248/92991523-f2cf9f00-f516-11ea-8432-44c60ec6b516.png"
-                     
-                ></li>
+<li>我们通过<code>po 0x000000010d671058</code>找出<code>name</code>的值<code>ZJ</code>，通过<code>po 0x000000010d671078</code>找出<code>nickName</code>的值<code>小J</code><br><img src="/BboyZJ.github.io/!%5B%5D(https:/user-images.githubusercontent.com/25925248/92991523-f2cf9f00-f516-11ea-8432-44c60ec6b516.png"></li>
 </ul>
 <p><strong>4、所以，这里可以总结下苹果中的内存对齐思想：</strong></p>
 <p>大部分的内存都是通过固定的内存块进行读取，尽管我们在内存中采用了内存对齐的方式，但并不是所有的内存都可以进行浪费的，苹果会自动 <code>对属性进行重排</code>，以此来 <code>优化内存</code></p>
@@ -852,10 +802,6 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
-
-
-    
-<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

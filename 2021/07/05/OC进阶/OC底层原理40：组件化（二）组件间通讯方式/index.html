@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -388,12 +388,7 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">//******* 1、分类定义新接口</span><br><span class="line">extension CTMediator&#123;</span><br><span class="line">    @objc func A_showHome()-&gt;UIViewController?&#123;</span><br><span class="line">        let params = [</span><br><span class="line">            kCTMediatorParamsKeySwiftTargetModuleName: &quot;ZJBase_Example&quot;</span><br><span class="line">        ]</span><br><span class="line">        </span><br><span class="line">        if let vc = self.performTarget(&quot;A&quot;, action: &quot;Extension_HomeViewController&quot;, params: params, shouldCacheTarget: false) as? UIViewController&#123;</span><br><span class="line">            return vc</span><br><span class="line">        &#125;</span><br><span class="line">        return nil</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//******* 2、模块提供者提供target-action的调用方式（对外需要加上public关键字）</span><br><span class="line">class Target_A: NSObject &#123;</span><br><span class="line">    </span><br><span class="line">    @objc func Action_Extension_HomeViewController(_ params: [String: Any])-&gt;UIViewController&#123;</span><br><span class="line">         </span><br><span class="line">        let home = HomeViewController()</span><br><span class="line">        return home</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//******* 3、使用</span><br><span class="line">if let vc = CTMediator.sharedInstance().A_showHome() &#123;</span><br><span class="line">            self.navigationController?.pushViewController(vc, animated: true)</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>其模块间的引用关系如下图所示：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/162383654-d820d060-c93d-4162-bed3-2b8473670650.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/162383654-d820d060-c93d-4162-bed3-2b8473670650.png"></p>
 <p><strong>缺点</strong></p>
 <ul>
 <li><p>需要在 <code>mediator</code> 和 <code>target</code> 中重新添加每一个接口，模块化时代码较为繁琐</p>
@@ -472,12 +467,7 @@
 <ul>
 <li>创建plist文件，Plist文件的格式也是数组中包含多个字典。字典里面有两个Key，一个是<code>@&quot;moduleLevel&quot;</code>，另一个是 <code>@&quot;moduleClass&quot;</code> 。注意根的数组的名字叫<code>@“moduleClasses”</code>。</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/162383772-d61d99f3-78b3-4e26-b139-1474e1c6ff60.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/162383772-d61d99f3-78b3-4e26-b139-1474e1c6ff60.png"></p>
 <ul>
 <li>进入 <code>loadLocalModules</code> 方法，主要是从 <code>Plist</code> 里面取出数组，然后把数组加入到<code>BHModuleInfos</code> 数组里面</li>
 </ul>
@@ -512,24 +502,14 @@
 <ul>
 <li><code>系统事件</code>：主要是指 <code>Application生命周期事件!</code></li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/162383825-1e06fb75-8aa2-4044-8176-6d249e3064a4.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/162383825-1e06fb75-8aa2-4044-8176-6d249e3064a4.png"></p>
 <p>一般的做法是<code>AppDelegate</code>改为 <code>继承自BHAppDelegate</code></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@interface TestAppDelegate : BHAppDelegate &lt;UIApplicationDelegate&gt;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li><code>应用事件</code>：官方给出的流程图，其中 <code>modSetup、modInit</code> 等，可以用于编码实现各插件模块的设置与初始化。</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/162383863-7f1e8d00-a2b1-48b2-a262-0e0840fda1dd.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/162383863-7f1e8d00-a2b1-48b2-a262-0e0840fda1dd.png"></p>
 <ul>
 <li>自定义事件</li>
 </ul>
@@ -560,12 +540,7 @@
 <ul>
 <li>设置plist文件</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/162383924-4e3279f9-dcfb-4328-839e-bef79af509a9.png"
-                     
-                ></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/162383924-4e3279f9-dcfb-4328-839e-bef79af509a9.png"></p>
 <ul>
 <li>同样也是在 <code>setContext</code> 时注册 <code>services</code></li>
 </ul>
@@ -900,10 +875,6 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
-
-
-    
-<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 

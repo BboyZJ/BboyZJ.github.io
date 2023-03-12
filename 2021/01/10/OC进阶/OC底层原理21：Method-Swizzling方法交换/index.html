@@ -48,7 +48,7 @@
     <script id="hexo-configurations">
     let REDEFINE = window.REDEFINE || {};
     REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
-    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
     REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
   </script>
     
@@ -339,12 +339,7 @@
 </li>
 </ul>
 <p>如下图所示，交换前后的 <code>sel</code> 和 <code>IMP</code> 的对应关系：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16472369628918.jpg"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16472369628918.jpg"></p>
 <h1 id="method-swizzling-涉及的相关API"><a href="#method-swizzling-涉及的相关API" class="headerlink" title="method-swizzling 涉及的相关API"></a>method-swizzling 涉及的相关API</h1><ul>
 <li><p>通过 <code>sel</code> 获取方法 <code>Method</code></p>
 <ul>
@@ -380,12 +375,7 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJRuntimeTool : NSObject</span><br><span class="line">+ (void)zj_methodSwizzlingWithClass:(Class)cls oriSEL:(SEL)oriSEL swizzledSEL:(SEL)swizzledSEL;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJRuntimeTool</span><br><span class="line">+ (void)zj_methodSwizzlingWithClass:(Class)cls oriSEL:(SEL)oriSEL swizzledSEL:(SEL)swizzledSEL&#123;</span><br><span class="line">    if (!cls) &#123;</span><br><span class="line">        NSLog(@&quot;传入的交换类不能为空&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    Method oriMethod = class_getInstanceMethod(cls, oriSEL);</span><br><span class="line">    Method swiMethod = class_getInstanceMethod(cls, swizzledSEL);</span><br><span class="line">    method_exchangeImplementations(oriMethod, swiMethod);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <p>通过实际代码的调试，发现会在p调用 <code>personInstanceMethod</code> 方法时崩溃，下面来进行详细说明</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16472399389818.jpg"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16472399389818.jpg"></p>
 <ul>
 <li><p><code>[student personInstanceMethod];</code> 中不报错是因为 <code>student</code> 中的 <code>imp</code> 交换成了 <code>zj_studentInstanceMethod</code>，而 <code>ZJStudent</code> 中有这个方法（在ZJ分类中），所以不会报错</p>
 </li>
@@ -403,41 +393,16 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">+ (void)zj_methodSwizzlingWithClass:(Class)cls oriSEL:(SEL)oriSEL swizzledSEL:(SEL)swizzledSEL&#123;</span><br><span class="line">    if (!cls) &#123;</span><br><span class="line">        NSLog(@&quot;传入的交换类不能为空&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    Method oriMethod = class_getInstanceMethod(cls, oriSEL);</span><br><span class="line">    Method swiMethod = class_getInstanceMethod(cls, swizzledSEL);</span><br><span class="line">    </span><br><span class="line">    // 一般交换方法：交换自己有的方法</span><br><span class="line">    // 交换自己没有实现的方法：</span><br><span class="line">    // 首先：会先尝试给自己添加要交换的方法 - personInstanceMethod(SEL) -&gt; swiMethod(IMP)</span><br><span class="line">    // 然后再将父类的IMP给swizzle personInstanceMethod(IMP) -&gt; swizzledSEL</span><br><span class="line">    BOOL success = class_addMethod(cls, oriSEL, method_getImplementation(swiMethod), method_getTypeEncoding(oriMethod));</span><br><span class="line">    </span><br><span class="line">    if (success) &#123; // 自己没有 - 交换 - 没有父类进行处理（重写一个）</span><br><span class="line">        class_replaceMethod(cls, swizzledSEL, method_getImplementation(oriMethod), method_getTypeEncoding(oriMethod));</span><br><span class="line">    &#125;else &#123; // 自己有</span><br><span class="line">        method_exchangeImplementations(oriMethod, swiMethod);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>下面是 <code>class_replaceMethod、class_addMethod、method_exchangeImplementations</code> 的源码实现</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16472413416660.jpg"
-                     
-                ></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16472413793468.jpg"
-                     
-                ></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16472412742988.jpg"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16472413416660.jpg"></p>
+<p><img src="/BboyZJ.github.io/assets/16472413793468.jpg"></p>
+<p><img src="/BboyZJ.github.io/assets/16472412742988.jpg"></p>
 <p>其中 <code>class_replaceMethod</code> 和 <code>class_addMethod</code> 中都调用了 <code>addMethod</code> 方法，区别在于 <code>bool</code> 值的判断，下面是 <code>addMethod</code> 的源码实现。</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16472416423445.jpg"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16472416423445.jpg"></p>
 <h1 id="坑点3：子类没有实现，父类也没有实现，下面的调用有什么问题？"><a href="#坑点3：子类没有实现，父类也没有实现，下面的调用有什么问题？" class="headerlink" title="坑点3：子类没有实现，父类也没有实现，下面的调用有什么问题？"></a>坑点3：子类没有实现，父类也没有实现，下面的调用有什么问题？</h1><p>在调用 <code>personInstanceMethod</code> 方法时，父类 <code>ZJPerson</code> 中只有声明，没有实现，子类 <code>ZJStudent</code> 中即没有声明，也没有实现</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 将父类 ZJPerson 实现注释</span><br><span class="line">@implementation ZJPerson</span><br><span class="line">//- (void)personInstanceMethod&#123;</span><br><span class="line">//    NSLog(@&quot;person对象方法:%s&quot;,__func__);</span><br><span class="line">//&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <p>经过调试，发现运行代码会崩溃，报错结果如下所示：</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16472419365115.jpg"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16472419365115.jpg"></p>
 <p>原因是：<code>栈溢出，递归死循环</code>，那么为什么会发生递归呢？</p>
 <p>主要是因为 <code>personInstanceMethod</code> 没有实现，然后在方法交换后，始终找不到 <code>oriMethod</code>，然后交换了个寂寞，即交换失败，当我们调用 <code>personInstanceMethod(oriMethod)</code>时，也就是 <code>oriMethod</code> 会进入 <code>ZJ</code> 中 <code>zj_studentInstanceMethod</code> 方法，然后这个方法中又调用了 <code>zj_studentInstanceMethod</code>，此时的 <code>zj_studentInstanceMethod</code> 并没有指向 <code>oriMethod</code>，然后导致了 <code>自己调自己</code>，即递归死循环</p>
 <p><strong>【优化：避免递归死循环】</strong></p>
@@ -504,12 +469,7 @@
 <ul>
 <li>打印结果如下，会输出崩溃日志，但是实际不会崩溃</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16473129345262.jpg"
-                     
-                ></p>
+<p><img src="/BboyZJ.github.io/assets/16473129345262.jpg"></p>
 
             </div>
 
@@ -801,10 +761,6 @@
 <script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
 
 
-
-
-    
-<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
 
 
 
