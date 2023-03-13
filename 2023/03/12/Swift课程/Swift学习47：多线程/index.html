@@ -9,14 +9,14 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/12/swift课程/swift学习47-多线程/"/>
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/12/swift课程/swift学习47：多线程/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     <meta property="og:type" content="article">
     <meta property="og:title" content="Swift学习47:多线程">
     <meta property="og:description" content="我是小J，关注我">
-    <meta property="og:url" content="https://www.bboyzj.cn2023/03/12/Swift课程/Swift学习47-多线程/">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/03/12/Swift课程/Swift学习47：多线程/">
     <meta property="og:image" content="/images/redefine-logo.svg">
     <meta property="og:site_name" content="BboyZJ">
     <meta name="twitter:card" content="summary_large_image">
@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-13 00:08:13</span>
-            <span class="mobile">2023-03-13 00:08</span>
+            <span class="pc">2023-03-13 17:40:14</span>
+            <span class="mobile">2023-03-13 17:40</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -429,9 +429,119 @@
 </ul>
 <h1 id="GCD-基本操作"><a href="#GCD-基本操作" class="headerlink" title="GCD 基本操作"></a>GCD 基本操作</h1><ul>
 <li>sync</li>
+</ul>
+<p>提交任务到当前队列里，并且直接任务执行完成，当前队列才会返回</p>
+<ul>
 <li>async</li>
+</ul>
+<p>调用一个任务去立即执行，但是不用等任务执行完当前队列就会返回</p>
+<ul>
 <li>asyncAfter</li>
 </ul>
+<p>调度一个任务多久之后去执行，但是不用等任务执行完当前队列就会返回</p>
+<h1 id="GCD-串行-amp-并行"><a href="#GCD-串行-amp-并行" class="headerlink" title="GCD 串行 &amp; 并行"></a>GCD 串行 &amp; 并行</h1><ul>
+<li>串行和并行描述的是任务之间如何运行</li>
+<li>串行任务每一个仅执行一个</li>
+<li>并行任务可以多个同时执行</li>
+</ul>
+<h1 id="GCD-同步-amp-异步"><a href="#GCD-同步-amp-异步" class="headerlink" title="GCD 同步 &amp; 异步"></a>GCD 同步 &amp; 异步</h1><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303131515216.png"
+                     
+                > </p>
+<h1 id="GCD-使用"><a href="#GCD-使用" class="headerlink" title="GCD 使用"></a>GCD 使用</h1><ul>
+<li>同步</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">let queue = DispatchQueue(label: &quot;myQueue&quot;,qos: DispatchQoS.default,attributes: DispatchQueue.Attributes.concurrent,autoreleaseFrequency: DispatchQueue.AutoreleaseFrequency.inherit,target: nil)</span><br><span class="line">queue.sync &#123; // 同步</span><br><span class="line">    sleep(1)</span><br><span class="line">    print(&quot;in queue sync&quot;)</span><br><span class="line">&#125;</span><br><span class="line">print(&quot;after invoke queue method&quot;)</span><br><span class="line"></span><br><span class="line">======</span><br><span class="line">in queue sync</span><br><span class="line">after invoke queue method</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>异步</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">queue.async &#123; // 异步</span><br><span class="line">    sleep(1)</span><br><span class="line">    print(&quot;in queue async&quot;)</span><br><span class="line">&#125;</span><br><span class="line">print(&quot;after invoke queue method&quot;)</span><br><span class="line"></span><br><span class="line">=====</span><br><span class="line">after invoke queue method</span><br><span class="line">in queue async</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>asyncAfter</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">queue.asyncAfter(deadline: .now() + 1) &#123;</span><br><span class="line">    print(&quot;in asyncAfter&quot;)</span><br><span class="line">&#125;</span><br><span class="line">print(&quot;after invoke queue method&quot;)</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">after invoke queue method</span><br><span class="line">in asyncAfter</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="GCD-源码剖析"><a href="#GCD-源码剖析" class="headerlink" title="GCD 源码剖析"></a>GCD 源码剖析</h1><ul>
+<li><p>dispatch_sync</p>
+<ul>
+<li><p>线程A在串行队里dq中执行task1的过程中，如果再向dq中投递串行任务task2，同时还要求必须阻塞当前线程，等待task2结束(sync投递task2)，那么这时候会发生死锁</p>
+</li>
+<li><p>因为这时候task1还没有结束，串行队列不会去执行task2，而我们又要在当前线程等待task2的结束才肯继续执行task1，即task1在等待task2，而task2也在等待task1，循环等待，形成死锁</p>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 串行队列</span><br><span class="line">let queue = DispatchQueue(label: &quot;label&quot;)</span><br><span class="line">queue.async &#123; // 异步</span><br><span class="line">    print(&quot;in queue async&quot;) // 串行队列执行task1</span><br><span class="line">    queue.sync &#123;</span><br><span class="line">        print(&quot;in queue sync&quot;) // 串行队列加入task2</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 死锁</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="临界区"><a href="#临界区" class="headerlink" title="临界区"></a>临界区</h1><p>一段代码不能被并发执行，也就是，两个线程不能同时执行这段代码</p>
+<h1 id="竟态条件"><a href="#竟态条件" class="headerlink" title="竟态条件"></a>竟态条件</h1><ul>
+<li>两个或多个线程读写某些数据，而最后的结果取决于线程运行的精确时序</li>
+</ul>
+<h1 id="Locks"><a href="#Locks" class="headerlink" title="Locks"></a>Locks</h1><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303131739456.png"
+                     
+                ></p>
+<h1 id="SpinLock"><a href="#SpinLock" class="headerlink" title="SpinLock"></a>SpinLock</h1><ul>
+<li><p>线程通过busy-wait-loop方式来获取锁，任何时刻只有一个线程能够获取锁，其他线程忙等待知道获取锁</p>
+</li>
+<li><p>临界区尽量简短，控制在100行代码以内，不要有限时或隐士的系统调用，调用的函数也尽量简短</p>
+</li>
+<li><p>保证访问锁的线程全部都处于同一优先级</p>
+</li>
+</ul>
+<h1 id="synchronized"><a href="#synchronized" class="headerlink" title="@synchronized"></a>@synchronized</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">func synchronized(_ obj: Any, closure: ()-&gt;()) &#123;</span><br><span class="line">    objc_sync_enter(obj)</span><br><span class="line">    closure()</span><br><span class="line">    objc_sync_exit(obj)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>只有传同样的对象给synchronized，才能起到加锁的作用</li>
+<li>如果传nil，无法起到加锁的作用</li>
+<li>可以重入</li>
+<li>synchronized不会持有传给它的对象</li>
+</ul>
+<h1 id="典型场景"><a href="#典型场景" class="headerlink" title="典型场景"></a>典型场景</h1><ul>
+<li><p>一个页面有三个网络请求，需要在三个网络请求都返回的时候刷新页面</p>
+</li>
+<li><p>实现一个多线程安全的Array的读和写</p>
+</li>
+<li><p>编写一个多线程下载器，可以执行多个下载任务，每个任务可以保存当前下载字节数，总字节数，可以设置回调得到当前下载进度</p>
+</li>
+<li><p>需要在主线程等待一个异步任务返回，才继续执行下面的逻辑，但是又不希望堵塞用户事件</p>
+</li>
+</ul>
+<h1 id="【场景一】：一个页面有三个网络请求，需要在三个网络请求都返回的时候刷新页面"><a href="#【场景一】：一个页面有三个网络请求，需要在三个网络请求都返回的时候刷新页面" class="headerlink" title="【场景一】：一个页面有三个网络请求，需要在三个网络请求都返回的时候刷新页面"></a>【场景一】：一个页面有三个网络请求，需要在三个网络请求都返回的时候刷新页面</h1><h1 id="【场景二】：实现一个多线程安全的Array的读和写"><a href="#【场景二】：实现一个多线程安全的Array的读和写" class="headerlink" title="【场景二】：实现一个多线程安全的Array的读和写"></a>【场景二】：实现一个多线程安全的Array的读和写</h1><p>一个队列加方法方法</p>
+<ul>
+<li>1、首先是 <code>并行队列</code>，我们需要保持多线程并行操作</li>
+<li>2、 <code>sync</code> 方法，<code>封装读操作</code>，读操作在调用读方法时能直接拿到返回值，而不是异步获取</li>
+<li>3、<code>async</code> 方法使用 <code>barrier flag</code>，<code>封装写操作</code>，起到一个栅栏的作用，等待所有的 <code>barrier flag</code> 函数前操作执行完成后， <code>barrier flag</code> 函数之后的所有操作才执行</li>
+</ul>
+<h1 id="【场景三】：编写一个多线程下载器，可以执行多个下载任务，每个任务可以保存当前下载字节数，总字节数，可以设置回调得到当前下载进度"><a href="#【场景三】：编写一个多线程下载器，可以执行多个下载任务，每个任务可以保存当前下载字节数，总字节数，可以设置回调得到当前下载进度" class="headerlink" title="【场景三】：编写一个多线程下载器，可以执行多个下载任务，每个任务可以保存当前下载字节数，总字节数，可以设置回调得到当前下载进度"></a>【场景三】：编写一个多线程下载器，可以执行多个下载任务，每个任务可以保存当前下载字节数，总字节数，可以设置回调得到当前下载进度</h1><h1 id="【场景四】：需要-在主线程等待一个异步任务返回，才继续执行下面的逻辑，但是又不希望堵塞用户事件"><a href="#【场景四】：需要-在主线程等待一个异步任务返回，才继续执行下面的逻辑，但是又不希望堵塞用户事件" class="headerlink" title="【场景四】：需要 在主线程等待一个异步任务返回，才继续执行下面的逻辑，但是又不希望堵塞用户事件"></a>【场景四】：需要 在主线程等待一个异步任务返回，才继续执行下面的逻辑，但是又不希望堵塞用户事件</h1><h1 id="Promise-多线程编程模式"><a href="#Promise-多线程编程模式" class="headerlink" title="Promise 多线程编程模式"></a>Promise 多线程编程模式</h1><ul>
+<li><p>所谓的 <code>Promise</code>，就是一个对象，<code>用来传递异步操作的消息</code>。它代表了某个未来才会知道结果的事件（通常是一个异步操作），并且这个事件提供统一的 <code>API</code>，可供进一步处理</p>
+</li>
+<li><p>对象的状态不受外界影响。<code>Promise</code> 对象代表一个异步操作，有三种状态：<code>Pending</code>（进行中）、<code>Resolved</code>（已完成）、<code>Rejected</code>（已失败）。只有异步操作的结果，可以决定当前是哪一种状态，任何其他操作都无法改变这个状态。这也是 <code>Promise</code> 这个名字的由来，它的英文意思就是 <code>承诺</code>，表示其他手段无法改变</p>
+</li>
+<li><p>一旦状态改变，就不会再变，任何时候都可以得到这个结果。<code>Promise</code> 对象的状态改变，只有两种可能：从 <code>Pending</code> 变为 <code>Resolved</code> 变为 <code>Rejected</code>，只要这两种情况发送，状态就凝固了，不会再变了，会一直保持这个结果。就算改变已经发送了，你再对 <code>Resolved</code> 对象添加回调函数，也会立即得到这个结果。这与事件 Event 完全不同，事件的特点是，如果你错过了它，再去监听，是得不到结果的</p>
+</li>
+</ul>
+<h1 id="Pipeline"><a href="#Pipeline" class="headerlink" title="Pipeline"></a>Pipeline</h1><ul>
+<li><p>将一个任务分解为若干个阶段（State），前阶段的输出作为下阶段的输入，各个阶段由不同的工作者线程负责执行</p>
+</li>
+<li><p>各个任务的各个阶段是并行（Parallel）处理的</p>
+</li>
+<li><p>具体任务的处理是串行的，即完成一个任务要一次执行各个阶段，但从整体任务上看，不同任务的各个阶段的执行时并行的</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303131740513.png"
+                     
+                ></p>
+<h1 id="Master-x2F-Slave"><a href="#Master-x2F-Slave" class="headerlink" title="Master&#x2F;Slave"></a>Master&#x2F;Slave</h1><p>将一个任务分解为若干个语义等同的子任务，并由专门的工作者线程来并行执行这些子任务，既提高计算效率，又实现了信息隐藏</p>
 
             </div>
 
@@ -443,7 +553,7 @@
         <li>Post author：张建</li>
         <li>Create time：2023-03-12 22:52:33</li>
         <li>
-            Post link：https://redefine.ohevan.com/2023/03/12/Swift课程/Swift学习47-多线程/
+            Post link：https://redefine.ohevan.com/2023/03/12/Swift课程/Swift学习47：多线程/
         </li>
         <li>
             Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
@@ -468,6 +578,21 @@
 
             
                 <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/03/13/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A048%EF%BC%9AARC/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习48：ARC</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
                     
                     
                         <div class="article-next">
@@ -498,7 +623,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">Swift学习47:多线程</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%8F%AF%E4%BB%A5%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-text">多线程可以做什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="nav-text">多线程编程的方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Thread"><span class="nav-text">Thread</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Operation-%E5%92%8C-OperationQueue-%E6%A6%82%E8%BF%B0"><span class="nav-text">Operation 和 OperationQueue 概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Operation"><span class="nav-text">Operation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OperationQueue"><span class="nav-text">OperationQueue</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BlockOperation"><span class="nav-text">BlockOperation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%A7%E6%89%BF-Operation"><span class="nav-text">继承 Operation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Operation-%E5%AE%8C%E6%88%90%E7%9A%84%E5%9B%9E%E8%B0%83"><span class="nav-text">Operation 完成的回调</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD"><span class="nav-text">GCD</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD%E5%8A%9F%E8%83%BD"><span class="nav-text">GCD功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD%E9%98%9F%E5%88%97"><span class="nav-text">GCD队列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD-%E9%98%9F%E5%88%97API"><span class="nav-text">GCD-队列API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD-%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-text">GCD 基本操作</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%8F%AF%E4%BB%A5%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-text">多线程可以做什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="nav-text">多线程编程的方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Thread"><span class="nav-text">Thread</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Operation-%E5%92%8C-OperationQueue-%E6%A6%82%E8%BF%B0"><span class="nav-text">Operation 和 OperationQueue 概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Operation"><span class="nav-text">Operation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OperationQueue"><span class="nav-text">OperationQueue</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BlockOperation"><span class="nav-text">BlockOperation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%A7%E6%89%BF-Operation"><span class="nav-text">继承 Operation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Operation-%E5%AE%8C%E6%88%90%E7%9A%84%E5%9B%9E%E8%B0%83"><span class="nav-text">Operation 完成的回调</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD"><span class="nav-text">GCD</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD%E5%8A%9F%E8%83%BD"><span class="nav-text">GCD功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD%E9%98%9F%E5%88%97"><span class="nav-text">GCD队列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD-%E9%98%9F%E5%88%97API"><span class="nav-text">GCD-队列API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD-%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-text">GCD 基本操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD-%E4%B8%B2%E8%A1%8C-amp-%E5%B9%B6%E8%A1%8C"><span class="nav-text">GCD 串行 &amp; 并行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD-%E5%90%8C%E6%AD%A5-amp-%E5%BC%82%E6%AD%A5"><span class="nav-text">GCD 同步 &amp; 异步</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD-%E4%BD%BF%E7%94%A8"><span class="nav-text">GCD 使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD-%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90"><span class="nav-text">GCD 源码剖析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%B4%E7%95%8C%E5%8C%BA"><span class="nav-text">临界区</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AB%9F%E6%80%81%E6%9D%A1%E4%BB%B6"><span class="nav-text">竟态条件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Locks"><span class="nav-text">Locks</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpinLock"><span class="nav-text">SpinLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#synchronized"><span class="nav-text">@synchronized</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B8%E5%9E%8B%E5%9C%BA%E6%99%AF"><span class="nav-text">典型场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%80%90%E5%9C%BA%E6%99%AF%E4%B8%80%E3%80%91%EF%BC%9A%E4%B8%80%E4%B8%AA%E9%A1%B5%E9%9D%A2%E6%9C%89%E4%B8%89%E4%B8%AA%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%EF%BC%8C%E9%9C%80%E8%A6%81%E5%9C%A8%E4%B8%89%E4%B8%AA%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E9%83%BD%E8%BF%94%E5%9B%9E%E7%9A%84%E6%97%B6%E5%80%99%E5%88%B7%E6%96%B0%E9%A1%B5%E9%9D%A2"><span class="nav-text">【场景一】：一个页面有三个网络请求，需要在三个网络请求都返回的时候刷新页面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%80%90%E5%9C%BA%E6%99%AF%E4%BA%8C%E3%80%91%EF%BC%9A%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84Array%E7%9A%84%E8%AF%BB%E5%92%8C%E5%86%99"><span class="nav-text">【场景二】：实现一个多线程安全的Array的读和写</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%80%90%E5%9C%BA%E6%99%AF%E4%B8%89%E3%80%91%EF%BC%9A%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8B%E8%BD%BD%E5%99%A8%EF%BC%8C%E5%8F%AF%E4%BB%A5%E6%89%A7%E8%A1%8C%E5%A4%9A%E4%B8%AA%E4%B8%8B%E8%BD%BD%E4%BB%BB%E5%8A%A1%EF%BC%8C%E6%AF%8F%E4%B8%AA%E4%BB%BB%E5%8A%A1%E5%8F%AF%E4%BB%A5%E4%BF%9D%E5%AD%98%E5%BD%93%E5%89%8D%E4%B8%8B%E8%BD%BD%E5%AD%97%E8%8A%82%E6%95%B0%EF%BC%8C%E6%80%BB%E5%AD%97%E8%8A%82%E6%95%B0%EF%BC%8C%E5%8F%AF%E4%BB%A5%E8%AE%BE%E7%BD%AE%E5%9B%9E%E8%B0%83%E5%BE%97%E5%88%B0%E5%BD%93%E5%89%8D%E4%B8%8B%E8%BD%BD%E8%BF%9B%E5%BA%A6"><span class="nav-text">【场景三】：编写一个多线程下载器，可以执行多个下载任务，每个任务可以保存当前下载字节数，总字节数，可以设置回调得到当前下载进度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%80%90%E5%9C%BA%E6%99%AF%E5%9B%9B%E3%80%91%EF%BC%9A%E9%9C%80%E8%A6%81-%E5%9C%A8%E4%B8%BB%E7%BA%BF%E7%A8%8B%E7%AD%89%E5%BE%85%E4%B8%80%E4%B8%AA%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1%E8%BF%94%E5%9B%9E%EF%BC%8C%E6%89%8D%E7%BB%A7%E7%BB%AD%E6%89%A7%E8%A1%8C%E4%B8%8B%E9%9D%A2%E7%9A%84%E9%80%BB%E8%BE%91%EF%BC%8C%E4%BD%86%E6%98%AF%E5%8F%88%E4%B8%8D%E5%B8%8C%E6%9C%9B%E5%A0%B5%E5%A1%9E%E7%94%A8%E6%88%B7%E4%BA%8B%E4%BB%B6"><span class="nav-text">【场景四】：需要 在主线程等待一个异步任务返回，才继续执行下面的逻辑，但是又不希望堵塞用户事件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Promise-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%BC%8F"><span class="nav-text">Promise 多线程编程模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Pipeline"><span class="nav-text">Pipeline</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Master-x2F-Slave"><span class="nav-text">Master&#x2F;Slave</span></a></li></ol>
 
     </div>
 </div>
