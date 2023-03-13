@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-14 05:01:25</span>
-            <span class="mobile">2023-03-14 05:01</span>
+            <span class="pc">2023-03-14 06:34:49</span>
+            <span class="mobile">2023-03-14 06:34</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -379,7 +379,7 @@
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class City &#123;</span><br><span class="line">    // 无主引用</span><br><span class="line">    unowned let country: Country</span><br><span class="line">    init(country: Country) &#123;</span><br><span class="line">        self.country = country</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Country &#123;</span><br><span class="line">    var capitaCity: City!</span><br><span class="line">    init(capitaCity: City) &#123;</span><br><span class="line">        self.capitaCity = capitaCity</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-<h1 id="闭包引用循环"><a href="#闭包引用循环" class="headerlink" title="闭包引用循环"></a>闭包引用循环</h1><p>将一个闭包赋值给类实例的某个属性，并且这个闭包使用了实例，这样也会产生强引用环。这个闭包可能反问了实例的某个属性，如果 <code>self.someProperty</code>，或者调用了实例的某个方法 <code>self.someMethod</code>。这两种情况都导致了闭包使用 self，从而产生了循环引用</p>
+<h1 id="闭包引用循环"><a href="#闭包引用循环" class="headerlink" title="闭包引用循环"></a>闭包引用循环</h1><p>将一个闭包赋值给类实例的某个属性，并且这个闭包使用了实例，这样也会产生强引用环。这个闭包可能反问了实例的某个属性，如果 <code>self.someProperty</code>，或者调用了实例的某个方法 <code>self.someMethod</code>。这两种情况都导致了闭包使用 <code>self</code>，从而产生了循环引用</p>
 <p>解决：</p>
 <ul>
 <li><p>定义占有列表-占有列表中的每个元素都是由 <code>weak</code> 或者 <code>unowend</code> 关键字和实例的引用（如 <code>self</code> 或 <code>someInstance</code>）组成。每一对都在括号中，通过逗号分开</p>
@@ -425,6 +425,21 @@
 
             
                 <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/03/14/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A049%EF%BC%9AAny/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习49：Any</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
                     
                     
                         <div class="article-next">
