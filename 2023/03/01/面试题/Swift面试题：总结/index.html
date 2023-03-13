@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-13 17:48:12</span>
-            <span class="mobile">2023-03-13 17:48</span>
+            <span class="pc">2023-03-14 05:11</span>
+            <span class="mobile">2023-03-14 05:11</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -383,10 +383,15 @@
 </ul>
 <h1 id="什么是闭包？"><a href="#什么是闭包？" class="headerlink" title="什么是闭包？"></a>什么是闭包？</h1><p>代码中可以 <code>被传递和引用的功能性独立的代码块</code></p>
 <h1 id="闭包作用？"><a href="#闭包作用？" class="headerlink" title="闭包作用？"></a>闭包作用？</h1><ul>
-<li>可以 <code>捕获和存储上下文的常量和变量</code>。<code>闭包</code> 实现上是一个 <code>结构体</code></li>
+<li><p><code>闭包</code> 可以 <code>捕获和存储上下文的常量和变量</code>，<code>闭包</code> 实现上是一个 <code>结构体</code></p>
+</li>
+<li><p><code>闭包</code> 可以作为函数 <code>参数</code>，也可以作为函数的 <code>返回值</code></p>
+</li>
+<li><p>闭包可以像 <code>oc</code> 中用于 <code>回调和反向传值</code></p>
+</li>
 </ul>
 <h1 id="闭包的几种类型？"><a href="#闭包的几种类型？" class="headerlink" title="闭包的几种类型？"></a>闭包的几种类型？</h1><ul>
-<li><p>尾随闭包：闭包作为函数最后一个参数</p>
+<li><p>尾随闭包：<code>闭包作为函数最后一个参数</code></p>
 </li>
 <li><p>逃逸闭包：函数返回之后调用 <code>@escaping</code></p>
 </li>
@@ -410,7 +415,8 @@
 </li>
 </ul>
 <h1 id="什么是类？什么是结构体？"><a href="#什么是类？什么是结构体？" class="headerlink" title="什么是类？什么是结构体？"></a>什么是类？什么是结构体？</h1><p>struct 和 class 都是 <code>构建代码的一种通用且灵活的构造体。</code></p>
-<h1 id="struct-和-class-区别？"><a href="#struct-和-class-区别？" class="headerlink" title="struct 和 class 区别？"></a>struct 和 class 区别？</h1><p>struct 和 class 有很多共同点：</p>
+<h1 id="struct-和-class-区别？"><a href="#struct-和-class-区别？" class="headerlink" title="struct 和 class 区别？"></a>struct 和 class 区别？</h1><ul>
+<li><p>struct、class 共同点：</p>
 <ul>
 <li>定义 <code>属性</code> 用于 <code>存储值</code></li>
 <li>定义 <code>方法</code> 用于 <code>提供功能</code></li>
@@ -419,16 +425,25 @@
 <li>通过 <code>扩展</code> 以 <code>增加默认实现的功能</code></li>
 <li>符合 <code>协议</code> 以 <code>提供标准功能</code></li>
 </ul>
-<p>struct 和 class 不同点：</p>
-<ul>
-<li>class 定义 <code>属性</code>，必须赋值或包装成Optional。struct 定义属性不需要要赋值</li>
-<li>class 是 <code>引用类型</code>，<code>浅拷贝</code>。struct 是 <code>值类型</code>，<code>深拷贝</code>。</li>
-<li>class <code>可以继承</code>。struct <code>不能继承</code>。</li>
-<li>class 有 <code>引用计数</code>，可以 <code>多次引用</code>。struct 没有引用计数</li>
-<li>class 有 <code>类型转换</code>，允许在 <code>运行时检查和解释一个类实例的类型</code>。struct 没有</li>
-<li>class 有 <code>反初始化器</code> 在 <code>类实例释放时调用</code></li>
-<li>struct 分配在 <code>栈</code> 中，系统分配是否内存。class 分配在 <code>堆</code> 中，动态分配释放内存</li>
-<li>struct 比 class <code>更轻量级</code>，<code>栈</code> 只访问一次拿到数据，<code>堆</code> 访问两次拿到数据（第一次获取指针，第二次获取数据）</li>
+</li>
+<li><p>struct、class 不同点：</p>
+</li>
+<li><p>class 定义 <code>属性</code>，必须赋值或包装成Optional。struct 定义属性不需要要赋值</p>
+</li>
+<li><p>class 是 <code>引用类型</code>，<code>浅拷贝</code>。struct 是 <code>值类型</code>，<code>深拷贝</code>。</p>
+</li>
+<li><p>class <code>可以继承</code>。struct <code>不能继承</code>。</p>
+</li>
+<li><p>class 有 <code>引用计数</code>，可以 <code>多次引用</code>。struct 没有引用计数</p>
+</li>
+<li><p>class 有 <code>类型转换</code>，允许在 <code>运行时检查和解释一个类实例的类型</code>。struct 没有</p>
+</li>
+<li><p>class 有 <code>析构方法释资源</code> </p>
+</li>
+<li><p>class 分配在 <code>堆</code> 中，动态分配释放内存，struct 分配在 <code>栈</code> 中，系统分配是否内存</p>
+</li>
+<li><p>struct 比 class <code>更轻量级</code>，<code>栈</code> 只访问一次拿到数据，<code>堆</code> 访问两次拿到数据（第一次获取指针，第二次获取数据）</p>
+</li>
 </ul>
 <h1 id="方法的调用？"><a href="#方法的调用？" class="headerlink" title="方法的调用？"></a>方法的调用？</h1><ul>
 <li><p>struct&#x2F;enum&#x2F;extension：值类型，方法调用是 <code>静态派发</code>，直接调用 <code>地址</code></p>
