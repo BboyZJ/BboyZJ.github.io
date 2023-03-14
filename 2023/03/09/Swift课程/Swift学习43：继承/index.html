@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-13 00:08:49</span>
-            <span class="mobile">2023-03-13 00:08</span>
+            <span class="pc">2023-03-15 03:12:59</span>
+            <span class="mobile">2023-03-15 03:12</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -360,7 +360,7 @@
 <blockquote>
 <p>super.someMethod() 重写父类的方法<br>super.someProperty 重写父类的属性<br>super[someIndex] 重写父类的下标脚本</p>
 </blockquote>
-<h1 id="重写方法"><a href="#重写方法" class="headerlink" title="重写方法"></a>重写方法</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class Teacher: Person &#123;</span><br><span class="line">    override func test() &#123;</span><br><span class="line">        print(&quot;呜呼！&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let t = Teacher()</span><br><span class="line">t.test()</span><br><span class="line"></span><br><span class="line">======</span><br><span class="line">呜呼！</span><br></pre></td></tr></table></figure></div>
+<h1 id="重写方法"><a href="#重写方法" class="headerlink" title="重写方法"></a>重写方法</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 父类</span><br><span class="line">class Person &#123;</span><br><span class="line">    // 实例方法</span><br><span class="line">    func test() &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 子类 Teacher 继承 Person 父类</span><br><span class="line">class Teacher: Person &#123;</span><br><span class="line">    // 子类重写父类的 test() 方法，用 override 关键字</span><br><span class="line">    override func test() &#123;</span><br><span class="line">        print(&quot;呜呼！&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let t = Teacher()</span><br><span class="line">t.test()</span><br><span class="line"></span><br><span class="line">======</span><br><span class="line">呜呼！</span><br></pre></td></tr></table></figure></div>
 
 <h1 id="重写属性的getter和setter方法"><a href="#重写属性的getter和setter方法" class="headerlink" title="重写属性的getter和setter方法"></a>重写属性的getter和setter方法</h1><p>可以自定义一个gett或setter来重写父类继承的属性</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class Person &#123;</span><br><span class="line">    var desc: String = &quot;ZJ&quot;</span><br><span class="line">&#125;</span><br><span class="line">class Teacher: Person &#123;</span><br><span class="line">    var age: Int = 0</span><br><span class="line">    override var desc: String &#123;</span><br><span class="line">        return super.desc + &quot;is \(age)&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let t = Teacher()</span><br><span class="line">age = 32</span><br><span class="line">print(t.desc)</span><br><span class="line"></span><br><span class="line">======</span><br><span class="line">ZJ is 32</span><br></pre></td></tr></table></figure></div>
@@ -368,7 +368,7 @@
 <h1 id="重写属性观察器"><a href="#重写属性观察器" class="headerlink" title="重写属性观察器"></a>重写属性观察器</h1><ul>
 <li><p>可以为继承的属性添加属性观察器</p>
 </li>
-<li><p>不可以为继承的 <code>常量存储属性或只读</code> 的计算属性添加属性观察器</p>
+<li><p>不可以为继承的 <code>常量存储属性</code> 或 <code>只读的计算属性</code> 添加属性观察器</p>
 </li>
 <li><p>不能为同一个属性同时提供重写 <code>setter和属性观察器</code></p>
 </li>

@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-12 22:02:50</span>
-            <span class="mobile">2023-03-12 22:02</span>
+            <span class="pc">2023-03-15 03:28:40</span>
+            <span class="mobile">2023-03-15 03:28</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -372,7 +372,7 @@
 <p>注：指定初始化器分为两种：一种是不带参数，一种是带参数<br>初始化器可以有任意数量</p>
 </blockquote>
 <h1 id="类的继承和构造"><a href="#类的继承和构造" class="headerlink" title="类的继承和构造"></a>类的继承和构造</h1><p>类中的所有存储属性-&gt;包括继承父类的所有存储属性：都必须在构造过程中 <code>设置默认值</code></p>
-<p>1、swift 中为类提供了两种初始化器：<code>指定初始化器</code> 和 <code>便捷初始化器</code></p>
+<p>1、<code>swift</code> 中为类提供了两种初始化器：<code>指定初始化器</code> 和 <code>便捷初始化器</code></p>
 <ul>
 <li>指定初始化器</li>
 </ul>
@@ -390,7 +390,7 @@
 <ul>
 <li>便捷初始化器，需要在 <code>init</code> 前放置 <code>convenience</code> 关键字</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class Person &#123;</span><br><span class="line">    // 未设置默认值的存储属性</span><br><span class="line">    var name: String</span><br><span class="line">    // 指定初始化器</span><br><span class="line">    init(name: String) &#123;</span><br><span class="line">        self.name = name</span><br><span class="line">    &#125;</span><br><span class="line">    // 便捷初始化器</span><br><span class="line">    convenience init() &#123;</span><br><span class="line">        // 横向代理：必须调用一个指定的初始化器</span><br><span class="line">        self.init(name: &quot;ZJ&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let p = Person()</span><br><span class="line">print(p.name)</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class Person &#123;</span><br><span class="line">    // 未设置默认值的存储属性</span><br><span class="line">    var name: String</span><br><span class="line">    // 指定初始化器 用来给存储属性设置默认值</span><br><span class="line">    init(name: String) &#123;</span><br><span class="line">        self.name = name</span><br><span class="line">    &#125;</span><br><span class="line">    // 便捷初始化器</span><br><span class="line">    convenience init() &#123;</span><br><span class="line">        // 横向代理：必须调用一个指定的初始化器</span><br><span class="line">        self.init(name: &quot;ZJ&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let p = Person()</span><br><span class="line">print(p.name)</span><br></pre></td></tr></table></figure></div>
 
 <blockquote>
 <p>类的初始化器代理规则<br>1、指定初始化器必须调用其直接父类的指定初始化器<br>2、便捷初始化器必须调从同类调用一个指定初始化器<br>3、便捷初始化器最终必须调用一个指定初始化器</p>
@@ -433,12 +433,12 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">deinit &#123;</span><br><span class="line">    // perform the deinitialization</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <h1 id="必要初始化器"><a href="#必要初始化器" class="headerlink" title="必要初始化器"></a>必要初始化器</h1><ul>
-<li>在类的初始化器前加 <code>required</code> 修饰符表明所有该子类够必须实现该初始化器</li>
+<li>在类的初始化器前加 <code>required</code> 修饰符表明所有该子类必须实现该初始化器</li>
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 必要初始化器</span><br><span class="line">class SomeClass &#123;</span><br><span class="line">    required init()&#123;</span><br><span class="line">        // 初始化器的实现代码</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
-<li>子类重写父类的必要初始化器时，子类的初始化器前也添加 required 关键字，表明可继承</li>
+<li>子类重写父类的必要初始化器时，子类的初始化器前也添加 <code>required</code> 关键字，表明可继承</li>
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 必要初始化器</span><br><span class="line">class SomeSubClass: SomeClass &#123;</span><br><span class="line">    required init()&#123;</span><br><span class="line">        // 初始化器的实现代码</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
