@@ -1,193 +1,340 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>OCRuntime03：对象的本质 | 张建的博客</title><meta name="author" content="小J,13718004742@163.com"><meta name="copyright" content="小J"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="OC对象的本质1.我们平时编写的Object-C代码，底层实现其实都是C&#x2F;C++代码。所以Objective-C的面向对象都是基于C&#x2F;C++的数据结构实现的 2.由于OC对象内部可以容纳不同数据类型的数据，因此可以推断OC对象的底层数据结构就是&#x3D;&#x3D;结构体&#x3D;&#x3D;。 1typedef struct objc_object Person; &#x2F;&#x2F;说">
-<meta property="og:type" content="article">
-<meta property="og:title" content="OCRuntime03：对象的本质">
-<meta property="og:url" content="https://www.bboyzj.cn/2020/07/13/OCRuntime&Runloop/OCRuntime02%EF%BC%9A%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%9C%AC%E8%B4%A8/index.html">
-<meta property="og:site_name" content="张建的博客">
-<meta property="og:description" content="OC对象的本质1.我们平时编写的Object-C代码，底层实现其实都是C&#x2F;C++代码。所以Objective-C的面向对象都是基于C&#x2F;C++的数据结构实现的 2.由于OC对象内部可以容纳不同数据类型的数据，因此可以推断OC对象的底层数据结构就是&#x3D;&#x3D;结构体&#x3D;&#x3D;。 1typedef struct objc_object Person; &#x2F;&#x2F;说">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://www.bboyzj.cn/img/avatar.png">
-<meta property="article:published_time" content="2020-07-13T09:15:17.000Z">
-<meta property="article:modified_time" content="2020-10-17T05:11:17.000Z">
-<meta property="article:author" content="小J">
-<meta property="article:tag" content="iOS-OC">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.bboyzj.cn/img/avatar.png"><link rel="shortcut icon" href="/BboyZJ.github.io/img/favicon.png"><link rel="canonical" href="https://www.bboyzj.cn/2020/07/13/OCRuntime&amp;Runloop/OCRuntime02%EF%BC%9A%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%9C%AC%E8%B4%A8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/BboyZJ.github.io/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
-  root: '/BboyZJ.github.io/',
-  algolia: undefined,
-  localSearch: undefined,
-  translate: undefined,
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
-  copy: {
-    success: 'Copy successfully',
-    error: 'Copy error',
-    noSupport: 'The browser does not support'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: '',
-  date_suffix: {
-    just: 'Just',
-    min: 'minutes ago',
-    hour: 'hours ago',
-    day: 'days ago',
-    month: 'months ago'
-  },
-  copyright: undefined,
-  lightbox: 'fancybox',
-  Snackbar: undefined,
-  source: {
-    justifiedGallery: {
-      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
-      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
-    }
-  },
-  isPhotoFigcaption: false,
-  islazyload: true,
-  isAnchor: false,
-  percent: {
-    toc: true,
-    rightside: false,
-  }
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: 'OCRuntime03：对象的本质',
-  isPost: true,
-  isHome: false,
-  isHighlightShrink: false,
-  isToc: true,
-  postUpdate: '2020-10-17 13:11:17'
-}</script><noscript><style type="text/css">
-  #nav {
-    opacity: 1
-  }
-  .justified-gallery img {
-    opacity: 1
-  }
-
-  #recent-posts time,
-  #post-meta time {
-    display: inline !important
-  }
-</style></noscript><script>(win=>{
-    win.saveToLocal = {
-      set: function setWithExpiry(key, value, ttl) {
-        if (ttl === 0) return
-        const now = new Date()
-        const expiryDay = ttl * 86400000
-        const item = {
-          value: value,
-          expiry: now.getTime() + expiryDay,
-        }
-        localStorage.setItem(key, JSON.stringify(item))
-      },
-
-      get: function getWithExpiry(key) {
-        const itemStr = localStorage.getItem(key)
-
-        if (!itemStr) {
-          return undefined
-        }
-        const item = JSON.parse(itemStr)
-        const now = new Date()
-
-        if (now.getTime() > item.expiry) {
-          localStorage.removeItem(key)
-          return undefined
-        }
-        return item.value
-      }
-    }
-  
-    win.getScript = url => new Promise((resolve, reject) => {
-      const script = document.createElement('script')
-      script.src = url
-      script.async = true
-      script.onerror = reject
-      script.onload = script.onreadystatechange = function() {
-        const loadState = this.readyState
-        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-        script.onload = script.onreadystatechange = null
-        resolve()
-      }
-      document.head.appendChild(script)
-    })
-  
-    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
-      const link = document.createElement('link')
-      link.rel = 'stylesheet'
-      link.href = url
-      if (id) link.id = id
-      link.onerror = reject
-      link.onload = link.onreadystatechange = function() {
-        const loadState = this.readyState
-        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-        link.onload = link.onreadystatechange = null
-        resolve()
-      }
-      document.head.appendChild(link)
-    })
-  
-      win.activateDarkMode = function () {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      win.activateLightMode = function () {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-        }
-      }
-      const t = saveToLocal.get('theme')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
     
-          if (t === 'dark') activateDarkMode()
-          else if (t === 'light') activateLightMode()
+    <link rel="canonical" href="https://www.bboyzj.cn/2020/07/13/ocruntime&runloop/ocruntime02：对象的本质/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OCRuntime03：对象的本质">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2020/07/13/OCRuntime&amp;Runloop/OCRuntime02：对象的本质/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OCRuntime03：对象的本质">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
         
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        if (asideStatus === 'hide') {
-          document.documentElement.classList.add('hide-aside')
-        } else {
-          document.documentElement.classList.remove('hide-aside')
-        }
-      }
+            OCRuntime03：对象的本质 -
+        
+        BboyZJ
+    </title>
     
-    const detectApple = () => {
-      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
-        document.documentElement.classList.add('apple')
-      }
-    }
-    detectApple()
-    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
-</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>const preloader = {
-  endLoading: () => {
-    document.body.style.overflow = 'auto';
-    document.getElementById('loading-box').classList.add("loaded")
-  },
-  initLoading: () => {
-    document.body.style.overflow = '';
-    document.getElementById('loading-box').classList.remove("loaded")
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
 
-  }
-}
-window.addEventListener('load',()=> { preloader.endLoading() })
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
 
-if (false) {
-  document.addEventListener('pjax:send', () => { preloader.initLoading() })
-  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
-}</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/BboyZJ.github.io/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/BboyZJ.github.io/archives/"><div class="headline">Articles</div><div class="length-num">245</div></a><a href="/BboyZJ.github.io/tags/"><div class="headline">Tags</div><div class="length-num">21</div></a><a href="/BboyZJ.github.io/categories/"><div class="headline">Categories</div><div class="length-num">20</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/BboyZJ.github.io/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/BboyZJ.github.io/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/link/"><i class="fa-fw fa fa-users"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/BboyZJ.github.io/" title="张建的博客"><span class="site-name">张建的博客</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/BboyZJ.github.io/%E9%9F%B3%E4%B9%90"><i class="fa-fw /music/"></i><span> 0</span></a></li><li><a class="site-page child" href="/BboyZJ.github.io/%E7%94%B5%E5%BD%B1"><i class="fa-fw /movies/"></i><span> 1</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/link/"><i class="fa-fw fa fa-users"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/BboyZJ.github.io/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">OCRuntime03：对象的本质</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2020-07-13T09:15:17.000Z" title="Created 2020-07-13 17:15:17">2020-07-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2020-10-17T05:11:17.000Z" title="Updated 2020-10-17 13:11:17">2020-10-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/BboyZJ.github.io/categories/OC-Runloop%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-Runloop探索篇</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="OCRuntime03：对象的本质"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><h1 id="OC对象的本质"><a href="#OC对象的本质" class="headerlink" title="OC对象的本质"></a>OC对象的本质</h1><p>1.我们平时编写的Object-C代码，底层实现其实都是C&#x2F;C++代码。所以Objective-C的面向对象都是基于C&#x2F;C++的数据结构实现的<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88036081-a2227200-cb75-11ea-835f-192845ba38b1.png"></p>
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OCRuntime03：对象的本质</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2020-07-13 17:15:17</span>
+        <span class="mobile">2020-07-13 17:15</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2020-10-17 13:11:17</span>
+            <span class="mobile">2020-10-17 13:11</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC-Runloop%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-Runloop探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/iOS-OC/">iOS-OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="OC对象的本质"><a href="#OC对象的本质" class="headerlink" title="OC对象的本质"></a>OC对象的本质</h1><p>1.我们平时编写的Object-C代码，底层实现其实都是C&#x2F;C++代码。所以Objective-C的面向对象都是基于C&#x2F;C++的数据结构实现的<br><img src="https://user-images.githubusercontent.com/25925248/88036081-a2227200-cb75-11ea-835f-192845ba38b1.png"></p>
 <p>2.由于OC对象内部可以容纳不同数据类型的数据，因此可以推断OC对象的底层数据结构就是&#x3D;&#x3D;结构体&#x3D;&#x3D;。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef struct objc_object Person; //说明Person的本质就是结构体</span><br></pre></td></tr></table></figure>
 
-<h1 id="将OC代码转化成C-x2F-C-代码"><a href="#将OC代码转化成C-x2F-C-代码" class="headerlink" title="将OC代码转化成C&#x2F;C++代码"></a>将OC代码转化成C&#x2F;C++代码</h1><p>那么我们就把OC代码尝试着转化成C&#x2F;C++代码，来看一下到底是不是结构体。<br>1.新建一个MacOS命令行项目<br>1)打开Xcode并新建一个Commend Line Tool命令行项目，如下：<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88041296-c7ff4500-cb7c-11ea-96cc-99b6af3c1962.png"><br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88041399-e9f8c780-cb7c-11ea-9844-582e4c7d6b8a.png"><br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88045562-4c53c700-cb81-11ea-9f38-06f6dfbe77f0.png"></p>
+<h1 id="将OC代码转化成C-x2F-C-代码"><a href="#将OC代码转化成C-x2F-C-代码" class="headerlink" title="将OC代码转化成C&#x2F;C++代码"></a>将OC代码转化成C&#x2F;C++代码</h1><p>那么我们就把OC代码尝试着转化成C&#x2F;C++代码，来看一下到底是不是结构体。<br>1.新建一个MacOS命令行项目<br>1)打开Xcode并新建一个Commend Line Tool命令行项目，如下：<br><img src="https://user-images.githubusercontent.com/25925248/88041296-c7ff4500-cb7c-11ea-96cc-99b6af3c1962.png"><br><img src="https://user-images.githubusercontent.com/25925248/88041399-e9f8c780-cb7c-11ea-9844-582e4c7d6b8a.png"><br><img src="https://user-images.githubusercontent.com/25925248/88045562-4c53c700-cb81-11ea-9f38-06f6dfbe77f0.png"></p>
 <p>2.为了进一步研究OC对象的本质，我们使用苹果Xcode内置的LLVM编译器前端clang中-rewrite-objc 将我们的OC代码转为C&#x2F;C++实现。</p>
 <p>1）打开终端，cd到main.m文件夹下，将<code>OC</code>代码转化成<code>C/C++</code>:</p>
 <p><code>xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc  OC源文件 -o 输出的cpp文件</code><br>2）由于不同平台支持的代码肯定是不一样的，目前我们关注点是iOS开发，建议在将OC代码转成C&#x2F;C++代码指定平台：<br><code>xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main.cpp</code></p>
-<p>3)生成main.cpp文件如下:<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88045740-963cad00-cb81-11ea-93a6-07a2a436cd78.png"></p>
-<p>4）通过生成的C&#x2F;C++代码，我们编写的OC对象NSObject的底层实现为:<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88046417-9ab59580-cb82-11ea-92a1-4afd7f7782b6.png"></p>
+<p>3)生成main.cpp文件如下:<br><img src="https://user-images.githubusercontent.com/25925248/88045740-963cad00-cb81-11ea-93a6-07a2a436cd78.png"></p>
+<p>4）通过生成的C&#x2F;C++代码，我们编写的OC对象NSObject的底层实现为:<br><img src="https://user-images.githubusercontent.com/25925248/88046417-9ab59580-cb82-11ea-92a1-4afd7f7782b6.png"></p>
 <p>说明:NSObject在内存中布局就是一个指向struct objc_class类型结构体的指针isa,由于内部只有一个成员，那么isa的地址就是NSObject结构体在内存中的地址。</p>
 <h1 id="问题：一个NSObject对象占用多少内存？"><a href="#问题：一个NSObject对象占用多少内存？" class="headerlink" title="问题：一个NSObject对象占用多少内存？"></a>问题：一个NSObject对象占用多少内存？</h1><p>根据上面NSObject内存本质的分析，我们应该会认为NSObject对象在内存中占用了8个字节（在64位的环境下占8个字节，在32环境上占4个字节，因为我们所使用的是64位架构的），那么实际上并不是，而是16个字节，为什么呢？让我们来进一步分析：<br>1.在runtime中有个class_getInstanceSize方法获取实例的大小，首先导入头文件#import &lt;objc&#x2F;runtime.h&gt;<br>2.还有一个获取内存大小的malloc_size方法，导入头文件#import &lt;malloc&#x2F;malloc.h&gt;<br>3.那么我们来打印一下看看：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line">#import &lt;objc/runtime.h&gt;</span><br><span class="line">#import &lt;malloc/malloc.h&gt;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        NSObject * obj = [[NSObject alloc] init];</span><br><span class="line">        //获取实例的大小</span><br><span class="line">        NSLog(@&quot;class_getInstanceSize:%ld&quot;,class_getInstanceSize([NSObject class]));</span><br><span class="line">        //获取内存大小</span><br><span class="line">        NSLog(@&quot;:%ld&quot;,malloc_size((__bridge const void *)obj));</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -195,22 +342,22 @@ if (false) {
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2020-07-21 19:07:40.772581+0800 NSObject对象的本质[21818:1404119] class_getInstanceSize:8</span><br><span class="line">2020-07-21 19:07:40.773072+0800 NSObject对象的本质[21818:1404119] :16</span><br></pre></td></tr></table></figure>
 
 <p>根据上面的两个方法获取的内存大小不一样,class_getInstanceSize获取的大小为8个字节，malloc_size获取的大小是16个字节。为什么会出现两种不同的情况呢，不要着急，我们来进一步分析,我们可以去runtime的源码里面，看一下class_getInstanceSize具体是怎么实现的。往下看。</p>
-<p>4.<a target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/">OC所有开放的源码地址</a>我们找到runtime源码位置然后下载下来:<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88049384-a192d700-cb87-11ea-8783-c4669865780e.png"></p>
-<p>点进去然后下载数字最大的。下载完成，打开项目，然后找到class_getInstanceSize的实现:<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88049530-e3bc1880-cb87-11ea-9c49-23839a6de68b.png"></p>
-<p>全局搜索class_getInstanceSize方法，在objc_class.mm这个c++文件夹下：<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88050235-069afc80-cb89-11ea-9ca1-9e76da95a1c9.png"></p>
+<p>4.<a target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/">OC所有开放的源码地址</a>我们找到runtime源码位置然后下载下来:<br><img src="https://user-images.githubusercontent.com/25925248/88049384-a192d700-cb87-11ea-8783-c4669865780e.png"></p>
+<p>点进去然后下载数字最大的。下载完成，打开项目，然后找到class_getInstanceSize的实现:<br><img src="https://user-images.githubusercontent.com/25925248/88049530-e3bc1880-cb87-11ea-9c49-23839a6de68b.png"></p>
+<p>全局搜索class_getInstanceSize方法，在objc_class.mm这个c++文件夹下：<br><img src="https://user-images.githubusercontent.com/25925248/88050235-069afc80-cb89-11ea-9ca1-9e76da95a1c9.png"></p>
 <p>我们点下去看下实现：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// Class&#x27;s ivar size rounded up to a pointer-size boundary.</span><br><span class="line">    uint32_t alignedInstanceSize() const &#123;</span><br><span class="line">        return word_align(unalignedInstanceSize());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>可以从注释上看出来返回的是Class’s ivar size,类的成员变量的大小，而alignedInstanceSize()表示内存对齐，因为NSObject对象只有一个isa成员变量，因此返回的是8个字节。</p>
-<p><strong>5.我们还可以从源码的另外一个角度来分析一下为什么malloc_size开辟16个字节的内存空间</strong><br>1）事实上，查看源码看一下alloc的时候分配了多大的内存大小，我们还是搜索刚才的源码allocWithZone:<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88051968-1b2cc400-cb8c-11ea-913c-e4db433ac9d0.png"></p>
-<p>2）这个方法中返回的是_objc_rootAllocWithZone(self, (malloc_zone_t *)zone),然后搜索找到这个方法源码：<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88051995-267fef80-cb8c-11ea-844b-b49733c6949b.png"></p>
-<p>3）这个方法返回_class_createInstanceFromZone(Class cls,size_t,)<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88093425-93af7700-cbc4-11ea-9fe9-5b1c449fb664.png"><br>终于找到了，从上述代码注释中可以看到，CF要求所有对象至少得返回16个字节的内存大小。</p>
+<p><strong>5.我们还可以从源码的另外一个角度来分析一下为什么malloc_size开辟16个字节的内存空间</strong><br>1）事实上，查看源码看一下alloc的时候分配了多大的内存大小，我们还是搜索刚才的源码allocWithZone:<br><img src="https://user-images.githubusercontent.com/25925248/88051968-1b2cc400-cb8c-11ea-913c-e4db433ac9d0.png"></p>
+<p>2）这个方法中返回的是_objc_rootAllocWithZone(self, (malloc_zone_t *)zone),然后搜索找到这个方法源码：<br><img src="https://user-images.githubusercontent.com/25925248/88051995-267fef80-cb8c-11ea-844b-b49733c6949b.png"></p>
+<p>3）这个方法返回_class_createInstanceFromZone(Class cls,size_t,)<br><img src="https://user-images.githubusercontent.com/25925248/88093425-93af7700-cbc4-11ea-9fe9-5b1c449fb664.png"><br>终于找到了，从上述代码注释中可以看到，CF要求所有对象至少得返回16个字节的内存大小。</p>
 <p>4）而系统开辟的内存空间通过malloc_zone_calloc或calloc方式开辟至少16bytes字节或16字节的倍数的内存空间。</p>
 <p><strong>6.总结</strong><br>从上面的所有分析来看，我们很容易能回答出文中最开始提出的问题一个NSObject占用多少内存？<br>答：<br>1、系统分配了16个字节给NSObject对象（可以通过malloc_size函数得到）<br>2、但NSObject对象内部只使用了8个字节空间（在64bit环境下，可以通过class_getInstanceSize函数获得）</p>
 <h1 id="如果一个Person对象继承NSObject类，那么Person类的对象占多少内存？"><a href="#如果一个Person对象继承NSObject类，那么Person类的对象占多少内存？" class="headerlink" title="如果一个Person对象继承NSObject类，那么Person类的对象占多少内存？"></a>如果一个Person对象继承NSObject类，那么Person类的对象占多少内存？</h1><p>1.分析： 新建Person类，添加成员变量。通过clang反编译main.m，打开main.cpp文件找到Person类的底层实现。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac@192 Person对象的本质 % cd /Users/mac/Desktop/iOS学习/iOS中进阶高/OC对象的本 质/Person对象的本质/Person对象的本质</span><br><span class="line">mac@192 Person对象的本质 % xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main.cpp  </span><br></pre></td></tr></table></figure>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88088214-a58d1c00-cbbc-11ea-9782-abda1513517c.png"></p>
-<p>2.由上图可知，Person对象其实是一个指向objc_object结构体的指针，objc_object里面也有一个isa指针,如下图：<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88089632-edad3e00-cbbe-11ea-9d14-39eb7ca815b5.png"></p>
-<p>3.而且若一个类继承自另一个类，则它的底层会将父类的成员变量放在结构体的最前面，此后依次放置本类的成员变量，如下图：<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88089632-edad3e00-cbbe-11ea-9d14-39eb7ca815b5.png"></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/88088214-a58d1c00-cbbc-11ea-9782-abda1513517c.png"></p>
+<p>2.由上图可知，Person对象其实是一个指向objc_object结构体的指针，objc_object里面也有一个isa指针,如下图：<br><img src="https://user-images.githubusercontent.com/25925248/88089632-edad3e00-cbbe-11ea-9d14-39eb7ca815b5.png"></p>
+<p>3.而且若一个类继承自另一个类，则它的底层会将父类的成员变量放在结构体的最前面，此后依次放置本类的成员变量，如下图：<br><img src="https://user-images.githubusercontent.com/25925248/88089632-edad3e00-cbbe-11ea-9d14-39eb7ca815b5.png"></p>
 <p>而从之前的分析可知，NSObject_IMPL的本质就是一个装有成员变量isa的结构体。因此，Person类对象所占的内存为isa的内存8加上Person类成员变量所占的空间。若不满16个字节，会强制分配到16个字节。</p>
 <p>4.我们来验证一下：<br>如果Person对象中有两个属性和两个实例变量：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@interface Person : NSObject</span><br><span class="line">&#123;</span><br><span class="line">    int add;</span><br><span class="line">    NSString * sex;</span><br><span class="line">&#125;</span><br><span class="line">@property (nonatomic,copy)NSString * name;</span><br><span class="line">@property (nonatomic,assign)int age;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
@@ -221,8 +368,8 @@ if (false) {
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2020-07-22 02:20:36.303506+0800 Person对象的本质[23797:1588297] class_getInstanceSize:40</span><br><span class="line">2020-07-22 02:20:36.305285+0800 Person对象的本质[23797:1588297] malloc_size:48</span><br></pre></td></tr></table></figure>
 
 <p><strong>5.结果：</strong><br>说明：属性name和age各占了8个字节的内存空间，实例变量add和sex也各占了8个字节；但是系统每次开辟的内存空间为16的倍数既3*16。</p>
-<h1 id="那么alloc和init都做了些什么呢？"><a href="#那么alloc和init都做了些什么呢？" class="headerlink" title="那么alloc和init都做了些什么呢？"></a>那么alloc和init都做了些什么呢？</h1><p>1.alloc<br>我们通过LLDB调试可以看到，对象alloc时，在汇编中调用了_objc_rootAlloc，明显这就是在苹果源码中的调用入口。<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88313984-dbf6a280-cd46-11ea-9c30-2c5a9190728f.png"></p>
-<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://user-images.githubusercontent.com/25925248/88314052-f597ea00-cd46-11ea-96d1-060bd8b1917c.png"></p>
+<h1 id="那么alloc和init都做了些什么呢？"><a href="#那么alloc和init都做了些什么呢？" class="headerlink" title="那么alloc和init都做了些什么呢？"></a>那么alloc和init都做了些什么呢？</h1><p>1.alloc<br>我们通过LLDB调试可以看到，对象alloc时，在汇编中调用了_objc_rootAlloc，明显这就是在苹果源码中的调用入口。<br><img src="https://user-images.githubusercontent.com/25925248/88313984-dbf6a280-cd46-11ea-9c30-2c5a9190728f.png"></p>
+<p><img src="https://user-images.githubusercontent.com/25925248/88314052-f597ea00-cd46-11ea-96d1-060bd8b1917c.png"></p>
 <p>我们去源码中查看一下，调用流程：发现_objc_rootAlloc调用的是callAlloc;继续跳转调用的是_objc_rootAllocWithZone；继续跳转调用的是class_createInstance；继续跳转调用的是_class_createInstanceFromZone</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">+ (id)alloc &#123;</span><br><span class="line">    return _objc_rootAlloc(self);</span><br><span class="line">&#125;</span><br><span class="line">// ************* 跳转 **************</span><br><span class="line">_objc_rootAlloc(Class cls)</span><br><span class="line">&#123;</span><br><span class="line">    return callAlloc(cls, false/*checkNil*/, true/*allocWithZone*/);</span><br><span class="line">&#125;</span><br><span class="line">// ************* 跳转 **************</span><br><span class="line">callAlloc(Class cls, bool checkNil, bool allocWithZone=false)</span><br><span class="line">&#123;</span><br><span class="line">#if __OBJC2__</span><br><span class="line">    if (slowpath(checkNil &amp;&amp; !cls)) return nil;</span><br><span class="line">    if (fastpath(!cls-&gt;ISA()-&gt;hasCustomAWZ())) &#123;</span><br><span class="line">        return _objc_rootAllocWithZone(cls, nil); //调用的是这个</span><br><span class="line">    &#125;</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">    // No shortcuts available.</span><br><span class="line">    if (allocWithZone) &#123;</span><br><span class="line">        return ((id(*)(id, SEL, struct _NSZone *))objc_msgSend)(cls, @selector(allocWithZone:), nil);</span><br><span class="line">    &#125;</span><br><span class="line">    return ((id(*)(id, SEL))objc_msgSend)(cls, @selector(alloc));</span><br><span class="line">&#125;</span><br><span class="line">// ************* 跳转 **************</span><br><span class="line">_objc_rootAllocWithZone(Class cls, malloc_zone_t *zone)</span><br><span class="line">&#123;</span><br><span class="line">    id obj;</span><br><span class="line"></span><br><span class="line">    if (fastpath(!zone)) &#123;</span><br><span class="line">        obj = class_createInstance(cls, 0); //调用的是这个</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        obj = class_createInstanceFromZone(cls, 0, zone);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (slowpath(!obj)) obj = _objc_callBadAllocHandler(cls);</span><br><span class="line">    return obj;</span><br><span class="line">&#125;</span><br><span class="line">// ************* 跳转 **************</span><br><span class="line">static id _class_createInstance(Class cls, size_t extraBytes)</span><br><span class="line">&#123;</span><br><span class="line">    return _class_createInstanceFromZone (cls, extraBytes, nil);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>最终会来到这里</p>
@@ -234,4 +381,369 @@ if (false) {
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+ (id)new &#123;</span><br><span class="line">    return [callAlloc(self, false/*checkNil*/) init];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://www.bboyzj.cn">小J</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://www.bboyzj.cn/2020/07/13/OCRuntime&amp;Runloop/OCRuntime02%EF%BC%9A%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%9C%AC%E8%B4%A8/">https://www.bboyzj.cn/2020/07/13/OCRuntime&amp;Runloop/OCRuntime02%EF%BC%9A%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%9C%AC%E8%B4%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/BboyZJ.github.io/tags/iOS-OC/">iOS-OC</a></div><div class="post_share"><div class="social-share" data-image="/BboyZJ.github.io/img/avatar.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/BboyZJ.github.io/2020/07/15/OCRuntime&amp;Runloop/OCRuntime03%EF%BC%9A%E6%96%B9%E6%B3%95%E7%9A%84%E6%9C%AC%E8%B4%A8/" title="OCRuntime03：方法的本质"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">OCRuntime03：方法的本质</div></div></a></div><div class="next-post pull-right"><a href="/BboyZJ.github.io/2020/07/12/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%EF%BC%9A%E6%88%91%E7%9A%84%E4%B8%AD%E7%BA%A7%E5%88%B0%E9%AB%98%E7%BA%A7%E8%BF%9B%E9%98%B6%E4%B9%8B%E8%B7%AF/" title="OC底层原理：我的中级到高级进阶之路"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">OC底层原理：我的中级到高级进阶之路</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/BboyZJ.github.io/2020/07/29/OCRuntime&Runloop/OCRunloop01%EF%BC%9ARunloop%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" title="OCRunloop01：Runloop底层原理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-29</div><div class="title">OCRunloop01：Runloop底层原理</div></div></a></div><div><a href="/BboyZJ.github.io/2023/02/16/OCRuntime&Runloop/OCRunloop02%EF%BC%9ARunloop%E7%BA%BF%E7%A8%8B%E4%BF%9D%E6%B4%BB/" title="OCRunloop02：Runloop线程保活"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-16</div><div class="title">OCRunloop02：Runloop线程保活</div></div></a></div><div><a href="/BboyZJ.github.io/2020/08/11/OCRuntime&Runloop/OCRuntime01%EF%BC%9Aruntime%E5%88%9D%E6%8E%A2/" title="OCRunloop02：runtime初探"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-08-11</div><div class="title">OCRunloop02：runtime初探</div></div></a></div><div><a href="/BboyZJ.github.io/2020/07/15/OCRuntime&Runloop/OCRuntime03%EF%BC%9A%E6%96%B9%E6%B3%95%E7%9A%84%E6%9C%AC%E8%B4%A8/" title="OCRuntime03：方法的本质"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-15</div><div class="title">OCRuntime03：方法的本质</div></div></a></div><div><a href="/BboyZJ.github.io/2020/08/02/OC%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B6/OC%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B601%EF%BC%9AYYWebImage%E6%8E%A2%E7%B4%A2/" title="OC：YYWebImage基本用法"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-08-02</div><div class="title">OC：YYWebImage基本用法</div></div></a></div><div><a href="/BboyZJ.github.io/2020/09/28/OC%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B6/OC%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B603%EF%BC%9AFDFullscreenPopGesture%E6%8E%A2%E7%B4%A2/" title="OC三方框架03：FDFullscreenPopGesture探索"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-09-28</div><div class="title">OC三方框架03：FDFullscreenPopGesture探索</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/BboyZJ.github.io/img/avatar.png" onerror="this.onerror=null;this.src='/BboyZJ.github.io/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">小J</div><div class="author-info__description">我是小J，关注我</div></div><div class="card-info-data site-data is-center"><a href="/BboyZJ.github.io/archives/"><div class="headline">Articles</div><div class="length-num">245</div></a><a href="/BboyZJ.github.io/tags/"><div class="headline">Tags</div><div class="length-num">21</div></a><a href="/BboyZJ.github.io/categories/"><div class="headline">Categories</div><div class="length-num">20</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#OC%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="toc-number">1.</span> <span class="toc-text">OC对象的本质</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%86OC%E4%BB%A3%E7%A0%81%E8%BD%AC%E5%8C%96%E6%88%90C-x2F-C-%E4%BB%A3%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">将OC代码转化成C&#x2F;C++代码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A%E4%B8%80%E4%B8%AANSObject%E5%AF%B9%E8%B1%A1%E5%8D%A0%E7%94%A8%E5%A4%9A%E5%B0%91%E5%86%85%E5%AD%98%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">问题：一个NSObject对象占用多少内存？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E4%B8%80%E4%B8%AAPerson%E5%AF%B9%E8%B1%A1%E7%BB%A7%E6%89%BFNSObject%E7%B1%BB%EF%BC%8C%E9%82%A3%E4%B9%88Person%E7%B1%BB%E7%9A%84%E5%AF%B9%E8%B1%A1%E5%8D%A0%E5%A4%9A%E5%B0%91%E5%86%85%E5%AD%98%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">如果一个Person对象继承NSObject类，那么Person类的对象占多少内存？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%82%A3%E4%B9%88alloc%E5%92%8Cinit%E9%83%BD%E5%81%9A%E4%BA%86%E4%BA%9B%E4%BB%80%E4%B9%88%E5%91%A2%EF%BC%9F"><span class="toc-number">5.</span> <span class="toc-text">那么alloc和init都做了些什么呢？</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/BboyZJ.github.io/2023/03/15/Swift/Swift%E5%AD%A6%E4%B9%A0%EF%BC%9A%E5%9B%BD%E9%99%85%E5%8C%96-%E5%A4%9A%E8%AF%AD%E8%A8%80%E9%80%82%E9%85%8D/" title="Swift学习：国际化/多语言适配">Swift学习：国际化/多语言适配</a><time datetime="2023-03-14T22:27:39.000Z" title="Created 2023-03-15 06:27:39">2023-03-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/BboyZJ.github.io/2023/03/15/Blog%E6%90%AD%E5%BB%BA/Blog-06%EF%BC%9A%E9%98%BF%E9%87%8C%E4%BA%91%E5%9B%BE%E5%BA%8A/" title="Blog-06：阿里云图床">Blog-06：阿里云图床</a><time datetime="2023-03-14T21:11:50.000Z" title="Created 2023-03-15 05:11:50">2023-03-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/BboyZJ.github.io/2023/03/15/Swift/Swift%E5%AD%A6%E4%B9%A0%EF%BC%9A%E8%87%AA%E5%AE%9A%E4%B9%89Log/" title="Swift学习：自定义Log">Swift学习：自定义Log</a><time datetime="2023-03-14T20:26:24.000Z" title="Created 2023-03-15 04:26:24">2023-03-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/BboyZJ.github.io/2023/03/14/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A049%EF%BC%9AAny/" title="Swift学习49：Any">Swift学习49：Any</a><time datetime="2023-03-13T22:34:03.000Z" title="Created 2023-03-14 06:34:03">2023-03-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/BboyZJ.github.io/2023/03/13/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A048%EF%BC%9AARC/" title="Swift学习48：ARC">Swift学习48：ARC</a><time datetime="2023-03-13T09:44:18.000Z" title="Created 2023-03-13 17:44:18">2023-03-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By 小J</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/BboyZJ.github.io/js/utils.js"></script><script src="/BboyZJ.github.io/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OCRuntime03：对象的本质</li>
+        <li>Post author：张建</li>
+        <li>Create time：2020-07-13 17:15:17</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2020/07/13/OCRuntime&amp;Runloop/OCRuntime02：对象的本质/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/iOS-OC/">#iOS-OC</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2020/07/15/OCRuntime&amp;Runloop/OCRuntime03%EF%BC%9A%E6%96%B9%E6%B3%95%E7%9A%84%E6%9C%AC%E8%B4%A8/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OCRuntime03：方法的本质</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2020/07/12/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%EF%BC%9A%E6%88%91%E7%9A%84%E4%B8%AD%E7%BA%A7%E5%88%B0%E9%AB%98%E7%BA%A7%E8%BF%9B%E9%98%B6%E4%B9%8B%E8%B7%AF/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理：我的中级到高级进阶之路</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OCRuntime03：对象的本质</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OC%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="nav-text">OC对象的本质</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%86OC%E4%BB%A3%E7%A0%81%E8%BD%AC%E5%8C%96%E6%88%90C-x2F-C-%E4%BB%A3%E7%A0%81"><span class="nav-text">将OC代码转化成C&#x2F;C++代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A%E4%B8%80%E4%B8%AANSObject%E5%AF%B9%E8%B1%A1%E5%8D%A0%E7%94%A8%E5%A4%9A%E5%B0%91%E5%86%85%E5%AD%98%EF%BC%9F"><span class="nav-text">问题：一个NSObject对象占用多少内存？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E4%B8%80%E4%B8%AAPerson%E5%AF%B9%E8%B1%A1%E7%BB%A7%E6%89%BFNSObject%E7%B1%BB%EF%BC%8C%E9%82%A3%E4%B9%88Person%E7%B1%BB%E7%9A%84%E5%AF%B9%E8%B1%A1%E5%8D%A0%E5%A4%9A%E5%B0%91%E5%86%85%E5%AD%98%EF%BC%9F"><span class="nav-text">如果一个Person对象继承NSObject类，那么Person类的对象占多少内存？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%82%A3%E4%B9%88alloc%E5%92%8Cinit%E9%83%BD%E5%81%9A%E4%BA%86%E4%BA%9B%E4%BB%80%E4%B9%88%E5%91%A2%EF%BC%9F"><span class="nav-text">那么alloc和init都做了些什么呢？</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
