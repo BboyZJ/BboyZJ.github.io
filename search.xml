@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>OC学习22：Crash崩溃和捕获</title>
+      <link href="/BboyZJ.github.io/2023/03/18/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A022%EF%BC%9ACrash%E5%B4%A9%E6%BA%83%E5%92%8C%E6%8D%95%E8%8E%B7/"/>
+      <url>/BboyZJ.github.io/2023/03/18/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A022%EF%BC%9ACrash%E5%B4%A9%E6%BA%83%E5%92%8C%E6%8D%95%E8%8E%B7/</url>
+      
+        <content type="html"><![CDATA[<h1 id="OC-层面的crash"><a href="#OC-层面的crash" class="headerlink" title="OC 层面的crash"></a>OC 层面的crash</h1><ol><li>NSInvalidArgumentException：非法参数</li></ol><ul><li><p>原因：</p><ul><li>字典 ：<code>key</code> 和 <code>value</code> 为 <code>nil</code></li><li>数组：添加了 <code>nil</code> 元素</li></ul></li><li><p>解决方案：hook 相关方法，增加保护机制</p></li></ul><ol start="2"><li>NSRangeException：下标越界</li></ol><ul><li><p>原因：最常见的 <code>数组</code> 下标越界</p></li><li><p>解决方案：hook 相关方法，增加保护机制</p></li></ul><ol start="3"><li>unrecognized selector sent to instance</li></ol><ul><li><p>原因：<code>实例对象</code> 或 <code>类对象</code> 找不到 <code>方法</code></p></li><li><p>方法调用的过程：</p><ul><li><p>动态方法决议：resolveInstanceMethod&#x2F;resolveClassMethod</p><p>  动态的添加方法：<code>class_addMethod</code></p></li><li><p>快速查找：forwardingTargetForSelector</p><p>  寻找别的对象接收消息</p></li><li><p>慢速查找：</p><p>  methodSignatureForSelector（函数符号制造器）+ forwardInvocation（函数执行器），灵活的将目标函数以其他形式执行。</p></li><li><p>抛出异常：doesNotRecognizeSelector</p></li></ul></li><li><p>解决方案：</p><ul><li>方案一：hook 慢速查找两个方法，添加 try-catch </li><li>方案二：hook 抛出异常，添加 try-catch</li></ul></li></ul><ol start="4"><li>KVO</li></ol><ul><li><p>原因：移除未注册的观察者、重复移除、添加观察者没有实现、添加移除keypath&#x2F;observer为nil</p></li><li><p>解决方案：添加 和 移除 成对出现</p></li></ul><h1 id="Signal-层面的crash"><a href="#Signal-层面的crash" class="headerlink" title="Signal 层面的crash"></a>Signal 层面的crash</h1><p>除了 OC 层面的 crash 之外，还有 内存错误、访问不存在的内存地址等产生的 crash，则需要利用 unix 标准的 signal 机制，注册 SIGABRT、SIGBUS、SIGSEGV 等信号发生时的处理函数。</p><ul><li>SIGKILL：用来立即结束程序的运行的信号。</li><li>SIGSEGV：试图访问未分配给自己的内存, 或试图往没有写权限的内存地址写数据。</li><li>SIGABRT：调用abort函数生成的信号。</li><li>SIGTRAP：由断点指令或其它trap指令产生。</li><li>SIGBUS：非法地址, 包括内存地址对齐(alignment)出错。比如访问一个四个字长的整数, 但其地址不是4的倍数。它与SIGSEGV的区别在于后者是由于对合法存储地址的非法访问触发的(如访问不属于自己存储空间或只读存储空间)。</li></ul><h1 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h1><p>程序闪退，用户体验不好</p><h1 id="Crash-捕获"><a href="#Crash-捕获" class="headerlink" title="Crash 捕获"></a>Crash 捕获</h1><ol><li>OC 层面 crash 捕获</li></ol><ul><li>NSSetUncaughExceptionHander 捕获 OC 层面面的 crash</li></ul><ol start="2"><li>Signal 层面 crash 捕获</li></ol><p>Appdelegate 中注册 <code>SIGABRT, SIGBUS, SIGSEGV</code> 等信号发生时的处理函数，处理Signal层面的crash。</p><ol start="3"><li>unrecognized selector sent to instance 捕获 crash</li></ol><p>hook 慢速查找，try - catch 捕获并上报</p><ol start="4"><li>KVO 活不 crash</li></ol><p>数组维护，添加和删除的时候做判断，同时 hook dealloc 函数</p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>具体代码在其他篇</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> OC </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> OC-学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>OC学习21：hybrid</title>
       <link href="/BboyZJ.github.io/2023/03/16/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A021%EF%BC%9Ahybrid/"/>
       <url>/BboyZJ.github.io/2023/03/16/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A021%EF%BC%9Ahybrid/</url>

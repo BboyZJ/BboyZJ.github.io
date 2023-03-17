@@ -6,7 +6,7 @@
   <link href="https://www.bboyzj.cn/atom.xml" rel="self"/>
   
   <link href="https://www.bboyzj.cn/"/>
-  <updated>2023-03-17T12:40:51.380Z</updated>
+  <updated>2023-03-17T23:47:59.483Z</updated>
   <id>https://www.bboyzj.cn/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>OC学习22：Crash崩溃和捕获</title>
+    <link href="https://www.bboyzj.cn/2023/03/18/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A022%EF%BC%9ACrash%E5%B4%A9%E6%BA%83%E5%92%8C%E6%8D%95%E8%8E%B7/"/>
+    <id>https://www.bboyzj.cn/2023/03/18/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A022%EF%BC%9ACrash%E5%B4%A9%E6%BA%83%E5%92%8C%E6%8D%95%E8%8E%B7/</id>
+    <published>2023-03-17T22:22:12.000Z</published>
+    <updated>2023-03-17T23:47:59.483Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="OC-层面的crash"><a href="#OC-层面的crash" class="headerlink" title="OC 层面的crash"></a>OC 层面的crash</h1><ol><li>NSInvalidArgumentException：非法参数</li></ol><ul><li><p>原因：</p><ul><li>字典 ：<code>key</code> 和 <code>value</code> 为 <code>nil</code></li><li>数组：添加了 <code>nil</code> 元素</li></ul></li><li><p>解决方案：hook 相关方法，增加保护机制</p></li></ul><ol start="2"><li>NSRangeException：下标越界</li></ol><ul><li><p>原因：最常见的 <code>数组</code> 下标越界</p></li><li><p>解决方案：hook 相关方法，增加保护机制</p></li></ul><ol start="3"><li>unrecognized selector sent to instance</li></ol><ul><li><p>原因：<code>实例对象</code> 或 <code>类对象</code> 找不到 <code>方法</code></p></li><li><p>方法调用的过程：</p><ul><li><p>动态方法决议：resolveInstanceMethod&#x2F;resolveClassMethod</p><p>  动态的添加方法：<code>class_addMethod</code></p></li><li><p>快速查找：forwardingTargetForSelector</p><p>  寻找别的对象接收消息</p></li><li><p>慢速查找：</p><p>  methodSignatureForSelector（函数符号制造器）+ forwardInvocation（函数执行器），灵活的将目标函数以其他形式执行。</p></li><li><p>抛出异常：doesNotRecognizeSelector</p></li></ul></li><li><p>解决方案：</p><ul><li>方案一：hook 慢速查找两个方法，添加 try-catch </li><li>方案二：hook 抛出异常，添加 try-catch</li></ul></li></ul><ol start="4"><li>KVO</li></ol><ul><li><p>原因：移除未注册的观察者、重复移除、添加观察者没有实现、添加移除keypath&#x2F;observer为nil</p></li><li><p>解决方案：添加 和 移除 成对出现</p></li></ul><h1 id="Signal-层面的crash"><a href="#Signal-层面的crash" class="headerlink" title="Signal 层面的crash"></a>Signal 层面的crash</h1><p>除了 OC 层面的 crash 之外，还有 内存错误、访问不存在的内存地址等产生的 crash，则需要利用 unix 标准的 signal 机制，注册 SIGABRT、SIGBUS、SIGSEGV 等信号发生时的处理函数。</p><ul><li>SIGKILL：用来立即结束程序的运行的信号。</li><li>SIGSEGV：试图访问未分配给自己的内存, 或试图往没有写权限的内存地址写数据。</li><li>SIGABRT：调用abort函数生成的信号。</li><li>SIGTRAP：由断点指令或其它trap指令产生。</li><li>SIGBUS：非法地址, 包括内存地址对齐(alignment)出错。比如访问一个四个字长的整数, 但其地址不是4的倍数。它与SIGSEGV的区别在于后者是由于对合法存储地址的非法访问触发的(如访问不属于自己存储空间或只读存储空间)。</li></ul><h1 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h1><p>程序闪退，用户体验不好</p><h1 id="Crash-捕获"><a href="#Crash-捕获" class="headerlink" title="Crash 捕获"></a>Crash 捕获</h1><ol><li>OC 层面 crash 捕获</li></ol><ul><li>NSSetUncaughExceptionHander 捕获 OC 层面面的 crash</li></ul><ol start="2"><li>Signal 层面 crash 捕获</li></ol><p>Appdelegate 中注册 <code>SIGABRT, SIGBUS, SIGSEGV</code> 等信号发生时的处理函数，处理Signal层面的crash。</p><ol start="3"><li>unrecognized selector sent to instance 捕获 crash</li></ol><p>hook 慢速查找，try - catch 捕获并上报</p><ol start="4"><li>KVO 活不 crash</li></ol><p>数组维护，添加和删除的时候做判断，同时 hook dealloc 函数</p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>具体代码在其他篇</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;OC-层面的crash&quot;&gt;&lt;a href=&quot;#OC-层面的crash&quot; class=&quot;headerlink&quot; title=&quot;OC 层面的crash&quot;&gt;&lt;/a&gt;OC 层面的crash&lt;/h1&gt;&lt;ol&gt;
+&lt;li&gt;NSInvalidArgumentException：非</summary>
+      
+    
+    
+    
+    <category term="OC" scheme="https://www.bboyzj.cn/categories/OC/"/>
+    
+    
+    <category term="OC-学习" scheme="https://www.bboyzj.cn/tags/OC-%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
   
   <entry>
     <title>OC学习21：hybrid</title>
@@ -471,30 +496,6 @@
     
     
     
-    
-  </entry>
-  
-  <entry>
-    <title>性能优化03：Crash检测和优化方案</title>
-    <link href="https://www.bboyzj.cn/2023/03/09/OC%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%9603%EF%BC%9ACrash%E6%A3%80%E6%B5%8B%E5%92%8C%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88/"/>
-    <id>https://www.bboyzj.cn/2023/03/09/OC%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%9603%EF%BC%9ACrash%E6%A3%80%E6%B5%8B%E5%92%8C%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88/</id>
-    <published>2023-03-08T21:32:04.000Z</published>
-    <updated>2023-03-09T19:15:28.122Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><h1 id="Crash原因"><a href="#Crash原因" class="headerlink" title="Crash原因"></a>Crash原因</h1><h1 id="Crash原因和解决"><a href="#Crash原因和解决" class="headerlink" title="Crash原因和解决"></a>Crash原因和解决</h1><ol><li>找不到方法的实现 unrecognized selector sent to instance</li></ol><ul><li><p>原因：找不到方法iOS系统抛出异常崩溃</p></li><li><p>解决方案：给NSObject添加一个分类，实现消息转发的几个方法</p></li></ul><ol start="2"><li>KVC造成的crash</li></ol><ul><li><p>原因：给不存在的key（包括key为nil）设置value</p></li><li><p>解决方法：</p></li><li><p>如果属性存在，利用iOS的反射机制来规避，NSStringFromSelector(@selector())将SEL反射为字符串作为key。这样在@selector()中传入方法名的过程中，编译器会有合法性检查，如果方法不存在或未实现会报黄色警告。</p></li><li><p>重写类的setValue:forUndefinedKey:和valueForUndefinedKey:</p></li></ul><ol start="3"><li>KVO引起的崩溃</li></ol><ul><li><p>原因：添加了观察者，没有在正确的时机移除</p></li><li><p>解决方案：addObserver和removeObserver一定要成对出现</p></li></ul><ol start="4"><li>集合类相关崩溃</li></ol><ul><li><p>原因：越界、添加nil、越界、添加nil</p></li><li><p>解决方案：</p></li></ul><p>给集合类添加category重写原来的方法，在内部做判段<br>使用Runtime把原来的方法替换成自定义的安全方法</p><ol start="5"><li>多线程中的崩溃</li></ol><p>原因:子线程中更新UI</p><p>解决方案：主线程更新UI</p><h1 id="Crash收集"><a href="#Crash收集" class="headerlink" title="Crash收集"></a>Crash收集</h1><h1 id="检测方式"><a href="#检测方式" class="headerlink" title="检测方式"></a>检测方式</h1><ol><li><p>第三方框架：Bugly</p></li><li><p>iTunes Store收集：上传App Store的app，苹果有帮我们收集，Xcode-&gt;Windows-&gt;Organizer</p></li><li><p>NSSetUncaughtExceptionHandler：iOS SDK 中提供了一个现成的函数</p></li></ol><h1 id="优化方案"><a href="#优化方案" class="headerlink" title="优化方案"></a>优化方案</h1>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;h1 id=&quot;Crash原因&quot;&gt;&lt;a href=&quot;#Crash原因&quot; class=&quot;headerlink&quot; title=&quot;Crash原因&quot;&gt;&lt;/</summary>
-      
-    
-    
-    
-    <category term="OC" scheme="https://www.bboyzj.cn/categories/OC/"/>
-    
-    
-    <category term="性能优化" scheme="https://www.bboyzj.cn/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
     
   </entry>
   
