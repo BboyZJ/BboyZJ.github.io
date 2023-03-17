@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-16 22:32:52</span>
-            <span class="mobile">2023-03-16 22:32</span>
+            <span class="pc">2023-03-17 20:24:27</span>
+            <span class="mobile">2023-03-17 20:24</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -328,27 +328,40 @@
                 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在 <code>iOS</code> 开发中，<code>iOS</code> 和 <code>JS</code> 交互是每个程序猿必须掌握的技能。<code>iOS8</code> 以后，苹果推出了新框架 <code>WebKit</code>，使用 <code>WKWebView</code> 替代 <code>UIWebView</code>。</p>
 <p>说道 <code>iOS</code> 和 <code>JS</code> 交互，就不得不提 <code>Hybrid（Hybrid Mobile App）</code>，即通过 <code>Web</code> 网络技术与 <code>Native</code> 相结合的混合移动应用开发</p>
 <blockquote>
-<p><code>WKWebView</code> 特性<br>稳定性好、占用内存少，速度更快<br>高达60fps的滚动刷新率以及内置手势</p>
+<p><code>WKWebView</code> 特性<br>1、稳定性好、占用内存少，速度更快<br>2、高达60fps的滚动刷新率以及内置手势</p>
 </blockquote>
 <p>本文主要介绍 <code>WKWebView</code> 与 <code>JS</code> 交互</p>
 <h1 id="WKWebView-和-JS-交互的方法"><a href="#WKWebView-和-JS-交互的方法" class="headerlink" title="WKWebView 和 JS 交互的方法"></a>WKWebView 和 JS 交互的方法</h1><ol>
+<li><code>WKScriptMessageHandler</code> 代理</li>
 <li>拦截 <code>URL</code></li>
-<li><code>WKScriptMessageHandler</code></li>
 </ol>
 <p>下面以实际功能为例讲解其使用</p>
-<h1 id="WKUserContentController"><a href="#WKUserContentController" class="headerlink" title="WKUserContentController"></a>WKUserContentController</h1><p><code>WKWebView</code> 和 <code>JS</code> 交互，那就得提到 <code>WKUserContentController</code> ，什么是 <code>WKUserContentController</code> ？ <code>WKUserContentController</code> 的作用？</p>
-<ul>
-<li><code>WKUserContentController</code> 可以理解为 <code>调度器</code>，用来与内容交互，即 <code>OC 监听 JS 的方法</code>，下面我们看一下具体有哪些方法：</li>
+<h1 id="WKScriptMessageHandler-代理"><a href="#WKScriptMessageHandler-代理" class="headerlink" title="WKScriptMessageHandler 代理"></a>WKScriptMessageHandler 代理</h1><ul>
+<li><code>WKScriptMessageHandler</code> 是一个 <code>代理</code> ，代理有一个方法：</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@interface WKUserContentController : NSObject &lt;NSCoding&gt;</span><br><span class="line">// 与内容交互的脚本对象数组</span><br><span class="line">@property (nonatomic, readonly, copy) NSArray&lt;WKUserScript *&gt; *userScripts; </span><br><span class="line">// 添加一个脚本，可以理解为注入一个对象</span><br><span class="line">- (void)addUserScript:(WKUserScript *)userScript;</span><br><span class="line"></span><br><span class="line">// 移除所有脚本</span><br><span class="line">- (void)removeAllUserScripts; </span><br><span class="line"></span><br><span class="line">// 添加 scriptMessageHandler 到所有的 frames 中，html5中需要添加 window.webkit.messageHandlers.&lt;name&gt;.postMessage(&lt;messageBody&gt;) 方法，来实现js与oc之间的桥梁，即 OC 监听 JS 的方法</span><br><span class="line">- (void)addScriptMessageHandler:(id &lt;WKScriptMessageHandler&gt;)scriptMessageHandler name:(NSString *)name;</span><br><span class="line"></span><br><span class="line">// 根据 name 移除所注入的 scriptMessageHandler</span><br><span class="line">- (void)removeScriptMessageHandlerForName:(NSString *)name;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 当接收到 JS 消息 时调用，是 UserContentController 委托的代理方法</span><br><span class="line">- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message;</span><br></pre></td></tr></table></figure></div>
 
+<blockquote>
+<p>上面的代理回调方法是 <code>WKScriptMessageHandler</code> 的代理回到方法，当接收到 <code>JS</code> 消息时调用，是 <code>UserContentController（调度器）</code> 委托的代理方法。</p>
+</blockquote>
+<h1 id="WKUserContentController"><a href="#WKUserContentController" class="headerlink" title="WKUserContentController"></a>WKUserContentController</h1><blockquote>
+<p><code>WKWebView</code> 和 <code>JS</code> 交互，那就得提到 <code>WKUserContentController</code> ，什么是 <code>WKUserContentController</code> ？ <code>WKUserContentController</code> 的作用？</p>
+</blockquote>
+<ul>
+<li><code>WKUserContentController</code> 可以理解为 <code>调度器</code>，用于 <code>JS 和 OC 内容交互</code>，下面我们看一下具体有哪些方法：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@interface WKUserContentController : NSObject &lt;NSCoding&gt;</span><br><span class="line">// 与内容交互的脚本对象数组</span><br><span class="line">@property (nonatomic, readonly, copy) NSArray&lt;WKUserScript *&gt; *userScripts; </span><br><span class="line">// 添加一个脚本，可以理解为注入一个对象</span><br><span class="line">- (void)addUserScript:(WKUserScript *)userScript;</span><br><span class="line"></span><br><span class="line">// 移除所有脚本</span><br><span class="line">- (void)removeAllUserScripts; </span><br><span class="line"></span><br><span class="line">// 添加 JS 消息处理并设置代理</span><br><span class="line">// JS 中要添加 window.webkit.messageHandlers.&lt;name&gt;.postMessage(&lt;messageBody&gt;) 方法,是 JS 与OC 之间的桥梁</span><br><span class="line">- (void)addScriptMessageHandler:(id &lt;WKScriptMessageHandler&gt;)scriptMessageHandler name:(NSString *)name;</span><br><span class="line"></span><br><span class="line">// 根据 name 移除所注入的 scriptMessageHandler</span><br><span class="line">- (void)removeScriptMessageHandlerForName:(NSString *)name;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>这里有一个重要的方法：<code>addScriptMessageHandler</code>，添加 <code>JS</code> 消息处理并设置代理</p>
+</blockquote>
 <ul>
 <li>示例：</li>
 </ul>
 <blockquote>
-<p><code>JS</code> 与 <code>OC</code> 约定好方法，用作 <code>JS</code> 调用 <code>OC</code> 时的方法，如 <code>ShowMessageFromWKWebView:</code><br><code>OC</code> 使用 <code>WKUserContentController</code> 的 <code>addScriptMessageHandler:name:</code> 方法监听 <code>name</code> 为 <code>ShowMessageFromWKWebView</code> 的消息<br><code>JS</code> 通过 <code>window.webkit.messageHandlers.scan.postMessage()</code> 的方式对 <code>scan</code> 方法发送消息<br><code>OC</code> 在 <code>WKScriptMessageHandler</code> 的代理协议回调 <code>userContentController:didReceiveScriptMessage:</code> 方法中读取 <code>name</code> 为 <code>ShowMessageFromWKWebView</code> 的消息数据 <code>message.body</code></p>
+<p>1、<code>JS</code> 与 <code>OC</code> 约定好方法，如 <code>ShowMessageFromWKWebView:</code><br>2、<code>OC</code> 使用 <code>WKUserContentController</code> 的 <code>addScriptMessageHandler:name:</code> 方法设置代理并接收名为 <code>name</code> 的 <code>ShowMessageFromWKWebView</code> 的消息<br>3、<code>JS</code> 通过 <code>window.webkit.messageHandlers.scan.postMessage()</code> 的方式将方法 <code>scan</code> 发送消息到 <code>OC</code><br>4、<code>OC</code> 通过 <code>WKScriptMessageHandler</code> 的代理回调方法 <code>userContentController:didReceiveScriptMessage:</code> 中读取 <code>name</code> 为 <code>ShowMessageFromWKWebView</code> 的消息，消息数据在 <code>message.body</code> 中</p>
 </blockquote>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- (void)setupWKWebView&#123;</span><br><span class="line">    WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];</span><br><span class="line">    configuration.userContentController = [[WKUserContentController alloc] init];</span><br><span class="line">    </span><br><span class="line">    // OC 监听 JS 方法</span><br><span class="line">    [configuration.userContentController addScriptMessageHandler:self name:@&quot;scan&quot;];</span><br><span class="line"></span><br><span class="line">    WKWebView *webView = [[WKWebView alloc] initWithFrame:self.view.frame configuration:configuration];</span><br><span class="line">    webView.UIDelegate = self;</span><br><span class="line">    [self.view addSubview:self.wkWebV];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- (void)setupWKWebView&#123;</span><br><span class="line">    WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];</span><br><span class="line">    configuration.userContentController = [[WKUserContentController alloc] init];</span><br><span class="line">    </span><br><span class="line">    // 添加 JS 消息处理并设置代理</span><br><span class="line">    [configuration.userContentController addScriptMessageHandler:self name:@&quot;scan&quot;];</span><br><span class="line"></span><br><span class="line">    WKWebView *webView = [[WKWebView alloc] initWithFrame:self.view.frame configuration:configuration];</span><br><span class="line">    webView.UIDelegate = self;</span><br><span class="line">    [self.view addSubview:self.wkWebV];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>h5中要实现的代码</li>
@@ -356,12 +369,12 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function showMessageFromWKWebViewClick() &#123;</span><br><span class="line">    // JS 发送消息到 OC</span><br><span class="line">window.webkit.messageHandlers.ShowMessageFromWKWebView.postMessage(&#123;title:&#x27;WKWebView&#x27;, message:&#x27;测试WKWebView和OC交互&#x27;&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
-<li>实现 <code>WKScriptMessageHandler</code> 代理方法，当 <code>JS</code> 调用 <code>ShowMessageFromWKWebView</code> 方法时，会回调此代理方法：</li>
+<li>实现 <code>WKScriptMessageHandler</code> 代理方法，当接收到 <code>JS</code> 消息 <code>name</code> 为 <code>ShowMessageFromWKWebView</code> 时调用，会回调此代理方法：</li>
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - WKScriptMessageHandler</span><br><span class="line">- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message&#123;</span><br><span class="line">// 从协议中我们可以看出这里使用了两个类 WKUserContentController 和 WKScriptMessage。WKUserContentController 可以理解为 调度器，WKScriptMessage 则是携带的数据。</span><br><span class="line">    </span><br><span class="line">    // OC 读取 JS 的消息数据</span><br><span class="line">    NSLog(@&quot;body:%@&quot;,message.body);</span><br><span class="line">    if ([message.name isEqualToString:@&quot;ShowMessageFromWKWebView&quot;]) &#123;</span><br><span class="line">        NSDictionary * dict = message.body;</span><br><span class="line">        NSString * messageStr = [dict objectForKey:@&quot;message&quot;];</span><br><span class="line">        NSString * titleStr = [dict objectForKey:@&quot;title&quot;];</span><br><span class="line">        NSLog(@&quot;messageStr:%@&quot;,messageStr);</span><br><span class="line">        NSLog(@&quot;titleStr:%@&quot;,titleStr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <h1 id="OC-调用-JS"><a href="#OC-调用-JS" class="headerlink" title="OC 调用 JS"></a>OC 调用 JS</h1><ul>
-<li><code>OC</code> 调用 <code>JS</code> 方法用 <code>evaluateJavaScript</code>，可以 <code>传递参数</code>，将拼接字符串传递给 <code>JS</code>，拼接的字符串有格式要求：<code>方法名(&#39;参数&#39;)</code></li>
+<li><code>OC</code> 调用 <code>JS</code> 方法用 <code>evaluateJavaScript</code>，可以 <code>传递参数</code>，将拼接字符串传递给 <code>JS</code>，拼接的字符串有格式要求：<code>方法名(&#39;参数&#39;)</code>，是 <code>WKWebView</code> 下的一个方法</li>
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// OC传值JS的代码</span><br><span class="line">NSString * returnJSStr = [NSString stringWithFormat:@&quot;showMessageFromWKWebViewResult(&#x27;%@&#x27;)&quot;, @&quot;message传到OC成功，message传到OC成功，message传到OC成功，message传到OC成功，message传到OC成功，message传到OC成功&quot;];</span><br><span class="line">[self.wkWebV evaluateJavaScript:returnJSStr completionHandler:^(id _Nullable result, NSError * _Nullable error) &#123;</span><br><span class="line">    NSLog(@&quot;%@,%@&quot;,result,error);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure></div>
 
@@ -370,7 +383,7 @@
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// JS 接收 OC 消息</span><br><span class="line">function showMessageFromWKWebViewResult(returnStr) &#123;</span><br><span class="line">    if (returnStr != null) &#123;</span><br><span class="line">        alert(&quot;JS已经收到OC的传值&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    document.getElementById(&quot;returnTextrea&quot;).value = returnStr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-<h1 id="拦截-URL-实现自定义跳转功能"><a href="#拦截-URL-实现自定义跳转功能" class="headerlink" title="拦截 URL 实现自定义跳转功能"></a>拦截 URL 实现自定义跳转功能</h1><p>通过 <code>WKWebView</code> 代理回调 <code>WKNavigationDelegate</code> 拦截 <code>URL</code> 方式可以实现，点击WebView按钮、cell等事件，去做一些功能</p>
+<h1 id="拦截-URL-实现自定义跳转功能"><a href="#拦截-URL-实现自定义跳转功能" class="headerlink" title="拦截 URL 实现自定义跳转功能"></a>拦截 URL 实现自定义跳转功能</h1><p>拦截 <code>URL</code> 是通过 <code>WKWebView</code> 的 <code>WKNavigationDelegate</code> 代理回调 <code>decidePolicyForNavigationAction</code> 方式实现的，例如：点击WebView按钮、cell等事件，去做一些功能</p>
 <ul>
 <li>在发送请求之前，决定是否跳转</li>
 </ul>
@@ -382,7 +395,6 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark -处理客服中心按钮的点击事件</span><br><span class="line">- (void)handleCallCenterClickActionWithUrl:(NSString *)url decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler&#123;</span><br><span class="line">    ZJLog(@&quot;url:%@&quot;,url);</span><br><span class="line">    if ([url containsString:@&quot;cloudapp://goodsDetail?goodsId=&quot;]) &#123; // 跳转商品详情</span><br><span class="line">        // 去掉前缀</span><br><span class="line">        NSArray * arr = [url componentsSeparatedByString:@&quot;goodsId=&quot;];</span><br><span class="line">        NSString * goodsId = arr.lastObject;</span><br><span class="line">        SFGoodsDetailVC * goodsDetailVc = [SFGoodsDetailVC new];</span><br><span class="line">        goodsDetailVc.goodsId = [goodsId integerValue];</span><br><span class="line">        goodsDetailVc.enterType = GoodsDetailEnterType_Normal;</span><br><span class="line">        goodsDetailVc.souce = CommodityDetailSouce_Banner; // 首页Banner</span><br><span class="line">        [self.navigationController pushViewController:goodsDetailVc animated:YES];</span><br><span class="line">        // 拦截跳转</span><br><span class="line">        decisionHandler(WKNavigationActionPolicyCancel);</span><br><span class="line">    &#125; else &#123; // 其他</span><br><span class="line">        // 不拦截跳转</span><br><span class="line">        decisionHandler(WKNavigationActionPolicyAllow);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 
-
 <h1 id="KVO-监听"><a href="#KVO-监听" class="headerlink" title="KVO 监听"></a>KVO 监听</h1><ul>
 <li>监听标题 title</li>
 </ul>
@@ -392,13 +404,13 @@
 <ul>
 <li>监听进度 <code>estimatedProgress</code></li>
 </ul>
-<p>通过监听 <code>estimatedProgress</code> 可以做 <code>进度条</code></p>
+<p>通过 <code>KeyPath路由</code> 监听  <code>estimatedProgress</code> 可以做 <code>进度条</code></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 添加监听</span><br><span class="line">[self.wkWebV zj_addObserver:self forKeyPath:@&quot;estimatedProgress&quot;];</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>监听 URL</li>
 </ul>
-<p>通过 <code>监听URL</code>，即在跳转过程中 <code>拦截URL</code>，可以去做一些 动态跳转到 <code>OC</code> 页面</p>
+<p>通过 <code>KeyPath路由</code> 监听 <code>URL</code>，即在跳转过程中 <code>拦截URL</code>，可以去做一些 动态跳转到 <code>OC</code> 页面</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 监听跳转</span><br><span class="line">[self.wkWebV zj_addObserver:self forKeyPath:@&quot;URL&quot;];</span><br></pre></td></tr></table></figure></div>
 
 <ul>
@@ -471,7 +483,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC面试题：hybrid</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WKWebView-%E5%92%8C-JS-%E4%BA%A4%E4%BA%92%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-text">WKWebView 和 JS 交互的方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WKUserContentController"><span class="nav-text">WKUserContentController</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OC-%E8%B0%83%E7%94%A8-JS"><span class="nav-text">OC 调用 JS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8B%A6%E6%88%AA-URL-%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B7%B3%E8%BD%AC%E5%8A%9F%E8%83%BD"><span class="nav-text">拦截 URL 实现自定义跳转功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KVO-%E7%9B%91%E5%90%AC"><span class="nav-text">KVO 监听</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WKWebView-%E5%92%8C-JS-%E4%BA%A4%E4%BA%92%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-text">WKWebView 和 JS 交互的方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WKScriptMessageHandler-%E4%BB%A3%E7%90%86"><span class="nav-text">WKScriptMessageHandler 代理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WKUserContentController"><span class="nav-text">WKUserContentController</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OC-%E8%B0%83%E7%94%A8-JS"><span class="nav-text">OC 调用 JS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8B%A6%E6%88%AA-URL-%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B7%B3%E8%BD%AC%E5%8A%9F%E8%83%BD"><span class="nav-text">拦截 URL 实现自定义跳转功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#KVO-%E7%9B%91%E5%90%AC"><span class="nav-text">KVO 监听</span></a></li></ol>
 
     </div>
 </div>
