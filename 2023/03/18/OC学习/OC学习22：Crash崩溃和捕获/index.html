@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-18 07:49:23</span>
-            <span class="mobile">2023-03-18 07:49</span>
+            <span class="pc">2023-03-19 07:40:40</span>
+            <span class="mobile">2023-03-19 07:40</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -370,8 +370,8 @@
 </li>
 <li><p>解决方案：</p>
 <ul>
-<li>方案一：hook 慢速查找两个方法，添加 try-catch </li>
-<li>方案二：hook 抛出异常，添加 try-catch</li>
+<li>方案一：<code>hook</code> 慢速查找两个方法，添加 <code>try-catch</code> </li>
+<li>方案二：<code>hook</code> 抛出异常 <code>doesNotRecognizeSelector</code>，添加 <code>try-catch</code></li>
 </ul>
 </li>
 </ul>
@@ -381,10 +381,10 @@
 <ul>
 <li><p>原因：移除未注册的观察者、重复移除、添加观察者没有实现、添加移除keypath&#x2F;observer为nil</p>
 </li>
-<li><p>解决方案：添加 和 移除 成对出现</p>
+<li><p>解决方案：<code>添加</code> 和 <code>移除</code> 成对出现</p>
 </li>
 </ul>
-<h1 id="Signal-层面的crash"><a href="#Signal-层面的crash" class="headerlink" title="Signal 层面的crash"></a>Signal 层面的crash</h1><p>除了 OC 层面的 crash 之外，还有 内存错误、访问不存在的内存地址等产生的 crash，则需要利用 unix 标准的 signal 机制，注册 SIGABRT、SIGBUS、SIGSEGV 等信号发生时的处理函数。</p>
+<h1 id="Signal-层面的crash"><a href="#Signal-层面的crash" class="headerlink" title="Signal 层面的crash"></a>Signal 层面的crash</h1><p>除了 <code>OC</code> 层面的 <code>crash</code> 之外，还有 内存错误、访问不存在的内存地址等产生的 <code>crash</code>，则需要利用 <code>unix</code> 标准的 <code>signal</code> 机制，注册 <code>SIGABRT、SIGBUS、SIGSEGV</code> 等信号发生时的处理函数。</p>
 <ul>
 <li>SIGKILL：用来立即结束程序的运行的信号。</li>
 <li>SIGSEGV：试图访问未分配给自己的内存, 或试图往没有写权限的内存地址写数据。</li>
@@ -394,23 +394,23 @@
 </ul>
 <h1 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h1><p>程序闪退，用户体验不好</p>
 <h1 id="Crash-捕获"><a href="#Crash-捕获" class="headerlink" title="Crash 捕获"></a>Crash 捕获</h1><ol>
-<li>OC 层面 crash 捕获</li>
+<li><code>OC</code> 层面 <code>crash</code> 捕获</li>
 </ol>
 <ul>
 <li>NSSetUncaughExceptionHander 捕获 OC 层面面的 crash</li>
 </ul>
 <ol start="2">
-<li>Signal 层面 crash 捕获</li>
+<li><code>Signal</code> 层面 <code>crash</code> 捕获</li>
 </ol>
-<p>Appdelegate 中注册 <code>SIGABRT, SIGBUS, SIGSEGV</code> 等信号发生时的处理函数，处理Signal层面的crash。</p>
+<p><code>Appdelegate</code> 中注册 <code>SIGABRT, SIGBUS, SIGSEGV</code> 等信号发生时的处理函数，处理Signal层面的crash。</p>
 <ol start="3">
 <li>unrecognized selector sent to instance 捕获 crash</li>
 </ol>
-<p>hook 慢速查找，try - catch 捕获并上报</p>
+<p><code>hook</code> 慢速查找，<code>try - catch</code> 捕获并上报</p>
 <ol start="4">
-<li>KVO 活不 crash</li>
+<li><code>KVO</code> 活不 <code>crash</code></li>
 </ol>
-<p>数组维护，添加和删除的时候做判断，同时 hook dealloc 函数</p>
+<p>数组维护，添加和删除的时候做判断，同时 <code>hook dealloc</code> 函数</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>具体代码看下一篇</p>
 
             </div>
