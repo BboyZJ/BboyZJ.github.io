@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-02-08 17:39:54</span>
-            <span class="mobile">2023-02-08 17:39</span>
+            <span class="pc">2023-03-23 19:48</span>
+            <span class="mobile">2023-03-23 19</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -325,14 +325,14 @@
             
 
             <div class="article-content markdown-body">
-                <h1 id="Time-Profiler简介"><a href="#Time-Profiler简介" class="headerlink" title="Time Profiler简介"></a>Time Profiler简介</h1><p>Time Profiler见名知意：CPU分析工具-时间分析工具，它会按照设定的时间间隔（默认1毫秒）来跟踪每一线程的堆栈信息（stacktrace），并通过比较时间间隔之间的堆栈状态，来推算出某个方法执行了多久，给出一个近似值。</p>
-<h1 id="Time-Profiler使用须知"><a href="#Time-Profiler使用须知" class="headerlink" title="Time Profiler使用须知"></a>Time Profiler使用须知</h1><p>当点击Time Profiler应用程序开始运行后.就能获取到整个应用程序运行消耗时间分布和百分比.为了保证数据分析在统一使用场景真实行有如下点需要注意:</p>
+                <h1 id="Time-Profiler简介"><a href="#Time-Profiler简介" class="headerlink" title="Time Profiler简介"></a>Time Profiler简介</h1><p><code>Time Profiler</code> 见名知意：CPU分析工具-时间分析工具，它会按照设定的时间间隔（默认1毫秒）来跟踪每一线程的堆栈信息（stacktrace），并通过比较时间间隔之间的堆栈状态，来推算出某个方法执行了多久，给出一个近似值。</p>
+<h1 id="Time-Profiler使用须知"><a href="#Time-Profiler使用须知" class="headerlink" title="Time Profiler使用须知"></a>Time Profiler使用须知</h1><p>当点击 <code>Time Profiler</code> 应用程序开始运行后，就能获取到整个应用程序运行消耗时间分布和百分比.为了保证数据分析在统一使用场景真实行有如下点需要注意:</p>
 <ul>
-<li><p>在开始进行应用程序性能分析的时候,一定要使用真机,模拟器运行在Mac上，然而Mac上的CPU往往比iOS设备要快。相反，Mac上的GPU和iOS设备的完全不一样，模拟器不得已要在软件层面（CPU）模拟设备的GPU，这意味着GPU相关的操作在模拟器上运行的更慢，尤其是使用CAEAGLLayer来写一些OpenGL的代码时候. 这就导致模拟器性能数据和用户真机使用性能数据相去甚运.</p>
+<li><p>在开始进行应用程序性能分析的时候,一定要使用真机，模拟器运行在Mac上，然而Mac上的CPU往往比iOS设备要快。相反，Mac上的GPU和iOS设备的完全不一样，模拟器不得已要在软件层面（CPU）模拟设备的GPU，这意味着GPU相关的操作在模拟器上运行的更慢，尤其是使用CAEAGLLayer来写一些OpenGL的代码时候. 这就导致模拟器性能数据和用户真机使用性能数据相去甚运.</p>
 </li>
 <li><p>另外在开始性能分析前另外一件重要的事情是，应用程序运行一定要Release版本 而不是Debug版本.</p>
 </li>
-<li><p>在发布环境打包的时候，编译器会引入一系列提高性能的优化，例如去掉调试符号或者移除并重新组织代码.另iOS引入一种”Watch Dog”[看门狗]机制.不同的场景下，“看门狗”会监测应用的性能。如果超出了该场景所规定的运行时间，“看门狗”就会强制终结这个应用的进程.开发者可以crashlog看到对应的日志.但Xcode在调试配置下会禁用”Watch Dog”。</p>
+<li><p>在发布环境打包的时候，编译器会引入一系列提高性能的优化，例如去掉调试符号或者移除并重新组织代码，另iOS引入一种 <code>Watch Dog</code> [看门狗]机制.不同的场景下，<code>看门狗</code> 会监测应用的性能。如果超出了该场景所规定的运行时间，<code>看门狗</code> 就会强制终结这个应用的进程，开发者可以 <code>crashlog</code> 看到对应的日志，但Xcode在调试配置下会禁用 <code>Watch Dog</code> 。</p>
 </li>
 </ul>
 <h1 id="Time-Profiler的使用"><a href="#Time-Profiler的使用" class="headerlink" title="Time Profiler的使用"></a>Time Profiler的使用</h1><ol>
@@ -341,34 +341,70 @@
 <li><p>修改Edit Scheme为Release版本如下:</p>
 </li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/90216257-9b171880-de30-11ea-99c2-dad43f1cef5d.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303231846918.png"
+                     
+                ></p>
 <p>因为Release环境下的才是正确的配置：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/90216456-1d9fd800-de31-11ea-8a41-c8ec6862d861.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303231846485.png"
+                     
+                ></p>
 <ol start="3">
 <li>打开Instrument -&gt; Time Profiler</li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/90214670-d8c57280-de2b-11ea-94b1-681955120491.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303231848198.png"
+                     
+                ></p>
 <ol start="4">
 <li>界面的整体如下:</li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/90213624-d877a800-de28-11ea-9c25-112091fd9ee4.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303231849946.png"
+                     
+                ></p>
 <ul>
-<li>weight: 整体运行时长和比例</li>
-<li>self weight:自己代码的运行时长和比例</li>
-<li>Symbol Name:被调用函数的符号信息,可以切换为实际调用的方法</li>
+<li>weight：整体运行时长和比例</li>
+<li>self weight：自己代码的运行时长和比例</li>
+<li>Symbol Name：被调用函数的符号信息，可以切换为实际调用的方法</li>
 </ul>
 <ol start="5">
 <li>选择真机和你要调试的App</li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/90214784-2f32b100-de2c-11ea-9c1f-8b32d9f1cabe.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303231849822.png"
+                     
+                ></p>
 <ol start="6">
-<li><p>点击Start按钮，Time Profiler就开始记录App的运行情况<br><img src="https://user-images.githubusercontent.com/25925248/90214870-77ea6a00-de2c-11ea-8644-a622607fb8ec.png"></p>
-</li>
-<li><p>可以看到在CPU使用过高的位置对应的具体调用栈</p>
-</li>
+<li>点击Start按钮，Time Profiler就开始记录App的运行情况</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303231850788.png"
+                     
+                ></p>
+<ol start="7">
+<li>可以看到在CPU使用过高的位置对应的具体调用栈</li>
 </ol>
 <p>打开Time Profiler调试工具进入到调试界面,选择你的真机和项目，点击左上角红色原点（启动程序按钮）之后便可以看到如下图的时间消耗：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/90213624-d877a800-de28-11ea-9c25-112091fd9ee4.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303231900540.png"
+                     
+                ></p>
 <ol start="8">
 <li>CallTree选项介绍</li>
 </ol>
@@ -393,21 +429,36 @@
 <h1 id="写一个demo具体定位耗时"><a href="#写一个demo具体定位耗时" class="headerlink" title="写一个demo具体定位耗时"></a>写一个demo具体定位耗时</h1><ol>
 <li>创建一个demo项目，写如下代码：</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    //单元测试</span><br><span class="line">    NSDate * startDate = [NSDate date];</span><br><span class="line">    for (int i = 0; i &lt; 100000; i++) &#123;</span><br><span class="line">        NSString *string = @&quot;123&quot;;</span><br><span class="line">        string = [string stringByAppendingString:@&quot;abc&quot;];</span><br><span class="line">        NSLog(@&quot;%@&quot;, string);</span><br><span class="line">    &#125;</span><br><span class="line">    NSDate *endDate = [NSDate date];</span><br><span class="line">    NSTimeInterval interval = [endDate timeIntervalSinceDate:startDate];</span><br><span class="line">    NSLog(@&quot;time = %f&quot;,interval);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    //单元测试</span><br><span class="line">    NSDate * startDate = [NSDate date];</span><br><span class="line">    for (int i = 0; i &lt; 100000; i++) &#123;</span><br><span class="line">        NSString *string = @&quot;123&quot;;</span><br><span class="line">        string = [string stringByAppendingString:@&quot;abc&quot;];</span><br><span class="line">        NSLog(@&quot;%@&quot;, string);</span><br><span class="line">    &#125;</span><br><span class="line">    NSDate *endDate = [NSDate date];</span><br><span class="line">    NSTimeInterval interval = [endDate timeIntervalSinceDate:startDate];</span><br><span class="line">    NSLog(@&quot;time = %f&quot;,interval);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ol start="2">
 <li>我们查看一下CPU耗时操作：</li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/90218587-c866c500-de36-11ea-8878-f62558db7eb4.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303231851115.png"
+                     
+                ></p>
 <p>可以看到ViewController中占用大量的时间763ms，双击函数调用进入里面看看：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/90218962-a3268680-de37-11ea-99db-062fb316b2a0.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303231851081.png"
+                     
+                ></p>
 <ol start="3">
 <li>我们注释掉打印重新跑一遍代码看看效果</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for (int i = 0; i &lt; 100000; i++) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        NSString *string = @&quot;123&quot;;</span><br><span class="line">        string = [string stringByAppendingString:@&quot;abc&quot;];</span><br><span class="line">//            NSLog(@&quot;%@&quot;, string);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for (int i = 0; i &lt; 100000; i++) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        NSString *string = @&quot;123&quot;;</span><br><span class="line">        string = [string stringByAppendingString:@&quot;abc&quot;];</span><br><span class="line">//            NSLog(@&quot;%@&quot;, string);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>查看结果如下:</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/90219276-3e1f6080-de38-11ea-8a03-52d974460550.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303231851330.png"
+                     
+                ></p>
 <p>结论:由此可见，耗时操作明显下降了。</p>
 
             </div>

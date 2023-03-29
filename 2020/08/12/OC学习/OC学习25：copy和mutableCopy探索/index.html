@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2020/08/12/oc学习/oc学习25：copy和mutablecopy探索/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC学习25：copy和mutableCopy探索">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2020/08/12/OC学习/OC学习25：copy和mutableCopy探索/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC学习25：copy和mutableCopy探索">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC学习25：copy和mutableCopy探索 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC学习25：copy和mutableCopy探索</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2020-08-12 06:54:44</span>
+        <span class="mobile">2020-08-12 06:54</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-26 10:20:35</span>
+            <span class="mobile">2023-03-26 10:20</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>Objective-C</code> 对象是通过指向该对象内存地址的指针，以 <code>间接</code> 方式访问的。</p>
+<h1 id="指针赋值"><a href="#指针赋值" class="headerlink" title="指针赋值"></a>指针赋值</h1><ul>
+<li><p>MRC 下仅仅将一个新的指针指向该内存地址，并没有获取该内存的所有权，引用计数不变；</p>
+</li>
+<li><p>ARC 下由于默认使用 <code>strong</code> 修饰，因此将一个新的指针指向该内存地址，获取该内存的所有权，引用计数+1；</p>
+</li>
+</ul>
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>对于实现了NSCopying与NSMutableCopying协议的对象来说，指针赋值并非简单的赋值，还有额外的操作：</p>
+<ol>
+<li>浅拷贝</li>
+</ol>
+<p>类似于ARC下的指针赋值，将一个新指针指向该内存地址；</p>
+<ol start="2">
+<li>深拷贝</li>
+</ol>
+<p>将一个新指针指向新的内存对象，该内存的数据与被复制的数据相同！如果改变原内存数据，新对象不会随着改变！</p>
+<h1 id="非容器类：字符串"><a href="#非容器类：字符串" class="headerlink" title="非容器类：字符串"></a>非容器类：字符串</h1><p>注：<code>__NSCFConstantString</code> 代表不可变，<code>__NSCFString</code> 代表可变</p>
+<ol>
+<li>不可变字符串NSString</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 不可变的字符串</span><br><span class="line">NSString *string = @&quot;string&quot;;</span><br><span class="line">NSString *string_1 = [string copy];</span><br><span class="line">NSMutableString *string_2 = [string mutableCopy];</span><br><span class="line">NSLog(@&quot;string     : %@ %p&quot;,[string class],string);</span><br><span class="line">NSLog(@&quot;string_1   : %@ %p&quot;,[string_1 class],string_1);</span><br><span class="line">NSLog(@&quot;string_2   : %@ %p&quot;,[string_2 class],string_2);</span><br><span class="line">    </span><br><span class="line">******打印结果******</span><br><span class="line">2020-08-12 20:10:15.022910+0800 OC-copy和mutableCopy[39668:2403350] string     : __NSCFConstantString 0x10a9bd028</span><br><span class="line">2020-08-12 20:10:15.023183+0800 OC-copy和mutableCopy[39668:2403350] string_1   : __NSCFConstantString 0x10a9bd028</span><br><span class="line">2020-08-12 20:10:15.023983+0800 OC-copy和mutableCopy[39668:2403350] string_2   : __NSCFString 0x600000e395c0</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>由结果可知：<br>copy指向同一个内存地址，指针拷贝，即浅拷贝，返回不可变类型<br>mutable指向不同的内存地址，深拷贝，返回可变类型</p>
+</blockquote>
+<ol start="2">
+<li>可变字符串NSMutableString</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//可变的字符串</span><br><span class="line">NSMutableString * mutableStr = [NSMutableString stringWithString:@&quot;mutableStr&quot;];</span><br><span class="line">NSMutableString *mutableString_1 = [mutableStr copy];</span><br><span class="line">NSMutableString *mutableString_2 = [mutableStr mutableCopy];</span><br><span class="line">NSLog(@&quot;mutableStr        : %@ %p&quot;,[mutableStr class],mutableStr);</span><br><span class="line">NSLog(@&quot;mutableString_1   : %@ %p&quot;,[mutableString_1 class],mutableString_1);</span><br><span class="line">NSLog(@&quot;mutableString_2   : %@ %p&quot;,[mutableString_2 class],mutableString_2);</span><br><span class="line"></span><br><span class="line">******打印结果******</span><br><span class="line">2020-08-12 20:11:36.024015+0800 OC-copy和mutableCopy[39698:2404773] mutableStr        : __NSCFString 0x600003bf9d10</span><br><span class="line">2020-08-12 20:11:36.024163+0800 OC-copy和mutableCopy[39698:2404773] mutableString_1   : __NSCFString 0x6000035f5400</span><br><span class="line">2020-08-12 20:11:36.024275+0800 OC-copy和mutableCopy[39698:2404773] mutableString_2   : __NSCFString 0x600003bf9e60</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>由结果可知：<br>copy指向不同的内存地址，深拷贝，返回可变类型<br>mutable指向不同的内存地址，深拷贝，返回可变类型</p>
+</blockquote>
+<h1 id="容器类："><a href="#容器类：" class="headerlink" title="容器类："></a>容器类：</h1><h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><ol>
+<li>不可变数组</li>
+</ol>
+<p>注: <code>__NSArrayI</code> 代表不可变，<code>__NSArrayM</code> 代表可变</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//不可变数组</span><br><span class="line">NSArray *arr = @[@&quot;1&quot;,@&quot;2&quot;];</span><br><span class="line">NSArray *arr_1 = arr.copy;</span><br><span class="line">NSMutableArray *arr_2 = arr.mutableCopy;</span><br><span class="line">NSLog(@&quot;arr     : %@ %p&quot;,[arr class],arr);</span><br><span class="line">NSLog(@&quot;arr_1   : %@ %p %p&quot;,[arr_1 class],arr_1,arr_1[0]);</span><br><span class="line">NSLog(@&quot;arr_2   : %@ %p %p&quot;,[arr_2 class],arr_2,arr_2[0]);</span><br><span class="line"></span><br><span class="line">******打印结果******</span><br><span class="line">2020-08-25 17:52:40.585722+0800 OC-copy和mutableCopy[43144:2152457] arr     : __NSArrayI 0x600000a6b8e0</span><br><span class="line">2020-08-25 17:52:40.585927+0800 OC-copy和mutableCopy[43144:2152457] arr_1   : __NSArrayI 0x600000a6b8e0 0x101024128</span><br><span class="line">2020-08-25 17:52:40.586054+0800 OC-copy和mutableCopy[43144:2152457] arr_2   : __NSArrayM 0x600000471980</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>由上面的结果可知:<br>copy指向同一个内存地址，浅拷贝，返回不可变类型<br>mutableCopy指向不同的内存地址，深拷贝，返回可变类型<br>不可变数组中的元素指向同一个内存地址，浅拷贝</p>
+</blockquote>
+<ol start="2">
+<li>可变数组</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//可变数组</span><br><span class="line">NSMutableArray * mutableArr = [NSMutableArray arrayWithObjects:@&quot;1&quot;,@&quot;2&quot;, nil];</span><br><span class="line">NSArray *mutableArr_1 = mutableArr.copy;</span><br><span class="line">NSMutableArray *mutableArr_2 = mutableArr.mutableCopy;</span><br><span class="line">NSLog(@&quot;mutableArr     : %@ %p&quot;,[mutableArr class],mutableArr);</span><br><span class="line">NSLog(@&quot;copyArr_1   : %@ %p %p&quot;,[mutableArr_1 class],mutableArr_1,mutableArr_1[0]);</span><br><span class="line">NSLog(@&quot;mutableCopyArr_2   : %@ %p %p&quot;,[mutableArr_2 class],mutableArr_2,mutableArr_2[0]);</span><br><span class="line">    </span><br><span class="line">******打印结果******</span><br><span class="line">2020-08-25 17:52:40.586501+0800 OC-copy和mutableCopy[43144:2152457] mutableArr     : __NSArrayM 0x600000479230</span><br><span class="line">2020-08-25 17:52:40.587261+0800 OC-copy和mutableCopy[43144:2152457] copyArr_1   : __NSArrayI 0x600000a05ec0 0x101024128</span><br><span class="line">2020-08-25 17:52:40.587486+0800 OC-copy和mutableCopy[43144:2152457] mutableCopyArr_2   : __NSArrayM 0x6000004790b0 0x101024128</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>由上面的结果可知:<br>copy指向不同的内存地址，深拷贝，返回不可变类型<br>mutableCopy指向不同的内存地址，深拷贝，返回可变类型<br>可变数组中的元素指向同一个内存地址，浅拷贝</p>
+</blockquote>
+<h2 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h2><ol>
+<li>不可变字典</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//不可变字典</span><br><span class="line">NSDictionary *dic = @&#123;@&quot;1&quot;:@&quot;z&quot;,@&quot;2&quot;:@&quot;j&quot;&#125;;</span><br><span class="line">NSDictionary *dic_1 = dic.copy;</span><br><span class="line">NSMutableDictionary *dic_2 = dic.mutableCopy;</span><br><span class="line">NSLog(@&quot;dic     : %@ %p&quot;,[dic class],dic);</span><br><span class="line">NSLog(@&quot;dic_1   : %@ %p %p&quot;,[dic_1 class],dic_1,dic_1[@&quot;1&quot;]);</span><br><span class="line">NSLog(@&quot;dic_2   : %@ %p %p&quot;,[dic_2 class],dic_2,dic_2[@&quot;1&quot;]);</span><br><span class="line"></span><br><span class="line">******打印结果******</span><br><span class="line">2020-08-25 18:02:07.764010+0800 OC-copy和mutableCopy[43252:2160581] dic     : __NSDictionaryI 0x600002acbac0</span><br><span class="line">2020-08-25 18:02:07.764194+0800 OC-copy和mutableCopy[43252:2160581] dic_1   : __NSDictionaryI 0x600002acbac0 0x10f0cb228</span><br><span class="line">2020-08-25 18:02:07.764331+0800 OC-copy和mutableCopy[43252:2160581] dic_2   : __NSDictionaryM 0x600003fb1ea0 0x10f0cb228</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>由结果可知：<br>copy指向同一个内存地址，浅拷贝，返回不可变类型<br>mutableCopy指向不同的内存地址，深拷贝，返回可变类型<br>不可变字典中的元素指向同一个内存地址，浅拷贝</p>
+</blockquote>
+<ol start="2">
+<li>可变字典</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//可变字组</span><br><span class="line">NSMutableDictionary * mutableDic = [NSMutableDictionary dictionaryWithDictionary:@&#123;@&quot;1&quot;:@&quot;z&quot;,@&quot;2&quot;:@&quot;z&quot;&#125;];</span><br><span class="line">NSArray *mutableDic_1 = mutableDic.copy;</span><br><span class="line">NSMutableArray *mutableDic_2 = mutableDic.mutableCopy;</span><br><span class="line">//可变字典</span><br><span class="line">NSMutableDictionary * mutableDic = [NSMutableDictionary dictionaryWithDictionary:@&#123;@&quot;1&quot;:@&quot;z&quot;,@&quot;2&quot;:@&quot;z&quot;&#125;];</span><br><span class="line">NSDictionary *mutableDic_1 = mutableDic.copy;</span><br><span class="line">NSMutableDictionary *mutableDic_2 = mutableDic.mutableCopy;</span><br><span class="line">NSLog(@&quot;mutableDic     : %@ %p&quot;,[mutableDic class],mutableDic);</span><br><span class="line">NSLog(@&quot;mutableDic_1   : %@ %p %p&quot;,[mutableDic_1 class],mutableDic_1,mutableDic_1[@&quot;1&quot;]);</span><br><span class="line">NSLog(@&quot;mutableDic_2   : %@ %p %p&quot;,[mutableDic_2 class],mutableDic_2,mutableDic_2[@&quot;1&quot;]);</span><br><span class="line">    </span><br><span class="line">******打印结果******</span><br><span class="line">2020-08-25 18:03:42.698800+0800 OC-copy和mutableCopy[43295:2162720] mutableDic     : __NSDictionaryM 0x6000023efb00</span><br><span class="line">2020-08-25 18:03:42.699266+0800 OC-copy和mutableCopy[43295:2162720] mutableDic_1   : __NSFrozenDictionaryM 0x6000023ef8a0 0x10602a228</span><br><span class="line">2020-08-25 18:03:42.699646+0800 OC-copy和mutableCopy[43295:2162720] mutableDic_2   : __NSDictionaryM 0x6000023ef800 0x10602a228</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>由结果可知：<br>copy指向不同的内存地址，深拷贝，返回不可变类型<br>mutableCopy指向不同的内存地址，深拷贝，返回可变类型<br>可变字典中的元素指向同一个内存地址，浅拷贝</p>
+</blockquote>
+<h1 id="非容器类：自定义对象"><a href="#非容器类：自定义对象" class="headerlink" title="非容器类：自定义对象"></a>非容器类：自定义对象</h1><p>要支持copy与mutableCopy，需要实现NSCopying,NSMutableCopying协议。<br>(Foundation框架对象都实现了该协议，所以可以直接使用copy与mutableCopy，UIKit框架不可以)<br>用法如下：</p>
+<p>自定义person类中实现</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@interface Person @interface Person : NSObject&lt;NSCopying,NSMutableCopying&gt;</span><br><span class="line">@property (nonatomic,copy)NSString * name;</span><br><span class="line">@property (nonatomic,assign)int age;</span><br><span class="line">@end</span><br><span class="line">@implementation Person</span><br><span class="line">- (id)copyWithZone:(NSZone *)zone&#123;</span><br><span class="line">    Person *person = [Person allocWithZone:zone];</span><br><span class="line">    person.name = self.name;</span><br><span class="line">    person.age = self.age;</span><br><span class="line">    return person;</span><br><span class="line">&#125;</span><br><span class="line">- (id)mutableCopyWithZone:(NSZone *)zone&#123;</span><br><span class="line">    Person *person = [Person allocWithZone:zone];</span><br><span class="line">    person.name = self.name;</span><br><span class="line">    person.age = self.age;</span><br><span class="line">    return person;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p>调用：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 简单的调用代码</span><br><span class="line">Person *person = [[Person alloc] init];</span><br><span class="line">Person *copyPerson = [person copy];</span><br><span class="line">Person *mutableCopyPerson = [person mutableCopy];</span><br><span class="line">NSLog(@&quot;person     : %@ %p&quot;,[person class],person);</span><br><span class="line">NSLog(@&quot;copyPerson   : %@ %p&quot;,[copyPerson class],copyPerson);</span><br><span class="line">NSLog(@&quot;mutableCopyPerson   : %@ %p&quot;,[mutableCopyPerson class],mutableCopyPerson);</span><br><span class="line">    </span><br><span class="line">*******打印结果********</span><br><span class="line">2020-08-12 20:49:20.832411+0800 OC-copy和mutableCopy[40043:2426556] person     : Person 0x600000e7f500</span><br><span class="line">2020-08-12 20:49:20.832594+0800 OC-copy和mutableCopy[40043:2426556] copyPerson   : Person 0x600000e7f540</span><br><span class="line">2020-08-12 20:49:20.832703+0800 OC-copy和mutableCopy[40043:2426556] mutableCopyPerson   : Person 0x600000e7f680</span><br></pre></td></tr></table></figure></div>
+
+<p>由结果可知:<br>copy指向不同的内存地址，深拷贝，返回本类<br>mutableCopy指向不同的内存地址，深拷贝，返回本类</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303261020834.png"
+                     
+                ></p>
+<blockquote>
+<p>注：容器类中的元素都是浅拷贝，因为指向同一个内存地址</p>
+</blockquote>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC学习25：copy和mutableCopy探索</li>
+        <li>Post author：张建</li>
+        <li>Create time：2020-08-12 06:54:44</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2020/08/12/OC学习/OC学习25：copy和mutableCopy探索/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">#OC-学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2020/08/13/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A018%EF%BC%9ACharles/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC：Charles探索</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2020/08/11/OCRuntime&amp;Runloop/OCRuntime01%EF%BC%9Aruntime%E5%88%9D%E6%8E%A2/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OCRunloop02：runtime初探</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC学习25：copy和mutableCopy探索</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E8%B5%8B%E5%80%BC"><span class="nav-text">指针赋值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-text">概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%9E%E5%AE%B9%E5%99%A8%E7%B1%BB%EF%BC%9A%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-text">非容器类：字符串</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E7%B1%BB%EF%BC%9A"><span class="nav-text">容器类：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84"><span class="nav-text">数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E5%85%B8"><span class="nav-text">字典</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%9E%E5%AE%B9%E5%99%A8%E7%B1%BB%EF%BC%9A%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AF%B9%E8%B1%A1"><span class="nav-text">非容器类：自定义对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

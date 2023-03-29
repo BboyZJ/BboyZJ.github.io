@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-02-11 11:08:08</span>
-            <span class="mobile">2023-02-11 11:08</span>
+            <span class="pc">2023-03-23 18:57:19</span>
+            <span class="mobile">2023-03-23 18:57</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -328,13 +328,22 @@
                 <h1 id="Animation-Hitches-前言"><a href="#Animation-Hitches-前言" class="headerlink" title="Animation Hitches 前言"></a>Animation Hitches 前言</h1><p><code>Instrument</code> 新增 <code>Animation Hieches</code> 监测类型用于监测 <code>卡顿</code>，去掉了 <code>Core Animation</code> 检测方式。</p>
 <h1 id="Animation-Hitches-简介"><a href="#Animation-Hitches-简介" class="headerlink" title="Animation Hitches 简介"></a>Animation Hitches 简介</h1><p><code>卡顿时间比</code>(Hitch Time Ratio) 的概念用于替代 <code>FPS</code>，iPhone13Pro之前屏幕刷最高刷新率仍为60HZ，iPhone13Pro及以上帧率调整到120HZ</p>
 <h1 id="调试页面渲染性能"><a href="#调试页面渲染性能" class="headerlink" title="调试页面渲染性能"></a>调试页面渲染性能</h1><p>所以，现在可以不用打开Instruments也可以。</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/90330340-a5771500-dfde-11ea-9233-c71ad6785a47.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303231855752.png"
+                     
+                ></p>
 <ol>
 <li><code>Color Blended Layer</code> 图层混合</li>
 </ol>
-<p>什么是图层混合：界面都是由多个UI控件 <code>叠加</code> 的，如果有 <code>透明或半透明</code> 的控件，GPU会计算显示颜色，损耗GPU资源。</p>
-<p>解决办法：打开 <code>color Blended Layer</code> 选项，显示 <code>红色则出现图层混合</code>；我们调试的目的就是把红色区域消减的越少越好，只要 <code>设置控件不透明</code> 即可。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">label.background = [UIColor whiteColor];</span><br><span class="line">label.layer.masksToBounds = YES;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>什么是图层混合：界面都是由多个UI控件 <code>叠加</code> 的，如果有 <code>透明或半透明</code> 的控件，GPU会计算显示颜色，损耗GPU资源。</p>
+</li>
+<li><p>解决办法：打开 <code>color Blended Layer</code> 选项，显示 <code>红色则出现图层混合</code>；我们调试的目的就是把红色区域消减的越少越好，只要 <code>设置控件不透明</code> 即可。</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">label.background = [UIColor whiteColor];</span><br><span class="line">label.layer.masksToBounds = YES;</span><br></pre></td></tr></table></figure></div>
 
 <ol start="2">
 <li>Color Hits Green and Misses Red（光栅化）</li>

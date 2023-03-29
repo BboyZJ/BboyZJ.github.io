@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/23/oc性能优化/性能优化02.2：runloop监测/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="性能优化02.2：Runloop监测">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/03/23/OC性能优化/性能优化02.2：Runloop监测/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="性能优化02.2：Runloop监测">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            性能优化02.2：Runloop监测 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">性能优化02.2：Runloop监测</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-03-23 08:07:53</span>
+        <span class="mobile">2023-03-23 08:07</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-26 03:04:26</span>
+            <span class="mobile">2023-03-26 03:04</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="RunLoop-原理"><a href="#RunLoop-原理" class="headerlink" title="RunLoop 原理"></a>RunLoop 原理</h1><ol>
+<li><code>RunLoop</code> 在 <code>iOS</code> 里由 <code>CFRunLoop</code> 实现。简单来说，<code>RunLoop</code> 是用来监听输入源，进行调度处理的。</li>
+</ol>
+<ul>
+<li><p>这里的输入源可以是输入设备、网络、周期性或者延迟时间、异步回调。</p>
+</li>
+<li><p><code>RunLoop</code> 会接收两种类型的输入源：一种是来自另一个线程或者来自不同应用的异步消息；另一种是来自预订时间或者重复间隔的同步事件。</p>
+</li>
+<li><p><code>RunLoop</code> 的目的是，当有事件要去处理时保持线程忙，当没有事件要处理时让线程进入休眠。所以，<code>RunLoop</code> 不光能够运用到监控卡顿上，还可以提高用户的交互体验。通过将那些繁重而不紧急会大量占用 <code>CPU</code> 的任务（比如图片加载），放到空闲的 <code>RunLoop</code> 模式里执行，就可以避开在 <code>UITrackingRunLoopMode</code> 这个 <code>RunLoop</code> 模式时执行</p>
+</li>
+</ul>
+<ol start="2">
+<li>RunLoop 执行流程</li>
+</ol>
+<ul>
+<li>在RunLoop运行的整个过程中，<code>loop</code> 的状态包括 <code>6</code> 个:</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) &#123;</span><br><span class="line">    kCFRunLoopEntry , // 进入 loop</span><br><span class="line">    kCFRunLoopBeforeTimers , // 触发 Timer 回调</span><br><span class="line">    kCFRunLoopBeforeSources , // 触发 Source0 回调</span><br><span class="line">    kCFRunLoopBeforeWaiting , // 等待 mach_port 消息</span><br><span class="line">    kCFRunLoopAfterWaiting ), // 接收 mach_port 消息</span><br><span class="line">    kCFRunLoopExit , // 退出 loop</span><br><span class="line">    kCFRunLoopAllActivities  // loop 所有状态改变</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>Runloop 流程图：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303230822991.png"
+                     
+                ></p>
+<blockquote>
+<p>注：<br>1、<code>Source0</code> 被添加到 <code>RunLoop</code> 上时并不会主动唤醒线程，需要手动去唤醒。<code>Source0</code> 负责对触摸事件的处理以及 <code>performSeletor:onThread:</code>。<br>2、<code>Source1</code> 具备唤醒线程的能力，使用的是基于 <code>Port</code> 的 <code>线程间通信</code>。<code>Source1</code> 负责捕获系统事件，并将事件交由 <code>Source0</code> 处理。</p>
+</blockquote>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">RunLoop 顺序：</span><br><span class="line">     1、进入</span><br><span class="line">     </span><br><span class="line">     2、通知Timer</span><br><span class="line">     3、通知Source</span><br><span class="line">     4、处理Block</span><br><span class="line">     5、处理Source0</span><br><span class="line">     6、如果有 Source1 调转到 11</span><br><span class="line">     7、通知 BeforWaiting</span><br><span class="line">     8、休眠 wait：等待线程被唤醒</span><br><span class="line">     9、通知 afterWaiting</span><br><span class="line">     10、处理唤醒线程消息： timer、GCD相关、处理Source1</span><br><span class="line">     11、处理 dispatch 到 main_queue 的 block</span><br><span class="line">     12、根据情况，决定如何操作：回到 2、退出Runloop</span><br><span class="line">     </span><br><span class="line">     13、退出 Runloop</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>理清楚Runloop的运行机制，就很容易明白处理事件主要有两个时间段 <code>kCFRunLoopBeforeSources</code> 发送之后和 <code>kCFRunLoopAfterWaiting</code> 发送之后。</p>
+</li>
+<li><p><code>dispatch_semaphore_t</code> 是一个信号量机制，信号量到达、或者超时会继续向下进行，否则等待，如果超时则返回的结果必定不为0，信号量到达结果为0。</p>
+</li>
+<li><p>利用这个特性我们判断卡顿出现的条件为 <code>在信号量发送</code> <code>kCFRunLoopBeforeSources</code> 和<code>kCFRunLoopAfterWaiting</code> 后进行了大量的操作，在一段时间内没有再发送信号量，导致超时。也就是说主线程通知状态长时间的停留在这两个状态上了。转换为代码就是判断有没有超时，超时了，判断当前停留的状态是不是这两个状态，如果是，就判定为 <code>卡顿</code>。</p>
+</li>
+</ul>
+<ol start="3">
+<li><p>这样就能解释通为什么要用这两个信号量判断卡顿。这么一个简单的问题，思路转不过来就绕进去了，现在回看感觉这个很简单，也是耗了一天时间。</p>
+</li>
+<li><p>要利用 <code>RunLoop</code> 原理来监控卡顿的话，要关注两个阶段。分别是 <code>kCFRunLoopBeforeSources</code> 和 <code>kCFRunLoopAfterWaiting</code> ，就是要触发 <code>Source0</code> 回调和接收 <code>mach_port</code> 消息两个状态。</p>
+</li>
+</ol>
+<h1 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h1><ol>
+<li>创建一个 ZJRunloopMonitor 类</li>
+</ol>
+<p>.h 文件</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">@interface ZJRunloopMonitor : NSObject</span><br><span class="line">// 单例</span><br><span class="line">+ (instancetype)shareInstance;</span><br><span class="line">// 开始监测</span><br><span class="line">- (void)startMonitor;</span><br><span class="line">// 停止监测</span><br><span class="line">- (void)stopMonitor;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p>.m 文件</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ZJRunloopMonitor.h&quot;</span><br><span class="line"></span><br><span class="line">@interface ZJRunloopMonitor ()&#123;</span><br><span class="line">    // 信号量</span><br><span class="line">    dispatch_semaphore_t dispatchSemaphore;</span><br><span class="line">    CFRunLoopObserverRef runLoopObserver;</span><br><span class="line">    CFRunLoopActivity runLoopActivity;</span><br><span class="line">    NSInteger timeoutCount;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJRunloopMonitor</span><br><span class="line">// 单例</span><br><span class="line">+ (instancetype)shareInstance&#123;</span><br><span class="line">    static ZJRunloopMonitor * instance = nil;</span><br><span class="line">    static dispatch_once_t onceToken;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        instance = [[ZJRunloopMonitor alloc] init];</span><br><span class="line">    &#125;);</span><br><span class="line">    return instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark -开始监测</span><br><span class="line">- (void)startMonitor&#123;</span><br><span class="line">    // 如果有监测，则返回</span><br><span class="line">    if (runLoopObserver) &#123;return;&#125;</span><br><span class="line">    </span><br><span class="line">    // 创建 CFRunLoopObserverContext 观察者</span><br><span class="line">    /**</span><br><span class="line">         typedef struct &#123;</span><br><span class="line">         CFIndex    version;</span><br><span class="line">         void * info;</span><br><span class="line">         const void *(*retain)(const void *info);</span><br><span class="line">         void   (*release)(const void *info);</span><br><span class="line">         CFStringRef    (*copyDescription)(const void *info);</span><br><span class="line">         &#125; CFRunLoopObserverContext;</span><br><span class="line">         */</span><br><span class="line"></span><br><span class="line">    CFRunLoopObserverContext context = &#123;0,(__bridge void*)self,NULL,NULL,NULL&#125;;</span><br><span class="line">    /**</span><br><span class="line">        CFRunLoopObserverRef CFRunLoopObserverCreate(</span><br><span class="line">        CFAllocatorRef allocator,</span><br><span class="line">        CFOptionFlags activities,</span><br><span class="line">        Boolean repeats,</span><br><span class="line">        CFIndex order,</span><br><span class="line">        CFRunLoopObserverCallBack callout,</span><br><span class="line">        CFRunLoopObserverContext *context</span><br><span class="line">        );</span><br><span class="line">        */</span><br><span class="line">    runLoopObserver = CFRunLoopObserverCreate(kCFAllocatorDefault,</span><br><span class="line">                                              kCFRunLoopAllActivities,</span><br><span class="line">                                              YES,</span><br><span class="line">                                              0,</span><br><span class="line">                                              &amp;runLoopObserverCallBack,</span><br><span class="line">                                              &amp;context);</span><br><span class="line">    // 添加观察者</span><br><span class="line">    CFRunLoopAddObserver(CFRunLoopGetMain(), runLoopObserver, kCFRunLoopCommonModes);</span><br><span class="line">    </span><br><span class="line">    // 向主线程添加 观察者</span><br><span class="line">    CFRunLoopRef mainLoop = CFRunLoopGetMain();</span><br><span class="line">    CFRunLoopAddObserver(mainLoop, runLoopObserver, kCFRunLoopCommonModes);</span><br><span class="line">    </span><br><span class="line">    // 创建子线程开始监控</span><br><span class="line">    dispatch_queue_t monitorQueue = dispatch_queue_create(&quot;com.zj.monitorQueue&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">        </span><br><span class="line">    // 创建同步信号量</span><br><span class="line">    dispatchSemaphore = dispatch_semaphore_create(0);</span><br><span class="line">    </span><br><span class="line">    //创建子线程开始监控</span><br><span class="line">    dispatch_async(monitorQueue, ^&#123;</span><br><span class="line">        // 子线程开启一个持续的loop用来进行监控</span><br><span class="line">        while (YES) &#123;</span><br><span class="line">            // 超时时间设置 2s</span><br><span class="line">            dispatch_time_t outTimer = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);</span><br><span class="line">            </span><br><span class="line">            // 信号量到达、或者 超时会继续向下进行，否则等待</span><br><span class="line">            long result = dispatch_semaphore_wait(self-&gt;dispatchSemaphore, outTimer);</span><br><span class="line">            </span><br><span class="line">            if (result != 0) &#123;</span><br><span class="line">                // 超时，判断最后停留的信号量是哪一个，是否处理为卡顿现象。</span><br><span class="line">                if (!self-&gt;runLoopObserver) &#123;</span><br><span class="line">                    NSLog(@&quot;--NO runLoopObserver---&quot;);</span><br><span class="line">                    self-&gt;timeoutCount = 0;</span><br><span class="line">                    self-&gt;dispatchSemaphore = 0;</span><br><span class="line">                    self-&gt;runLoopActivity = 0;</span><br><span class="line">                    return;</span><br><span class="line">                &#125;</span><br><span class="line">                //判断当前 监听到的 信号(也就是说上一个信号量超过2秒没有更新，故卡顿)</span><br><span class="line">                if (self-&gt;runLoopActivity == kCFRunLoopBeforeSources ||</span><br><span class="line">                    self-&gt;runLoopActivity == kCFRunLoopAfterWaiting) &#123;</span><br><span class="line">                    // 出现卡顿、进一步处理</span><br><span class="line">                    NSLog(@&quot;--卡顿啦----From 卡顿监控线程&quot;);</span><br><span class="line">                    // log current stack info</span><br><span class="line">                    continue;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            NSLog(@&quot;--系统运行良好--From 卡顿监控线程&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 停止监测</span><br><span class="line">- (void)stopMonitor&#123;</span><br><span class="line">    if (!runLoopObserver) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    CFRunLoopRemoveObserver(CFRunLoopGetMain(), runLoopObserver, kCFRunLoopCommonModes);</span><br><span class="line">    CFRelease(runLoopObserver);</span><br><span class="line">    runLoopObserver = NULL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark -监控是否处于 运行状态</span><br><span class="line">// 观察者回调函数</span><br><span class="line">void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info) &#123;</span><br><span class="line">    // 每一次监测到Runloop发送通知的时候，都会调用此函数</span><br><span class="line">    // 在此过程修改当前的 RunloopActivity 状态，发送同步信号。</span><br><span class="line">    ZJRunloopMonitor * monitor = (__bridge ZJRunloopMonitor *)info;</span><br><span class="line">    monitor-&gt;runLoopActivity = activity;</span><br><span class="line">    dispatch_semaphore_t semaphore = monitor-&gt;dispatchSemaphore;</span><br><span class="line">    dispatch_semaphore_signal(semaphore);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>观察RunLoop 的 <code>common</code> 模式</li>
+</ol>
+<ul>
+<li><p>将创建好的观察者 <code>runLoopObserver</code> 添加到主线程 <code>RunLoop</code> 的 <code>common</code> 模式下观察。<br>然后，创建一个持续的子线程专门用来监控主线程的 <code>RunLoop</code> 状态。</p>
+</li>
+<li><p>一旦发现进入睡眠前的 <code>kCFRunLoopBeforeSources</code> 状态，或者唤醒后的状态 <code>kCFRunLoopAfterWaiting</code>，在设置的时间阈值内一直没有变化，即可判定为 <code>卡顿</code>。</p>
+</li>
+<li><p>代码中触发卡顿的时间阈值 ,设置成了 <code>2</code> 秒。这个 <code>2</code> 秒的阈值合理？我们可以根据 <code>WatchDog</code> 机制来设置。<code>WatchDog</code> 在不同状态下设置的不同时间，如下所示：</p>
+</li>
+</ul>
+<blockquote>
+<p>启动（Launch）：20s；<br>恢复（Resume）：10s；<br>挂起（Suspend）：10s；<br>退出（Quit）：6s；<br>后台（Background）：3min（在 iOS 7 之前，每次申请 10min； 之后改为每次申请 3min，可连续申请，最多申请到 10min）。</p>
+</blockquote>
+<ul>
+<li>接下来，我们就可以 <code>log</code> 出堆栈的信息，从而进一步分析出具体是哪个方法的执行时间过长。</li>
+</ul>
+<h1 id="如何获取卡顿的方法堆栈信息"><a href="#如何获取卡顿的方法堆栈信息" class="headerlink" title="如何获取卡顿的方法堆栈信息"></a>如何获取卡顿的方法堆栈信息</h1><ul>
+<li><p>子线程监控发现卡顿后，还需要记录当前出现卡顿的方法堆栈信息，并适时推送到服务端供开发者分析，从而解决卡顿问题。</p>
+</li>
+<li><p>直接调用系统函数获取堆栈</p>
+</li>
+<li><p>这种方法的优点在于，性能消耗小。但是，它只能够获取简单的信息，也没有办法配合 <code>dSYM</code> 来获取具体是哪行代码出了问题，而且能够获取的信息类型也有限。</p>
+</li>
+<li><p>但因为性能比较好，所以适用于观察大盘统计卡顿情况，而不是想要找到卡顿原因的场景。</p>
+</li>
+</ul>
+<ol>
+<li>直接获取堆栈信息</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;libkern/OSAtomic.h&gt;</span><br><span class="line">#include &lt;execinfo.h&gt;</span><br><span class="line"></span><br><span class="line">//获取函数堆栈信息</span><br><span class="line">+ (NSArray *)backtrace &#123;</span><br><span class="line">    void* callstack[128];</span><br><span class="line">    int frames = backtrace(callstack, 128);//用于获取当前线程的函数调用堆栈，返回实际获取的指针个数</span><br><span class="line">    char **strs = backtrace_symbols(callstack, frames);//从backtrace函数获取的信息转化为一个字符串数组</span><br><span class="line">    int i;</span><br><span class="line">    NSMutableArray *backtrace = [NSMutableArray arrayWithCapacity:frames];</span><br><span class="line">    for (i = 0;</span><br><span class="line">     i &lt; backtrace.count;</span><br><span class="line">     i++)  &#123;</span><br><span class="line">        [backtrace addObject:[NSString stringWithUTF8String:strs[i]]];</span><br><span class="line">    &#125;</span><br><span class="line">    free(strs);</span><br><span class="line">    return backtrace;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>三方库</li>
+</ol>
+<p>直接用 <a href="">PLCrashReporter</a> 这个开源的第三方库来获取堆栈信息。这种方法的特点是，能够定位到问题代码的具体位置，而且性能消耗也不大。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 获取数据</span><br><span class="line">NSData *lagData = [[[PLCrashReporter alloc] initWithConfiguration:[[PLCrashReporterConfig alloc] initWithSignalHandlerType:PLCrashReporterSignalHandlerTypeBSD symbolicationStrategy:PLCrashReporterSymbolicationStrategyAll]] generateLiveReport];</span><br><span class="line">// 转换成 PLCrashReport 对象</span><br><span class="line">PLCrashReport *lagReport = [[PLCrashReport alloc] initWithData:lagData error:NULL];</span><br><span class="line">// 进行字符串格式化处理</span><br><span class="line">NSString *lagReportString = [PLCrashReportTextFormatter stringValueForCrashReport:lagReport withTextFormat:PLCrashReportTextFormatiOS];</span><br><span class="line">//将字符串上传服务器</span><br><span class="line">NSLog(@&quot;lag happen, detail below: \n %@&quot;,lagReportString);</span><br></pre></td></tr></table></figure></div>
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：性能优化02.2：Runloop监测</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-03-23 08:07:53</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/03/23/OC性能优化/性能优化02.2：Runloop监测/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">#性能优化</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/03/23/OC%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%9602.3%EF%BC%9APing%E4%B8%BB%E7%BA%BF%E7%A8%8B/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">性能优化02.3：Ping主线程</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/03/23/OC%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%9602.1%EF%BC%9AFPS%E7%9B%91%E6%B5%8B/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">性能优化02.1：FPS监测</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">性能优化02.2：Runloop监测</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RunLoop-%E5%8E%9F%E7%90%86"><span class="nav-text">RunLoop 原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="nav-text">具体实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E5%8D%A1%E9%A1%BF%E7%9A%84%E6%96%B9%E6%B3%95%E5%A0%86%E6%A0%88%E4%BF%A1%E6%81%AF"><span class="nav-text">如何获取卡顿的方法堆栈信息</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-10 03:51:04</span>
-            <span class="mobile">2023-03-10 03:51</span>
+            <span class="pc">2023-03-26 10:04:08</span>
+            <span class="mobile">2023-03-26 10:04</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -325,13 +325,19 @@
             
 
             <div class="article-content markdown-body">
-                <h1 id="PerformSelector和runloop的关系？"><a href="#PerformSelector和runloop的关系？" class="headerlink" title="PerformSelector和runloop的关系？"></a>PerformSelector和runloop的关系？</h1><ul>
+                <h1 id="PerformSelector-和-runloop的关系？"><a href="#PerformSelector-和-runloop的关系？" class="headerlink" title="PerformSelector 和 runloop的关系？"></a>PerformSelector 和 runloop的关系？</h1><ul>
 <li>基础用法：默认在主线程的runloop，会执行，因为此方法是发送消息，objc_msgSend</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[self performSelector:@selector(name:) withObject:@“张建&quot;];</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[self performSelector:@selector(name:) withObject:@“张建&quot;];</span><br></pre></td></tr></table></figure></div>
 
 <ul>
-<li>performSelector 在子线程默认不执行，需要加入到 runloop 中并开启</li>
+<li>performSelector 在子线程默认不执行，需要加入到 <code>runloop</code> 中并开启</li>
+</ul>
+<h1 id="Runloop-在项目中的实际应用？"><a href="#Runloop-在项目中的实际应用？" class="headerlink" title="Runloop 在项目中的实际应用？"></a>Runloop 在项目中的实际应用？</h1><ul>
+<li><p>线程保活</p>
+</li>
+<li><p>卡顿监测</p>
+</li>
 </ul>
 
             </div>
@@ -414,7 +420,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC面试题：Runloop</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PerformSelector%E5%92%8Crunloop%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%9F"><span class="nav-text">PerformSelector和runloop的关系？</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PerformSelector-%E5%92%8C-runloop%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%9F"><span class="nav-text">PerformSelector 和 runloop的关系？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop-%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%EF%BC%9F"><span class="nav-text">Runloop 在项目中的实际应用？</span></a></li></ol>
 
     </div>
 </div>

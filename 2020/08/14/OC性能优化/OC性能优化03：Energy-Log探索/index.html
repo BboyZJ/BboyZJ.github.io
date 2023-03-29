@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2020-10-17 13:10:17</span>
-            <span class="mobile">2020-10-17 13:10</span>
+            <span class="pc">2023-03-23 19:00</span>
+            <span class="mobile">2023-03-23 19</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -327,20 +327,53 @@
             <div class="article-content markdown-body">
                 <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>所有应用程序在执行网络操作、更新用户界面或在CPU上运行代码时都会消耗能量。随着用户越来越多地依赖电池电量，以及应用程序的激增，能效已成为用户体验中不可或缺的一部分。</p>
 <h1 id="电池寿命"><a href="#电池寿命" class="headerlink" title="电池寿命"></a>电池寿命</h1><p>随着能源效率的下降，电池的寿命也会下降。同时消耗过多的资源会导致界面滞后，对用户输入的响应会很慢。随着越来越多的应用程序使用越来越多的资源，系统工作起来越来越努力，速度也越来越快，设备的物理温度也在逐渐升高。当这种情况发生时，系统会采取措施将温度降低到更容易接受的水平。</p>
-<h1 id="能量消耗的因素"><a href="#能量消耗的因素" class="headerlink" title="能量消耗的因素"></a>能量消耗的因素</h1><p>1.CPU: CPU是能源的主要消耗者。高CPU使用周期会迅速耗尽用户的电池。 CPU使用率超过20%就会快速耗干电池电量——建议只在必要时通过批处理、调度和优先级排序来完成工作。</p>
-<p>2.Network：大多数iOS应用程序执行网络操作。当联网发生时，蜂窝无线电和Wi-Fi等组件就会启动并消耗能量。通过批量处理和减少事务、压缩数据和适当处理错误，您的应用程序可以为节能做出重大贡献。</p>
-<p>3.GPU: 图形处理器(显卡的处理器),乱使用GPU会导致交互差,并且降低电池寿命。</p>
-<p>4.Location: 许多应用程序发出位置请求是为了记录用户的物理活动或提供基于环境的警报。能量消耗随着精确度的提高和位置请求的延长而增加。你的应用应该尽可能减少定位活动的准确性和持续时间。当不再需要时停止位置请求。</p>
-<p>5.Background: 后台状态App仍会消耗电量,App要按需执行后台操作,并使用延迟APNS来保证系统运算高效执行.另外,在app进入后台状态是,立即减少动作,并且通知系统一次这些动作已经完成.</p>
-<p>6.Bluetooth: 长时间的蓝牙活动会耗尽iOS设备和蓝牙设备的电池。只要可能，批处理和缓冲蓝牙活动，并减少对数据的轮询。</p>
-<p>7.Device wakes：iOS设备依靠睡眠来延长电池寿命。无论设备何时唤醒，都会有很高的开销成本，因为必须为屏幕和其他资源提供电源。你的应用程序，尤其是在后台操作时，应该尽可能空闲，除非绝对必要，避免用推送通知或其他活动唤醒设备</p>
-<h1 id="分析工具"><a href="#分析工具" class="headerlink" title="分析工具"></a>分析工具</h1><p>1.Time Profile:时间分析器分析模板。使用此模板对正在运行的进程执行低开销的基于时间的采样。Time Profiler 监视应用程序中正在运行的线程，并定期采样。为每个样本收集完整的回溯，允许您深入查看样本，以准确找到代码中花费大量时间的位置。</p>
-<p>2.Core Animation:核心动画分析模板。使用此模板可以测量图形性能和CPU使用率。启用模板 Core Animation 的Flash Updated Regions 设置，以查看应用中发生的每个屏幕更新，并观察不必要或意外的更新。</p>
-<p>3.Activity Monitor: 活动监视器分析模板。使用此模板可以监视整体CPU，磁盘I&#x2F;O和网络使用情况。</p>
-<h1 id="Energy-log调试和演示"><a href="#Energy-log调试和演示" class="headerlink" title="Energy log调试和演示"></a>Energy log调试和演示</h1><p>1.检查第一步，是通过xcode开发工具的energy impact来整体查看app的耗电情况。<br><img src="https://user-images.githubusercontent.com/25925248/90361066-de22f700-e08f-11ea-8c0d-c4d4a022ce37.png"></p>
-<p>Overhead：表示开销,包括CPU的唤起,无线电模组(蓝牙&amp;WiFi),和其他系统资源的调用等。</p>
-<p>2.检查第二步：通过instrument工具的energy log来检测具体的耗电模块。<br><img src="https://user-images.githubusercontent.com/25925248/90362291-db75d100-e092-11ea-9f6e-213ce6cf0924.png"></p>
-<p>3.降低能量消耗举例<br>1）CPU</p>
+<h1 id="能量消耗的因素"><a href="#能量消耗的因素" class="headerlink" title="能量消耗的因素"></a>能量消耗的因素</h1><ol>
+<li><p>CPU: CPU是能源的主要消耗者。高CPU使用周期会迅速耗尽用户的电池。 CPU使用率超过20%就会快速耗干电池电量——建议只在必要时通过 <code>批处理、调度和优先级排序</code> 来完成工作。</p>
+</li>
+<li><p>GPU: 图形处理器(显卡的处理器)，乱使用GPU会导致交互差，并且降低电池寿命。</p>
+</li>
+<li><p>Network：大多数iOS应用程序执行网络操作。当联网发生时，蜂窝无线电和Wi-Fi等组件就会启动并消耗能量。通过 <code>批量处理和减少事务、压缩数据和适当处理错误</code>，您的应用程序可以为节能做出重大贡献。</p>
+</li>
+<li><p>Location: 许多应用程序发出位置请求是为了记录用户的物理活动或提供基于环境的警报。能量消耗随着精确度的提高和位置请求的延长而增加。你的应用应该尽可能减少定位活动的准确性和持续时间。当不再需要时停止位置请求。</p>
+</li>
+<li><p>Background: 后台状态App仍会消耗电量，App要按需执行后台操作，并使用延迟APNS来保证系统运算高效执行。另外，在app进入后台状态是，立即减少动作，并且通知系统一次这些动作已经完成</p>
+</li>
+<li><p>Bluetooth: 长时间的蓝牙活动会耗尽iOS设备和蓝牙设备的电池。只要可能，批处理和缓冲蓝牙活动，并减少对数据的轮询。</p>
+</li>
+<li><p>Device wakes：iOS设备依靠睡眠来延长电池寿命。无论设备何时唤醒，都会有很高的开销成本，因为必须为屏幕和其他资源提供电源。你的应用程序，尤其是在后台操作时，应该尽可能空闲，除非绝对必要，避免用推送通知或其他活动唤醒设备</p>
+</li>
+</ol>
+<h1 id="分析工具"><a href="#分析工具" class="headerlink" title="分析工具"></a>分析工具</h1><ol>
+<li><p>Time Profile：时间分析器分析模板。使用此模板对正在运行的进程执行低开销的基于时间的采样。Time Profiler 监视应用程序中正在运行的线程，并定期采样。为每个样本收集完整的回溯，允许您深入查看样本，以准确找到代码中花费大量时间的位置。</p>
+</li>
+<li><p>Core Animation：核心动画分析模板。使用此模板可以测量图形性能和CPU使用率。启用模板 Core Animation 的Flash Updated Regions 设置，以查看应用中发生的每个屏幕更新，并观察不必要或意外的更新。</p>
+</li>
+<li><p>Activity Monitor: 活动监视器分析模板。使用此模板可以监视整体CPU，磁盘I&#x2F;O和网络使用情况。</p>
+</li>
+</ol>
+<h1 id="Energy-log调试和演示"><a href="#Energy-log调试和演示" class="headerlink" title="Energy log调试和演示"></a>Energy log调试和演示</h1><ol>
+<li>检查第一步，是通过xcode开发工具的energy impact来整体查看app的耗电情况。</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303231852146.png"
+                     
+                ></p>
+<p>Overhead：表示开销，包括CPU的唤起，无线电模组(蓝牙&amp;WiFi)，和其他系统资源的调用等。</p>
+<ol start="2">
+<li>检查第二步：通过instrument工具的 <code>energy log</code> 来检测具体的耗电模块。</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303231853126.png"
+                     
+                ></p>
+<ol start="3">
+<li>降低能量消耗举例</li>
+</ol>
+<p>1）CPU</p>
 <ul>
 <li>Timer的时间间隔不宜太短,满足需求即可</li>
 <li>线程适量,不宜过多,不要阻塞主线程</li>
@@ -348,22 +381,22 @@
 <li>适当使用多线程</li>
 <li>避免庞大的xib,storyBoard,尽量使用纯代码开发</li>
 </ul>
-<p>2）网络请求</p>
+<p>2)GPU</p>
+<ul>
+<li>减少视图刷新：确保必要的时候才刷新，能刷新1行cell最好只刷新一行；</li>
+<li>审查模糊用法：避免将模糊放在更新元素上，尽量少使用圆角和透明度；</li>
+<li>尽量减少使用离散GPU除非动画效果需要，或功能不能支持的情况下</li>
+</ul>
+<p>3）网络请求</p>
 <ul>
 <li>识别：确保不重复做同一个操作；</li>
 <li>优化：使用后台会话</li>
 <li>合并：批处理事务</li>
 <li>减少：最小化重试，缓存结构优化等等</li>
 </ul>
-<p>3)GPU</p>
-<ul>
-<li>减少视图刷新：确保必要的时候才刷新，能刷新1行cell最好只刷新一行；</li>
-<li>审查模糊用法：避免将模糊放在更新元素上，尽量少使用圆角和透明度；</li>
-<li>尽量减少使用离散GPU除非动画效果需要，或功能不能支持的情况下</li>
-</ul>
 <p>4)Location, Bluetooth, Background</p>
 <ul>
-<li>定位和蓝牙按需取用,定位之后要关闭或降低定位频率，进入后台关闭定位，停止定时器运行等</li>
+<li>定位和蓝牙按需取用，定位之后要关闭或降低定位频率，进入后台关闭定位，停止定时器运行等</li>
 </ul>
 
             </div>

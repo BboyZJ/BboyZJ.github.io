@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2020/08/25/oc学习/oc学习32：计时器探索/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC学习32：计时器探索">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2020/08/25/OC学习/OC学习32：计时器探索/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC学习32：计时器探索">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC学习32：计时器探索 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC学习32：计时器探索</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2020-08-25 13:42:40</span>
+        <span class="mobile">2020-08-25 13:42</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-26 11:27:16</span>
+            <span class="mobile">2023-03-26 11:27</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>在iOS中，计时器是比较常用的，用于统计累加数据或者倒计时等，例如手机号获取验证码。计时器大概有那么三种，分别是：<code>NSTimer、CADisplayLink、dispatch_source_t</code></p>
+<h1 id="创建NSTimer方式：有两种"><a href="#创建NSTimer方式：有两种" class="headerlink" title="创建NSTimer方式：有两种"></a>创建NSTimer方式：有两种</h1><ol>
+<li>第一种：SEL方式</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)demo&#123;</span><br><span class="line">    // SEL</span><br><span class="line">    // 1.系统自动帮我们加入到runloop中</span><br><span class="line">    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(run) userInfo:nil repeats:YES];</span><br><span class="line">    </span><br><span class="line">    // 2.系统不会自动帮我们加入到runloop中，需要手动添加</span><br><span class="line">    self.timer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(run) userInfo:nil repeats:YES];</span><br><span class="line">    [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>第二种：Block方式</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (void)demo1&#123;</span><br><span class="line">    // Block</span><br><span class="line">    // 1.系统会自动帮我们加入到runloop中</span><br><span class="line">    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">        NSLog(@&quot;timer&quot;);</span><br><span class="line">    &#125;];</span><br><span class="line">    </span><br><span class="line">    // 2.系统不会自动帮我们加入到runloop中，需要我们手动添加</span><br><span class="line">    self.timer = [NSTimer timerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">        NSLog(@&quot;timer1&quot;);</span><br><span class="line">    &#125;];</span><br><span class="line">    [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>由创建方式可知：</li>
+</ol>
+<ul>
+<li><p><code>scheduledTimerWithTimeInterval</code> 方式创建的，系统会自动帮我们添加到当前的runloop当中;</p>
+</li>
+<li><p><code>timerWithTimeInterval</code> 方式创建的，系统默认不会帮我们添加到当前的runloop当中，需要我们自己手动添加</p>
+</li>
+</ul>
+<h1 id="NSTimer与NSRunloopMode关系"><a href="#NSTimer与NSRunloopMode关系" class="headerlink" title="NSTimer与NSRunloopMode关系"></a>NSTimer与NSRunloopMode关系</h1><ol>
+<li><p>当NSTimer加入到NSRunloop中的NSDefaultRunLoopMode模式时出现一个问题，就是当页面有UIScrollView滑动执行时执行的模式是UITrackingRunLoopMode，NSDefaultRunLoopMode被挂起了，会导致定时器失效，等滑动结束时才恢复定时器。</p>
+</li>
+<li><p>需要定时器在 UIScrollView 滑动时也不影响的话，有两种解决方法：</p>
+</li>
+</ol>
+<ul>
+<li>给NSTimer分别添加到 <code>UITrackingRunLoopMode</code> 和 <code>NSDefaultRunLoopMode</code> 这两个模式中：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[[NSRunLoop mainRunLoop] addTimer:timer </span><br><span class="line">forMode:NSDefaultRunLoopMode];</span><br><span class="line">[[NSRunLoop mainRunLoop] addTimer:timer </span><br><span class="line">forMode: UITrackingRunLoopMode]; </span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>给NSTimer添加NSRunLoop的NSRunLoopCommonModes中，平常用这中就可以了，比较简便来。</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[NSRunLoop mainRunLoop] addTimer:timer </span><br><span class="line">forMode: NSRunLoopCommonModes]; </span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>NSRunLoopCommonModes相当于UITrackingRunLoopMode 和 NSDefaultRunLoopMode的伪模式</li>
+</ul>
+<h1 id="NSTimer与线程的关系"><a href="#NSTimer与线程的关系" class="headerlink" title="NSTimer与线程的关系"></a>NSTimer与线程的关系</h1><p>主线程默认开启runloop,子线程默认不开启runloop，需要手动开启runloop</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (void)demo2&#123;</span><br><span class="line">    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</span><br><span class="line">        //scheduledTimerWithTimeInterval</span><br><span class="line">        self.timer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">            NSLog(@&quot;timer&quot;);</span><br><span class="line">        &#125;];</span><br><span class="line">        [[NSRunLoop currentRunLoop] run];</span><br><span class="line">        </span><br><span class="line">        //timerWithTimeInterval</span><br><span class="line">        self.timer = [NSTimer timerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">            NSLog(@&quot;timer&quot;);</span><br><span class="line">        &#125;];</span><br><span class="line">        [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];</span><br><span class="line">        [[NSRunLoop currentRunLoop] run];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>子线程需要 [[NSRunLoop currentRunLoop] run] 才能执行NSTimer</strong></p>
+<h1 id="NSTimer循环引用"><a href="#NSTimer循环引用" class="headerlink" title="NSTimer循环引用"></a>NSTimer循环引用</h1><ol>
+<li>NSTimer使用不当就会造成内存泄漏，比如常见的使用方法：</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//定义</span><br><span class="line">@property (nonatomic, strong) NSTimer *timer;</span><br><span class="line"></span><br><span class="line">//实现</span><br><span class="line">self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(showMsg) userInfo:nil repeats:YES];</span><br><span class="line"></span><br><span class="line">//销毁</span><br><span class="line">-(void)dealloc</span><br><span class="line">&#123;</span><br><span class="line">    [self.timer invalidate];</span><br><span class="line">    self.timer = nil;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>由于NSTimer会引用住self，而 self又持有NSTimer对象，所以形成循环引用，dealloc会被执行，但 <code>timer 也永远不会被释放</code>，一直在打印，造成内存泄漏。</p>
+<p>尝试解决办法：</p>
+<ul>
+<li>把timer改成弱引用</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, weak) NSTimer *timer;</span><br></pre></td></tr></table></figure></div>
+
+<p>虽然self对timer是弱引用，但是控制的delloc方法的执行依赖于timer的invalidate，timer的invalidate又依赖于控制器的delloc方法，依旧是循环引用；</p>
+<ul>
+<li>使用 <code>__weak</code></li>
+</ul>
+<p>  <br>那换个思路能不能让NSTimer弱引用target：
+  </p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">__weak typeof(self) weakSelf = self;</span><br><span class="line">self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:weakSelf selector:@selector(showMsg) userInfo:nil repeats:YES];</span><br></pre></td></tr></table></figure></div>
+
+<p>weak关键字适用于block，当block引用了块外的变量时，会根据修饰变量的关键字来决定是强引用还是弱引用，如果变量使用weak关键字修饰，那block会对变量进行弱引用，如果没有 <code>__weak</code> 关键字，那就是强引用。<br>  <br>但是NSTimer的 <code>scheduledTimerWithTimeInterval：target</code> 方法内部不会判断修饰target的关键字，所以这里传 <code>self</code> 和 <code>weakSelf</code> 是没区别的，其内部会对target进行强引用，还是会产生循环引用。</p>
+<ul>
+<li>选择合适的时机手动释放timer</li>
+</ul>
+<p>采用下面的方法解决循环引用：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (void) viewWillDisappear:(BOOL)animated &#123;</span><br><span class="line">    [super viewWillDisappear:animated];</span><br><span class="line">    </span><br><span class="line">    if (self.timer) &#123;</span><br><span class="line">        [self.timer invalidate];</span><br><span class="line">        self.timer = nil;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>在某些情况下，这种做法是可以解决问题的，但是有时却会引起其他问题，比如控制器push到下一个控制器，viewDidDisappear执行后，timer被释放，此时再pop回来，timer已经不复存在了。</p>
+<p>所以，这种 方案 并不是合理的。</p>
+<p>优化上面的方法这个时候可以采用配对使用在 <code>viewWillAppear</code> 开timer启，在 viewWillDisappear 关闭timer：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">-(void)viewWillAppear:(BOOL)animated&#123;</span><br><span class="line">    [super viewWillAppear:animated];</span><br><span class="line">    if (!self.timer) &#123;</span><br><span class="line">        self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(showMsg) userInfo:nil repeats:YES];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)viewWillDisappear:(BOOL)animated&#123;</span><br><span class="line">    [super viewWillDisappear:animated];</span><br><span class="line">    if (self.timer) &#123;</span><br><span class="line">        [self.timer invalidate];</span><br><span class="line">        self.timer = nil;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p>上面的方法只是维护起来比较麻烦</p>
+<ol start="2">
+<li>最终解决办法</li>
+</ol>
+<ul>
+<li>自定义 category 用 block 解决</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">@interface NSTimer (TimerBlock)</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> 分类解决NSTimer在使用时造成的循环引用的问题</span><br><span class="line"></span><br><span class="line"> @param interval 间隔时间</span><br><span class="line"> @param block    回调</span><br><span class="line"> @param repeats  用于设置定时器是否重复触发</span><br><span class="line"></span><br><span class="line"> @return 返回NSTimer实体</span><br><span class="line"> */</span><br><span class="line">+ (NSTimer *)block_TimerWithTimeInterval:(NSTimeInterval)interval block:(void(^)())block repeats:(BOOL)repeats;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;NSTimer+TimerBlock.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation NSTimer (TimerBlock)</span><br><span class="line">+ (NSTimer *)block_TimerWithTimeInterval:(NSTimeInterval)interval block:(void (^)())block repeats:(BOOL)reqeats&#123;</span><br><span class="line">    return [self timerWithTimeInterval:interval target:self selector:@selector(blockSelector:) userInfo:[block copy] repeats:reqeats];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (void) blockSelector:(NSTimer *)timer&#123;</span><br><span class="line">    void (^block)() = timer.userInfo;</span><br><span class="line">    if (block) &#123;</span><br><span class="line">        block();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p>上述创建方式调用者是NSTImer自己，只是NSTimer捕获了参数block。这样我们在使用timer时，由于target的改变，就不再有循环引用了。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">__weak typeof(self) weakSelf = self;    //避免 block 强引用 self</span><br><span class="line">self.timer = [NSTimer block_TimerWithTimeInterval:3 block:^&#123;</span><br><span class="line">//    [weakSelf dosomething];</span><br><span class="line">&#125; repeats:YES];</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>给 <code>self</code> 添加中间件 <code>Proxy</code></li>
+</ol>
+<p>引入一个对象 <code>Proxy</code>，<code>Proxy</code> 弱引用 <code>self</code>，然后 <code>Proxy</code> 传入 NSTimer。即 <code>self</code> 强引用NSTimer，<code>NSTimer</code> 强引用 <code>Proxy</code>，<code>Proxy</code> 弱引用 <code>self</code>，这样通过弱引用来解决了相互引用，此时不会形成环。</p>
+<p>定义一个继承自 <code>NSObject</code> 的中间代理对象 <code>Proxy</code>，<code>VC</code> 不持有 <code>timer</code>，而是持有 <code>Proxy</code> 实例，让 <code>Proxy</code> 实例来弱引用 <code>VC</code>，timer强引用 <code>Proxy</code> 实例，直接看代码：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// ZJProxy.h</span><br><span class="line">@interface FFProxy : NSObject</span><br><span class="line">+(instancetype)proxyWithTarget:(id)target;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// ZJProxy.m</span><br><span class="line">#import &quot;ZJProxy.h&quot;</span><br><span class="line"></span><br><span class="line">@interface ZJProxy()</span><br><span class="line">@property (nonatomic ,weak) id target;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation FFProxy</span><br><span class="line"></span><br><span class="line">+(instancetype)proxyWithTarget:(id)target</span><br><span class="line">&#123;</span><br><span class="line">    FFProxy *proxy = [[FFProxy alloc] init];</span><br><span class="line">    proxy.target = target;</span><br><span class="line">    return proxy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 仅仅添加了weak类型的属性还不够，为了保证中间件能够响应外部self的事件，需要通过消息转发机制，让实际的响应target还是外部self，这一步至关重要，主要涉及到runtime的消息机制。</span><br><span class="line">-(id)forwardingTargetForSelector:(SEL)aSelector&#123;</span><br><span class="line">    return self.target;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>forwardingTargetForSelector:(SEL)aSelector是什么？</li>
+</ul>
+<p>消息转发，简单来说就是如果当前对象没有实现这个方法，系统会到这个方法里来找实现对象。<br>本文中由于当前target是 <code>ZJProxy</code>，但是 <code>FFProxy</code> 没有实现showMsg方法(当然也不需要它实现)，让系统去找target实例的方法实现，也就是去找ViewController中的方法实现。</p>
+<ol start="3">
+<li>使用 <code>NSProxy</code> 类</li>
+</ol>
+<p>使用 iOS 的 <code>NSProxy</code> 类，<code>NSProxy</code> 就是专门用来 <code>做消息转发的</code>。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">// ZJWeakProxy.h</span><br><span class="line">@interface ZJWeakProxy : NSProxy</span><br><span class="line">+ (instancetype)proxyWithTarget:(id)target;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// ZJWeakProxy.m</span><br><span class="line">@interface ZJWeakProxy()</span><br><span class="line">@property (nonatomic ,weak)id target;</span><br><span class="line">@end</span><br><span class="line">@implementation FFWeakProxy</span><br><span class="line">+ (instancetype)proxyWithTarget:(id)target &#123;</span><br><span class="line">    // NSProxy实例方法为alloc</span><br><span class="line">    ZJWeakProxy *proxy = [ZJWeakProxy alloc];</span><br><span class="line">    proxy.target = target;</span><br><span class="line">    return proxy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> 这个函数让重载方有机会抛出一个函数的签名，再由后面的forwardInvocation:去执行</span><br><span class="line">    为给定消息提供参数类型信息</span><br><span class="line"> */</span><br><span class="line">- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel &#123;</span><br><span class="line">    return [self.target methodSignatureForSelector:sel];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> *  NSInvocation封装了NSMethodSignature，通过invokeWithTarget方法将消息转发给其他对象。这里转发给控制器执行。</span><br><span class="line"> */</span><br><span class="line">- (void)forwardInvocation:(NSInvocation *)invocation &#123;</span><br><span class="line">    [invocation invokeWithTarget:self.target];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p>Controller里代码如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    // 这里的target又发生了变化</span><br><span class="line">    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:[ZJWeakProxy proxyWithTarget:self] selector:@selector(showMsg) userInfo:nil repeats:YES];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 销毁</span><br><span class="line">-(void)dealloc</span><br><span class="line">&#123;</span><br><span class="line">    [self.timer invalidate];</span><br><span class="line">    self.timer = nil;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="NSTimer总结："><a href="#NSTimer总结：" class="headerlink" title="NSTimer总结："></a>NSTimer总结：</h1><ul>
+<li>使用NSTimer比较方便快捷。</li>
+<li>创建NSTimer必须加入到Runloop中才能生效创建NSTimer都是要加到Runloop中的，不管是手动添加还是系统添加。</li>
+<li>当Timer加入到runloop的模式的NSDefaultRunLoopMode，当UIScrollView滑动的时候会暂时失效</li>
+<li>使用NSTimer会存在延时，计时不是很准。因为不管是一次性的还是周期性的timer的实际触发事件的时间，都会与所加入的RunLoop和RunLoop Mode有关。如果此RunLoop正在执行一个连续性的运算，timer就会被延时出发。重复性的timer遇到这种情况，如果延迟超过了一个周期，则会在延时结束后立刻执行，并按照之前指定的周期继续执行。</li>
+</ul>
+<h1 id="CADisplayLink"><a href="#CADisplayLink" class="headerlink" title="CADisplayLink"></a>CADisplayLink</h1><ol>
+<li>创建方式</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-(void)createCADisplayLink&#123;</span><br><span class="line">    _displaylinkTimer = [CADisplayLink displayLinkWithTarget:self selector:@selector(handleDisplayLink:)];</span><br><span class="line">    [_displaylinkTimer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>当把CADisplayLink对象add到runloop中后，selector就能被周期性调用，类似于重复的NSTimer被启动了；执行invalidate操作时，CADisplayLink对象就会从runloop中移除，selector调用也随即停止，类似于NSTimer的invalidate方法。</p>
+<ol start="2">
+<li>特性</li>
+</ol>
+<ul>
+<li>屏幕刷新时调用CADisplayLink是一个能让我们以和屏幕刷新率同步的频率将特定的内容画到屏幕上的定时器类。CADisplayLink以特定模式注册到runloop后，每当屏幕显示内容刷新结束的时候，runloop就会向CADisplayLink指定的target发送一次指定的selector消息， CADisplayLink类对应的selector就会被调用一次。所以通常情况下，按照iOS设备屏幕的刷新率60次&#x2F;秒</li>
+<li>延迟iOS设备的屏幕刷新频率是固定的，CADisplayLink在正常情况下会在每次刷新结束都被调用，精确度相当高。但如果调用的方法比较耗时，超过了屏幕刷新周期，就会导致跳过若干次回调调用机会。如果CPU过于繁忙，无法保证屏幕60次&#x2F;秒的刷新率，就会导致跳过若干次调用回调方法的机会，跳过次数取决CPU的忙碌程度。</li>
+</ul>
+<ol start="3">
+<li>使用场景</li>
+</ol>
+<p>从原理上可以看出，CADisplayLink适合做界面的不停重绘，比如视频播放的时候需要不停地获取下一帧用于界面渲染。</p>
+<ol start="4">
+<li>重要属性</li>
+</ol>
+<ul>
+<li><p>frameInterval<br>  NSInteger类型的值，用来设置间隔多少帧调用一次selector方法，默认值是1，即每帧都调用一次。</p>
+</li>
+<li><p>duration<br>  readOnly的CFTimeInterval值，表示两次屏幕刷新之间的时间间隔。需要注意的是，该属性在target的selector被首次调用以后才会被赋值。selector的调用间隔时间计算方式是：调用间隔时间 &#x3D; duration × frameInterval。</p>
+</li>
+</ul>
+<h1 id="dispatch-source-t"><a href="#dispatch-source-t" class="headerlink" title="dispatch_source_t"></a>dispatch_source_t</h1><ol>
+<li>创建方式</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">//dispatch_source_t</span><br><span class="line">-(void)createDispatch_source_t&#123;</span><br><span class="line">    </span><br><span class="line">    // 创建全局队列</span><br><span class="line">    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</span><br><span class="line">    </span><br><span class="line">    // 使用全局队列创建计时器</span><br><span class="line">    _sourceTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);</span><br><span class="line">    </span><br><span class="line">    // 定时器延迟时间</span><br><span class="line">    NSTimeInterval delayTime = 1.0f;</span><br><span class="line">    </span><br><span class="line">    // 定时器间隔时间</span><br><span class="line">    NSTimeInterval timeInterval = 1.0f;</span><br><span class="line">    </span><br><span class="line">    // 设置开始时间</span><br><span class="line">    dispatch_time_t startDelayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayTime * NSEC_PER_SEC));</span><br><span class="line">    </span><br><span class="line">    // 设置计时器</span><br><span class="line">dispatch_source_set_timer(_sourceTimer,startDelayTime,timeInterval*NSEC_PER_SEC,0.1*NSEC_PER_SEC);</span><br><span class="line">    </span><br><span class="line">    // 执行事件</span><br><span class="line">    dispatch_source_set_event_handler(_sourceTimer,^&#123;</span><br><span class="line">        // 销毁定时器</span><br><span class="line">        // dispatch_source_cancel(_sourceTimer);</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    // 启动计时器</span><br><span class="line">    dispatch_resume(_sourceTimer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>特性</li>
+</ol>
+<p>默认是重复执行的，可以在事件响应回调中通过 <code>dispatch_source_cancel</code> 方法来设置为只执行一次，如下代码:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dispatch_source_set_event_handler(_timer, ^&#123;</span><br><span class="line">    //执行事件</span><br><span class="line">    dispatch_source_cancel(_sourceTimer);&#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>优点：</li>
+</ol>
+<ul>
+<li>时间准确</li>
+<li>可以使用子线程，解决定时间跑在主线程上卡UI问题</li>
+</ul>
+<ol start="4">
+<li>需要将 <code>dispatch_source_t timer</code> 设置为 <code>成员变量</code>，不然会立即释放</li>
+</ol>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC学习32：计时器探索</li>
+        <li>Post author：张建</li>
+        <li>Create time：2020-08-25 13:42:40</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2020/08/25/OC学习/OC学习32：计时器探索/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">#OC-学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2020/08/26/OC%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/OC%E7%AE%97%E6%B3%9505%EF%BC%9A%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC算法05：选择排序探索</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2020/08/25/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A027%EF%BC%9ACopy%E5%92%8CStrong%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习27：Copy和Strong探索</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC学习32：计时器探索</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BANSTimer%E6%96%B9%E5%BC%8F%EF%BC%9A%E6%9C%89%E4%B8%A4%E7%A7%8D"><span class="nav-text">创建NSTimer方式：有两种</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSTimer%E4%B8%8ENSRunloopMode%E5%85%B3%E7%B3%BB"><span class="nav-text">NSTimer与NSRunloopMode关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSTimer%E4%B8%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-text">NSTimer与线程的关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSTimer%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8"><span class="nav-text">NSTimer循环引用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSTimer%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="nav-text">NSTimer总结：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CADisplayLink"><span class="nav-text">CADisplayLink</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dispatch-source-t"><span class="nav-text">dispatch_source_t</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
