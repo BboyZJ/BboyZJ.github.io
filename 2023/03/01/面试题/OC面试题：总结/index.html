@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-26 11:41:17</span>
-            <span class="mobile">2023-03-26 11:41</span>
+            <span class="pc">2023-03-29 12:56:51</span>
+            <span class="mobile">2023-03-29 12:56</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -410,12 +410,12 @@
 <li>copy和mutableCopy都是深拷贝(属性：浅拷贝）</li>
 </ul>
 <h1 id="属性用copy还是strong？-重点"><a href="#属性用copy还是strong？-重点" class="headerlink" title="属性用copy还是strong？ 重点"></a>属性用copy还是strong？ <strong>重点</strong></h1><ul>
-<li><p>对于不可变属性，推荐用copy，目的是为了 <code>让本属性不受外界影响</code>，无论给我传入可变还是不可变对象，我本身持有的就是一个不可变的副本，被set时，改变的是这个副本。</p>
+<li><p>对于 <code>不可变属性</code>，推荐用 <code>copy</code>，目的是为了 <code>让本属性不受外界影响</code>，无论给我传入可变还是不可变对象，我本身持有的就是一个不可变的副本，被set时，改变的是这个副本。</p>
 </li>
-<li><p>对于可变属性，推荐用strong，因为copy修饰后，会变成不可变对象，再调用可变对象函数时会 crash</p>
+<li><p>对于 <code>可变属性</code>，推荐用 <code>strong</code>，因为copy修饰后，会变成不可变对象，再调用可变对象函数时会 <code>crash</code></p>
 </li>
 </ul>
-<h2 id="一个APP是如何唤醒另一个APP的？-重点"><a href="#一个APP是如何唤醒另一个APP的？-重点" class="headerlink" title="一个APP是如何唤醒另一个APP的？ 重点"></a>一个APP是如何唤醒另一个APP的？ <strong>重点</strong></h2><p>URL Scheme：iOS有一个特性就是将 <code>自身绑定</code> 到一个自定义的 <code>URL Scheme</code> 上，该 <code>scheme</code> 用于从 <code>浏览器或其他应用中启动本应用</code>。</p>
+<h2 id="一个APP是如何唤醒另一个APP的？-重点"><a href="#一个APP是如何唤醒另一个APP的？-重点" class="headerlink" title="一个APP是如何唤醒另一个APP的？ 重点"></a>一个APP是如何唤醒另一个APP的？ <strong>重点</strong></h2><p><code>URL Scheme</code>：iOS有一个特性就是将 <code>自身绑定</code> 到一个自定义的 <code>URL Scheme</code> 上，该 <code>scheme</code> 用于从 <code>浏览器或其他应用中启动本应用</code>。</p>
 <h2 id="UIView和CALayer"><a href="#UIView和CALayer" class="headerlink" title="UIView和CALayer"></a>UIView和CALayer</h2><ul>
 <li>UIView和CALayer的关系？</li>
 </ul>
@@ -496,9 +496,9 @@
 </li>
 </ul>
 <h2 id="HTTPS和HTTP的区别？"><a href="#HTTPS和HTTP的区别？" class="headerlink" title="HTTPS和HTTP的区别？"></a>HTTPS和HTTP的区别？</h2><ul>
-<li><p>HTTP：超文本传输协议，信息明文传输；端口号80；响应速度快（使用TCP三次握手，客户端和服务端需要交换3个包）；</p>
+<li><p>HTTP：<code>超文本传输协议</code>，信息明文传输；端口号80；响应速度快（使用TCP三次握手，客户端和服务端需要交换3个包）；</p>
 </li>
-<li><p>HTTPS：超文本传输安全协议，HTTPS协议 &#x3D; HTTP协议 + SSL&#x2F;TLS协议，信息加密传输；端口号443；响应速度慢（除了使用TCP三个包，还要加上SSL握手的9个包）；需要到CA申请证书</p>
+<li><p>HTTPS：<code>超文本传输安全协议</code>，HTTPS协议 &#x3D; HTTP协议 + SSL&#x2F;TLS协议，信息加密传输；端口号443；响应速度慢（除了使用TCP三个包，还要加上SSL握手的9个包）；需要到CA申请证书</p>
 </li>
 </ul>
 <h1 id="HTTP连接过程"><a href="#HTTP连接过程" class="headerlink" title="HTTP连接过程"></a>HTTP连接过程</h1><ul>
@@ -528,7 +528,7 @@
 </ol>
 <p>三次握手是为了建立一个可靠的数据传输通道：</p>
 <ul>
-<li><p>刚开始客户端和服务端处于关闭状态，而且服务端B一直处于监听状态，时刻监听是否有建立连接的请求</p>
+<li><p>刚开始 <code>客户端</code> 处于关闭状态，而且 <code>服务端</code> 一直处于监听状态，时刻监听是否有建立连接的请求</p>
 </li>
 <li><p>当客户端需要建立连接的时候就会发送一个 <code>请求连接</code> 的报文，此报文是 <code>同步报文SYN=1</code>，并且会生成一个 <code>随机的序号seq=x</code>，这是第一次握手</p>
 </li>
@@ -546,9 +546,9 @@
 </li>
 <li><p>服务端接收到请求断开连接 <code>FIN报文</code> 后，回复一个 <code>确认断开连接</code> 报文 <code>ACK=1,seq=v,ack=u+1</code>，这是第二次挥手</p>
 </li>
-<li><p>当服务端数据发送完后，再发送一个FIN报文给客户端，通知客户端，服务端准备关闭连接，此报文 <code>FIN=1,ACK=1,ack=u+1,seq=w</code>，这是第三次挥手</p>
+<li><p>当 <code>服务端数据发送完后</code>，再发送一个 <code>FIN</code> 报文给客户端，通知客户端，服务端准备关闭连接，此报文 <code>FIN=1,ACK=1,ack=u+1,seq=w</code>，这是第三次挥手</p>
 </li>
-<li><p>当客户端收到 <code>FIN确认报文</code>，再发送一个FIN确认报文 <code>ACK=1,seq=u+1,ack=w+1</code>，并进入<code> TIME-WAIT</code> 等待，等待 <code>2MSL</code> 后关闭连接，这是第四次挥手</p>
+<li><p>当客户端收到 <code>FIN确认报文</code>，再发送一个 <code>FIN</code> 确认报文 <code>ACK=1,seq=u+1,ack=w+1</code>，并进入<code> TIME-WAIT</code> 等待，等待 <code>2MSL</code> 后关闭连接，这是第四次挥手</p>
 </li>
 </ul>
 <h1 id="HTTP和socket区别？-重点"><a href="#HTTP和socket区别？-重点" class="headerlink" title="HTTP和socket区别？ 重点"></a>HTTP和socket区别？ <strong>重点</strong></h1><ul>
@@ -644,12 +644,30 @@
 <li>检测卡顿</li>
 </ul>
 <p><code>displaylink + runloop 进行卡顿检测，将数值和页面绑定上传到服务器</code></p>
-<h2 id="RunLoop接收几种输入源，系统默认定义了几种模式？-重点"><a href="#RunLoop接收几种输入源，系统默认定义了几种模式？-重点" class="headerlink" title="RunLoop接收几种输入源，系统默认定义了几种模式？ 重点"></a>RunLoop接收几种输入源，系统默认定义了几种模式？ <strong>重点</strong></h2><ul>
-<li><p>输入源有两种<br>基于 <code>端口</code> 的输入源（port）<br><code>自定义</code> 的输入源（custom）</p>
+<h2 id="RunLoop接收几种输入源，系统默认定义了几种模式？-重点"><a href="#RunLoop接收几种输入源，系统默认定义了几种模式？-重点" class="headerlink" title="RunLoop接收几种输入源，系统默认定义了几种模式？ 重点"></a>RunLoop接收几种输入源，系统默认定义了几种模式？ <strong>重点</strong></h2><ol>
+<li>输入源有两种</li>
+</ol>
+<ul>
+<li><p>基于 <code>端口</code> 的输入源（port）</p>
 </li>
-<li><p>系统定义的RunLoop模式有五种，最常用的有三种，如下所示：<br>NSDefaultRunLoopMode<br>默认模式，主线程中默认是NSDefaultRunLoopMode<br>UITrackingRunLoopMode<br>视图滚动模式，RunLoop会处于该模式下<br>NSRunLoopCommonModes<br>并不是真正意义上的Mode，是一个占位用的“Mode”，默认包含了NSDefaultRunLoopMode和UITrackingRunLoopMode两种模式</p>
+<li><p><code>自定义</code> 的输入源（custom）</p>
 </li>
 </ul>
+<ol start="2">
+<li>系统定义的RunLoop模式有五种，最常用的有三种，如下所示：</li>
+</ol>
+<ul>
+<li>NSDefaultRunLoopMode</li>
+</ul>
+<p>默认模式，主线程中默认是NSDefaultRunLoopMode</p>
+<ul>
+<li>UITrackingRunLoopMode</li>
+</ul>
+<p>视图滚动模式，RunLoop会处于该模式下</p>
+<ul>
+<li>NSRunLoopCommonModes</li>
+</ul>
+<p>并不是真正意义上的Mode，是一个占位用的 <code>Mode</code>，默认包含了NSDefaultRunLoopMode和UITrackingRunLoopMode两种模式</p>
 <h2 id="RunLoop和线程有什么关系？Runloop的mode-Runloop的作用？-重点"><a href="#RunLoop和线程有什么关系？Runloop的mode-Runloop的作用？-重点" class="headerlink" title="RunLoop和线程有什么关系？Runloop的mode? Runloop的作用？ 重点"></a>RunLoop和线程有什么关系？Runloop的mode? Runloop的作用？ <strong>重点</strong></h2><ul>
 <li>每一个线程都有一个runloop，主线程的runloop默认启动。子线程的runloop默认不启动</li>
 <li>mode：主要用来指定事件在运行时循环的优先级</li>
@@ -720,17 +738,18 @@
 <ul>
 <li><code>快速转发阶段</code></li>
 </ul>
-<p>如果也没有实现动态解析方法，则会进行消息转发阶段，将消息转发给可以处理消息的接受者来处理。以处理消息的接受者来处理。<br><code>- (id)forwardingTargetForSelector:</code>由上述代码可以看出，当本类没有实现方法，并且没有动态解析方法，就会调用forwardingTargetForSelector函数，<code>进行消息转发</code>，我们可以实现forwardingTargetForSelector函数，在其内部将消息转发给可以实现此方法的对象。</p>
+<p>如果也没有实现动态解析方法，则会进行消息转发阶段，将消息转发给可以处理消息的接受者来处理。以处理消息的接受者来处理。<br><code>- (id)forwardingTargetForSelector:</code>由上述代码可以看出，当本类没有实现方法，并且没有动态解析方法，就会调用forwardingTargetForSelector函数，<code>进行消息转发</code>，我们可以实现forwardingTargetForSelector函数，在其内部 <code>将消息转发给可以实现此方法的对象</code>。</p>
 <ul>
 <li><code>慢速转发阶段</code></li>
 </ul>
 <p><code>方法签名</code>：返回值类型、参数类型<br><code>- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector</code></p>
-<p>如果forwardingTargetForSelector函数返回为nil或者没有实现的话，就会调用methodSignatureForSelector方法，用来返回一个方法签名，这也是我们正确跳转方法的最后机会。</p>
+<p>如果forwardingTargetForSelector函数返回为nil或者没有实现的话，就会调用methodSignatureForSelector方法，用来返回一个 <code>方法签名</code>，这也是我们正确跳转方法的最后机会。</p>
 <p>NSInvocation 封装了一个方法调用，包括：方法调用者，方法，方法的参数<br><code>- (void)forwardInvocation:(NSInvocation *)anInvocation</code></p>
-<p>如果methodSignatureForSelector方法返回正确的方法签名就会调用forwardInvocation方法，forwardInvocation方法内提供一个NSInvocation类型的参数，NSInvocation封装了一个方法的调用，包括方法的调用者，方法名，以及方法的参数。在forwardInvocation函数内修改方法调用对象即可。<br>如果methodSignatureForSelector返回的为nil，就会来到doseNotRecognizeSelector:方法内部，程序crash提示无法识别选择器unrecognized selector sent to instance。</p>
+<p>如果methodSignatureForSelector方法返回正确的方法签名就会调用forwardInvocation方法，forwardInvocation方法内提供一个NSInvocation类型的参数，NSInvocation封装了一个方法的调用，包括方法的调用者，方法名，以及方法的参数。在forwardInvocation函数内 <code>修改方法调用对象</code> 即可。</p>
 <ul>
-<li>如果消息转发也没有实现，就会报方法找不到的错误，无法识别消息，unrecognzied selector sent to instance</li>
+<li>如果 <code>methodSignatureForSelector</code> 返回的为nil，就会来到<code>doseNotRecognizeSelector:</code> 方法内部，程序crash提示无法识别选择器unrecognized selector sent to instance。</li>
 </ul>
+<p>如果消息转发也没有实现，就会报方法找不到的错误，无法识别消息，unrecognzied selector sent to instance</p>
 <h1 id="循环引用的几种情况和解决方式？-重点"><a href="#循环引用的几种情况和解决方式？-重点" class="headerlink" title="循环引用的几种情况和解决方式？ 重点"></a>循环引用的几种情况和解决方式？ <strong>重点</strong></h1><ul>
 <li>Block</li>
 </ul>
