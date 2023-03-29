@@ -331,7 +331,7 @@
 <ul>
 <li><code>NSObject</code> 的底层编译是 <code>struct objc_object</code> 结构体</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct objc_object NSObject;</span><br><span class="line">struct NSObject_IMPL &#123;</span><br><span class="line">	Class isa;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">typedef struct objc_class *Class;</span><br><span class="line">struct objc_object &#123;</span><br><span class="line">    Class _Nonnull isa __attribute__((deprecated));</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct objc_object NSObject;</span><br><span class="line">struct NSObject_IMPL &#123;</span><br><span class="line">	Class isa;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">typedef struct objc_class *Class;</span><br><span class="line">struct objc_object &#123;</span><br><span class="line">    Class _Nonnull isa __attribute__((deprecated));</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>由编译后的 c++ 源码可知：</strong></p>
 <ul>
@@ -351,11 +351,21 @@
 </ul>
 </li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/94989132-01085c80-05a5-11eb-9bc2-f9f47d1f2bc8.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/94989132-01085c80-05a5-11eb-9bc2-f9f47d1f2bc8.png"
+                     
+                ></p>
 <ul>
 <li>一个位于 <code>objc-runtime-new.h</code> 文件中，是可用的</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/94989263-f4d0cf00-05a5-11eb-8bba-635273f846ff.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/94989263-f4d0cf00-05a5-11eb-8bba-635273f846ff.png"
+                     
+                ></p>
 <ul>
 <li><p>在 <code>objc4</code> 源码中搜索 <code>objc_object</code>，其源码定义如下：</p>
 <ul>
@@ -363,7 +373,12 @@
 </ul>
 </li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/94989053-5728d000-05a4-11eb-9117-4a82b7fd49c5.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/94989053-5728d000-05a4-11eb-9117-4a82b7fd49c5.png"
+                     
+                ></p>
 <p>通过上述查找源码和其定义，可总结出以下几点内容：</p>
 <ul>
 <li><p>结构体类型 <code>objc_class</code> 继承自 <code>objc_object</code> 类型，其中 <code>objc_object</code> 也是一个结构体，且有一个 <code>isa</code> 属性，所以 <code>objc_class</code> 也拥有了 <code>isa</code> 属性</p>
@@ -404,10 +419,10 @@
 <h1 id="补充知识-内存偏移"><a href="#补充知识-内存偏移" class="headerlink" title="补充知识-内存偏移"></a>补充知识-内存偏移</h1><p>在分析 <code>类信息</code> 中存储哪些信息之前，需要先 <code>了解内存偏移</code>，因为分析 <code>类信息</code> 需要用到内存偏移</p>
 <p><strong>1、【普通指针】</strong></p>
 <p>定义一个方法</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 普通指针</span><br><span class="line">void testOffset1()&#123;</span><br><span class="line">    // a/b : 变量  10 ： 值</span><br><span class="line">    int a = 10;</span><br><span class="line">    int b = 10;</span><br><span class="line">    // a/b : 打印得值 &amp;a/&amp;b : 取a的地址指针</span><br><span class="line">    NSLog(@&quot;%d---%p&quot;,a,&amp;a);</span><br><span class="line">    NSLog(@&quot;%d---%p&quot;,b,&amp;b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 普通指针</span><br><span class="line">void testOffset1()&#123;</span><br><span class="line">    // a/b : 变量  10 ： 值</span><br><span class="line">    int a = 10;</span><br><span class="line">    int b = 10;</span><br><span class="line">    // a/b : 打印得值 &amp;a/&amp;b : 取a的地址指针</span><br><span class="line">    NSLog(@&quot;%d---%p&quot;,a,&amp;a);</span><br><span class="line">    NSLog(@&quot;%d---%p&quot;,b,&amp;b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <p>在mian.m调用，查看打印结果</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2020-10-04 13:41:07.378260+0800 KCObjc[23781:838866] 10---0x7ffeefbff4a8</span><br><span class="line">2020-10-04 13:41:07.378948+0800 KCObjc[23781:838866] 10---0x7ffeefbff4ac</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2020-10-04 13:41:07.378260+0800 KCObjc[23781:838866] 10---0x7ffeefbff4a8</span><br><span class="line">2020-10-04 13:41:07.378948+0800 KCObjc[23781:838866] 10---0x7ffeefbff4ac</span><br></pre></td></tr></table></figure></div>
 
 <p>由上述的打印结果可知：</p>
 <ul>
@@ -417,13 +432,18 @@
 </li>
 </ul>
 <p>其地址指针指向如图所示：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95008850-eccd6980-064f-11eb-808f-c105ff5497e5.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95008850-eccd6980-064f-11eb-808f-c105ff5497e5.png"
+                     
+                ></p>
 <p><strong>2、【对象指针】</strong></p>
 <p>定义一个方法</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 对象指针</span><br><span class="line">void testOffset2()&#123;</span><br><span class="line">    // p1：指针</span><br><span class="line">    ZJPerson * p1 = [ZJPerson alloc];</span><br><span class="line">    ZJPerson * p2 = [ZJPerson alloc];</span><br><span class="line">    NSLog(@&quot;%@---%p&quot;,p1,&amp;p1);</span><br><span class="line">    NSLog(@&quot;%@---%p&quot;,p2,&amp;p2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 对象指针</span><br><span class="line">void testOffset2()&#123;</span><br><span class="line">    // p1：指针</span><br><span class="line">    ZJPerson * p1 = [ZJPerson alloc];</span><br><span class="line">    ZJPerson * p2 = [ZJPerson alloc];</span><br><span class="line">    NSLog(@&quot;%@---%p&quot;,p1,&amp;p1);</span><br><span class="line">    NSLog(@&quot;%@---%p&quot;,p2,&amp;p2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>在mian.m调用，查看打印结果</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2020-10-04 14:14:59.341733+0800 KCObjc[24079:859357] &lt;ZJPerson: 0x101035830&gt;---0x7ffeefbff4a0</span><br><span class="line">2020-10-04 14:14:59.341901+0800 KCObjc[24079:859357] &lt;ZJPerson: 0x101035980&gt;---0x7ffeefbff4a8</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2020-10-04 14:14:59.341733+0800 KCObjc[24079:859357] &lt;ZJPerson: 0x101035830&gt;---0x7ffeefbff4a0</span><br><span class="line">2020-10-04 14:14:59.341901+0800 KCObjc[24079:859357] &lt;ZJPerson: 0x101035980&gt;---0x7ffeefbff4a8</span><br></pre></td></tr></table></figure></div>
 
 <p>由上述的打印结果可知：</p>
 <ul>
@@ -433,13 +453,18 @@
 </li>
 </ul>
 <p>其地址指针指向如图所示：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95008855-f48d0e00-064f-11eb-9c05-f68f7302e56c.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95008855-f48d0e00-064f-11eb-9c05-f68f7302e56c.png"
+                     
+                ></p>
 <p><strong>3、【数组指针】</strong></p>
 <p>定义一个方法</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 数组指针</span><br><span class="line">void testOffset3()&#123;</span><br><span class="line">    int c[4] = &#123;1,2,3,4&#125;;</span><br><span class="line">    int *d = c;</span><br><span class="line">    NSLog(@&quot;%p -- %p - %p&quot;, &amp;c, &amp;c[0], &amp;c[1]);</span><br><span class="line">    NSLog(@&quot;%p -- %p - %p&quot;, d, d+1, d+2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 数组指针</span><br><span class="line">void testOffset3()&#123;</span><br><span class="line">    int c[4] = &#123;1,2,3,4&#125;;</span><br><span class="line">    int *d = c;</span><br><span class="line">    NSLog(@&quot;%p -- %p - %p&quot;, &amp;c, &amp;c[0], &amp;c[1]);</span><br><span class="line">    NSLog(@&quot;%p -- %p - %p&quot;, d, d+1, d+2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <p>在mian.m调用，查看打印结果</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2020-10-04 14:38:14.720430+0800 KCObjc[24171:872712] 0x7ffeefbff490 -- 0x7ffeefbff490 - 0x7ffeefbff494</span><br><span class="line">2020-10-04 14:38:14.720522+0800 KCObjc[24171:872712] 0x7ffeefbff490 -- 0x7ffeefbff494 - 0x7ffeefbff498</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2020-10-04 14:38:14.720430+0800 KCObjc[24171:872712] 0x7ffeefbff490 -- 0x7ffeefbff490 - 0x7ffeefbff494</span><br><span class="line">2020-10-04 14:38:14.720522+0800 KCObjc[24171:872712] 0x7ffeefbff490 -- 0x7ffeefbff494 - 0x7ffeefbff498</span><br></pre></td></tr></table></figure></div>
 
 <p>由上述的打印结果可知：</p>
 <ul>
@@ -448,15 +473,25 @@
 <li><p><code>&amp;c</code> 与 <code>&amp;c[1]</code> 相差 <code>4个字节</code>，地址之间相差的字节数，主要 <code>取决于</code> 存储的 <code>数据类型</code></p>
 </li>
 <li><p><code>*d</code> 代表取 <code>c</code> 的地址，可以通过 <code>lldb</code> 调试 <code>p *(d+1)、*(d+2) </code> 获取 地址 所对应的值 <code>2、4</code></p>
-<p>  <img src="https://user-images.githubusercontent.com/25925248/95009188-aa595c00-0652-11eb-8f0b-1eeb58de6e28.png"></p>
+<p>  <img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95009188-aa595c00-0652-11eb-8f0b-1eeb58de6e28.png"
+                     
+                ></p>
 </li>
 <li><p>可以通过 <code>首地址+偏移量</code> 取出数组中的其他元素，其中偏移量 <code>是</code> 数组的 <code>下标</code>，内存中首地址实际移动的 <code>字节数</code> 等于 <code>偏移量 * 数据类型字节数</code></p>
 </li>
 </ul>
 <p>其地址指针指向如图所示：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95009477-fd341300-0654-11eb-8fc1-2d2282ff5109.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95009477-fd341300-0654-11eb-8fc1-2d2282ff5109.png"
+                     
+                ></p>
 <h1 id="探索类信息中都有哪些内容"><a href="#探索类信息中都有哪些内容" class="headerlink" title="探索类信息中都有哪些内容"></a>探索类信息中都有哪些内容</h1><p>由前文可知，所有的 <code>类</code> 都是以 <code>objc_class</code> 模板创建的，通过 <code>objc4</code> 源码可知，<code>objc_class</code> 中包含许多属性，如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">struct objc_class : objc_object &#123;</span><br><span class="line">    // Class ISA; // 继承自objc_object 的isa指针</span><br><span class="line">    Class superclass; // Class 类型的 superclass</span><br><span class="line">    cache_t cache; // formerly cache pointer and vtable</span><br><span class="line">    class_data_bits_t bits; // class_rw_t * plus custom rr/alloc flags</span><br><span class="line"></span><br><span class="line">    // 获取data</span><br><span class="line">    class_rw_t *data() const &#123;</span><br><span class="line">        return bits.data();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //...此处省略许多方法</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">struct objc_class : objc_object &#123;</span><br><span class="line">    // Class ISA; // 继承自objc_object 的isa指针</span><br><span class="line">    Class superclass; // Class 类型的 superclass</span><br><span class="line">    cache_t cache; // formerly cache pointer and vtable</span><br><span class="line">    class_data_bits_t bits; // class_rw_t * plus custom rr/alloc flags</span><br><span class="line"></span><br><span class="line">    // 获取data</span><br><span class="line">    class_rw_t *data() const &#123;</span><br><span class="line">        return bits.data();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //...此处省略许多方法</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>【这些属性的定义】：</strong></p>
 <ul>
@@ -474,20 +509,25 @@
 <ul>
 <li>自定义一个ZJPerson类，继承自NSObject</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">@end</span><br><span class="line">@implementation ZJPerson</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">@end</span><br><span class="line">@implementation ZJPerson</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>在 <code>main.m</code> 中初始化 <code>ZJPerson</code> 类和 <code>NSObject</code> 类</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        // insert code here...</span><br><span class="line">        </span><br><span class="line">        NSObject * obj = [NSObject alloc];</span><br><span class="line">        ZJPerson * p = [ZJPerson alloc];</span><br><span class="line">        NSLog(@&quot;Hello, World! %@ - %@&quot;,obj,p);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        // insert code here...</span><br><span class="line">        </span><br><span class="line">        NSObject * obj = [NSObject alloc];</span><br><span class="line">        ZJPerson * p = [ZJPerson alloc];</span><br><span class="line">        NSLog(@&quot;Hello, World! %@ - %@&quot;,obj,p);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>下断点到 <code>NSObject...</code> 行，通过 <code>lldb</code> 调试，过程如下：</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/94992863-679a7400-05bf-11eb-994d-f208a825779a.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/94992863-679a7400-05bf-11eb-994d-f208a825779a.png"
+                     
+                ></p>
 <h1 id="计算cache-t的内存大小"><a href="#计算cache-t的内存大小" class="headerlink" title="计算cache_t的内存大小"></a>计算cache_t的内存大小</h1><p>由上面的分析，我们知道了 <code>cache_t</code> 内存大小 和 <code>内部属性</code> 有关，因此我们需要进入 <code>objc4-781新版本</code> 内部源码去分析</p>
 <p>进入 <code>cache</code> 类 <code>cache_t</code> 的定义（只贴出了结构体中 <code>非static</code> 修饰的 <code>属性</code>，主要是因为 <code>static类型</code> 的属性 <code>不存在结构体</code> 的内存中），有如下几个属性：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">struct cache_t &#123;</span><br><span class="line">#if CACHE_MASK_STORAGE == CACHE_MASK_STORAGE_OUTLINED</span><br><span class="line">     // 是一个结构体指针类型，占8字节</span><br><span class="line">    explicit_atomic&lt;struct bucket_t *&gt; _buckets;</span><br><span class="line">    // 是mask_t 类型，而 mask_t 是 unsigned int 的别名，占4字节</span><br><span class="line">    explicit_atomic&lt;mask_t&gt; _mask;</span><br><span class="line">#elif CACHE_MASK_STORAGE == CACHE_MASK_STORAGE_HIGH_16</span><br><span class="line">    </span><br><span class="line">    ...此处省略</span><br><span class="line">    </span><br><span class="line">#elif CACHE_MASK_STORAGE == CACHE_MASK_STORAGE_LOW_4    </span><br><span class="line"></span><br><span class="line">    ...此处省略</span><br><span class="line">    </span><br><span class="line">#else</span><br><span class="line">#error Unknown cache mask storage type.</span><br><span class="line">#endif   </span><br><span class="line"></span><br><span class="line">#if __LP64__</span><br><span class="line">    // 内部是 unsigned short 类型的 2字节</span><br><span class="line">    uint16_t _flags; // 2</span><br><span class="line">#endif</span><br><span class="line">    // 内部是 unsigned short 类型的 2字节</span><br><span class="line">    uint16_t _occupied; // 2</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">struct cache_t &#123;</span><br><span class="line">#if CACHE_MASK_STORAGE == CACHE_MASK_STORAGE_OUTLINED</span><br><span class="line">     // 是一个结构体指针类型，占8字节</span><br><span class="line">    explicit_atomic&lt;struct bucket_t *&gt; _buckets;</span><br><span class="line">    // 是mask_t 类型，而 mask_t 是 unsigned int 的别名，占4字节</span><br><span class="line">    explicit_atomic&lt;mask_t&gt; _mask;</span><br><span class="line">#elif CACHE_MASK_STORAGE == CACHE_MASK_STORAGE_HIGH_16</span><br><span class="line">    </span><br><span class="line">    ...此处省略</span><br><span class="line">    </span><br><span class="line">#elif CACHE_MASK_STORAGE == CACHE_MASK_STORAGE_LOW_4    </span><br><span class="line"></span><br><span class="line">    ...此处省略</span><br><span class="line">    </span><br><span class="line">#else</span><br><span class="line">#error Unknown cache mask storage type.</span><br><span class="line">#endif   </span><br><span class="line"></span><br><span class="line">#if __LP64__</span><br><span class="line">    // 内部是 unsigned short 类型的 2字节</span><br><span class="line">    uint16_t _flags; // 2</span><br><span class="line">#endif</span><br><span class="line">    // 内部是 unsigned short 类型的 2字节</span><br><span class="line">    uint16_t _occupied; // 2</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>计算 <code>cache_t</code> 内部属性的大小，最后的内存大小总和都是 <code>16</code> 字节</p>
 <ul>
@@ -504,13 +544,18 @@
 <h1 id="获取bits"><a href="#获取bits" class="headerlink" title="获取bits"></a>获取bits</h1><p>由上述计算 <code>Class类型 ISA 是 8字节</code>、<code>Class superclass 是 8 字节</code>、<code>cache_t cache 是 16字节;</code> 可知，想要获取 <code>bits</code> 的中的内容，只需通过 类的 首地址平移 <code>32字节（8 + 8 + 16）</code> 即可</p>
 <p><strong>【验证】：通过lldb命令调试</strong></p>
 <p>自定义两个类 <code>ZJPerson</code> 和继承自ZJPerson的 <code>ZJStudent</code> 类：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">// 名字</span><br><span class="line">@property (nonatomic,copy)NSString * name;</span><br><span class="line">// 方法</span><br><span class="line">- (void)test;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJPerson</span><br><span class="line">// 方法</span><br><span class="line">- (void)test&#123;</span><br><span class="line">    NSLog(@&quot;来了!&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface ZJStudent : ZJPerson</span><br><span class="line">@end</span><br><span class="line">@implementation ZJStudent</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">// 名字</span><br><span class="line">@property (nonatomic,copy)NSString * name;</span><br><span class="line">// 方法</span><br><span class="line">- (void)test;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJPerson</span><br><span class="line">// 方法</span><br><span class="line">- (void)test&#123;</span><br><span class="line">    NSLog(@&quot;来了!&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface ZJStudent : ZJPerson</span><br><span class="line">@end</span><br><span class="line">@implementation ZJStudent</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <p>main.m中定义两个类</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ZJPerson * person = [ZJPerson alloc];</span><br><span class="line">ZJStudent * student = [ZJStudent alloc];</span><br><span class="line">// class_data_bits_t</span><br><span class="line">NSLog(@&quot;hello world :%@ %@&quot;,person,student);</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ZJPerson * person = [ZJPerson alloc];</span><br><span class="line">ZJStudent * student = [ZJStudent alloc];</span><br><span class="line">// class_data_bits_t</span><br><span class="line">NSLog(@&quot;hello world :%@ %@&quot;,person,student);</span><br></pre></td></tr></table></figure></div>
 
 <p>下断点到 <code>NSLog</code>，<code>lldb</code> 命令调试 <code>bits</code> 流程如下:</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95011125-12af3a00-0661-11eb-97b7-e4098214b1f7.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95011125-12af3a00-0661-11eb-97b7-e4098214b1f7.png"
+                     
+                ></p>
 <p>由调试结果可知:</p>
 <ul>
 <li><p>通过 <code>p/x ZJPerson.class</code> 获类的信息，即 <code>首地址</code> 信息</p>
@@ -529,14 +574,29 @@
 </li>
 </ul>
 <h1 id="class-rw-t"><a href="#class-rw-t" class="headerlink" title="class_rw_t"></a>class_rw_t</h1><p>通过查看 <code>class_rw_t</code> 定义的源码发现，结构体中有提供相应的方法去获取 <code>属性列表</code>、<code>方法列表</code> 等，如下所示：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95011518-c9acb500-0663-11eb-8627-00c68bee909d.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95011518-c9acb500-0663-11eb-8627-00c68bee909d.png"
+                     
+                ></p>
 <h1 id="属性列表（property-list）"><a href="#属性列表（property-list）" class="headerlink" title="属性列表（property_list）"></a>属性列表（property_list）</h1><p><strong>【准备工作】</strong>：在ZJPerson中增加一个 <code>属性</code> 和一个 <code>成员变量</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">&#123;</span><br><span class="line">    NSString * sex; // 性别</span><br><span class="line">&#125;</span><br><span class="line">// 名字</span><br><span class="line">@property (nonatomic,copy)NSString * name;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJPerson</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">&#123;</span><br><span class="line">    NSString * sex; // 性别</span><br><span class="line">&#125;</span><br><span class="line">// 名字</span><br><span class="line">@property (nonatomic,copy)NSString * name;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJPerson</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>【探索】</strong> 由上图可知 <code>properties</code> 是 <code>property_array_t</code> 类型的，其内部源码如下：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95011600-58b9cd00-0664-11eb-8ed0-f811182a0604.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95011600-58b9cd00-0664-11eb-8ed0-f811182a0604.png"
+                     
+                ></p>
 <p>我们通过 <code>lldb</code> 调试属性列表，如下:</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95012094-31fd9580-0668-11eb-9c08-0327d9da41b2.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95012094-31fd9580-0668-11eb-9c08-0327d9da41b2.png"
+                     
+                ></p>
 <p>由lldb调试可知:</p>
 <ul>
 <li><p><code>p $3.properties()</code> 命令中的 <code>propertoes</code> 方法是由 <code>class_rw_t</code> 提供的,方法中返回的实际类型为 <code>property_array_t</code></p>
@@ -552,10 +612,15 @@
 <p>由此可得出 <code>property_list</code> 中只有 <code>属性</code>，没有 <code>成员变量</code> ，属性与成员变量的区别就是有没有set、get方法，如果有，则是属性，如果没有，则是成员变量。</p>
 <p>那么问题来了，<code>成员变量</code> 存储在哪里？为什么会有这种情况？请移至文末的分析与探索</p>
 <h1 id="方法列表（methods-list）"><a href="#方法列表（methods-list）" class="headerlink" title="方法列表（methods_list）"></a>方法列表（methods_list）</h1><p><strong>【准备工作】</strong> 在ZJPerson中增加两个方法，一个对象方法和一个类方法</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">- (void)sayHello;</span><br><span class="line">+ (void)sayBye;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJPerson</span><br><span class="line">- (void)sayHello&#123;</span><br><span class="line">    NSLog(@&quot;hello&quot;);</span><br><span class="line">&#125;</span><br><span class="line">+ (void)sayBye&#123;</span><br><span class="line">    NSLog(@&quot;bye&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">- (void)sayHello;</span><br><span class="line">+ (void)sayBye;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJPerson</span><br><span class="line">- (void)sayHello&#123;</span><br><span class="line">    NSLog(@&quot;hello&quot;);</span><br><span class="line">&#125;</span><br><span class="line">+ (void)sayBye&#123;</span><br><span class="line">    NSLog(@&quot;bye&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <p>【开始探索】通过 <code>lldb</code> 调试来获取方法列表，步骤如图所示：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95045583-ea811300-0714-11eb-83dd-1b842741344b.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95045583-ea811300-0714-11eb-83dd-1b842741344b.png"
+                     
+                ></p>
 <p><strong>由lldb调试可知:</strong></p>
 <ul>
 <li><p>系统在编译的时候自动帮你生成</p>
@@ -571,31 +636,51 @@
 </ul>
 <h1 id="补充知识-属性、成员变量、实例变量"><a href="#补充知识-属性、成员变量、实例变量" class="headerlink" title="补充知识-属性、成员变量、实例变量"></a>补充知识-属性、成员变量、实例变量</h1><p>我们通常都知道 <code>@property</code> 是 <code>属性</code> 的意思，但是什么是 <code>成员变量</code> 和 <code>实例变量</code> 呢？我们探索一下：</p>
 <p><strong>1、首先我们自定义一个类 <code>ZJPerson</code>，放在 <code>main.m</code> 中：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// 成员变量 vs 属性</span><br><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">&#123;</span><br><span class="line">    NSString *hobby;</span><br><span class="line">    NSObject *objc;</span><br><span class="line">&#125;</span><br><span class="line">@property (nonatomic, copy) NSString *nickName;</span><br><span class="line">@property (nonatomic, strong) NSString *name;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJPerson</span><br><span class="line">@end</span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line"></span><br><span class="line">        // 属性&amp;成员变量&amp;实例变量</span><br><span class="line">        ZJPerson * P = [ZJPerson alloc];        </span><br><span class="line">        NSLog(@&quot;Hello, World!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// 成员变量 vs 属性</span><br><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">&#123;</span><br><span class="line">    NSString *hobby;</span><br><span class="line">    NSObject *objc;</span><br><span class="line">&#125;</span><br><span class="line">@property (nonatomic, copy) NSString *nickName;</span><br><span class="line">@property (nonatomic, strong) NSString *name;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJPerson</span><br><span class="line">@end</span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line"></span><br><span class="line">        // 属性&amp;成员变量&amp;实例变量</span><br><span class="line">        ZJPerson * P = [ZJPerson alloc];        </span><br><span class="line">        NSLog(@&quot;Hello, World!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>2、我们通过 <code>clang</code> 编译一下这个 <code>main.m</code> 为 <code>main.cpp</code> ,来查看 <code>C</code> 的底层实现，步骤如下：</strong></p>
 <p>1）我们打开终端，cd到你要编译文件的文件夹下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@192 ~ % cd /Users/mac/Desktop/逻辑教育/LG-OC底层大师班上课资料/20200914-大师班第5天-类原理分析-资料/01--课堂代码/001-类的属性与变量/001-类的属性与变量</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@192 ~ % cd /Users/mac/Desktop/逻辑教育/LG-OC底层大师班上课资料/20200914-大师班第5天-类原理分析-资料/01--课堂代码/001-类的属性与变量/001-类的属性与变量</span><br></pre></td></tr></table></figure></div>
 
 <p>2）输入编译命令<code>clang -x objective-c -rewrite-objc -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk xxxx.m</code>编译你的目标文件：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@192 001-类的属性与变量 % clang -x objective-c -rewrite-objc -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk main.m</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@192 001-类的属性与变量 % clang -x objective-c -rewrite-objc -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk main.m</span><br></pre></td></tr></table></figure></div>
 
 <p>3）然后你目录下就会重写一个 <code>cpp</code> 文件，内容比较多你可以搜索关键类 <code>ZJPerson</code> 对照查看：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/93217433-a5179880-f79b-11ea-9324-1ea74f21998b.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/93217433-a5179880-f79b-11ea-9324-1ea74f21998b.png"
+                     
+                ></p>
 <p>3.我们打开 <code>main.cpp</code> 查找 <code>ZJPerson</code> 来查看一下：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/93218809-376c6c00-f79d-11ea-9518-025708a64dde.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/93218809-376c6c00-f79d-11ea-9518-025708a64dde.png"
+                     
+                ></p>
 <ul>
 <li><code>hobby</code> 和 <code>objc</code> 没有下划线 <code>_</code>，是 <code>成员变量</code></li>
 <li><code>nickName</code> 和 <code>name</code> 有下划线 <code>_</code>，是 <code>属性</code></li>
 </ul>
 <p>继续往下看：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/93222275-5f5dce80-f7a1-11ea-9b57-877ed9861bbd.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/93222275-5f5dce80-f7a1-11ea-9b57-877ed9861bbd.png"
+                     
+                ></p>
 <ul>
 <li><code>hobby</code> 和 <code>objc</code> 没有没有生成 <code>setter</code> 和 <code>getter</code> 方法，是 <code>成员变量</code></li>
 <li><code>nickName</code> 和 <code>name</code> 有生成 <code>setter</code> 和 <code>getter</code> 方法，是 <code>属性</code></li>
 </ul>
 <p><strong>4、由上面我们知道了什么是成员变量和属性，那么实例变量呢？</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/93219787-4ef82480-f79e-11ea-95b5-2cf401e6f7fb.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/93219787-4ef82480-f79e-11ea-95b5-2cf401e6f7fb.png"
+                     
+                ></p>
 <ul>
 <li><p><code>hobby</code> 不能进行实例化，是 <code>成员变量</code></p>
 </li>
@@ -603,20 +688,25 @@
 </li>
 </ul>
 <p><strong>5、我们用一下图表示 <code>成员变量&amp;实例变量&amp;属性</code> 的关系：</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/93222061-1574e880-f7a1-11ea-8d89-72bab64db0d3.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/93222061-1574e880-f7a1-11ea-8d89-72bab64db0d3.png"
+                     
+                ></p>
 <p><strong>6、由上面的分析我们得知了，什么是 <code>属性、成员变量和实例变量</code></strong></p>
 <p>由上面的探索我们了解了什么是 <code>属性</code> 和 <code>成员变量</code>，我们也可以通过下面的方法来验证一下属性列表和成员变量列表是不是正确的，如下：</p>
 <ul>
 <li><code>zjObjc_copyIvar_copyProperies</code> 函数：打印 <code>变量</code> 和 <code>属性</code> 名</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">void zjObjc_copyIvar_copyProperies(Class pClass)&#123;</span><br><span class="line">    </span><br><span class="line">    unsigned int count = 0;</span><br><span class="line">    Ivar *ivars = class_copyIvarList(pClass, &amp;count);</span><br><span class="line">    for (unsigned int i=0; i &lt; count; i++) &#123;</span><br><span class="line">        Ivar const ivar = ivars[i];</span><br><span class="line">        // 获取实例变量名</span><br><span class="line">        const char*cName = ivar_getName(ivar);</span><br><span class="line">        NSString *ivarName = [NSString stringWithUTF8String:cName];</span><br><span class="line">        ZJLog(@&quot;class_copyIvarList:%@&quot;,ivarName);</span><br><span class="line">    &#125;</span><br><span class="line">    free(ivars);</span><br><span class="line"></span><br><span class="line">    unsigned int pCount = 0;</span><br><span class="line">    objc_property_t *properties = class_copyPropertyList(pClass, &amp;pCount);</span><br><span class="line">    for (unsigned int i=0; i &lt; pCount; i++) &#123;</span><br><span class="line">        objc_property_t const property = properties[i];</span><br><span class="line">        // 获取属性名</span><br><span class="line">        NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];</span><br><span class="line">        // 获取属性值</span><br><span class="line">        ZJLog(@&quot;class_copyProperiesList:%@&quot;,propertyName);</span><br><span class="line">    &#125;</span><br><span class="line">    free(properties);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">void zjObjc_copyIvar_copyProperies(Class pClass)&#123;</span><br><span class="line">    </span><br><span class="line">    unsigned int count = 0;</span><br><span class="line">    Ivar *ivars = class_copyIvarList(pClass, &amp;count);</span><br><span class="line">    for (unsigned int i=0; i &lt; count; i++) &#123;</span><br><span class="line">        Ivar const ivar = ivars[i];</span><br><span class="line">        // 获取实例变量名</span><br><span class="line">        const char*cName = ivar_getName(ivar);</span><br><span class="line">        NSString *ivarName = [NSString stringWithUTF8String:cName];</span><br><span class="line">        ZJLog(@&quot;class_copyIvarList:%@&quot;,ivarName);</span><br><span class="line">    &#125;</span><br><span class="line">    free(ivars);</span><br><span class="line"></span><br><span class="line">    unsigned int pCount = 0;</span><br><span class="line">    objc_property_t *properties = class_copyPropertyList(pClass, &amp;pCount);</span><br><span class="line">    for (unsigned int i=0; i &lt; pCount; i++) &#123;</span><br><span class="line">        objc_property_t const property = properties[i];</span><br><span class="line">        // 获取属性名</span><br><span class="line">        NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];</span><br><span class="line">        // 获取属性值</span><br><span class="line">        ZJLog(@&quot;class_copyProperiesList:%@&quot;,propertyName);</span><br><span class="line">    &#125;</span><br><span class="line">    free(properties);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>在main.m中调用</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        //属性&amp;成员变量&amp;实例变量</span><br><span class="line">        ZJPerson * P = [ZJPerson alloc];</span><br><span class="line">        // 打印</span><br><span class="line">        Class pClass     = object_getClass(P);</span><br><span class="line">        zjTypes();</span><br><span class="line">        zjObjc_copyIvar_copyProperies(pClass);</span><br><span class="line">        NSLog(@&quot;Hello, World!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        //属性&amp;成员变量&amp;实例变量</span><br><span class="line">        ZJPerson * P = [ZJPerson alloc];</span><br><span class="line">        // 打印</span><br><span class="line">        Class pClass     = object_getClass(P);</span><br><span class="line">        zjTypes();</span><br><span class="line">        zjObjc_copyIvar_copyProperies(pClass);</span><br><span class="line">        NSLog(@&quot;Hello, World!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 
 <p>查看打印结果：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class_copyIvarList:hobby</span><br><span class="line">class_copyIvarList:objc</span><br><span class="line">class_copyIvarList:_nickName</span><br><span class="line">class_copyIvarList:_name</span><br><span class="line">class_copyProperiesList:nickName</span><br><span class="line">class_copyProperiesList:name</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class_copyIvarList:hobby</span><br><span class="line">class_copyIvarList:objc</span><br><span class="line">class_copyIvarList:_nickName</span><br><span class="line">class_copyIvarList:_name</span><br><span class="line">class_copyProperiesList:nickName</span><br><span class="line">class_copyProperiesList:name</span><br></pre></td></tr></table></figure></div>
 
 
 <p>由结果可知：</p>
@@ -626,12 +716,27 @@
 </ul>
 <h1 id="成员变量的存储（ivars）"><a href="#成员变量的存储（ivars）" class="headerlink" title="成员变量的存储（ivars）"></a>成员变量的存储（ivars）</h1><p>由上面的属性列表分析可得出 <code>property_list</code> 中只有 <code>属性</code>，没有 <code>成员变量</code>，那么问题来了，成员变量 <code>存储在哪里</code> ？为什么会有这种情况？</p>
 <p>通过 <code>objc4-781最新源码</code> 查看 <code>objc_class</code> 中 <code>bits属性</code> 中存储数据的类 <code>class_rw_t</code> 的结构发现，除了 <code>methods、properties、protocols</code> 方法，还有一个 <code>ro</code> 方法，其返回类型是 <code>class_ro_t</code> ，如下图所示:</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95050773-b6125480-071e-11eb-8fa3-615a44917b47.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95050773-b6125480-071e-11eb-8fa3-615a44917b47.png"
+                     
+                ></p>
 <p>点击进去查看 <code>class_ro_t</code> 定义，<br>如下图：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95051059-333dc980-071f-11eb-8a1e-f9d7f1e88e91.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95051059-333dc980-071f-11eb-8a1e-f9d7f1e88e91.png"
+                     
+                ></p>
 <p>发现其中有一个  <code>ivars属性</code> ，我们可以做如下猜测：是否成员变量就存储在这个  <code>ivar_list_t</code> 类型的 <code>ivars</code> 属性中呢？</p>
 <p>下面我们通过 <code>lldb</code> 的调试来验证一下：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95055265-9fbbc700-0725-11eb-934c-b467d8b27acb.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95055265-9fbbc700-0725-11eb-934c-b467d8b27acb.png"
+                     
+                ></p>
 <p>由上图lld调试可知：</p>
 <ul>
 <li><p>通过 <code>p *$7</code> 打印成员变量列表，<code>count = 2</code>，我们知道 <code>class_ro_t</code> 中包含两个 成员变量 <code>sex</code> 和 <code>name</code></p>
@@ -643,7 +748,12 @@
 </ul>
 <h1 id="类方法的存储"><a href="#类方法的存储" class="headerlink" title="类方法的存储"></a>类方法的存储</h1><p>我们由前文探索方法列表可知，在 <code>method_list</code> 中 <code>没有类方法</code>，<code>只有实例方法</code>，那么问题来了，类方法存储在哪里？为什么会有这种情况？下面我们来仔细分析下</p>
 <p>我们在 <a href="https://www.bboyzj.cn/2020/09/22/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8609%EF%BC%9Aisa%E8%B5%B0%E5%90%91&%E7%BB%A7%E6%89%BF%E5%88%86%E6%9E%90/">OC底层原理09：isa走向&amp;继承分析</a> 中，曾提及了 <code>元类</code>，类对象的 <code>isa</code> 指向就是 <code>元类</code>，元类是用来 <code>存储类</code> 的 <code>相关信息</code> 的，所以我们猜测：是否 <code>类方法</code>  是否存储在 <code>源类bits方法</code> 中呢？可以通过 <code>lldb</code> 命令来验证我们的猜测。下图是 <code>lldb</code> 命令的调试流程：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95059246-32ab3000-072b-11eb-93c3-8e3ae8302a88.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95059246-32ab3000-072b-11eb-93c3-8e3ae8302a88.png"
+                     
+                ></p>
 <p>由上图lld调试可知：</p>
 <ul>
 <li><p>类的 <code>实例方法</code> 存储在 <code>类的bits属性</code> 中，通过 <code>bits --&gt; methods() --&gt; list</code> 获取实例方法列表，例如 <code>ZJPerson类</code> 的 实例方法 <code>sayHello</code> 就存储在<code>ZJPerson类</code> 的 <code>bits属性</code> 中，类中的方法列表除了 <code>包括实例方法</code>，还包括系统自动生成的 <code>属性</code> 的 <code>set方法</code> 、 <code>get方法</code> 和 <code>cxx_destruct</code>方法，</p>

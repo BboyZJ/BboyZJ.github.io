@@ -326,14 +326,24 @@
 
             <div class="article-content markdown-body">
                 <h1 id="编译器架构"><a href="#编译器架构" class="headerlink" title="编译器架构"></a>编译器架构</h1><p>Swift编译过程和OC基本类似，仅仅是前端编译器不一样。</p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020024798.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020024798.png"
+                     
+                ></p>
 <ul>
 <li><code>OC/C</code> 前端编译器是 <code>Clang</code></li>
 <li><code>Swift</code> 先解析成 <code>Swift AST</code>（抽象语法树），通过 <code>swiftc</code> 这个命令行参数，编译成 <code>Swift IL</code></li>
 <li><code>OC</code> 和 <code>Swift</code> 最后均编译成 <code>LLVM IR</code> 中间层表示</li>
 <li><code>OC</code> 和 <code>Swift</code> 最终通过 后端编译器 <code>LLVM compiler</code> ，编译成最终的在具体地址上可以执行的二进制，包括x86、arm和other</li>
 </ul>
-<h1 id="详细编译流程"><a href="#详细编译流程" class="headerlink" title="详细编译流程"></a>详细编译流程</h1><p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020025648.png"></p>
+<h1 id="详细编译流程"><a href="#详细编译流程" class="headerlink" title="详细编译流程"></a>详细编译流程</h1><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020025648.png"
+                     
+                ></p>
 <ul>
 <li>Swift 先解析成 <code>AST（抽象语法树）</code></li>
 <li>经过一系列工具编程 <code>Swift</code> 的 <code>SIL(中间语言)</code></li>
@@ -341,14 +351,24 @@
 <li>最终通过 后端编译器 LLVM compiler 编译成 .o 目标文件</li>
 </ul>
 <h1 id="命令行流程"><a href="#命令行流程" class="headerlink" title="命令行流程"></a>命令行流程</h1><p>使用终端创建一个简单的 <code>main.swift</code> 文件</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % cd Desktop</span><br><span class="line">mac@bogon Desktop % touch main.swift</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % cd Desktop</span><br><span class="line">mac@bogon Desktop % touch main.swift</span><br></pre></td></tr></table></figure></div>
 
 <p>此时你可以在桌面看到一个 <code>main.swift</code> 文件</p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020026247.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020026247.png"
+                     
+                ></p>
 <p>在该文件下写下两个数相加的一个函数</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">func sum(a:Int,b:Int) -&gt; Int &#123;</span><br><span class="line">    return a + b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let value = sum(a: 1, b: 2)</span><br><span class="line">print(value)</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">func sum(a:Int,b:Int) -&gt; Int &#123;</span><br><span class="line">    return a + b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let value = sum(a: 1, b: 2)</span><br><span class="line">print(value)</span><br></pre></td></tr></table></figure></div>
 
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020027637.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020027637.png"
+                     
+                ></p>
 <ul>
 <li>打开命令行工具</li>
 </ul>
@@ -357,28 +377,48 @@
 <li>生成 <code>AST</code> 抽象语法树</li>
 </ul>
 <p><code>mac@bogon ~ % swiftc main.swift -dump-ast</code></p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020027831.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020027831.png"
+                     
+                ></p>
 <ul>
 <li>生成 <code>SIL</code> 中间语言</li>
 </ul>
 <p><code>mac@bogon ~ % swiftc main.swift -emit-sil</code></p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/20230302002831.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/20230302002831.png"
+                     
+                ></p>
 <ul>
 <li>生成 LLVM IR 中间表示层</li>
 </ul>
 <p><code>mac@bogon ~ % swiftc main.swift -emit-ir</code></p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020029775.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020029775.png"
+                     
+                ></p>
 <ul>
 <li>生成 Assembly Language 汇编语言</li>
 </ul>
 <p><code>mac@bogon ~ % swiftc main.swift -emit-assembly</code></p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020030034.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303020030034.png"
+                     
+                ></p>
 <ul>
 <li>生成二进制文件</li>
 </ul>
 <p><code>mac@bogon ~ % swiftc -o main.out main.swift</code></p>
 <p>命令行输入：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % cd /Users/mac/Desktop/01swift编译流程 </span><br><span class="line">mac@bogon 01swift编译流程 % swiftc -o main.out main.swift</span><br><span class="line">mac@bogon 01swift编译流程 % ./main.out</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % cd /Users/mac/Desktop/01swift编译流程 </span><br><span class="line">mac@bogon 01swift编译流程 % swiftc -o main.out main.swift</span><br><span class="line">mac@bogon 01swift编译流程 % ./main.out</span><br><span class="line">3</span><br></pre></td></tr></table></figure></div>
 
 
             </div>

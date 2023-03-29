@@ -328,10 +328,15 @@
                 <h1 id="查看内存地址的方法"><a href="#查看内存地址的方法" class="headerlink" title="查看内存地址的方法"></a>查看内存地址的方法</h1><p><strong>1、【方法一】：<code>Debug-&gt;Debug Workflow-&gt;Alway View Memory</code></strong></p>
 <p><strong>2、【方法二】：<code>x 地址</code>&#x2F;<code>x 对象</code></strong></p>
 <p>1）下面我们通过代码具体查看一下使用：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">@property (nonatomic, copy) NSString *name;</span><br><span class="line">@property (nonatomic, assign) int age;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 内存对齐</span><br><span class="line">ZJPerson * p = [ZJPerson alloc];</span><br><span class="line">p.name = @&quot;ZJ&quot;;  // NSString</span><br><span class="line">p.age = 30; // int</span><br><span class="line">    </span><br><span class="line">NSLog(@&quot;%@&quot;,p);</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">@property (nonatomic, copy) NSString *name;</span><br><span class="line">@property (nonatomic, assign) int age;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 内存对齐</span><br><span class="line">ZJPerson * p = [ZJPerson alloc];</span><br><span class="line">p.name = @&quot;ZJ&quot;;  // NSString</span><br><span class="line">p.age = 30; // int</span><br><span class="line">    </span><br><span class="line">NSLog(@&quot;%@&quot;,p);</span><br></pre></td></tr></table></figure></div>
 
 <p>2）通过LLDB编译命令查看内存情况：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92987563-16362200-f4f6-11ea-8f34-49785fab2912.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92987563-16362200-f4f6-11ea-8f34-49785fab2912.png"
+                     
+                ></p>
 <ul>
 <li><code>x 0x100867a60</code> ：以16进制打印当前地址的内存情况，查看不方便</li>
 <li><code>x/4gx 0x100867a60</code>：以16进制形式打印4个地址，查看方便</li>
@@ -341,17 +346,22 @@
 <li><code>0x0000000100001010</code>：ZJ</li>
 </ul>
 <p>3）那么 <code>0x100867a60、0x102038770</code> 和 <code>0x001d80010000220d 0x000000000000001e 0x0000000100001010 0x0000000000000000</code><br>有什么关系呢？我们用一张图来表示一下：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92987594-82b12100-f4f6-11ea-89cc-c106d7d79318.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92987594-82b12100-f4f6-11ea-89cc-c106d7d79318.png"
+                     
+                ></p>
 <p>4）如果有一个 <code>double/float</code> 类型的 <code>height</code> 呢？</p>
 <p>我们来分析一下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, assign) double height;</span><br><span class="line"></span><br><span class="line">p.height = 170; // double</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, assign) double height;</span><br><span class="line"></span><br><span class="line">p.height = 170; // double</span><br></pre></td></tr></table></figure></div>
 
 <p>通过 <code>x/4gx p</code> 查看打印的结果:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(lldb) po 0x4065400000000000</span><br><span class="line">4640185359819341824</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(lldb) po 0x4065400000000000</span><br><span class="line">4640185359819341824</span><br></pre></td></tr></table></figure></div>
 
 <p>我们发现竟然没有打印170，这是为什么呢？</p>
 <p>原因：<code>16进制和double/float类型的转换</code><br>验证：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(lldb) p/x (double)170</span><br><span class="line">(double) $7 = 0x4065400000000000</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(lldb) p/x (double)170</span><br><span class="line">(double) $7 = 0x4065400000000000</span><br></pre></td></tr></table></figure></div>
 
 <p>我们可以得到和上面的地址一抹抹一样样，<code>还有谁?</code></p>
 <p>5）从打印结果我们可以看出一个问题，两个属性占用内存不是按照定义属性的顺序，这是为什么呢？其实这就是 <code>iOS中的内存字节对齐现象</code></p>
@@ -371,7 +381,12 @@
 <li><p>结构体总体大小，必须是其内部最大成员的整数倍，不足要补齐</p>
 </li>
 </ul>
-<h1 id="数据类型所占字节"><a href="#数据类型所占字节" class="headerlink" title="数据类型所占字节"></a>数据类型所占字节</h1><p><img src="https://user-images.githubusercontent.com/25925248/92480517-94a17400-f217-11ea-9dc4-8b27214158a2.png"></p>
+<h1 id="数据类型所占字节"><a href="#数据类型所占字节" class="headerlink" title="数据类型所占字节"></a>数据类型所占字节</h1><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92480517-94a17400-f217-11ea-9dc4-8b27214158a2.png"
+                     
+                ></p>
 <h1 id="获取内存的三个方法"><a href="#获取内存的三个方法" class="headerlink" title="获取内存的三个方法"></a>获取内存的三个方法</h1><ul>
 <li><p><code>sizeof</code> 是运算符，编译的时候就替换为常数，返回的是 <code>一个类型所占内存的大小</code></p>
 </li>
@@ -381,9 +396,19 @@
 </li>
 </ul>
 <h1 id="对象属性内存对齐"><a href="#对象属性内存对齐" class="headerlink" title="对象属性内存对齐"></a>对象属性内存对齐</h1><p><strong>1、首先通过一个类的内存段来分析</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92477729-af71e980-f213-11ea-8ab4-4e3438dca409.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92477729-af71e980-f213-11ea-8ab4-4e3438dca409.png"
+                     
+                ></p>
 <p><strong>2、然后我们下断点，分析一下对象的内存情况</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92478059-31faa900-f214-11ea-9936-65f3dfb689a0.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92478059-31faa900-f214-11ea-9936-65f3dfb689a0.png"
+                     
+                ></p>
 <ul>
 <li><p><code>po p</code>：查看当前的对象信息&lt;ZJPerson: 0x60000072f870&gt;</p>
 <ul>
@@ -414,10 +439,15 @@
 </ul>
 <p>我们都知道 <code>对象</code> 的 <code>本质</code> 是 <code>结构体</code> ，因此 <code>对象</code> 的 <code>内存对齐</code> 来自 <code>结构体</code> ，因此接下来我们分析一下机构体是如何内存对齐的：</p>
 <p><strong>1、struct1</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 普通结构体</span><br><span class="line">struct ZJStruct1 &#123;</span><br><span class="line">    double a;   // 占8个字节 起始位置(0-7)</span><br><span class="line">    char b;     // 占1个字节 8是1的整数倍[8 1] 起始位置(8)</span><br><span class="line">    int c;      // 占4个字节 9不是4的整数倍，往下找[9 4] 9 10 11 起始位置(12 13 14 15)</span><br><span class="line">    short d;    // 占2个字节 16是2的整数倍[16 2] 起始位置(16 17)</span><br><span class="line">&#125;struct1;</span><br><span class="line">// 内部需要的大小为: 17个字节</span><br><span class="line">// 最大属性 : 8个字节</span><br><span class="line">// 结构体整数倍: 最大成员的整数倍 8*3 = 24个字节</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 普通结构体</span><br><span class="line">struct ZJStruct1 &#123;</span><br><span class="line">    double a;   // 占8个字节 起始位置(0-7)</span><br><span class="line">    char b;     // 占1个字节 8是1的整数倍[8 1] 起始位置(8)</span><br><span class="line">    int c;      // 占4个字节 9不是4的整数倍，往下找[9 4] 9 10 11 起始位置(12 13 14 15)</span><br><span class="line">    short d;    // 占2个字节 16是2的整数倍[16 2] 起始位置(16 17)</span><br><span class="line">&#125;struct1;</span><br><span class="line">// 内部需要的大小为: 17个字节</span><br><span class="line">// 最大属性 : 8个字节</span><br><span class="line">// 结构体整数倍: 最大成员的整数倍 8*3 = 24个字节</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <p>我们通过图来分析一下struct1的内存存储情况：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92988578-4f26c480-f4ff-11ea-8d8d-ea99fcc5534a.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92988578-4f26c480-f4ff-11ea-8d8d-ea99fcc5534a.png"
+                     
+                ></p>
 <p>根据内存对齐规则，分析ZJStruct1的内存计算：</p>
 <ul>
 <li><code>变量a</code>：占<code>8</code>个字节，从<code>0</code>开始，此时 <code>0</code> 存储 <code>a</code></li>
@@ -427,10 +457,15 @@
 </ul>
 <p>因此ZJStruct1的需要的内存大小为 <code>18</code> 字节，而ZJStruct1中最大变量的字节数为 <code>8</code>，所以 ZJStruct1 实际的内存大小必须是 <code>8</code> 的整数倍，<code>18</code> 向上取整到 <code>24</code>，主要是因为 <code>24</code> 是 <code>8</code> 的整数倍，所以 <code>sizeof(ZJStruct1)</code> 的结果是 <code>24</code></p>
 <p><strong>2、struct2</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 普通结构体</span><br><span class="line">struct ZJStruct2 &#123;</span><br><span class="line">    char a;     //占1个字节 起始位置(0)</span><br><span class="line">    int b;      //占4个字节 1不是4的整数倍 起始位置(4~7)</span><br><span class="line">    short c;    //占2个字节 8是2的倍数，起始位置(8 9)</span><br><span class="line">    double c;     //占8个字节 10不是8的倍数 起始位置(16~23)</span><br><span class="line">    </span><br><span class="line">&#125;struct2;</span><br><span class="line">// 内部需要的大小为：23个字节</span><br><span class="line">// 最大属性：8个字节</span><br><span class="line">// 结构体整数倍：8*3 = 24个字节</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 普通结构体</span><br><span class="line">struct ZJStruct2 &#123;</span><br><span class="line">    char a;     //占1个字节 起始位置(0)</span><br><span class="line">    int b;      //占4个字节 1不是4的整数倍 起始位置(4~7)</span><br><span class="line">    short c;    //占2个字节 8是2的倍数，起始位置(8 9)</span><br><span class="line">    double c;     //占8个字节 10不是8的倍数 起始位置(16~23)</span><br><span class="line">    </span><br><span class="line">&#125;struct2;</span><br><span class="line">// 内部需要的大小为：23个字节</span><br><span class="line">// 最大属性：8个字节</span><br><span class="line">// 结构体整数倍：8*3 = 24个字节</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <p>我们通过图来分析一下struct1的内存存储情况：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92989153-b09d6200-f504-11ea-9d85-f13a43580f5e.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92989153-b09d6200-f504-11ea-9d85-f13a43580f5e.png"
+                     
+                ></p>
 <p>根据内存对齐规则，分析ZJStruct2的内存计算：</p>
 <ul>
 <li><code>变量a</code>：占<code>1</code>个字节，从<code>0</code>开始，此时 <code>0</code> 存储 <code>a</code></li>
@@ -440,10 +475,15 @@
 </ul>
 <p>因此 <code>ZJStruct2</code> 的需要的内存大小为 <code>24</code> 字节，而ZJStruct1中最大变量的字节数为 <code>8</code>，所以 <code>ZJStruct1</code> 实际的内存大小必须是 <code>8</code> 的整数倍，<code>24</code> 向上取整到 <code>24</code>，主要是因为 <code>24</code> 是 <code>8</code> 的整数倍，所以 <code>sizeof(ZJStruct2)</code> 的结果是 <code>24</code></p>
 <p><code>3、struct3</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// 嵌套结构体</span><br><span class="line">struct ZJStruct3 &#123;</span><br><span class="line">    char a; //占1个字节</span><br><span class="line">    int b; //占4个字节</span><br><span class="line">    short c; //占2个字节</span><br><span class="line">&#125;struct3;</span><br><span class="line">struct ZJStruct4 &#123;</span><br><span class="line">    double a; //占8个字节 起始位置(0~7)</span><br><span class="line">    int b; //占4个字节 8是4的整数倍[8 4] 起始位置(8 9 10 11)</span><br><span class="line">    struct ZJStruct3 s3; // char(12) int(16,17,18,19) short(20,21) 结构体内部要对齐（4*3=12）补22,23</span><br><span class="line">    short c; //占2个字节 24是2的整数倍 (24,25)</span><br><span class="line">&#125;struct4;</span><br><span class="line">// 内部需要的大小：25个字节</span><br><span class="line">// 最大属性：8个字节</span><br><span class="line">// 结构体整数倍：8*4 = 32个字节</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// 嵌套结构体</span><br><span class="line">struct ZJStruct3 &#123;</span><br><span class="line">    char a; //占1个字节</span><br><span class="line">    int b; //占4个字节</span><br><span class="line">    short c; //占2个字节</span><br><span class="line">&#125;struct3;</span><br><span class="line">struct ZJStruct4 &#123;</span><br><span class="line">    double a; //占8个字节 起始位置(0~7)</span><br><span class="line">    int b; //占4个字节 8是4的整数倍[8 4] 起始位置(8 9 10 11)</span><br><span class="line">    struct ZJStruct3 s3; // char(12) int(16,17,18,19) short(20,21) 结构体内部要对齐（4*3=12）补22,23</span><br><span class="line">    short c; //占2个字节 24是2的整数倍 (24,25)</span><br><span class="line">&#125;struct4;</span><br><span class="line">// 内部需要的大小：25个字节</span><br><span class="line">// 最大属性：8个字节</span><br><span class="line">// 结构体整数倍：8*4 = 32个字节</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <p>我们通过图来分析一下struct3的内存存储情况：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/93211572-02a7e700-f794-11ea-8d12-56396f3f238a.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/93211572-02a7e700-f794-11ea-8d12-56396f3f238a.png"
+                     
+                ></p>
 <p>根据内存对齐规则，分析ZJStruct3的内存计算：</p>
 <ul>
 <li><code>变量a</code>：占<code>8</code>个字节，从<code>0</code>开始，此时 <code>0-7</code> 存储 <code>a</code></li>
@@ -459,7 +499,7 @@
 </ul>
 <p>因此ZJStruct4的需要的内存大小为 <code>26</code> 字节，而ZJStruct4中最大变量的字节数为 <code>8</code>，所以 ZJStruct4 实际的内存大小必须是 <code>8</code> 的整数倍，<code>26</code> 向上取整到 <code>32</code>，主要是因为 <code>32</code> 是 <code>8</code> 的整数倍，所以 <code>sizeof(ZJStruct4)</code> 的结果是 <code>32</code></p>
 <p><strong>4、我们通过上面的分析来实际验证一下结果：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 打印结构体内存大小</span><br><span class="line">NSLog(@&quot;%lu-%lu-%lu-%lu&quot;,sizeof(struct1),sizeof(struct2),sizeof(struct4),sizeof(struct4.s3));</span><br><span class="line">        </span><br><span class="line">*******打印结果******</span><br><span class="line">2020-09-15 20:23:52.275929+0800 001-内存对齐原则[25197:515659] 24-16-32-12</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 打印结构体内存大小</span><br><span class="line">NSLog(@&quot;%lu-%lu-%lu-%lu&quot;,sizeof(struct1),sizeof(struct2),sizeof(struct4),sizeof(struct4.s3));</span><br><span class="line">        </span><br><span class="line">*******打印结果******</span><br><span class="line">2020-09-15 20:23:52.275929+0800 001-内存对齐原则[25197:515659] 24-16-32-12</span><br></pre></td></tr></table></figure></div>
 
 <p>结果显示我们分析的结果是正确的</p>
 <h1 id="内存优化（属性重排）"><a href="#内存优化（属性重排）" class="headerlink" title="内存优化（属性重排）"></a>内存优化（属性重排）</h1><ul>
@@ -470,18 +510,28 @@
 </ul>
 <p>以下面这个例子来进行说明 苹果中属性重排，即内存优化：</p>
 <p><strong>1、我们通过自定义一个类ZJPerson，并定义几个属性，来分析一下</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">@property (nonatomic, copy) NSString * name;</span><br><span class="line">@property (nonatomic, copy) NSString *nickName;</span><br><span class="line">@property (nonatomic, assign) int age;</span><br><span class="line">@property (nonatomic, assign) long height;</span><br><span class="line">@property (nonatomic) char c1;</span><br><span class="line">@property (nonatomic) char c2;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">@property (nonatomic, copy) NSString * name;</span><br><span class="line">@property (nonatomic, copy) NSString *nickName;</span><br><span class="line">@property (nonatomic, assign) int age;</span><br><span class="line">@property (nonatomic, assign) long height;</span><br><span class="line">@property (nonatomic) char c1;</span><br><span class="line">@property (nonatomic) char c2;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>2、在main中创建ZJPerson的实例对象，并对其中的几个属性赋值</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line">#import &lt;objc/runtime.h&gt;</span><br><span class="line">#import &lt;malloc/malloc.h&gt;</span><br><span class="line">#import &quot;ZJPerson.h&quot;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        // insert code here...</span><br><span class="line">        </span><br><span class="line">        // 对象的内存对齐 - 对象的内存对齐来自结构体</span><br><span class="line">        ZJPerson * p = [ZJPerson alloc]; //占8字节</span><br><span class="line">        p.name       = @&quot;ZJ&quot;; //占8个字节</span><br><span class="line">        p.nickName   = @&quot;小J&quot;; //占8个字节</span><br><span class="line">        p.age        = 30;  //占4个字节</span><br><span class="line">        p.c1        = &#x27;a&#x27;;  //占1个字节</span><br><span class="line">        p.c2        = &#x27;b&#x27;;  //占1个字节</span><br><span class="line">        </span><br><span class="line">        NSLog(@&quot;%@ - %lu - %lu - %lu&quot;,p,sizeof(p),class_getInstanceSize([p class]),malloc_size((__bridge const void *)(p)));</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">********打印结果******</span><br><span class="line">2020-09-13 23:48:30.357717+0800 KCObjc[84742:2078708] &lt;ZJPerson: 0x100660120&gt; - 8 - 40 - 48</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line">#import &lt;objc/runtime.h&gt;</span><br><span class="line">#import &lt;malloc/malloc.h&gt;</span><br><span class="line">#import &quot;ZJPerson.h&quot;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        // insert code here...</span><br><span class="line">        </span><br><span class="line">        // 对象的内存对齐 - 对象的内存对齐来自结构体</span><br><span class="line">        ZJPerson * p = [ZJPerson alloc]; //占8字节</span><br><span class="line">        p.name       = @&quot;ZJ&quot;; //占8个字节</span><br><span class="line">        p.nickName   = @&quot;小J&quot;; //占8个字节</span><br><span class="line">        p.age        = 30;  //占4个字节</span><br><span class="line">        p.c1        = &#x27;a&#x27;;  //占1个字节</span><br><span class="line">        p.c2        = &#x27;b&#x27;;  //占1个字节</span><br><span class="line">        </span><br><span class="line">        NSLog(@&quot;%@ - %lu - %lu - %lu&quot;,p,sizeof(p),class_getInstanceSize([p class]),malloc_size((__bridge const void *)(p)));</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">********打印结果******</span><br><span class="line">2020-09-13 23:48:30.357717+0800 KCObjc[84742:2078708] &lt;ZJPerson: 0x100660120&gt; - 8 - 40 - 48</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>3、断点调试p，根据ZJPerson的对象地址，查找出属性的值：</strong></p>
 <ul>
 <li>当我们向通过 <code>0x0000001e00006261</code> 地址找出 <code>age</code> 等数据时，发现是 <code>乱码</code>，这里无法找出值的原因是苹果中针对 <code>age、c1、c2</code> 属性的内存进行了重排，因为 <code>age</code> 类型占 <code>4</code> 个字节，<code>c1</code> 和 <code>c2</code> 类型 <code>char</code> 分别占 <code>1</code> 个字节，通过 <code>4+1+1</code> 的方式，按照 <code>8</code> 字节对齐，不足补齐的方式存储在同一块内存中</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/93021660-6dcbaf00-f616-11ea-9aae-8dd7c500cd7f.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/93021660-6dcbaf00-f616-11ea-9aae-8dd7c500cd7f.png"
+                     
+                ></p>
 <ul>
-<li>我们通过<code>po 0x000000010d671058</code>找出<code>name</code>的值<code>ZJ</code>，通过<code>po 0x000000010d671078</code>找出<code>nickName</code>的值<code>小J</code><br><img src="/BboyZJ.github.io/!%5B%5D(https:/user-images.githubusercontent.com/25925248/92991523-f2cf9f00-f516-11ea-8432-44c60ec6b516.png"></li>
+<li>我们通过<code>po 0x000000010d671058</code>找出<code>name</code>的值<code>ZJ</code>，通过<code>po 0x000000010d671078</code>找出<code>nickName</code>的值<code>小J</code><br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/!%5B%5D(https:/user-images.githubusercontent.com/25925248/92991523-f2cf9f00-f516-11ea-8432-44c60ec6b516.png"
+                     
+                ></li>
 </ul>
 <p><strong>4、所以，这里可以总结下苹果中的内存对齐思想：</strong></p>
 <p>大部分的内存都是通过固定的内存块进行读取，尽管我们在内存中采用了内存对齐的方式，但并不是所有的内存都可以进行浪费的，苹果会自动 <code>对属性进行重排</code>，以此来 <code>优化内存</code></p>
@@ -489,22 +539,22 @@
 <p>我们可以通过 <code>objc4</code> 中的源码来进行分析</p>
 <p><strong>1、<code>实例对象</code>开辟内存的流程如下：</strong></p>
 <p>1）<code>class_getInstanceSize</code>内部实现如下:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/** </span><br><span class="line"> * Returns the size of instances of a class.</span><br><span class="line"> * </span><br><span class="line"> * @param cls A class object.</span><br><span class="line"> * </span><br><span class="line"> * @return The size in bytes of instances of the class \e cls, or \c 0 if \e cls is \c Nil.</span><br><span class="line"> */</span><br><span class="line">OBJC_EXPORT size_t</span><br><span class="line">class_getInstanceSize(Class _Nullable cls) </span><br><span class="line">    OBJC_AVAILABLE(10.5, 2.0, 9.0, 1.0, 2.0);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/** </span><br><span class="line"> * Returns the size of instances of a class.</span><br><span class="line"> * </span><br><span class="line"> * @param cls A class object.</span><br><span class="line"> * </span><br><span class="line"> * @return The size in bytes of instances of the class \e cls, or \c 0 if \e cls is \c Nil.</span><br><span class="line"> */</span><br><span class="line">OBJC_EXPORT size_t</span><br><span class="line">class_getInstanceSize(Class _Nullable cls) </span><br><span class="line">    OBJC_AVAILABLE(10.5, 2.0, 9.0, 1.0, 2.0);</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li><p><code>class_getInstanceSize</code>内部调用<code>alignedInstanceSize</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// Class&#x27;s ivar size rounded up to a pointer-size boundary.</span><br><span class="line">    uint32_t alignedInstanceSize() const &#123;</span><br><span class="line">        return word_align(unalignedInstanceSize());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// Class&#x27;s ivar size rounded up to a pointer-size boundary.</span><br><span class="line">    uint32_t alignedInstanceSize() const &#123;</span><br><span class="line">        return word_align(unalignedInstanceSize());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></div>
 </li>
 <li><p><code>word_align</code>内部调用如下：</p>
 </li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#ifdef __LP64__</span><br><span class="line">#   define WORD_SHIFT 3UL</span><br><span class="line">#   define WORD_MASK 7UL</span><br><span class="line">#   define WORD_BITS 64</span><br><span class="line">#else</span><br><span class="line">#   define WORD_SHIFT 2UL</span><br><span class="line">#   define WORD_MASK 3UL</span><br><span class="line">#   define WORD_BITS 32</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">static inline uint32_t word_align(uint32_t x) &#123;</span><br><span class="line">    return (x + WORD_MASK) &amp; ~WORD_MASK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#ifdef __LP64__</span><br><span class="line">#   define WORD_SHIFT 3UL</span><br><span class="line">#   define WORD_MASK 7UL</span><br><span class="line">#   define WORD_BITS 64</span><br><span class="line">#else</span><br><span class="line">#   define WORD_SHIFT 2UL</span><br><span class="line">#   define WORD_MASK 3UL</span><br><span class="line">#   define WORD_BITS 32</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">static inline uint32_t word_align(uint32_t x) &#123;</span><br><span class="line">    return (x + WORD_MASK) &amp; ~WORD_MASK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>由源码可知：<code>(x + WORD_MASK) &amp; ~WORD_MASK</code>是一个运算，代表 <code>8</code> 字节对齐</p>
 <p><strong>2、为什么对象真正开辟内存是8字节对齐？系统为对象开辟的是16字节对齐?</strong></p>
 <p>apple系统为了 <code>防止一切的容错</code>，采用的是 <code>16</code> 字节对齐的内存，主要是因为采用 <code>8</code> 字节对齐时，两个对象的内存会紧挨着，显得 <code>比较紧凑</code>，而 <code>16</code> 字节 <code>比较宽松</code>，利于苹果以后的扩展。</p>
 <h1 id="8字节内存计算"><a href="#8字节内存计算" class="headerlink" title="8字节内存计算"></a>8字节内存计算</h1><p>由断点可知此时的x为40，WORD_MASK为7，我们来计算一下：<code>(x + WORD_MASK) &amp; ~WORD_MASK</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">2^5 = 32 2^4 = 16 2^3 = 8 2^2 = 4 2^1 = 2 2^0 = 1</span><br><span class="line"></span><br><span class="line">40 + 7 = 47 = 32 + 8 + 4 + 2 + 1 16进制表示</span><br><span class="line">0000 0000 0010 1111</span><br><span class="line"> </span><br><span class="line">7</span><br><span class="line">0000 0000 0000 0111</span><br><span class="line">7取反</span><br><span class="line">~1111 1111 1111 1000</span><br><span class="line"> </span><br><span class="line">47 &amp; ~7</span><br><span class="line">0000 0000 0010 1111</span><br><span class="line">1111 1111 1111 1000</span><br><span class="line">-----------------------</span><br><span class="line">0000 0000 0010 1000 = 40</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">2^5 = 32 2^4 = 16 2^3 = 8 2^2 = 4 2^1 = 2 2^0 = 1</span><br><span class="line"></span><br><span class="line">40 + 7 = 47 = 32 + 8 + 4 + 2 + 1 16进制表示</span><br><span class="line">0000 0000 0010 1111</span><br><span class="line"> </span><br><span class="line">7</span><br><span class="line">0000 0000 0000 0111</span><br><span class="line">7取反</span><br><span class="line">~1111 1111 1111 1000</span><br><span class="line"> </span><br><span class="line">47 &amp; ~7</span><br><span class="line">0000 0000 0010 1111</span><br><span class="line">1111 1111 1111 1000</span><br><span class="line">-----------------------</span><br><span class="line">0000 0000 0010 1000 = 40</span><br></pre></td></tr></table></figure></div>
 
 <p>由结果<code>40</code>可知，与<code>class_getInstanceSize</code>获取实例对象的大小<code>40</code>如何吻合，还有谁？</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>

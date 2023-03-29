@@ -364,25 +364,55 @@
 </ol>
 <p>流程举例: 红色的为已排序部分，蓝色的为未排序部分</p>
 <p>1）原始数据：首先把原数组从下坐标1开始拆分为2部分， 已排序部分(红色)，未排序部分(蓝色)。默认原数组首元素为已排序元素。</p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061833441.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061833441.png"
+                     
+                ></p>
 <p>2）第一轮：接着用后面未排序部分的第一个元素与已排序部分的最后一个元素进行比较，这里发现已排序最末尾元素5小于未排序元素第一个元素9.且元素5余元素9的位置是相邻的。不发生插入。把元素9列入已排序数组中。此时已排序好的元素多了一个。</p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061833527.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061833527.png"
+                     
+                ></p>
 <p>3）第二轮：然后接着用后面未排序部分的第一个元素与已排序部分的最后一个元素进行比较，这里发现已排序最末尾元素9大于未排序元素第一个元素2。并且9不是已排序元素最前面一个元素，所以忽略本次操作，让元素2与已排序元素从右往左的下一个元素进行比较，此时发现已排序元素5大于元素2，但发现元素5是已排序元素中首个元素。则直接把元素2插入到元素5前面。</p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061833540.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061833540.png"
+                     
+                ></p>
 <p>4）第三轮排序：用后面未排序部分的第一个元素与已排序部分的最后一个元素进行比较，这里发现已排序最末尾元素9小于未排序元素第一个元素15。且两个元素相邻。不发生插入，把元素15加入已排序部分。</p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061833930.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061833930.png"
+                     
+                ></p>
 <p>5）第四轮排序：用后面未排序部分的第一个元素与已排序部分的最后一个元素进行比较，这里发现已排序最末尾元素15小于未排序元素第一个元素46。且两个元素相邻。不发生插入，把元素46加入已排序部分。</p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061835372.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061835372.png"
+                     
+                ></p>
 <p>6）最后：依次按照上面的方式递归排序。直到所有元素排序完成。</p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061834433.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061834433.png"
+                     
+                ></p>
 <ol start="4">
 <li>列子:</li>
 </ol>
 <p>代码实现：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    NSMutableArray * arr = [NSMutableArray arrayWithArray:@[@15,@2,@5,@10,@20]];</span><br><span class="line">    </span><br><span class="line">    // 插入排序的原理：始终定义第一个元素为有序的，将元素逐个插入到有序的排列中</span><br><span class="line">    // 其特点是：不断的移动数据，空出一个适当的位置，把待插入的元素放到里面去</span><br><span class="line">    for (int i = 0 ; i &lt; arr.count; i ++) &#123;</span><br><span class="line">        // temp为待排元素i为其位置</span><br><span class="line">        NSNumber * temp = arr[i];</span><br><span class="line">        // j为已排元素最后一个元素的位置</span><br><span class="line">        int j = i - 1;</span><br><span class="line">        // 当j&gt;=0时，i为第一个待排元素，取已排元素和待排元素比较，在已经排好序中从后向前扫描</span><br><span class="line">        while (j &gt;= 0 &amp;&amp; [arr[j] integerValue] &gt; [temp integerValue]) &#123;</span><br><span class="line">            // 如果已经排好序的序列中元素大于新元素，则将该元素往右移动一个位置</span><br><span class="line">            [arr replaceObjectAtIndex:j+1 withObject:arr[j]];</span><br><span class="line">            j --;</span><br><span class="line">        &#125;</span><br><span class="line">        // 跳出循环时，j已排元素小于或等于i的元素（待排元素）。插入新元素a[j+1] = temp，即空出来的位置插入待排序的值</span><br><span class="line">        [arr replaceObjectAtIndex:j+1 withObject:temp];</span><br><span class="line">        NSLog(@&quot;插入排序排序中:%@&quot;,[self getArrayStr:arr]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 将数组中的元素拼接成字符串 - 方便打印</span><br><span class="line">- (NSString *)getArrayStr:(NSArray *)array &#123;</span><br><span class="line">    NSMutableString *strM = [NSMutableString string];</span><br><span class="line">    for (NSNumber *num in array) &#123;</span><br><span class="line">        [strM appendString:[NSString stringWithFormat:@&quot;%@,&quot;,num]];</span><br><span class="line">    &#125;</span><br><span class="line">    return strM.copy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    NSMutableArray * arr = [NSMutableArray arrayWithArray:@[@15,@2,@5,@10,@20]];</span><br><span class="line">    </span><br><span class="line">    // 插入排序的原理：始终定义第一个元素为有序的，将元素逐个插入到有序的排列中</span><br><span class="line">    // 其特点是：不断的移动数据，空出一个适当的位置，把待插入的元素放到里面去</span><br><span class="line">    for (int i = 0 ; i &lt; arr.count; i ++) &#123;</span><br><span class="line">        // temp为待排元素i为其位置</span><br><span class="line">        NSNumber * temp = arr[i];</span><br><span class="line">        // j为已排元素最后一个元素的位置</span><br><span class="line">        int j = i - 1;</span><br><span class="line">        // 当j&gt;=0时，i为第一个待排元素，取已排元素和待排元素比较，在已经排好序中从后向前扫描</span><br><span class="line">        while (j &gt;= 0 &amp;&amp; [arr[j] integerValue] &gt; [temp integerValue]) &#123;</span><br><span class="line">            // 如果已经排好序的序列中元素大于新元素，则将该元素往右移动一个位置</span><br><span class="line">            [arr replaceObjectAtIndex:j+1 withObject:arr[j]];</span><br><span class="line">            j --;</span><br><span class="line">        &#125;</span><br><span class="line">        // 跳出循环时，j已排元素小于或等于i的元素（待排元素）。插入新元素a[j+1] = temp，即空出来的位置插入待排序的值</span><br><span class="line">        [arr replaceObjectAtIndex:j+1 withObject:temp];</span><br><span class="line">        NSLog(@&quot;插入排序排序中:%@&quot;,[self getArrayStr:arr]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 将数组中的元素拼接成字符串 - 方便打印</span><br><span class="line">- (NSString *)getArrayStr:(NSArray *)array &#123;</span><br><span class="line">    NSMutableString *strM = [NSMutableString string];</span><br><span class="line">    for (NSNumber *num in array) &#123;</span><br><span class="line">        [strM appendString:[NSString stringWithFormat:@&quot;%@,&quot;,num]];</span><br><span class="line">    &#125;</span><br><span class="line">    return strM.copy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <p>打印结果:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2020-08-07 21:30:38.316438+0800 C-直接插入排序算法[3671:1382925] 插入排序排序中:15,2,5,10,20,</span><br><span class="line">2020-08-07 21:30:38.316483+0800 C-直接插入排序算法[3671:1382925] 插入排序排序中:2,15,5,10,20,</span><br><span class="line">2020-08-07 21:30:38.316502+0800 C-直接插入排序算法[3671:1382925] 插入排序排序中:2,5,15,10,20,</span><br><span class="line">2020-08-07 21:30:38.316519+0800 C-直接插入排序算法[3671:1382925] 插入排序排序中:2,5,10,15,20,</span><br><span class="line">2020-08-07 21:30:38.316535+0800 C-直接插入排序算法[3671:1382925] 插入排序排序中:2,5,10,15,20,</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2020-08-07 21:30:38.316438+0800 C-直接插入排序算法[3671:1382925] 插入排序排序中:15,2,5,10,20,</span><br><span class="line">2020-08-07 21:30:38.316483+0800 C-直接插入排序算法[3671:1382925] 插入排序排序中:2,15,5,10,20,</span><br><span class="line">2020-08-07 21:30:38.316502+0800 C-直接插入排序算法[3671:1382925] 插入排序排序中:2,5,15,10,20,</span><br><span class="line">2020-08-07 21:30:38.316519+0800 C-直接插入排序算法[3671:1382925] 插入排序排序中:2,5,10,15,20,</span><br><span class="line">2020-08-07 21:30:38.316535+0800 C-直接插入排序算法[3671:1382925] 插入排序排序中:2,5,10,15,20,</span><br></pre></td></tr></table></figure></div>
 
 <ol start="5">
 <li>算法分析</li>
@@ -390,7 +420,12 @@
 <ul>
 <li>直接插入排序的算法性能</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/89651355-62d67e00-d8f6-11ea-8a41-5245460356d6.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/89651355-62d67e00-d8f6-11ea-8a41-5245460356d6.png"
+                     
+                ></p>
 <ul>
 <li>时间复杂度</li>
 </ul>
@@ -398,7 +433,7 @@
 <ol>
 <li>当元素的初始序列为正序时，仅外循环要进行n-1趟排序且每一趟只进行一次比较，没有进入if语句不存在元素之间的交换(移动)。此时比较次数(Cmin)和移动次数(Mmin)达到最小值。 此时时间复杂度为O(n)。</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">比较次数：Cmin = n-1;</span><br><span class="line">移动次数：Mmin = 0;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">比较次数：Cmin = n-1;</span><br><span class="line">移动次数：Mmin = 0;</span><br></pre></td></tr></table></figure></div>
 
 <ol start="2">
 <li>举例：</li>
@@ -408,7 +443,7 @@
 <ol>
 <li>最差就是逆序。每趟排序中待插入的元素都要和[0,i-1]中的i个元素进行比较且要将这i个元素后移，i个元素后移移动次数当然也就为i了，再加上temp &#x3D; arr[i]与arr[j+1] &#x3D; temp的两次移动，每趟移动的次数为i+2,此时比较次数(Cmin)和移动次数(Mmin)达到最小值。 此时时间复杂度为O(n2)。</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cmax = 1+2+...+(n-1) = n*(n-1)/2 = O(n2)</span><br><span class="line">Mmax = (1+2)+(2+2)+...+(n-1+2) = (n-1)*(n+4)/2 = O(n2)  (i取值范围1~n-1)</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cmax = 1+2+...+(n-1) = n*(n-1)/2 = O(n2)</span><br><span class="line">Mmax = (1+2)+(2+2)+...+(n-1+2) = (n-1)*(n+4)/2 = O(n2)  (i取值范围1~n-1)</span><br></pre></td></tr></table></figure></div>
 
 <ol start="2">
 <li>例子：</li>
@@ -459,22 +494,57 @@
 <ul>
 <li>原始数据：@[@(11),@(10),@(9),@(8),@(7),@(6),@(5),@(4),@(3),@(2),@(1)]</li>
 </ul>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061837614.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061837614.png"
+                     
+                ></p>
 <ol>
 <li>第一次分组：</li>
 </ol>
 <p>第一步，数组中有11个元素，把数组除以二，得到5(11&#x2F;2实际是等于5余1，由于取正所以为5，由于有余数，所以按照增量取出来的数组的 <code>组数</code> 有 <code>增量+1</code> 即 <code>5 + 1 = 6组</code>。如果没有余数则组数就是增量数。)，以5为增量，从数组第一个元素开始，每间隔5个数取出来的所有元素分为一组，分为6组，分别是：<br>@{11,7}、@{10,4}、@{9,3}、@{8,2}、@{5,1}、@{6}</p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061837549.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061837549.png"
+                     
+                ></p>
 <p>第一次排序：每种颜色为一组。接着对每组进行插入排序(具体比较过程就不说了，看过上面插入排序的应该懂)，排序结果为下图(共交换5次):<br>@{7,11}、@{4,10}、@{3,9}、@{2,8}、@{1,5}、@{6}</p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061838511.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303061838511.png"
+                     
+                ></p>
 <p>2)第二次分组：将增量5再次除以2，得到2(实际5&#x2F;2是等于2余1，有余数所以组数为3)。分为3组分别是:<br>@{7,2,11,8}、@{4,1,10,5}、@{3,6,9}</p>
-<p><img src="/BboyZJ.github.io/assets/16780991255622.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16780991255622.jpg"
+                     
+                ></p>
 <p>第二次排序：每种颜色为一组，对每组元素进行插入排序。排序结果为(共交换4次)<br>@{2,7,8,11}、@{1,4,5,10}、@{3,6,9}</p>
-<p><img src="/BboyZJ.github.io/assets/16780991388627.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16780991388627.jpg"
+                     
+                ></p>
 <p>3)第三次分组：将增量2再次除以1，得到1(实际2&#x2F;2等1，没有余数，所以分为1组)。分组后是<br>@{2,1,3,7,4,6,8,5,9,11,10}</p>
-<p><img src="/BboyZJ.github.io/assets/16780991560782.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16780991560782.jpg"
+                     
+                ></p>
 <p>第三次排序：最后对整组数组进行插入排序，排序结果为(共交换7次)：</p>
-<p><img src="/BboyZJ.github.io/assets/16780991704280.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16780991704280.jpg"
+                     
+                ></p>
 <ol start="4">
 <li>希尔排序的特点</li>
 </ol>
@@ -482,10 +552,10 @@
 <ol start="5">
 <li>实例</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    NSMutableArray * arr = [NSMutableArray arrayWithArray:@[@(9),@(3),@(8),@(5),@(2),@(4),@(7),@(6),@(1)]];</span><br><span class="line">    [self shellSort:arr];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)shellSort:(NSMutableArray *)list&#123;</span><br><span class="line">    // 起始间隔值gap设置为总数的一半</span><br><span class="line">    int gap = (int)list.count / 2;</span><br><span class="line">    // 直到gap==1结束</span><br><span class="line">    while (gap &gt;= 1) &#123;</span><br><span class="line">        //i为待排元素，以步距gap从后向前扫描</span><br><span class="line">        for(int i = gap ; i &lt; [list count]; i++)&#123;</span><br><span class="line">            //temp为待排元素i为其位置</span><br><span class="line">            NSInteger temp = [[list objectAtIndex:i] intValue];</span><br><span class="line">            //获取当前位置</span><br><span class="line">            int j = i;</span><br><span class="line">            //然后将此位置之前的元素，按照增量进行跳跃式比较</span><br><span class="line">            while (j &gt;= gap &amp;&amp; temp &lt; [[list objectAtIndex:(j - gap)] intValue]) &#123;</span><br><span class="line">                [list replaceObjectAtIndex:j withObject:[list objectAtIndex:j-gap]];</span><br><span class="line">                j -= gap;</span><br><span class="line">            &#125;</span><br><span class="line">            //跳出循环时，j元素小于i的元素（待排元素）。插入新元素a[j] = temp，即空出来的位置插入待排序的值</span><br><span class="line">            [list replaceObjectAtIndex:j withObject:[NSNumber numberWithInteger:temp]];</span><br><span class="line">        &#125;</span><br><span class="line">        NSLog(@&quot;步长：%d --- 希尔排序:%@&quot;,gap,[self getArrayStr:list]);</span><br><span class="line">        //步长</span><br><span class="line">        gap = gap / 2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 将数组中的元素拼接成字符串 - 方便打印</span><br><span class="line">- (NSString *)getArrayStr:(NSArray *)array &#123;</span><br><span class="line">    NSMutableString *strM = [NSMutableString string];</span><br><span class="line">    for (NSNumber *num in array) &#123;</span><br><span class="line">        [strM appendString:[NSString stringWithFormat:@&quot;%@,&quot;,num]];</span><br><span class="line">    &#125;</span><br><span class="line">    return strM.copy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    NSMutableArray * arr = [NSMutableArray arrayWithArray:@[@(9),@(3),@(8),@(5),@(2),@(4),@(7),@(6),@(1)]];</span><br><span class="line">    [self shellSort:arr];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)shellSort:(NSMutableArray *)list&#123;</span><br><span class="line">    // 起始间隔值gap设置为总数的一半</span><br><span class="line">    int gap = (int)list.count / 2;</span><br><span class="line">    // 直到gap==1结束</span><br><span class="line">    while (gap &gt;= 1) &#123;</span><br><span class="line">        //i为待排元素，以步距gap从后向前扫描</span><br><span class="line">        for(int i = gap ; i &lt; [list count]; i++)&#123;</span><br><span class="line">            //temp为待排元素i为其位置</span><br><span class="line">            NSInteger temp = [[list objectAtIndex:i] intValue];</span><br><span class="line">            //获取当前位置</span><br><span class="line">            int j = i;</span><br><span class="line">            //然后将此位置之前的元素，按照增量进行跳跃式比较</span><br><span class="line">            while (j &gt;= gap &amp;&amp; temp &lt; [[list objectAtIndex:(j - gap)] intValue]) &#123;</span><br><span class="line">                [list replaceObjectAtIndex:j withObject:[list objectAtIndex:j-gap]];</span><br><span class="line">                j -= gap;</span><br><span class="line">            &#125;</span><br><span class="line">            //跳出循环时，j元素小于i的元素（待排元素）。插入新元素a[j] = temp，即空出来的位置插入待排序的值</span><br><span class="line">            [list replaceObjectAtIndex:j withObject:[NSNumber numberWithInteger:temp]];</span><br><span class="line">        &#125;</span><br><span class="line">        NSLog(@&quot;步长：%d --- 希尔排序:%@&quot;,gap,[self getArrayStr:list]);</span><br><span class="line">        //步长</span><br><span class="line">        gap = gap / 2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 将数组中的元素拼接成字符串 - 方便打印</span><br><span class="line">- (NSString *)getArrayStr:(NSArray *)array &#123;</span><br><span class="line">    NSMutableString *strM = [NSMutableString string];</span><br><span class="line">    for (NSNumber *num in array) &#123;</span><br><span class="line">        [strM appendString:[NSString stringWithFormat:@&quot;%@,&quot;,num]];</span><br><span class="line">    &#125;</span><br><span class="line">    return strM.copy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <p>打印结果</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2020-08-09 22:02:14.160098+0800 OC-哈希排序[23997:1116332] 步长：4 --- 希尔排序:1,3,7,5,2,4,8,6,9,</span><br><span class="line">2020-08-09 22:02:14.160373+0800 OC-哈希排序[23997:1116332] 步长：2 --- 希尔排序:1,3,2,4,7,5,8,6,9,</span><br><span class="line">2020-08-09 22:02:14.160620+0800 OC-哈希排序[23997:1116332] 步长：1 --- 希尔排序:1,2,3,4,5,6,7,8,9,</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2020-08-09 22:02:14.160098+0800 OC-哈希排序[23997:1116332] 步长：4 --- 希尔排序:1,3,7,5,2,4,8,6,9,</span><br><span class="line">2020-08-09 22:02:14.160373+0800 OC-哈希排序[23997:1116332] 步长：2 --- 希尔排序:1,3,2,4,7,5,8,6,9,</span><br><span class="line">2020-08-09 22:02:14.160620+0800 OC-哈希排序[23997:1116332] 步长：1 --- 希尔排序:1,2,3,4,5,6,7,8,9,</span><br></pre></td></tr></table></figure></div>
 
 <ol start="6">
 <li>希尔排序算法分析：</li>

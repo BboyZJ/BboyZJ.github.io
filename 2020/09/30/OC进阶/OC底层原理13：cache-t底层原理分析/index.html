@@ -326,8 +326,8 @@
 
             <div class="article-content markdown-body">
                 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>我们在前面的 <a href="https://www.bboyzj.cn/2020/09/24/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8610%EF%BC%9A%E7%B1%BB%20&%20%E7%B1%BB%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90/">OC底层原理10：类 &amp; 类结构分析</a> 中<br>得知 <code>类</code> 都是以 <code>objc_class</code> 模板创建的，而 <code>objc_class</code> 中包含许多属性，如 <code>Class ISA、Class superclass、cache_t cache、class_data_bits_t bits</code>，并分析了 <code>ISA、superclass、bits</code>，本文主要分析 <code>cache_t</code> 中的 <code>cache</code> 属性。</p>
-<h1 id="cache-t-结构分析"><a href="#cache-t-结构分析" class="headerlink" title="cache_t 结构分析"></a>cache_t 结构分析</h1><p> 通过 <a target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/">objc4-781源码</a> ，查看 <code>cache_t</code> 的源码结构如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">// cache 存的是什么？ 怎么存的？</span><br><span class="line">// cache 用来缓存</span><br><span class="line">struct cache_t &#123;</span><br><span class="line">#if CACHE_MASK_STORAGE == CACHE_MASK_STORAGE_OUTLINED  // MacOS 或 模拟器 -- 主要作为架构的区分</span><br><span class="line">    // explicit_atomic 显示原子性，目的是为了能够 增删改查时 保证线程的安全性</span><br><span class="line">    // 等价于 struct bucket_t * _buckets;</span><br><span class="line">    // _buckets 中放的是 sel imp</span><br><span class="line">    // _buckets的读取 有提供相应名称的方法 buckets()</span><br><span class="line">    explicit_atomic&lt;struct bucket_t *&gt; _buckets;</span><br><span class="line">    // _mask 掩码，即面具 -- 类似于isa的掩码，即位域</span><br><span class="line">    explicit_atomic&lt;mask_t&gt; _mask;</span><br><span class="line">    </span><br><span class="line">#elif CACHE_MASK_STORAGE == CACHE_MASK_STORAGE_HIGH_16 // 真机 &amp; 64位</span><br><span class="line">    // _maskAndBuckets 把原来的两个结构 _buckets 和 _mask 写成一个了，作用 为了优化</span><br><span class="line">    explicit_atomic&lt;uintptr_t&gt; _maskAndBuckets;</span><br><span class="line">    // 苹果没有写完</span><br><span class="line">    mask_t _mask_unused;</span><br><span class="line">    </span><br><span class="line">    // 静态的省略...</span><br><span class="line">        </span><br><span class="line">#elif CACHE_MASK_STORAGE == CACHE_MASK_STORAGE_LOW_4 // 真机 不是64位的</span><br><span class="line">    </span><br><span class="line">    explicit_atomic&lt;uintptr_t&gt; _maskAndBuckets;</span><br><span class="line">    mask_t _mask_unused;</span><br><span class="line"></span><br><span class="line">    // 静态的省略...</span><br><span class="line">    </span><br><span class="line">#else</span><br><span class="line">#error Unknown cache mask storage type.</span><br><span class="line">#endif</span><br><span class="line">    </span><br><span class="line">#if __LP64__</span><br><span class="line">    // 位置标记</span><br><span class="line">    uint16_t _flags;</span><br><span class="line">#endif</span><br><span class="line">    // 占位</span><br><span class="line">    uint16_t _occupied;</span><br><span class="line"></span><br><span class="line">    //其他方法省略.....</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="cache-t-结构分析"><a href="#cache-t-结构分析" class="headerlink" title="cache_t 结构分析"></a>cache_t 结构分析</h1><p> 通过 <a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/" >objc4-781源码 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> ，查看 <code>cache_t</code> 的源码结构如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">// cache 存的是什么？ 怎么存的？</span><br><span class="line">// cache 用来缓存</span><br><span class="line">struct cache_t &#123;</span><br><span class="line">#if CACHE_MASK_STORAGE == CACHE_MASK_STORAGE_OUTLINED  // MacOS 或 模拟器 -- 主要作为架构的区分</span><br><span class="line">    // explicit_atomic 显示原子性，目的是为了能够 增删改查时 保证线程的安全性</span><br><span class="line">    // 等价于 struct bucket_t * _buckets;</span><br><span class="line">    // _buckets 中放的是 sel imp</span><br><span class="line">    // _buckets的读取 有提供相应名称的方法 buckets()</span><br><span class="line">    explicit_atomic&lt;struct bucket_t *&gt; _buckets;</span><br><span class="line">    // _mask 掩码，即面具 -- 类似于isa的掩码，即位域</span><br><span class="line">    explicit_atomic&lt;mask_t&gt; _mask;</span><br><span class="line">    </span><br><span class="line">#elif CACHE_MASK_STORAGE == CACHE_MASK_STORAGE_HIGH_16 // 真机 &amp; 64位</span><br><span class="line">    // _maskAndBuckets 把原来的两个结构 _buckets 和 _mask 写成一个了，作用 为了优化</span><br><span class="line">    explicit_atomic&lt;uintptr_t&gt; _maskAndBuckets;</span><br><span class="line">    // 苹果没有写完</span><br><span class="line">    mask_t _mask_unused;</span><br><span class="line">    </span><br><span class="line">    // 静态的省略...</span><br><span class="line">        </span><br><span class="line">#elif CACHE_MASK_STORAGE == CACHE_MASK_STORAGE_LOW_4 // 真机 不是64位的</span><br><span class="line">    </span><br><span class="line">    explicit_atomic&lt;uintptr_t&gt; _maskAndBuckets;</span><br><span class="line">    mask_t _mask_unused;</span><br><span class="line"></span><br><span class="line">    // 静态的省略...</span><br><span class="line">    </span><br><span class="line">#else</span><br><span class="line">#error Unknown cache mask storage type.</span><br><span class="line">#endif</span><br><span class="line">    </span><br><span class="line">#if __LP64__</span><br><span class="line">    // 位置标记</span><br><span class="line">    uint16_t _flags;</span><br><span class="line">#endif</span><br><span class="line">    // 占位</span><br><span class="line">    uint16_t _occupied;</span><br><span class="line"></span><br><span class="line">    //其他方法省略.....</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <p>分析 <code>cache_t</code> 的结构：</p>
 <ul>
@@ -347,7 +347,7 @@
 </li>
 </ul>
 <p>我们可以点进 <code>CACHE_MASK_STORAGE</code> 中查看具体的定义：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#define CACHE_MASK_STORAGE_OUTLINED 1 </span><br><span class="line">#define CACHE_MASK_STORAGE_HIGH_16 2</span><br><span class="line">#define CACHE_MASK_STORAGE_LOW_4 3</span><br><span class="line"></span><br><span class="line">#if defined(__arm64__) &amp;&amp; __LP64__ // 真机 &amp; 64位</span><br><span class="line">#define CACHE_MASK_STORAGE CACHE_MASK_STORAGE_HIGH_16</span><br><span class="line">#elif defined(__arm64__) &amp;&amp; !__LP64__ // 真机 &amp; 非64位</span><br><span class="line">#define CACHE_MASK_STORAGE CACHE_MASK_STORAGE_LOW_4</span><br><span class="line">#else // MacOS 或 模拟器</span><br><span class="line">#define CACHE_MASK_STORAGE CACHE_MASK_STORAGE_OUTLINED</span><br><span class="line">#endif</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#define CACHE_MASK_STORAGE_OUTLINED 1 </span><br><span class="line">#define CACHE_MASK_STORAGE_HIGH_16 2</span><br><span class="line">#define CACHE_MASK_STORAGE_LOW_4 3</span><br><span class="line"></span><br><span class="line">#if defined(__arm64__) &amp;&amp; __LP64__ // 真机 &amp; 64位</span><br><span class="line">#define CACHE_MASK_STORAGE CACHE_MASK_STORAGE_HIGH_16</span><br><span class="line">#elif defined(__arm64__) &amp;&amp; !__LP64__ // 真机 &amp; 非64位</span><br><span class="line">#define CACHE_MASK_STORAGE CACHE_MASK_STORAGE_LOW_4</span><br><span class="line">#else // MacOS 或 模拟器</span><br><span class="line">#define CACHE_MASK_STORAGE CACHE_MASK_STORAGE_OUTLINED</span><br><span class="line">#endif</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li><p><code>explicit_atomic</code>：表示 <code>显示原子性</code>，目的是为了能够保证 <code>增删改查</code>时 <code>线程的安全性</code></p>
@@ -355,7 +355,7 @@
 <li><p><code>_buckets</code>：是一个 <code>struct bucket_t</code> 的结构体，其内部源码如下：</p>
 </li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">struct bucket_t &#123;</span><br><span class="line">private:</span><br><span class="line">    // IMP-first is better for arm64e ptrauth and no worse for arm64.</span><br><span class="line">    // SEL-first is better for armv7* and i386 and x86_64.</span><br><span class="line">#if __arm64__ // 真机 64位</span><br><span class="line">    explicit_atomic&lt;uintptr_t&gt; _imp;</span><br><span class="line">    explicit_atomic&lt;SEL&gt; _sel;</span><br><span class="line">#else // 非真机</span><br><span class="line">    explicit_atomic&lt;SEL&gt; _sel;</span><br><span class="line">    explicit_atomic&lt;uintptr_t&gt; _imp;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">struct bucket_t &#123;</span><br><span class="line">private:</span><br><span class="line">    // IMP-first is better for arm64e ptrauth and no worse for arm64.</span><br><span class="line">    // SEL-first is better for armv7* and i386 and x86_64.</span><br><span class="line">#if __arm64__ // 真机 64位</span><br><span class="line">    explicit_atomic&lt;uintptr_t&gt; _imp;</span><br><span class="line">    explicit_atomic&lt;SEL&gt; _sel;</span><br><span class="line">#else // 非真机</span><br><span class="line">    explicit_atomic&lt;SEL&gt; _sel;</span><br><span class="line">    explicit_atomic&lt;uintptr_t&gt; _imp;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure></div>
 
 <p>由 <code>bucket_t</code> 源码可知，其内部保存的是 <code>SEL</code> 和 <code>IMP</code></p>
 <ul>
@@ -367,14 +367,19 @@
 </li>
 </ul>
 <p><code>masK_t</code> 的内部结构如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#if __LP64__</span><br><span class="line">typedef uint32_t mask_t;  // x86_64 &amp; arm64 asm are less efficient with 16-bits</span><br><span class="line">#else</span><br><span class="line">typedef uint16_t mask_t;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#if __LP64__</span><br><span class="line">typedef uint32_t mask_t;  // x86_64 &amp; arm64 asm are less efficient with 16-bits</span><br><span class="line">#else</span><br><span class="line">typedef uint16_t mask_t;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li><code>_maskAndBuckets</code>： <code>真机</code> 环境把原来的两个结构 <code>_buckets</code> 和 <code>_mask</code> 写成一个了，作用是 <code>为了优化</code></li>
 </ul>
 <p><strong>【总结】</strong></p>
 <p>通过上面几个结构体分析，我们可以得出一个如下的结构图：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/96363367-6db75580-1166-11eb-9331-a1daecd5fb9c.png" alt="w250"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96363367-6db75580-1166-11eb-9331-a1daecd5fb9c.png"
+                      alt="w250"
+                ></p>
 <h1 id="【补充知识】sel-amp-imp-的关系"><a href="#【补充知识】sel-amp-imp-的关系" class="headerlink" title="【补充知识】sel &amp; imp 的关系"></a>【补充知识】sel &amp; imp 的关系</h1><p>我们知道，每一个方法都有一个 <code>sel</code> 和 <code>imp</code>，<code>sel</code> 就是 <code>方法编号</code>，<code>imp</code> 就是 <code>函数指针(方法实现)</code>，我们在查找方法的时候是一个非常漫长的过程，<code>oc</code> 的 <code>函数实现</code> 是通过 <code>下层c/c++</code> 来实现的，<code>oc上层</code> 的 <code>sel</code> 和 <code>imp</code> 起始是 <code>对下层</code> 的 <code>封装</code></p>
 <p><strong>【方法的组成】:</strong></p>
 <ul>
@@ -389,7 +394,12 @@
 <li>通过页码去定位具体的内容</li>
 </ul>
 <p>下面用一张图表示：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95676103-5ae4d400-0bee-11eb-9762-59f6497c62f5.png" alt="w250"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95676103-5ae4d400-0bee-11eb-9762-59f6497c62f5.png"
+                      alt="w250"
+                ></p>
 <h1 id="cache中查找sel-imp"><a href="#cache中查找sel-imp" class="headerlink" title="cache中查找sel-imp"></a>cache中查找sel-imp</h1><p><code>cache_t</code> 中查找存储的 <code>sel-imp</code>，有以下两种方式</p>
 <ul>
 <li>通过源码查找</li>
@@ -400,20 +410,30 @@
 <li>自定义一个 <code>ZJPerson</code> 类，并定义 <code>2个属性</code> 和 <code>5个实例方法</code> 及其 <code>实现</code></li>
 </ul>
 <p><code>ZJPerson.h</code> 中</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">@property (nonatomic, copy) NSString *zjName;</span><br><span class="line">@property (nonatomic, strong) NSString *nickName;</span><br><span class="line"></span><br><span class="line">- (void)sayHello;</span><br><span class="line"></span><br><span class="line">- (void)sayCode;</span><br><span class="line"></span><br><span class="line">- (void)sayMaster;</span><br><span class="line"></span><br><span class="line">- (void)sayNB;</span><br><span class="line"></span><br><span class="line">+ (void)sayHappy;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">@property (nonatomic, copy) NSString *zjName;</span><br><span class="line">@property (nonatomic, strong) NSString *nickName;</span><br><span class="line"></span><br><span class="line">- (void)sayHello;</span><br><span class="line"></span><br><span class="line">- (void)sayCode;</span><br><span class="line"></span><br><span class="line">- (void)sayMaster;</span><br><span class="line"></span><br><span class="line">- (void)sayNB;</span><br><span class="line"></span><br><span class="line">+ (void)sayHappy;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <p><code>ZJPerson.m</code> 中</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">@implementation ZJPerson</span><br><span class="line">- (void)sayHello&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)sayCode&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)sayMaster&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)sayNB&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (void)sayHappy&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">@implementation ZJPerson</span><br><span class="line">- (void)sayHello&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)sayCode&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)sayMaster&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)sayNB&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (void)sayHappy&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>在 <code>main.m</code> 中定义 <code>ZJPerson</code> 类的 <code>对象p</code>，并调用其中的 <code>3个实例方法</code>，在第一个方法处加两个 <code>断点</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/96364523-955dec00-116d-11eb-9eb9-c57c7c6fa8ed.png" alt="w250"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96364523-955dec00-116d-11eb-9eb9-c57c7c6fa8ed.png"
+                      alt="w250"
+                ></p>
 <p><code>【通过源码查找】</code></p>
 <ul>
 <li>运行执行，断在 <code>[p sayHello];</code> 部分，此时执行以下lldb调试流程：</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/96365462-4f0b8b80-1173-11eb-8594-4baa031fae9f.png" alt="w250"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96365462-4f0b8b80-1173-11eb-8594-4baa031fae9f.png"
+                      alt="w250"
+                ></p>
 <p>由上面的调式流程可知：</p>
 <ul>
 <li><p><code>cache属性</code> 的获取，需要通过 <code>pClass</code> 的 <code>首地址平移16字节</code>，即 <code>首地址 + 0x10</code> 获取 <code>cache的地址</code></p>
@@ -426,31 +446,56 @@
 <p>由上图可知，在没有执行方法调用之前，此时 <code>cache</code> 是没有缓存的，执行调用了一次之后，<code>cache</code> 中就 <code>缓存</code> 了 <code>一次</code>，即调用一次方法就会缓存一次。</p>
 <p>我们在前面了解了如何获取 <code>cache</code> 中 <code>sel-imp</code>，那么如何验证打印的<code>sel-imp</code> 就是我们调用的呢？可以通过 <code>machoView</code> 打开 <code>target</code> 的可执行文件，在方法列表中查看其 <code>imp</code> 的值 <code>是否是一致</code> 的，如下所示，发现是一致的，所以打印的这个 <code>sel-imp</code> 就是 <code>ZJPerson</code> 的实例方法：</p>
 <p><strong>【machoView图】：</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/96365694-0e147680-1175-11eb-96a8-2118cc073e87.png" alt="w250"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96365694-0e147680-1175-11eb-96a8-2118cc073e87.png"
+                      alt="w250"
+                ></p>
 <p><strong>【imp截图：】</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/96365715-2b494500-1175-11eb-8a60-1f4cf17407d3.png" alt="w250"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96365715-2b494500-1175-11eb-8a60-1f4cf17407d3.png"
+                      alt="w250"
+                ></p>
 <ul>
 <li>接着上面的 <code>LLDB</code> 调试步骤，我们再调一个方法，其 <code>LLDB</code> 调试如下图：</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/96365992-4452f580-1177-11eb-9496-57b30db5353c.png" alt="w250"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96365992-4452f580-1177-11eb-9496-57b30db5353c.png"
+                      alt="w250"
+                ></p>
 <p>第一个调用方法的存储获取很简单，直接通过 <code>_buckets</code> 的 <code>首地址</code> 调用对应的方法即可，那么获取第二个呢？在之前的 <a href="https://www.bboyzj.cn/2020/09/24/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8610%EF%BC%9A%E7%B1%BB%20&%20%E7%B1%BB%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90/">OC底层原理10：类 &amp; 类结构分析</a> 文章中，曾提及过一个概念 <code>指针偏移</code>，所以我们这里可以通过 <code>_buckets</code> 属性的 <code>首地址偏移</code>，即 <code>p *($9+1)</code> 即可获取第二个方法的 <code>sel 和 imp</code></p>
 <p>如果有多个方法需要获取，以此类推，例如 <code>p *($9+i)</code></p>
 <p><strong>【脱离源码通过项目查找】</strong></p>
 <p>脱离源码环境，就是将所需的 <code>源码</code> 的部分 <code>拷贝至项目</code> 中，其完整代码如下：</p>
 <p>【ZJPerson类】</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">//*********.h********</span><br><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">@property (nonatomic, copy) NSString *zjName;</span><br><span class="line">@property (nonatomic, strong) NSString *nickName;</span><br><span class="line">- (void)say1;</span><br><span class="line">- (void)say2;</span><br><span class="line">- (void)say3;</span><br><span class="line">- (void)say4;</span><br><span class="line">- (void)say5;</span><br><span class="line">- (void)say6;</span><br><span class="line">- (void)say7;</span><br><span class="line">+ (void)sayHappy;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">//*********.m********</span><br><span class="line">@implementation ZJPerson</span><br><span class="line">- (void)say1&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">- (void)say2&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">- (void)say3&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">- (void)say4&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">- (void)say5&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">- (void)say6&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">- (void)say7&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">+ (void)sayHappy&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">//*********.h********</span><br><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">@property (nonatomic, copy) NSString *zjName;</span><br><span class="line">@property (nonatomic, strong) NSString *nickName;</span><br><span class="line">- (void)say1;</span><br><span class="line">- (void)say2;</span><br><span class="line">- (void)say3;</span><br><span class="line">- (void)say4;</span><br><span class="line">- (void)say5;</span><br><span class="line">- (void)say6;</span><br><span class="line">- (void)say7;</span><br><span class="line">+ (void)sayHappy;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">//*********.m********</span><br><span class="line">@implementation ZJPerson</span><br><span class="line">- (void)say1&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">- (void)say2&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">- (void)say3&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">- (void)say4&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">- (void)say5&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">- (void)say6&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">- (void)say7&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">+ (void)sayHappy&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : %s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>【main中代码】</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line">#import &quot;ZJPerson.h&quot;</span><br><span class="line">#import &lt;objc/runtime.h&gt;</span><br><span class="line"></span><br><span class="line">typedef uint32_t mask_t;  // x86_64 &amp; arm64 asm are less efficient with 16-bits</span><br><span class="line"></span><br><span class="line">struct zj_bucket_t &#123;</span><br><span class="line">    SEL _sel;</span><br><span class="line">    IMP _imp;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct zj_cache_t &#123;</span><br><span class="line">    struct zj_bucket_t * _buckets;</span><br><span class="line">    mask_t _mask;</span><br><span class="line">    uint16_t _flags;</span><br><span class="line">    uint16_t _occupied;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct zj_class_data_bits_t &#123;</span><br><span class="line">    uintptr_t bits;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct zj_objc_class &#123;</span><br><span class="line">    Class ISA;</span><br><span class="line">    Class superclass;</span><br><span class="line">    struct zj_cache_t cache;             // formerly cache pointer and vtable</span><br><span class="line">    struct zj_class_data_bits_t bits;    // class_rw_t * plus custom rr/alloc flags</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        ZJPerson *p  = [ZJPerson alloc];</span><br><span class="line">        Class pClass = [ZJPerson class];  // objc_clas</span><br><span class="line">        [p say1];</span><br><span class="line">        [p say2];</span><br><span class="line">        [p say3];</span><br><span class="line">        [p say4];</span><br><span class="line">         </span><br><span class="line">        // _occupied  _mask 是什么  cup - 1</span><br><span class="line">        // 会变化 2-3 -&gt; 2-7</span><br><span class="line">        // bucket 会有丢失  重新申请</span><br><span class="line">        // 顺序有点问题  哈希</span><br><span class="line">        </span><br><span class="line">        // cache_t 底层原理</span><br><span class="line">        // 线索 :</span><br><span class="line">        </span><br><span class="line">        struct zj_objc_class *zj_pClass = (__bridge struct zj_objc_class *)(pClass);</span><br><span class="line">        NSLog(@&quot;%hu - %u&quot;,zj_pClass-&gt;cache._occupied,zj_pClass-&gt;cache._mask);</span><br><span class="line">        for (mask_t i = 0; i&lt;zj_pClass-&gt;cache._mask; i++) &#123;</span><br><span class="line">            // 打印获取的 bucket</span><br><span class="line">            struct zj_bucket_t bucket = zj_pClass-&gt;cache._buckets[i];</span><br><span class="line">            NSLog(@&quot;%@ - %p&quot;,NSStringFromSelector(bucket._sel),bucket._imp);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line">        NSLog(@&quot;Hello, World!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line">#import &quot;ZJPerson.h&quot;</span><br><span class="line">#import &lt;objc/runtime.h&gt;</span><br><span class="line"></span><br><span class="line">typedef uint32_t mask_t;  // x86_64 &amp; arm64 asm are less efficient with 16-bits</span><br><span class="line"></span><br><span class="line">struct zj_bucket_t &#123;</span><br><span class="line">    SEL _sel;</span><br><span class="line">    IMP _imp;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct zj_cache_t &#123;</span><br><span class="line">    struct zj_bucket_t * _buckets;</span><br><span class="line">    mask_t _mask;</span><br><span class="line">    uint16_t _flags;</span><br><span class="line">    uint16_t _occupied;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct zj_class_data_bits_t &#123;</span><br><span class="line">    uintptr_t bits;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct zj_objc_class &#123;</span><br><span class="line">    Class ISA;</span><br><span class="line">    Class superclass;</span><br><span class="line">    struct zj_cache_t cache;             // formerly cache pointer and vtable</span><br><span class="line">    struct zj_class_data_bits_t bits;    // class_rw_t * plus custom rr/alloc flags</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        ZJPerson *p  = [ZJPerson alloc];</span><br><span class="line">        Class pClass = [ZJPerson class];  // objc_clas</span><br><span class="line">        [p say1];</span><br><span class="line">        [p say2];</span><br><span class="line">        [p say3];</span><br><span class="line">        [p say4];</span><br><span class="line">         </span><br><span class="line">        // _occupied  _mask 是什么  cup - 1</span><br><span class="line">        // 会变化 2-3 -&gt; 2-7</span><br><span class="line">        // bucket 会有丢失  重新申请</span><br><span class="line">        // 顺序有点问题  哈希</span><br><span class="line">        </span><br><span class="line">        // cache_t 底层原理</span><br><span class="line">        // 线索 :</span><br><span class="line">        </span><br><span class="line">        struct zj_objc_class *zj_pClass = (__bridge struct zj_objc_class *)(pClass);</span><br><span class="line">        NSLog(@&quot;%hu - %u&quot;,zj_pClass-&gt;cache._occupied,zj_pClass-&gt;cache._mask);</span><br><span class="line">        for (mask_t i = 0; i&lt;zj_pClass-&gt;cache._mask; i++) &#123;</span><br><span class="line">            // 打印获取的 bucket</span><br><span class="line">            struct zj_bucket_t bucket = zj_pClass-&gt;cache._buckets[i];</span><br><span class="line">            NSLog(@&quot;%@ - %p&quot;,NSStringFromSelector(bucket._sel),bucket._imp);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line">        NSLog(@&quot;Hello, World!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>这里有个问题需要注意，在源码中，<code>objc_class</code> 的 <code>ISA</code> 属性时继承自 <code>objc_object</code> 的，但在我们将其拷贝过来时，去掉了 <code>objc_class</code> 的继承关系，需要将这个属性明确，否则打印的结果是有问题的，如下图所示：</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506161124201.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506161124201.jpg"
+                     
+                ></p>
 <ul>
 <li>加上 <code>ISA</code> 属性后，其正确的打印结果如下：</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506161617054.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506161617054.jpg"
+                     
+                ></p>
 <p>针对上面的打印结果，有以下几个疑问？</p>
 <ul>
 <li><code>_mask</code> 是什么？</li>
@@ -464,29 +509,59 @@
 <h1 id="cache-t-底层原理分析"><a href="#cache-t-底层原理分析" class="headerlink" title="cache_t 底层原理分析"></a>cache_t 底层原理分析</h1><ul>
 <li>首先，从 <code>cache_t</code> 中的 <code>_mask</code> 属性开始分析，找 <code>cache_t</code> 中引起变化的函数，发现了 <code>incrementOccupied()</code> 函数</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506175409306.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506175409306.jpg"
+                     
+                ></p>
 <p>该函数的具体实现为</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void incrementOccupied(); //Occupied自增</span><br><span class="line"></span><br><span class="line">//👇具体实现</span><br><span class="line">void cache_t::incrementOccupied() </span><br><span class="line">&#123;</span><br><span class="line">    _occupied++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void incrementOccupied(); //Occupied自增</span><br><span class="line"></span><br><span class="line">//👇具体实现</span><br><span class="line">void cache_t::incrementOccupied() </span><br><span class="line">&#123;</span><br><span class="line">    _occupied++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>源码中，全局搜索 <code>incrementOccupied()</code> 函数，发现只在 <code>cache_t</code> 的 <code>insert</code> 方法有调用</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506176699882.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506176699882.png"
+                     
+                ></p>
 <ul>
 <li><code>insert</code> 方法，理解为 <code>cache_t</code> 的插入，而 <code>cache</code> 中存储的就是 <code>sel-imp</code>，所以 <code>cache</code> 的原理从 <code>insert</code> 方法开始分析，以下是 <code>cache</code> 原理分析的流程图</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506177129298.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506177129298.png"
+                     
+                ></p>
 <ul>
 <li>全局搜索 <code>insert(</code> 方法，发现只有 <code>cache_fill</code> 方法中的调用符合</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506177819433.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506177819433.png"
+                     
+                ></p>
 <ul>
 <li>全局搜索 <code>cache_fill</code>，发现在写入之前，还有一步操作，即 <code>cache</code> 读取，即查找 <code>sel-imp</code>，如下所示</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506178147151.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506178147151.png"
+                     
+                ></p>
 <p>但本文的重点还是分析 <code>cache</code> 存储的原理，接下来根据 <code>cache_t</code> 写入的流程图，着重分析 <code>insert</code> 方法</p>
 <h1 id="insert-方法分析"><a href="#insert-方法分析" class="headerlink" title="insert 方法分析"></a>insert 方法分析</h1><p>在 <code>insert</code> 方法中，其源码实现如下</p>
-<p><img src="/BboyZJ.github.io/assets/16506178813685.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506178813685.png"
+                     
+                ></p>
 <p>主要分为以下几部分：</p>
 <ul>
 <li>【第一步】<code>计算</code> 出当前的 <code>缓存占用量</code></li>
@@ -495,7 +570,7 @@
 </ul>
 <p><strong>1、【第一步】计算出当前的缓存占用量</strong></p>
 <p>根据 <code>occupied</code> 的值计算出当前的缓存占用量，当 <code>属性未赋值及无法调用时</code>，此时的 <code>occupied()为0</code> ，而 <code>newOccupied为1</code> ，如下所示</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mask_t newOccupied = occupied() + 1;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mask_t newOccupied = occupied() + 1;</span><br></pre></td></tr></table></figure></div>
 
 <p>关于缓存占用量的计算，有以下几点说明：</p>
 <ul>
@@ -510,21 +585,26 @@
 <ul>
 <li>如果是 <code>第一次创建</code>，则默认开辟4个</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">if (slowpath(isConstantEmptyCache())) &#123; //小概率发生的 即当 occupied() = 0时，即创建缓存，创建属于小概率事件</span><br><span class="line">    // Cache is read-only. Replace it.</span><br><span class="line">    if (!capacity) capacity = INIT_CACHE_SIZE; //初始化时，capacity = 4（1&lt;&lt;2 -- 100）</span><br><span class="line">    reallocate(oldCapacity, capacity, /* freeOld */false); //开辟空间</span><br><span class="line">    //到目前为止，if的流程的操作都是初始化创建</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">if (slowpath(isConstantEmptyCache())) &#123; //小概率发生的 即当 occupied() = 0时，即创建缓存，创建属于小概率事件</span><br><span class="line">    // Cache is read-only. Replace it.</span><br><span class="line">    if (!capacity) capacity = INIT_CACHE_SIZE; //初始化时，capacity = 4（1&lt;&lt;2 -- 100）</span><br><span class="line">    reallocate(oldCapacity, capacity, /* freeOld */false); //开辟空间</span><br><span class="line">    //到目前为止，if的流程的操作都是初始化创建</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>如果缓存占用量 <code>小于等于3/4</code>，则不作任何处理</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">else if (fastpath(newOccupied + CACHE_END_MARKER &lt;= capacity / 4 * 3)) &#123; </span><br><span class="line">    // Cache is less than 3/4 full. Use it as-is.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">else if (fastpath(newOccupied + CACHE_END_MARKER &lt;= capacity / 4 * 3)) &#123; </span><br><span class="line">    // Cache is less than 3/4 full. Use it as-is.</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>如果缓存占用量 <code>超过3/4</code>，则需要进行 <code>两倍扩容</code> 以及 <code>重新开辟空间</code></li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">else &#123; //如果超出了3/4，则需要扩容（两倍扩容）</span><br><span class="line">    // 扩容算法： 有cap时，扩容两倍，没有cap就初始化为4</span><br><span class="line">    capacity = capacity ? capacity * 2 : INIT_CACHE_SIZE;  // 扩容两倍 2*4 = 8</span><br><span class="line">    if (capacity &gt; MAX_CACHE_SIZE) &#123;</span><br><span class="line">        capacity = MAX_CACHE_SIZE;</span><br><span class="line">    &#125;</span><br><span class="line">    // 走到这里表示 曾经有，但是已经满了，需要重新梳理</span><br><span class="line">    reallocate(oldCapacity, capacity, true);</span><br><span class="line">    // 内存 扩容完毕</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">else &#123; //如果超出了3/4，则需要扩容（两倍扩容）</span><br><span class="line">    // 扩容算法： 有cap时，扩容两倍，没有cap就初始化为4</span><br><span class="line">    capacity = capacity ? capacity * 2 : INIT_CACHE_SIZE;  // 扩容两倍 2*4 = 8</span><br><span class="line">    if (capacity &gt; MAX_CACHE_SIZE) &#123;</span><br><span class="line">        capacity = MAX_CACHE_SIZE;</span><br><span class="line">    &#125;</span><br><span class="line">    // 走到这里表示 曾经有，但是已经满了，需要重新梳理</span><br><span class="line">    reallocate(oldCapacity, capacity, true);</span><br><span class="line">    // 内存 扩容完毕</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>【realloc方法：开辟空间】</strong></p>
 <p>该方法，在 <code>第一次创建</code> 以及 <code>两倍扩容</code> 时，都会使用，其源码实现如图所示</p>
-<p><img src="/BboyZJ.github.io/assets/16506185309016.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506185309016.png"
+                     
+                ></p>
 <p>主要有以下几步：</p>
 <ul>
 <li><p><code>allocateBuckets</code> 方法：向系统 <code>申请开辟内存</code>，即开辟 <code>bucket</code>，此时的bucket只是一个临时变量</p>
@@ -535,20 +615,40 @@
 </ul>
 </li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506186391406.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506186391406.png"
+                     
+                ></p>
 <ul>
 <li>如果 <code>不是真机</code>，<code>正常存储bucket和mask</code>，并将 <code>occupied</code> 占用设置为 <code>0</code></li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506186864056.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506186864056.png"
+                     
+                ></p>
 <ul>
 <li>如果有旧的buckets，需要清理之前的缓存，即调用 <code>cache_collect_free</code> 方法，其源码实现如下</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506187036345.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506187036345.png"
+                     
+                ></p>
 <p>该方法的实现主要有以下几步：</p>
 <ul>
 <li><code>_garbage_make_room</code> 方法：创建垃圾回收空间</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506187497909.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506187497909.png"
+                     
+                ></p>
 <ul>
 <li><p>如果是 <code>第一次</code>，需要 <code>分配回收空间</code></p>
 </li>
@@ -559,7 +659,12 @@
 <li><p><code>cache_collect</code> 方法：垃圾回收，清理旧的bucket</p>
 </li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16506187497909.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16506187497909.png"
+                     
+                ></p>
 <p><strong>【第三步】针对需要存贮的bucket进行内部imp和sel赋值</strong></p>
 <p>这部分主要是根据 <code>cache_hash</code> 方法，即 <code>哈希算法</code> ，计算 <code>sel-imp</code> 存储的 <code>哈希下标</code>，分为以下三种情况：</p>
 <ul>
@@ -574,12 +679,12 @@
 <ul>
 <li><code>cache_hash</code>：哈希算法</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">static inline mask_t cache_hash(SEL sel, mask_t mask) </span><br><span class="line">&#123;</span><br><span class="line">    return (mask_t)(uintptr_t)sel &amp; mask; // 通过sel &amp; mask（mask = cap -1）</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">static inline mask_t cache_hash(SEL sel, mask_t mask) </span><br><span class="line">&#123;</span><br><span class="line">    return (mask_t)(uintptr_t)sel &amp; mask; // 通过sel &amp; mask（mask = cap -1）</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li><code>cache_next</code>：哈希冲突算法</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#if __arm__  ||  __x86_64__  ||  __i386__</span><br><span class="line">// objc_msgSend has few registers available.</span><br><span class="line">// Cache scan increments and wraps at special end-marking bucket.</span><br><span class="line">#define CACHE_END_MARKER 1</span><br><span class="line">static inline mask_t cache_next(mask_t i, mask_t mask) &#123;</span><br><span class="line">    return (i+1) &amp; mask; //（将当前的哈希下标 +1） &amp; mask，重新进行哈希计算，得到一个新的下标</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#elif __arm64__</span><br><span class="line">// objc_msgSend has lots of registers available.</span><br><span class="line">// Cache scan decrements. No end marker needed.</span><br><span class="line">#define CACHE_END_MARKER 0</span><br><span class="line">static inline mask_t cache_next(mask_t i, mask_t mask) &#123;</span><br><span class="line">    return i ? i-1 : mask; //如果i是空，则为mask，mask = cap -1，如果不为空，则 i-1，向前插入sel-imp</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#if __arm__  ||  __x86_64__  ||  __i386__</span><br><span class="line">// objc_msgSend has few registers available.</span><br><span class="line">// Cache scan increments and wraps at special end-marking bucket.</span><br><span class="line">#define CACHE_END_MARKER 1</span><br><span class="line">static inline mask_t cache_next(mask_t i, mask_t mask) &#123;</span><br><span class="line">    return (i+1) &amp; mask; //（将当前的哈希下标 +1） &amp; mask，重新进行哈希计算，得到一个新的下标</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#elif __arm64__</span><br><span class="line">// objc_msgSend has lots of registers available.</span><br><span class="line">// Cache scan decrements. No end marker needed.</span><br><span class="line">#define CACHE_END_MARKER 0</span><br><span class="line">static inline mask_t cache_next(mask_t i, mask_t mask) &#123;</span><br><span class="line">    return i ? i-1 : mask; //如果i是空，则为mask，mask = cap -1，如果不为空，则 i-1，向前插入sel-imp</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>到此，cache_t的原理基本分析完成了，然后前文提及的几个问题，我们现在就有答案了</p>
 <h1 id="疑问解答"><a href="#疑问解答" class="headerlink" title="疑问解答"></a>疑问解答</h1><p><strong>1、<code>_mask</code> 是什么？</strong></p>

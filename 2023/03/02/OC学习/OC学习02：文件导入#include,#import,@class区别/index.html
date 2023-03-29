@@ -348,32 +348,42 @@
 <h1 id="include-示例"><a href="#include-示例" class="headerlink" title="include 示例"></a>include 示例</h1><ul>
 <li><code>A文件导入两次B文件</code>：报重复定义错误</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line"></span><br><span class="line">// include 不允许重复导入两次</span><br><span class="line">#include &quot;VB.h&quot;</span><br><span class="line">#include &quot;VB.h&quot;</span><br><span class="line"></span><br><span class="line">NS_ASSUME_NONNULL_BEGIN</span><br><span class="line"></span><br><span class="line">@interface VA : UIView</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line"></span><br><span class="line">// include 不允许重复导入两次</span><br><span class="line">#include &quot;VB.h&quot;</span><br><span class="line">#include &quot;VB.h&quot;</span><br><span class="line"></span><br><span class="line">NS_ASSUME_NONNULL_BEGIN</span><br><span class="line"></span><br><span class="line">@interface VA : UIView</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <p>command + b 编译报错：</p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303021812383.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303021812383.png"
+                     
+                ></p>
 <ul>
 <li>A引用B，B引用C，A再引用C：同样 <code>报重复定义错误</code>，相当于A引用了两次C</li>
 </ul>
 <h1 id="import-示例"><a href="#import-示例" class="headerlink" title="import 示例"></a>import 示例</h1><ul>
 <li>导入两次A文件，不报错</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 导入两次A文件</span><br><span class="line">#import &quot;A.h&quot;</span><br><span class="line">#import &quot;A.h&quot;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 导入两次A文件</span><br><span class="line">#import &quot;A.h&quot;</span><br><span class="line">#import &quot;A.h&quot;</span><br></pre></td></tr></table></figure></div>
 
 <h1 id="class-使用场景"><a href="#class-使用场景" class="headerlink" title="class 使用场景"></a>class 使用场景</h1><ul>
 <li>A类引用B类，B类引用A：互相引用报错</li>
 </ul>
 <p>A.h文件</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line">#import &quot;B.h&quot;</span><br><span class="line">@interface A : UIView</span><br><span class="line">@property (nonatomic,strong)B * b;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line">#import &quot;B.h&quot;</span><br><span class="line">@interface A : UIView</span><br><span class="line">@property (nonatomic,strong)B * b;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <p>B.h文件</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line">#import &quot;A.h&quot;</span><br><span class="line">@interface B : UIView</span><br><span class="line">@property (nonatomic,strong)A * a;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line">#import &quot;A.h&quot;</span><br><span class="line">@interface B : UIView</span><br><span class="line">@property (nonatomic,strong)A * a;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303021813725.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303021813725.png"
+                     
+                ></p>
 <ul>
 <li>可以用 <code>@class</code> 方式进行引用，一个用@class或者两个都用 @class</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//#import &quot;A.h&quot;</span><br><span class="line"></span><br><span class="line">// class声明A</span><br><span class="line">@class A;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//#import &quot;A.h&quot;</span><br><span class="line"></span><br><span class="line">// class声明A</span><br><span class="line">@class A;</span><br></pre></td></tr></table></figure></div>
             </div>
 
             

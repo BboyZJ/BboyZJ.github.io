@@ -346,21 +346,21 @@
 </ul>
 <p><code>指针就是地址，地址就是指针</code> 即 <code>* = &amp;</code>，<code>指针变量</code> 是存放 <code>内存单元地址</code> 的变量，它内部保存的值是对应的 <code>地址</code>， <code>地址就是内存单元编号</code>。</p>
 <p>例子：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int  i = 10; // 定义一个 整形变量 i 初始值 10</span><br><span class="line">int *p = i; // 定义一个 整形的指针变量p，变量p 指向 i的地址</span><br><span class="line"></span><br><span class="line">// 这两行等于上面两行</span><br><span class="line">int *p; </span><br><span class="line">*p = &amp;i;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int  i = 10; // 定义一个 整形变量 i 初始值 10</span><br><span class="line">int *p = i; // 定义一个 整形的指针变量p，变量p 指向 i的地址</span><br><span class="line"></span><br><span class="line">// 这两行等于上面两行</span><br><span class="line">int *p; </span><br><span class="line">*p = &amp;i;</span><br></pre></td></tr></table></figure></div>
 
 <h1 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h1><p>结构体是用户根据自己的实际需要，自定义的复合数据类型</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 学生类型</span><br><span class="line">typedef struct Student &#123; // 结构体定义</span><br><span class="line">    int age;</span><br><span class="line">    char *name;</span><br><span class="line">&#125;myStudent;</span><br><span class="line"></span><br><span class="line">// 直接传递 只占用 4 byte 的指针，省时效率也高&lt;推荐用法&gt;</span><br><span class="line">void func(struct Student *p)&#123;</span><br><span class="line">    print(&quot;age = %d&quot;,p)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 学生类型</span><br><span class="line">typedef struct Student &#123; // 结构体定义</span><br><span class="line">    int age;</span><br><span class="line">    char *name;</span><br><span class="line">&#125;myStudent;</span><br><span class="line"></span><br><span class="line">// 直接传递 只占用 4 byte 的指针，省时效率也高&lt;推荐用法&gt;</span><br><span class="line">void func(struct Student *p)&#123;</span><br><span class="line">    print(&quot;age = %d&quot;,p)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>有两种结构体的使用方式：</p>
 <ul>
 <li>直接使用</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">struct Student stu = &#123;12,&quot;xiaojian&quot;&#125;;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">struct Student stu = &#123;12,&quot;xiaojian&quot;&#125;;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>通过指针使用</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">struct Student *p = &amp;stu;</span><br><span class="line">p -&gt; age = 31;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">struct Student *p = &amp;stu;</span><br><span class="line">p -&gt; age = 31;</span><br></pre></td></tr></table></figure></div>
 
             </div>
 

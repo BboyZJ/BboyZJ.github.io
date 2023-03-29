@@ -330,7 +330,12 @@
 <h1 id="常识"><a href="#常识" class="headerlink" title="常识"></a>常识</h1><h2 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h2><ul>
 <li>栈：是一种 <code>具有特殊的访问方式的存储空间</code>（即 <code>后进先出</code> Last In First Out，<code>LIFO</code>）</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165877691-e0fe53cc-93c8-40c4-8cbb-a3445092ca40.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165877691-e0fe53cc-93c8-40c4-8cbb-a3445092ca40.jpg"
+                     
+                ></p>
 <ul>
 <li><p>高地址往低地址存数据（<code>存：高--&gt;低</code>）</p>
 </li>
@@ -343,16 +348,21 @@
 <li><p><code>FP寄存器</code>（也称为 <code>x29</code> 寄存器）：属于通用寄存器，但是在某些时刻（例如函数嵌套调用时）可以 <code>利用它保存栈底的地址</code></p>
 </li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">注意：</span><br><span class="line"></span><br><span class="line">* arm64开始，取消了32位的LDM、STM、PUSH、POP指令，取而代之的是ldr/ldp、str/stp（r和p的区别在于处理的寄存器个数，r表示处理1个寄存器，p表示处理两个寄存器）</span><br><span class="line">* arm64中，对栈的操作是 16字节对齐 的</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">注意：</span><br><span class="line"></span><br><span class="line">* arm64开始，取消了32位的LDM、STM、PUSH、POP指令，取而代之的是ldr/ldp、str/stp（r和p的区别在于处理的寄存器个数，r表示处理1个寄存器，p表示处理两个寄存器）</span><br><span class="line">* arm64中，对栈的操作是 16字节对齐 的</span><br></pre></td></tr></table></figure></div>
 
 <p>以下是arm64之前和arm64之后的一个对比</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/165877713-b57fc265-1f30-4965-b5b6-dc17d4a346a7.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165877713-b57fc265-1f30-4965-b5b6-dc17d4a346a7.jpg"
+                     
+                ></p>
 <ul>
 <li>在arm64之前，栈顶指针是压栈时一个数据移动一个单元</li>
 <li>在arm64开始，首先是 <code>从高地址往低地址开辟一段空间（由编译器决定）</code>，然后再放入数据，所以不存在push、pop操作。这种情况可以通过内存读写指令（<code>ldr/ldp、str/stp</code>）对其进行操作</li>
 </ul>
 <h2 id="函数调用栈"><a href="#函数调用栈" class="headerlink" title="函数调用栈"></a>函数调用栈</h2><p>以下是常见的函数调用 <code>开辟（sub）</code> 以及 <code>恢复栈空间（add）</code> 的汇编代码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 开辟栈空间</span><br><span class="line">sub    sp, sp, #0x40             ; 拉伸（开辟）0x40（64字节）空间</span><br><span class="line">stp    x29, x30, [sp, #0x30]     ; x29\x30 寄存器入栈保护</span><br><span class="line">add    x29, sp, #0x30            ; x29指向栈帧的底部</span><br><span class="line">... </span><br><span class="line">ldp    x29, x30, [sp, #0x30]     ; 恢复x29/x30 寄存器的值</span><br><span class="line">// 恢复栈空间</span><br><span class="line">add    sp, sp, #0x40             ; 栈平衡</span><br><span class="line">ret</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 开辟栈空间</span><br><span class="line">sub    sp, sp, #0x40             ; 拉伸（开辟）0x40（64字节）空间</span><br><span class="line">stp    x29, x30, [sp, #0x30]     ; x29\x30 寄存器入栈保护</span><br><span class="line">add    x29, sp, #0x30            ; x29指向栈帧的底部</span><br><span class="line">... </span><br><span class="line">ldp    x29, x30, [sp, #0x30]     ; 恢复x29/x30 寄存器的值</span><br><span class="line">// 恢复栈空间</span><br><span class="line">add    sp, sp, #0x40             ; 栈平衡</span><br><span class="line">ret</span><br></pre></td></tr></table></figure></div>
 
 <h2 id="内存读写指令"><a href="#内存读写指令" class="headerlink" title="内存读写指令"></a>内存读写指令</h2><p><strong>注意：</strong></p>
 <ul>
@@ -373,63 +383,113 @@
 </li>
 </ul>
 <h2 id="堆栈练习"><a href="#堆栈练习" class="headerlink" title="堆栈练习"></a>堆栈练习</h2><p>使用32个字节空间作为这段程序的栈空间，然后利用栈将x0和x1的值进行交换</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sub sp, sp, #0x20       ;拉伸栈空间32个字节</span><br><span class="line">stp x0, x1, [sp, #0x10] ;sp往上加16个字节（两个8字节的寄存器），存放x0和x1</span><br><span class="line">ldp x1, x0, [sp, #0x10] ;将sp偏移16个字节的值从取出来，放入x1和x0，内存是temp（寄存器里面的值进行交换了）</span><br><span class="line">add sp, sp, #0x20       ;栈平衡</span><br><span class="line">ret                     ;返回</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sub sp, sp, #0x20       ;拉伸栈空间32个字节</span><br><span class="line">stp x0, x1, [sp, #0x10] ;sp往上加16个字节（两个8字节的寄存器），存放x0和x1</span><br><span class="line">ldp x1, x0, [sp, #0x10] ;将sp偏移16个字节的值从取出来，放入x1和x0，内存是temp（寄存器里面的值进行交换了）</span><br><span class="line">add sp, sp, #0x20       ;栈平衡</span><br><span class="line">ret                     ;返回</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>栈的操作如下图所示：</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/165877747-40c08e41-164d-4bd7-95b3-bacc3cf9d99f.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165877747-40c08e41-164d-4bd7-95b3-bacc3cf9d99f.jpg"
+                     
+                ></p>
 <p><strong>调式查看栈</strong></p>
 <ul>
 <li>在 asm文件中写入如下代码：</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">.text</span><br><span class="line">.global _A,_B</span><br><span class="line"></span><br><span class="line">_B:</span><br><span class="line">    sub sp, sp, #0x20</span><br><span class="line">    stp x0, x1, [sp, #0x10]</span><br><span class="line">    ldp x1, x0, [sp, #0x10]</span><br><span class="line">    add sp, sp, #0x20</span><br><span class="line">    ret</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">.text</span><br><span class="line">.global _A,_B</span><br><span class="line"></span><br><span class="line">_B:</span><br><span class="line">    sub sp, sp, #0x20</span><br><span class="line">    stp x0, x1, [sp, #0x10]</span><br><span class="line">    ldp x1, x0, [sp, #0x10]</span><br><span class="line">    add sp, sp, #0x20</span><br><span class="line">    ret</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>在 VC 中调用</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@interface ViewController ()</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line"></span><br><span class="line">// 函数的声明</span><br><span class="line">int B();</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    B();</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@interface ViewController ()</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line"></span><br><span class="line">// 函数的声明</span><br><span class="line">int B();</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    B();</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>断点到 <code>sub sp, sp, #0x20</code>： 进行调试，如下图</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165877782-ebaca024-9985-4d61-834c-6e4bd1415b80.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165877782-ebaca024-9985-4d61-834c-6e4bd1415b80.jpg"
+                     
+                ></p>
 <p>由上图可知，sp的初始地址是 <code>0x000000016f491a80</code>，正常由高地址往低地址 <code>拉伸（开辟）</code> #0x20个地址后，sp的最新地址为 <code>0x000000016f491a80 - 0x20 = 0x000000016f491a60</code></p>
 <ul>
 <li>按住 <code>control Step into</code>，往下走一步查看结果</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165877797-84cef9dc-5837-443a-9f6f-f9bd66a26085.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165877797-84cef9dc-5837-443a-9f6f-f9bd66a26085.jpg"
+                     
+                ></p>
 <ul>
 <li>此时 <code>x0，x1</code> 的默认地址如下图</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165877802-0afedacc-a62e-4bfa-b77d-2a627f263e69.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165877802-0afedacc-a62e-4bfa-b77d-2a627f263e69.jpg"
+                     
+                ></p>
 <ul>
 <li><code>stp x0, x1, [sp, #0x10]</code>：将 <code>sp</code> 的偏移 <code>#0x10</code> 写入 <code>x0，x1</code>，结果如下图：</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165877809-8c5b755b-79fe-447e-ba10-652758eacd9f.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165877809-8c5b755b-79fe-447e-ba10-652758eacd9f.jpg"
+                     
+                ></p>
 <ul>
 <li><code>ldp x1, x0, [sp, #0x10]</code>：将 <code>sp</code> 的内存地址加上 <code>#0x10</code>，读取 <code>x0，x1</code> 的数据并交换结果如下；</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165877818-ade8c981-e6c2-4cff-9368-82d4ed6f541a.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165877818-ade8c981-e6c2-4cff-9368-82d4ed6f541a.jpg"
+                     
+                ></p>
 <ul>
 <li><code>add sp, sp, #0x20</code>：走到栈平衡，最后将 <code>sp</code> 指针地址加上 <code>#0x20</code>，即 <code>sp恢复了</code>，此时的a和b仍然在内存中，等待着下一轮栈拉伸后数据的写入覆盖。如果此时读取，读取到的是垃圾数据</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165877824-7915eaea-4ae6-4071-be69-29aa95150802.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165877824-7915eaea-4ae6-4071-be69-29aa95150802.jpg"
+                     
+                ></p>
 <ul>
 <li>如果上面默认的地址不方便看，你可以重写 <code>register write x0 0xa</code> 和 <code>register write x1 0xb</code> 的来断点调试，如下图：</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165877828-1da5ed85-77dd-4ff5-873e-ee20ee003b5d.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165877828-1da5ed85-77dd-4ff5-873e-ee20ee003b5d.jpg"
+                     
+                ></p>
 <p><strong>疑问：栈空间不断开辟，死循环，会不会崩溃？</strong></p>
 <p>在这里我们将会处理上篇 <a href="https://www.bboyzj.cn/2022/04/20/OC%E9%80%86%E5%90%9101%EF%BC%9A%E5%88%9D%E5%A7%8B%E6%B1%87%E7%BC%96/">OC逆向01：初始汇编</a> 文章中文末遗留的问题</p>
 <p>下面我们通过一个汇编代码来演示</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--asm.s--&gt;</span><br><span class="line">.text</span><br><span class="line">.global _B</span><br><span class="line"></span><br><span class="line">_B:</span><br><span class="line">    sub sp,sp,#0x20</span><br><span class="line">    stp x0,x1,[sp,#0x10]</span><br><span class="line">    ldp x1,x0,[sp,#0x10];寄存器里面的值进行交换</span><br><span class="line">    bl _B</span><br><span class="line">    add sp,sp,#0x20</span><br><span class="line">    ret</span><br><span class="line">    </span><br><span class="line">&lt;!--调用--&gt;</span><br><span class="line">int B();</span><br><span class="line"></span><br><span class="line">int main(int argc, char * argv[]) &#123;</span><br><span class="line">    B();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--asm.s--&gt;</span><br><span class="line">.text</span><br><span class="line">.global _B</span><br><span class="line"></span><br><span class="line">_B:</span><br><span class="line">    sub sp,sp,#0x20</span><br><span class="line">    stp x0,x1,[sp,#0x10]</span><br><span class="line">    ldp x1,x0,[sp,#0x10];寄存器里面的值进行交换</span><br><span class="line">    bl _B</span><br><span class="line">    add sp,sp,#0x20</span><br><span class="line">    ret</span><br><span class="line">    </span><br><span class="line">&lt;!--调用--&gt;</span><br><span class="line">int B();</span><br><span class="line"></span><br><span class="line">int main(int argc, char * argv[]) &#123;</span><br><span class="line">    B();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>运行结果发现：死循环会崩溃，会导致 <code>堆栈溢出</code></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/165878330-a8724c53-c3a0-48fc-8e07-f81c0269c27f.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165878330-a8724c53-c3a0-48fc-8e07-f81c0269c27f.jpg"
+                     
+                ></p>
 <h2 id="bl、ret指令"><a href="#bl、ret指令" class="headerlink" title="bl、ret指令"></a>bl、ret指令</h2><p><strong>bl标号</strong></p>
 <ul>
 <li>b：转到标号处执行指令（即b）</li>
 <li>将 <code>下一条指令的地址</code> 放入通用寄存器 <code>lr（x30）</code> 中</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165907393-b5a445ac-42e8-45a5-9fa0-b58230a95637.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165907393-b5a445ac-42e8-45a5-9fa0-b58230a95637.jpg"
+                     
+                ></p>
 <p>等到B函数ret时，通过lr获取回家的路（注：<code>lr就是保存回家的路</code>）</p>
 <p><strong>ret</strong></p>
 <ul>
@@ -442,37 +502,67 @@
 <ul>
 <li>asm文件下代码如下</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">.text</span><br><span class="line">.global _A, _B</span><br><span class="line"></span><br><span class="line">_A:</span><br><span class="line">    mov x0, #0xaaaa</span><br><span class="line">    bl _B</span><br><span class="line">    mov x0, #0xaaaa</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line">_B:</span><br><span class="line">    mov x0, #0xbbbb</span><br><span class="line">    ret</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">.text</span><br><span class="line">.global _A, _B</span><br><span class="line"></span><br><span class="line">_A:</span><br><span class="line">    mov x0, #0xaaaa</span><br><span class="line">    bl _B</span><br><span class="line">    mov x0, #0xaaaa</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line">_B:</span><br><span class="line">    mov x0, #0xbbbb</span><br><span class="line">    ret</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>vc中执行如下代码</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 函数的声明</span><br><span class="line">int A();</span><br><span class="line">int B();</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    printf(@&quot;A&quot;);</span><br><span class="line">    A();</span><br><span class="line">    printf(@&quot;B&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 函数的声明</span><br><span class="line">int A();</span><br><span class="line">int B();</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    printf(@&quot;A&quot;);</span><br><span class="line">    A();</span><br><span class="line">    printf(@&quot;B&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>断点 <code>mov x0，#0xaaaa</code> 运行：发现 <code>lr</code> 保存了下一条指令的地址是 <code>1f78</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165907463-7429e0d8-09ed-444f-b823-385facf324d8.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165907463-7429e0d8-09ed-444f-b823-385facf324d8.jpg"
+                     
+                ></p>
 <ul>
 <li>往下执行 <code>bl _B</code> ：此时 <code>x0</code> 的地址为 <code>0xaaaa</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165907474-58c5c158-2aa7-4e75-bda5-0d21fe65e1e9.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165907474-58c5c158-2aa7-4e75-bda5-0d21fe65e1e9.jpg"
+                     
+                ></p>
 <ul>
 <li>继续执行 <code>bl _B</code>，跳转到 <code>B</code>，此时的 <code>lr</code> 会变成 <code>A</code> 中 <code>bl</code> 的下一条指令的地址 <code>1f20</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165907549-add8c93c-b1be-4a85-8fa7-0528c94de017.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165907549-add8c93c-b1be-4a85-8fa7-0528c94de017.jpg"
+                     
+                ></p>
 <ul>
 <li>执行完B中的 <code>mov x0, #0xbbbb</code>，x0 变成 <code>bbbb</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165907579-d20b57c9-4e1e-400e-965c-2a798b298f1f.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165907579-d20b57c9-4e1e-400e-965c-2a798b298f1f.jpg"
+                     
+                ></p>
 <ul>
 <li>执行 <code>B</code> 中的 <code>ret</code>，<code>lr</code> 会回到 <code>A</code> 中 <code>1f20</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165907624-fa004fd1-e39a-4607-94c4-6596506acc13.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165907624-fa004fd1-e39a-4607-94c4-6596506acc13.jpg"
+                     
+                ></p>
 <ul>
 <li>继续执行 <code>A</code> 中的 <code>ret</code>，会再次回到 <code>1f20</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165907673-708eb03d-94c9-4b64-923b-a8fe3b1c4952.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165907673-708eb03d-94c9-4b64-923b-a8fe3b1c4952.jpg"
+                     
+                ></p>
 <ul>
 <li><p>走到这里，发现 <code>死循环了</code>，主要是因为 <code>lr</code> 一直是 <code>1f20</code>，<code>ret</code> 只会看 <code>lr</code>。</p>
 <ul>
@@ -480,7 +570,12 @@
 </ul>
 </li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165907711-6e3449f2-ee23-431e-8fd9-f636ada6a11e.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165907711-6e3449f2-ee23-431e-8fd9-f636ada6a11e.jpg"
+                     
+                ></p>
 <p><strong>疑问1：此时B回到A没问题，那么A回到viewDidLoad怎么回事呢？</strong></p>
 <ul>
 <li><p>需要在A的bl之前 <code>保护lr寄存器</code></p>
@@ -498,56 +593,106 @@
 </ul>
 <p><strong>系统中函数嵌套是如何返回的？</strong></p>
 <p>下面我们来看一下系统是如何操作的，例如：<code>d -&gt; c -&gt; viewDidLoad</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">void d()&#123;</span><br><span class="line">&#125;</span><br><span class="line">void c()&#123;</span><br><span class="line">    d();</span><br><span class="line">    return;</span><br><span class="line">&#125;</span><br><span class="line">- (void)viewDidLoad&#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    printf(&quot;A&quot;);</span><br><span class="line">    c();</span><br><span class="line">    printf(&quot;B&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">void d()&#123;</span><br><span class="line">&#125;</span><br><span class="line">void c()&#123;</span><br><span class="line">    d();</span><br><span class="line">    return;</span><br><span class="line">&#125;</span><br><span class="line">- (void)viewDidLoad&#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    printf(&quot;A&quot;);</span><br><span class="line">    c();</span><br><span class="line">    printf(&quot;B&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>查看汇编，断点在 <code>c()</code> 函数</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165907777-b0445a62-79ff-4ff4-886e-2a4671ea9c84.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165907777-b0445a62-79ff-4ff4-886e-2a4671ea9c84.jpg"
+                     
+                ></p>
 <ul>
 <li><code>stp x29,x30,[sp,#-0x10]</code>：边开辟栈，边写入，其中 <code>x29就是fp（栈底）</code>，<code>x30是lr</code>，<code>!</code> 的含义是，将[]中计算的结果给sp，即 <code>sp-=0x10</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165907817-6b4444cb-7a81-4727-9763-2837d930d4a4.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165907817-6b4444cb-7a81-4727-9763-2837d930d4a4.jpg"
+                     
+                ></p>
 <ul>
 <li><code>ldp    x29, x30, [sp], #0x10</code>：读取sp执行地址的数据，放入x29、x30；<code>[sp], #0x10</code> 表示 <code>sp=sp+0x10</code>，以此保证 <code>栈平衡</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165907855-29abbe8d-2cd0-443d-930a-eff32f539872.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165907855-29abbe8d-2cd0-443d-930a-eff32f539872.jpg"
+                     
+                ></p>
 <p><strong>【结论】</strong>：当有函数嵌套调用时，将上一个函数的地址通过<code> lr（即x30）</code> 放在栈中保存，保证可以找到回家的路，如下图所示</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/165907899-adb6019c-c638-4001-a60a-bf7de51ef164.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165907899-adb6019c-c638-4001-a60a-bf7de51ef164.jpg"
+                     
+                ></p>
 <p>自定义汇编代码完善：<code>_A中保存回家的路</code><br>所以根据系统的函数嵌套操作，最终在_A中增加了如下汇编代码，用于保存回家的路</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--导致死循环的汇编代码--&gt;</span><br><span class="line">_A:</span><br><span class="line">    mov x0. #0xaaaa</span><br><span class="line">    bl _B</span><br><span class="line">    mov x0, #0xaaaa</span><br><span class="line">    ret</span><br><span class="line">    </span><br><span class="line">&lt;!--增加lr保存：可以找到回家的路--&gt;</span><br><span class="line">_A:</span><br><span class="line">    sub sp, sp, #0x10  // 拉伸</span><br><span class="line">    str x30, [sp]     // 存</span><br><span class="line">    mov x0, #0xaaaa</span><br><span class="line">    // 保护lr寄存器，存储到栈区域</span><br><span class="line">    bl _B</span><br><span class="line">    mov x0, #0xaaa</span><br><span class="line">    ldr x30, [sp]      // 修改lr，用于A找到回家的路</span><br><span class="line">    add sp, sp, #0x10 // 栈平衡</span><br><span class="line">    ret</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--导致死循环的汇编代码--&gt;</span><br><span class="line">_A:</span><br><span class="line">    mov x0. #0xaaaa</span><br><span class="line">    bl _B</span><br><span class="line">    mov x0, #0xaaaa</span><br><span class="line">    ret</span><br><span class="line">    </span><br><span class="line">&lt;!--增加lr保存：可以找到回家的路--&gt;</span><br><span class="line">_A:</span><br><span class="line">    sub sp, sp, #0x10  // 拉伸</span><br><span class="line">    str x30, [sp]     // 存</span><br><span class="line">    mov x0, #0xaaaa</span><br><span class="line">    // 保护lr寄存器，存储到栈区域</span><br><span class="line">    bl _B</span><br><span class="line">    mov x0, #0xaaa</span><br><span class="line">    ldr x30, [sp]      // 修改lr，用于A找到回家的路</span><br><span class="line">    add sp, sp, #0x10 // 栈平衡</span><br><span class="line">    ret</span><br></pre></td></tr></table></figure></div>
 
 <p>修改_A、_B：改成简写形式</p>
 <ul>
 <li>其中lr是x30的一个别名</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">_A:</span><br><span class="line">    sub sp, sp, #0x10  // 拉伸</span><br><span class="line">    str x30, [sp]      // 存</span><br><span class="line">    mov x0, #0xaaaa</span><br><span class="line">    // 保护lr寄存器，存储到栈区域</span><br><span class="line">    bl _B</span><br><span class="line">    mov x0, #0xaaa</span><br><span class="line">    ldr x30, [sp]      // 修改lr，用于A找到回家的路</span><br><span class="line">    add sp, sp, #0x10  // 栈平衡</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line">_B:</span><br><span class="line">    mov x0, #0xbbbb</span><br><span class="line">    ret</span><br><span class="line">    </span><br><span class="line">&lt;!--改成简写形式--&gt;</span><br><span class="line">_A:</span><br><span class="line">    sub sp, sp, #0x10  // 拉伸</span><br><span class="line">    str x30, [sp]      // 存</span><br><span class="line">    mov x0, #0xaaaa</span><br><span class="line">    // 保护lr寄存器，存储到栈区域</span><br><span class="line">    bl _B</span><br><span class="line">    mov x0, #0xaaa</span><br><span class="line">    // ldr x30, [sp]      // 修改lr，用于A找到回家的路</span><br><span class="line">    // add sp, sp, #0x10  // 栈平衡</span><br><span class="line">    ldr x30, [sp], #0x10  // 将sp的值读取出来，给到x30，然后sp += 0x10</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line">_B:</span><br><span class="line">    mov x0, #0xbbbb</span><br><span class="line">    ret</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">_A:</span><br><span class="line">    sub sp, sp, #0x10  // 拉伸</span><br><span class="line">    str x30, [sp]      // 存</span><br><span class="line">    mov x0, #0xaaaa</span><br><span class="line">    // 保护lr寄存器，存储到栈区域</span><br><span class="line">    bl _B</span><br><span class="line">    mov x0, #0xaaa</span><br><span class="line">    ldr x30, [sp]      // 修改lr，用于A找到回家的路</span><br><span class="line">    add sp, sp, #0x10  // 栈平衡</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line">_B:</span><br><span class="line">    mov x0, #0xbbbb</span><br><span class="line">    ret</span><br><span class="line">    </span><br><span class="line">&lt;!--改成简写形式--&gt;</span><br><span class="line">_A:</span><br><span class="line">    sub sp, sp, #0x10  // 拉伸</span><br><span class="line">    str x30, [sp]      // 存</span><br><span class="line">    mov x0, #0xaaaa</span><br><span class="line">    // 保护lr寄存器，存储到栈区域</span><br><span class="line">    bl _B</span><br><span class="line">    mov x0, #0xaaa</span><br><span class="line">    // ldr x30, [sp]      // 修改lr，用于A找到回家的路</span><br><span class="line">    // add sp, sp, #0x10  // 栈平衡</span><br><span class="line">    ldr x30, [sp], #0x10  // 将sp的值读取出来，给到x30，然后sp += 0x10</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line">_B:</span><br><span class="line">    mov x0, #0xbbbb</span><br><span class="line">    ret</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>【断点调试】:</strong></p>
 <ul>
 <li><code>str x30, [sp, #-0x10]</code>：查看此时 <code>sp寄存器</code> 的地址 <code>sp = 0x000000016b411a80</code>，<code>lr</code> 的地址 <code>lr = 0x00000001003d9f90</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165907949-dbc11d23-135d-4705-9ace-30b8a04d5615.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165907949-dbc11d23-135d-4705-9ace-30b8a04d5615.jpg"
+                     
+                ></p>
 <ul>
 <li>执行到 <code>mov x0, #0xaaaa</code>：sp变了，lr未变</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165907963-d6fcc34f-c7ab-4503-9594-47fa07e9d8ff.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165907963-d6fcc34f-c7ab-4503-9594-47fa07e9d8ff.jpg"
+                     
+                ></p>
 <ul>
 <li>执行 <code>mov x0, #0xaaaa</code>，x0 为 <code>aaaa</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165908041-70f758fc-5728-47c2-ad8f-44f9d45e851e.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165908041-70f758fc-5728-47c2-ad8f-44f9d45e851e.jpg"
+                     
+                ></p>
 <ul>
 <li>执行A中的 <code>bl _B</code>：跳转到B，此时 <code>lr = 0x0000000100929f40</code>，<code>x0</code> 变成 <code>bbbb</code>，<code>sp = 0x000000016f4d9a70</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165908095-956b50c9-aff6-4f3f-b83a-9527ca18ec4f.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165908095-956b50c9-aff6-4f3f-b83a-9527ca18ec4f.jpg"
+                     
+                ></p>
 <ul>
 <li>执行B的ret：从B回到A，此时lr还是 <code>lr = 0x0000000100929f40</code></li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165908144-6324ea28-b686-4d75-9eaf-4732275a4cf8.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165908144-6324ea28-b686-4d75-9eaf-4732275a4cf8.jpg"
+                     
+                ></p>
 <ul>
 <li>执行A中的 <code>ldr    x30, [sp], #0x10</code>，发现此时 lr变了为 <code>lr = 0x0000000100929f90</code>，sp也变了为 <code>sp = 0x000000016f4d9a80</code>。从这里可以看出，A找到了回家的路</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/165908203-9b69e84f-99de-4bcc-9f7d-cec8f83948e1.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/165908203-9b69e84f-99de-4bcc-9f7d-cec8f83948e1.jpg"
+                     
+                ></p>
 <h1 id="x30寄存器"><a href="#x30寄存器" class="headerlink" title="x30寄存器"></a>x30寄存器</h1><ul>
 <li><p><code>x30</code> 寄存器 <code>存放</code> 的是 <code>函数的返回地址</code>，当ret指令执行时刻，会寻找x30寄存器保存的地址值</p>
 </li>

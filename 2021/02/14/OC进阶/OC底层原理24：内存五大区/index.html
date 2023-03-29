@@ -326,7 +326,12 @@
 
             <div class="article-content markdown-body">
                 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在iOS中，内存主要分为 <code>栈区、堆区、全局区、常量区、代码区</code> 五个区域，如下图所示：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/125901732-fa12526a-8600-4a06-b2c5-9052f6ce50c9.jpeg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/125901732-fa12526a-8600-4a06-b2c5-9052f6ce50c9.jpeg"
+                     
+                ></p>
 <h1 id="栈区"><a href="#栈区" class="headerlink" title="栈区"></a>栈区</h1><p><strong>义</strong></p>
 <ul>
 <li><p>栈是 <code>系统数据结构</code>，其对应的 <code>进程或者线程是唯一的</code></p>
@@ -358,8 +363,13 @@
 </ul>
 </li>
 </ul>
-<p>以上内存大小的说明，在<a target="_blank" rel="noopener" href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Multithreading/CreatingThreads/CreatingThreads.html#//apple_ref/doc/uid/10000057i-CH15-SW7">Threading Programming Guide</a>中有相关说明，如下图：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/125901809-574ffd97-9226-4f40-99d7-0b573935a2a4.ng"></p>
+<p>以上内存大小的说明，在<a class="link"   target="_blank" rel="noopener" href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Multithreading/CreatingThreads/CreatingThreads.html#//apple_ref/doc/uid/10000057i-CH15-SW7" >Threading Programming Guide <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>中有相关说明，如下图：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/125901809-574ffd97-9226-4f40-99d7-0b573935a2a4.ng"
+                     
+                ></p>
 <h1 id="堆区"><a href="#堆区" class="headerlink" title="堆区"></a>堆区</h1><p>*<em>定义</em></p>
 <ul>
 <li><p>堆是<code>向高地址扩展</code>的数据结构</p>
@@ -402,10 +412,10 @@
 <p>字符串常量因为可能在程序中被多次使用，所以在程序运行之前就会提前分配内存</p>
 <h1 id="代码区（即-text）"><a href="#代码区（即-text）" class="headerlink" title="代码区（即.text）"></a>代码区（即.text）</h1><p>代码区是<code>由编译时分配</code>，主要用于存放<code>程序运行时的代码</code>，代码会被编译成<code>二进制存进内存</code>的</p>
 <h1 id="内存五大区验证"><a href="#内存五大区验证" class="headerlink" title="内存五大区验证"></a>内存五大区验证</h1><p>运行下面的一段代码，看看变量在内存中是如何分配的：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">int a = 10; // 全局区（已初始化的全局变量）</span><br><span class="line">char * b; // 全局区(未初始化的全局变量)</span><br><span class="line">- (void)test&#123;</span><br><span class="line">    NSInteger i = 123; // 栈区（局部变量）</span><br><span class="line">    NSLog(@&quot;i的内存地址：%p&quot;, &amp;i);</span><br><span class="line">    </span><br><span class="line">    NSString *string = @&quot;ZJ&quot;; // 常量区（字符串常量）</span><br><span class="line">    NSLog(@&quot;string的内存地址：%p&quot;, string);</span><br><span class="line">    NSLog(@&quot;&amp;string的内存地址：%p&quot;, &amp;string);</span><br><span class="line">    </span><br><span class="line">    NSObject *obj = [[NSObject alloc] init]; // 堆区（alloc对象）</span><br><span class="line">    NSLog(@&quot;obj的内存地址：%p&quot;, obj);</span><br><span class="line">    NSLog(@&quot;&amp;obj的内存地址：%p&quot;, &amp;obj);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">int a = 10; // 全局区（已初始化的全局变量）</span><br><span class="line">char * b; // 全局区(未初始化的全局变量)</span><br><span class="line">- (void)test&#123;</span><br><span class="line">    NSInteger i = 123; // 栈区（局部变量）</span><br><span class="line">    NSLog(@&quot;i的内存地址：%p&quot;, &amp;i);</span><br><span class="line">    </span><br><span class="line">    NSString *string = @&quot;ZJ&quot;; // 常量区（字符串常量）</span><br><span class="line">    NSLog(@&quot;string的内存地址：%p&quot;, string);</span><br><span class="line">    NSLog(@&quot;&amp;string的内存地址：%p&quot;, &amp;string);</span><br><span class="line">    </span><br><span class="line">    NSObject *obj = [[NSObject alloc] init]; // 堆区（alloc对象）</span><br><span class="line">    NSLog(@&quot;obj的内存地址：%p&quot;, obj);</span><br><span class="line">    NSLog(@&quot;&amp;obj的内存地址：%p&quot;, &amp;obj);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>运行结果如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2022-03-11 14:34:25.438913+0800 内存五大区[70321:4340509] i的内存地址：0x16f6f5a18</span><br><span class="line">2022-03-11 14:34:25.438976+0800 内存五大区[70321:4340509] string的内存地址：0x100710098</span><br><span class="line">2022-03-11 14:34:25.438997+0800 内存五大区[70321:4340509] &amp;string的内存地址：0x16f6f5a10</span><br><span class="line">2022-03-11 14:34:25.439014+0800 内存五大区[70321:4340509] obj的内存地址：0x280fa0bc0</span><br><span class="line">2022-03-11 14:34:25.439031+0800 内存五大区[70321:4340509] &amp;obj的内存地址：0x16f6f5a08</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2022-03-11 14:34:25.438913+0800 内存五大区[70321:4340509] i的内存地址：0x16f6f5a18</span><br><span class="line">2022-03-11 14:34:25.438976+0800 内存五大区[70321:4340509] string的内存地址：0x100710098</span><br><span class="line">2022-03-11 14:34:25.438997+0800 内存五大区[70321:4340509] &amp;string的内存地址：0x16f6f5a10</span><br><span class="line">2022-03-11 14:34:25.439014+0800 内存五大区[70321:4340509] obj的内存地址：0x280fa0bc0</span><br><span class="line">2022-03-11 14:34:25.439031+0800 内存五大区[70321:4340509] &amp;obj的内存地址：0x16f6f5a08</span><br></pre></td></tr></table></figure></div>
 
 
 <ul>
@@ -435,7 +445,12 @@
 </li>
 </ul>
 <p>如下图所示，是经典图- <code>ARM的栈帧布局方式</code></p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303021911717.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303021911717.png"
+                     
+                ></p>
 <ul>
 <li><p>其中 <code>main stack frame</code> 为调用函数的栈帧</p>
 </li>
@@ -466,10 +481,15 @@
 </ul>
 <h1 id="栈帧示例"><a href="#栈帧示例" class="headerlink" title="栈帧示例"></a>栈帧示例</h1><p>描述下面代码的栈帧变化</p>
 <p>栈帧程序示例</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">int Add(int x,int y) &#123;</span><br><span class="line">    int z = 0;</span><br><span class="line">    z = x + y;</span><br><span class="line">    return z;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    int a = 10;</span><br><span class="line">    int b = 20;</span><br><span class="line">    int ret = Add(a, b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">int Add(int x,int y) &#123;</span><br><span class="line">    int z = 0;</span><br><span class="line">    z = x + y;</span><br><span class="line">    return z;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    int a = 10;</span><br><span class="line">    int b = 20;</span><br><span class="line">    int ret = Add(a, b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>程序执行时，栈区中栈帧的变化如下图所示：</p>
-<p><img src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303021912743.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303021912743.png"
+                     
+                ></p>
 
             </div>
 

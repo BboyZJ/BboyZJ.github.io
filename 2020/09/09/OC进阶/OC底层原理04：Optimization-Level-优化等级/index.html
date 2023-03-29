@@ -327,11 +327,21 @@
             <div class="article-content markdown-body">
                 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>Optimization Level</code> 是编译器的优化程度。比较早期的时候，硬件资源是比较缺乏的。为了 <code>提高性能</code>，开发编译器的大师们，都会对编译器(从c到汇编的编译过程)加上一定的优化策略。优化后的代码效率比较高，但是可读性比较差，且编译时间更长。 </p>
 <h1 id="Optimization-Level"><a href="#Optimization-Level" class="headerlink" title="Optimization Level"></a>Optimization Level</h1><p><strong>下面我用一张截图表示设置的位置</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92318184-34ee7180-f03b-11ea-98ee-25539ea20ec2.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92318184-34ee7180-f03b-11ea-98ee-25539ea20ec2.png"
+                     
+                ></p>
 <ul>
 <li>编译器优化设置在<code>target-&gt;Build Settings-&gt;Optimization Level</code>下,如图:</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/92305169-37a78300-efb7-11ea-811b-dc5b422c6d1a.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92305169-37a78300-efb7-11ea-811b-dc5b422c6d1a.png"
+                     
+                ></p>
 <p>1）主要有两种模式<code>Debug</code>和<code>Release</code></p>
 <ul>
 <li>Debug下默认是关闭</li>
@@ -353,14 +363,29 @@
 <li><p><code>Fastest [-O3]</code>：最小的优化尺寸。这个设置允许所有 <code>更快</code> 的优化通常不增加代码大小。它还旨在减少代码的大小进行进一步的优化。</p>
 </li>
 </ul>
-<h1 id="通过下面的代码我们来探索一下"><a href="#通过下面的代码我们来探索一下" class="headerlink" title="通过下面的代码我们来探索一下"></a>通过下面的代码我们来探索一下</h1><p><img src="https://user-images.githubusercontent.com/25925248/92318235-c9f16a80-f03b-11ea-9741-bd929707be58.png"></p>
+<h1 id="通过下面的代码我们来探索一下"><a href="#通过下面的代码我们来探索一下" class="headerlink" title="通过下面的代码我们来探索一下"></a>通过下面的代码我们来探索一下</h1><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92318235-c9f16a80-f03b-11ea-9741-bd929707be58.png"
+                     
+                ></p>
 <p><strong>我们可以通过下图方式去切换Debug和Release模式运行在真机：</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92318373-15a51380-f03e-11ea-91be-a470cdcee40e.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92318373-15a51380-f03e-11ea-91be-a470cdcee40e.png"
+                     
+                ></p>
 <p><strong>1、在真机Debug模式下运行，查看堆栈信息</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92318360-e2628480-f03d-11ea-857a-6f151f7962e6.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92318360-e2628480-f03d-11ea-857a-6f151f7962e6.png"
+                     
+                ></p>
 <p>注:x代表的是arm64操作系统，w代表的是arm32位操作系统，为了节省资源，所以在真机下用的是arm32为w来存储数据</p>
 <p>我们通过LLDB调试具体打印：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">warning: failed to set breakpoint site at 0x104336290 for breakpoint 3.1: error: 0 sending the breakpoint request</span><br><span class="line">(lldb) po 0xa</span><br><span class="line">10</span><br><span class="line"></span><br><span class="line">(lldb) po 0x14</span><br><span class="line">20</span><br><span class="line"></span><br><span class="line">(lldb) register read w8</span><br><span class="line">      w8 = 0x0000001e</span><br><span class="line">(lldb) po 0x0000001e</span><br><span class="line">30</span><br><span class="line"></span><br><span class="line">(lldb) </span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">warning: failed to set breakpoint site at 0x104336290 for breakpoint 3.1: error: 0 sending the breakpoint request</span><br><span class="line">(lldb) po 0xa</span><br><span class="line">10</span><br><span class="line"></span><br><span class="line">(lldb) po 0x14</span><br><span class="line">20</span><br><span class="line"></span><br><span class="line">(lldb) register read w8</span><br><span class="line">      w8 = 0x0000001e</span><br><span class="line">(lldb) po 0x0000001e</span><br><span class="line">30</span><br><span class="line"></span><br><span class="line">(lldb) </span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li><p><code>po(print object)</code>: 常用于查看对象信息</p>
@@ -369,9 +394,14 @@
 </li>
 </ul>
 <p><strong>2、在真机Release模式下运行，查看堆栈信息</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/92318421-aa0f7600-f03e-11ea-883f-944288c6d718.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/92318421-aa0f7600-f03e-11ea-883f-944288c6d718.png"
+                     
+                ></p>
 <p>我们来读取一下寄存器中的数据：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(lldb) register read w8</span><br><span class="line">      w8 = 0x0000001e</span><br><span class="line">(lldb) po 0x0000001e</span><br><span class="line">30</span><br><span class="line"></span><br><span class="line">(lldb)</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(lldb) register read w8</span><br><span class="line">      w8 = 0x0000001e</span><br><span class="line">(lldb) po 0x0000001e</span><br><span class="line">30</span><br><span class="line"></span><br><span class="line">(lldb)</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>3、Debug和Release的区别：</strong></p>
 <ul>

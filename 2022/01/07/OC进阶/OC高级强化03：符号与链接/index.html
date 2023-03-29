@@ -341,17 +341,17 @@
 <h1 id="全局-和-本地-符号"><a href="#全局-和-本地-符号" class="headerlink" title="全局 和 本地 符号"></a>全局 和 本地 符号</h1><ul>
 <li>全局符号：可见性 - 对整个项目可见</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 全局变量</span><br><span class="line">int global_uninit_value</span><br><span class="line">// 全局符号</span><br><span class="line">void global_object() &#123;</span><br><span class="line">    NSLog(@&quot;global_object&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 全局变量</span><br><span class="line">int global_uninit_value</span><br><span class="line">// 全局符号</span><br><span class="line">void global_object() &#123;</span><br><span class="line">    NSLog(@&quot;global_object&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>本地符号：可见性 - 只对当前文件可见</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 静态变量 -&gt; 本地变量</span><br><span class="line">static int static_init_value = 9;</span><br><span class="line">// 本地符号</span><br><span class="line">static void global_object() &#123;</span><br><span class="line">    NSLog(@&quot;static_global_object&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 静态变量 -&gt; 本地变量</span><br><span class="line">static int static_init_value = 9;</span><br><span class="line">// 本地符号</span><br><span class="line">static void global_object() &#123;</span><br><span class="line">    NSLog(@&quot;static_global_object&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li><strong>attribute</strong>(())</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">可以给编译器传递属性：</span><br><span class="line">__attribute__((deprecated)) ：告诉编译器已废弃</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">可以给编译器传递属性：</span><br><span class="line">__attribute__((deprecated)) ：告诉编译器已废弃</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>two_levelnamespace &amp; flat_namespace</li>
@@ -360,24 +360,49 @@
 <ul>
 <li>终端查看符号表的方式</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">% man nm 查看具体的文档</span><br><span class="line">% nm --help </span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">% man nm 查看具体的文档</span><br><span class="line">% nm --help </span><br></pre></td></tr></table></figure></div>
 
-<h1 id="符号表说明"><a href="#符号表说明" class="headerlink" title="符号表说明"></a>符号表说明</h1><p><img src="https://user-images.githubusercontent.com/25925248/148521680-4c60b2f0-15c5-43e4-a955-67050bf209ca.jpeg"></p>
+<h1 id="符号表说明"><a href="#符号表说明" class="headerlink" title="符号表说明"></a>符号表说明</h1><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148521680-4c60b2f0-15c5-43e4-a955-67050bf209ca.jpeg"
+                     
+                ></p>
 <h1 id="下面我们来通过终端来查看一个可执行文件的符号表"><a href="#下面我们来通过终端来查看一个可执行文件的符号表" class="headerlink" title="下面我们来通过终端来查看一个可执行文件的符号表"></a>下面我们来通过终端来查看一个可执行文件的符号表</h1><p>-pa ：不排序，显示所有符号</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/148521755-986985d9-e621-4770-83a4-2f73ca7b8e94.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148521755-986985d9-e621-4770-83a4-2f73ca7b8e94.jpg"
+                     
+                ></p>
 <p>上面的 t、s等就是符号的种类</p>
 <h1 id="man-nm-如何使用呢"><a href="#man-nm-如何使用呢" class="headerlink" title="man nm 如何使用呢"></a>man nm 如何使用呢</h1><ul>
 <li>终端输入 man nm</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/148521826-caa76f3d-aeb1-4693-a481-68d1c87079c1.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148521826-caa76f3d-aeb1-4693-a481-68d1c87079c1.jpg"
+                     
+                ></p>
 <ul>
 <li>终端输入 &#x2F;-p</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/148521895-fe74b1fe-6be8-4378-a80b-ec4d01f7c889.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148521895-fe74b1fe-6be8-4378-a80b-ec4d01f7c889.jpg"
+                     
+                ></p>
 <ul>
 <li>终端输入 &#x2F;-a</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/148521972-9f443eff-1437-4137-b910-a0033c55f1d8.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148521972-9f443eff-1437-4137-b910-a0033c55f1d8.jpg"
+                     
+                ></p>
 
             </div>
 

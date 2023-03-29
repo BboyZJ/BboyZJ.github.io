@@ -336,7 +336,7 @@
 <li><p>图片下载由NSURLSession来完成，下载完成后对图片进行内存和磁盘缓存，并返回显示。</p>
 </li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 下载图片</span><br><span class="line">        operation.loaderOperation = [imageLoader requestImageWithURL:url options:options context:context progress:progressBlock completed:^(UIImage *downloadedImage, NSData *downloadedData, NSError *error, BOOL finished) &#123;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 下载图片</span><br><span class="line">        operation.loaderOperation = [imageLoader requestImageWithURL:url options:options context:context progress:progressBlock completed:^(UIImage *downloadedImage, NSData *downloadedData, NSError *error, BOOL finished) &#123;</span><br></pre></td></tr></table></figure></div>
 
 <h1 id="SDWebImageView-缓存机制"><a href="#SDWebImageView-缓存机制" class="headerlink" title="SDWebImageView 缓存机制"></a>SDWebImageView 缓存机制</h1><ol>
 <li>首先，<code>SDWebImage</code>的图片缓存采用的是 <code>memory</code>（内存） 和 <code>disk</code>（磁盘） 双重机制，<code>SDImageCache</code> 中有 <code>memoryCache</code> 和 <code>diskCache</code> 两个属性；<code>memoryCache</code> 是将图片存储在内存中 ； <code>diskCache</code> 是将图片放到 <code>NSCacheDiretory</code> 目录中，具体如下：</li>

@@ -347,20 +347,20 @@
 <ul>
 <li>在ZJPerson中定义一个实例方法和一个类方法，并实现</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">- (void)sayHello;</span><br><span class="line">+ (void)sayHappy;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ZJPerson</span><br><span class="line">- (void)sayHello&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : Hello!!!&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (void)sayHappy&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : Happy!!!&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">- (void)sayHello;</span><br><span class="line">+ (void)sayHappy;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ZJPerson</span><br><span class="line">- (void)sayHello&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : Hello!!!&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (void)sayHappy&#123;</span><br><span class="line">    NSLog(@&quot;ZJPerson say : Happy!!!&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>在 <code>main</code> 主函数，调用自定义的方法</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        ZJPerson * p = [ZJPerson alloc];</span><br><span class="line">        Class pClass = object_getClass(p);</span><br><span class="line">        // 获取类的方法</span><br><span class="line">        zjObjc_copyMethodList(pClass);</span><br><span class="line">        // 获取类和元类的实例方法</span><br><span class="line">        zjInstanceMethod_classToMetaclass(pClass);</span><br><span class="line">        // 获取类和元类的类方法</span><br><span class="line">        zjClassMethod_classToMetaclass(pClass);</span><br><span class="line">        // 获取类和元类的方法实现</span><br><span class="line">        zjIMP_classToMetaclass(pClass);</span><br><span class="line">        NSLog(@&quot;Hello, World!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        ZJPerson * p = [ZJPerson alloc];</span><br><span class="line">        Class pClass = object_getClass(p);</span><br><span class="line">        // 获取类的方法</span><br><span class="line">        zjObjc_copyMethodList(pClass);</span><br><span class="line">        // 获取类和元类的实例方法</span><br><span class="line">        zjInstanceMethod_classToMetaclass(pClass);</span><br><span class="line">        // 获取类和元类的类方法</span><br><span class="line">        zjClassMethod_classToMetaclass(pClass);</span><br><span class="line">        // 获取类和元类的方法实现</span><br><span class="line">        zjIMP_classToMetaclass(pClass);</span><br><span class="line">        NSLog(@&quot;Hello, World!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li><code>zjObjc_copyMethodList</code> ：用于获取 <code>类的方法列表</code></li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 获取类的方法列表</span><br><span class="line">void zjObjc_copyMethodList(Class pClass)&#123;</span><br><span class="line">    unsigned int count = 0;</span><br><span class="line">    Method *methods = class_copyMethodList(pClass, &amp;count);</span><br><span class="line">    for (unsigned int i=0; i &lt; count; i++) &#123;</span><br><span class="line">        Method const method = methods[i];</span><br><span class="line">        //获取方法名</span><br><span class="line">        NSString *key = NSStringFromSelector(method_getName(method));</span><br><span class="line">        </span><br><span class="line">        ZJLog(@&quot;Method, name: %@&quot;, key);</span><br><span class="line">    &#125;</span><br><span class="line">    free(methods);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 获取类的方法列表</span><br><span class="line">void zjObjc_copyMethodList(Class pClass)&#123;</span><br><span class="line">    unsigned int count = 0;</span><br><span class="line">    Method *methods = class_copyMethodList(pClass, &amp;count);</span><br><span class="line">    for (unsigned int i=0; i &lt; count; i++) &#123;</span><br><span class="line">        Method const method = methods[i];</span><br><span class="line">        //获取方法名</span><br><span class="line">        NSString *key = NSStringFromSelector(method_getName(method));</span><br><span class="line">        </span><br><span class="line">        ZJLog(@&quot;Method, name: %@&quot;, key);</span><br><span class="line">    &#125;</span><br><span class="line">    free(methods);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>查看一下打印结果:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Method, name: sayHello</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Method, name: sayHello</span><br></pre></td></tr></table></figure></div>
 
 <p>下面我们来分析一下打印结果:</p>
 <p><strong>【zjObjc_copyMethodList函数】</strong></p>
@@ -368,15 +368,20 @@
 <ul>
 <li><code>zjInstanceMethod_classToMetaclass</code> ：用于获取 <code>类和元类</code> 的 <code>实例方法</code></li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void zjInstanceMethod_classToMetaclass(Class pClass)&#123;</span><br><span class="line">    </span><br><span class="line">    const char *className = class_getName(pClass);</span><br><span class="line">    Class metaClass = objc_getMetaClass(className);</span><br><span class="line">    </span><br><span class="line">    Method method1 = class_getInstanceMethod(pClass, @selector(sayHello));</span><br><span class="line">    Method method2 = class_getInstanceMethod(metaClass, @selector(sayHello));</span><br><span class="line"></span><br><span class="line">    Method method3 = class_getInstanceMethod(pClass, @selector(sayHappy));</span><br><span class="line">    Method method4 = class_getInstanceMethod(metaClass, @selector(sayHappy));</span><br><span class="line">    </span><br><span class="line">    ZJLog(@&quot;%s - %p-%p-%p-%p&quot;,__func__,method1,method2,method3,method4);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void zjInstanceMethod_classToMetaclass(Class pClass)&#123;</span><br><span class="line">    </span><br><span class="line">    const char *className = class_getName(pClass);</span><br><span class="line">    Class metaClass = objc_getMetaClass(className);</span><br><span class="line">    </span><br><span class="line">    Method method1 = class_getInstanceMethod(pClass, @selector(sayHello));</span><br><span class="line">    Method method2 = class_getInstanceMethod(metaClass, @selector(sayHello));</span><br><span class="line"></span><br><span class="line">    Method method3 = class_getInstanceMethod(pClass, @selector(sayHappy));</span><br><span class="line">    Method method4 = class_getInstanceMethod(metaClass, @selector(sayHappy));</span><br><span class="line">    </span><br><span class="line">    ZJLog(@&quot;%s - %p-%p-%p-%p&quot;,__func__,method1,method2,method3,method4);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>查看一下打印结果:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zjInstanceMethod_classToMetaclass - 0x100003100-0x0-0x0-0x100003098</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zjInstanceMethod_classToMetaclass - 0x100003100-0x0-0x0-0x100003098</span><br></pre></td></tr></table></figure></div>
 
 <p>下面我们来分析一下打印结果:</p>
 <p><strong>【zjInstanceMethod_classToMetaclass函数】</strong>:用于获取 <code>类和元类</code> 的 <code>类方法</code></p>
 <p>在分析前先了解一下函数 <code>class_getInstanceMethod</code> :作用是获取实例方法，根据官方文档的解释:</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95673850-da6aa700-0bde-11eb-93b1-c67694683310.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95673850-da6aa700-0bde-11eb-93b1-c67694683310.png"
+                     
+                ></p>
 <p>其大致含义就是：<code>如果在传入的类或者类的父类中没有找到指定的实例方法，则返回NULL</code></p>
 <p>从上面的代码可知传入的 <code>pClass</code> 是 <code>ZJPerson 类</code>，metaClass 是 <code>ZJPerson元类</code>,函数中4个打印结果分别是：</p>
 <ul>
@@ -391,14 +396,19 @@
 <li><p><code>zjClassMethod_classToMetaclass</code>函数：获取类或类的父类中的类方法</p>
 </li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// 类和元类-类方法</span><br><span class="line">void zjClassMethod_classToMetaclass(Class pClass)&#123;</span><br><span class="line">    </span><br><span class="line">    const char *className = class_getName(pClass);</span><br><span class="line">    Class metaClass = objc_getMetaClass(className);</span><br><span class="line">    </span><br><span class="line">    Method method1 = class_getClassMethod(pClass, @selector(sayHello));</span><br><span class="line">    Method method2 = class_getClassMethod(metaClass, @selector(sayHello));</span><br><span class="line"></span><br><span class="line">    Method method3 = class_getClassMethod(pClass, @selector(sayHappy));</span><br><span class="line">    // 元类 为什么有 sayHappy 类方法 0 1</span><br><span class="line">    //</span><br><span class="line">    Method method4 = class_getClassMethod(metaClass, @selector(sayHappy));</span><br><span class="line">    </span><br><span class="line">    ZJLog(@&quot;%s-%p-%p-%p-%p&quot;,__func__,method1,method2,method3,method4);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// 类和元类-类方法</span><br><span class="line">void zjClassMethod_classToMetaclass(Class pClass)&#123;</span><br><span class="line">    </span><br><span class="line">    const char *className = class_getName(pClass);</span><br><span class="line">    Class metaClass = objc_getMetaClass(className);</span><br><span class="line">    </span><br><span class="line">    Method method1 = class_getClassMethod(pClass, @selector(sayHello));</span><br><span class="line">    Method method2 = class_getClassMethod(metaClass, @selector(sayHello));</span><br><span class="line"></span><br><span class="line">    Method method3 = class_getClassMethod(pClass, @selector(sayHappy));</span><br><span class="line">    // 元类 为什么有 sayHappy 类方法 0 1</span><br><span class="line">    //</span><br><span class="line">    Method method4 = class_getClassMethod(metaClass, @selector(sayHappy));</span><br><span class="line">    </span><br><span class="line">    ZJLog(@&quot;%s-%p-%p-%p-%p&quot;,__func__,method1,method2,method3,method4);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>查看一下打印结果:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zjClassMethod_classToMetaclass-0x0-0x0-0x100003098-0x100003098</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zjClassMethod_classToMetaclass-0x0-0x0-0x100003098-0x100003098</span><br></pre></td></tr></table></figure></div>
 
 <p>下面我们来分析一下打印结果:</p>
 <p><code>class_getClassMethod</code>：用于获取 <code>类或类的父类</code> 的 <code>类方法</code>，根据官方文档的解释:</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95673759-3f71cd00-0bde-11eb-9f7c-2d74ade4a3d0.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95673759-3f71cd00-0bde-11eb-9f7c-2d74ade4a3d0.png"
+                     
+                ></p>
 <p>其大致含义就是：<code>如果在传入的类或者类的父类中没有找到指定的类方法，则返回NULL</code></p>
 <p>从上面的代码可知传入的 <code>pClass</code> 是 <code>ZJPerson 类</code>，<code>metaClass</code> 是 <code>ZJPerson元类</code>,函数中4个打印结果分别是：</p>
 <ul>
@@ -413,7 +423,7 @@
 </ul>
 <p><strong>【问题】</strong>：<code>ZJPerson元类</code> 为什么会有 <code>类方法sayHappy</code>？</p>
 <p>我们查看一下源码:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">//获取类方法</span><br><span class="line">Method class_getClassMethod(Class cls, SEL sel)</span><br><span class="line">&#123;</span><br><span class="line">    if (!cls  ||  !sel) return nil;</span><br><span class="line"></span><br><span class="line">    return class_getInstanceMethod(cls-&gt;getMeta(), sel);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">⬇️</span><br><span class="line">//获取元类</span><br><span class="line"> // NOT identical to this-&gt;ISA when this is a metaclass 判断是否是元类，是元类就直接返回，反之，继续找isa指向</span><br><span class="line">Class getMeta() &#123;</span><br><span class="line">    if (isMetaClass()) return (Class)this;</span><br><span class="line">    else return this-&gt;ISA();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">//获取类方法</span><br><span class="line">Method class_getClassMethod(Class cls, SEL sel)</span><br><span class="line">&#123;</span><br><span class="line">    if (!cls  ||  !sel) return nil;</span><br><span class="line"></span><br><span class="line">    return class_getInstanceMethod(cls-&gt;getMeta(), sel);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">⬇️</span><br><span class="line">//获取元类</span><br><span class="line"> // NOT identical to this-&gt;ISA when this is a metaclass 判断是否是元类，是元类就直接返回，反之，继续找isa指向</span><br><span class="line">Class getMeta() &#123;</span><br><span class="line">    if (isMetaClass()) return (Class)this;</span><br><span class="line">    else return this-&gt;ISA();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>由源码可知：<code>class_getClassMethod</code> 的实现是获取类的类方法，其本质就是 <code>获取元类的实例方法</code>，最终还是会走到 <code>class_getInstanceMethod</code>，但是在这里需要注意的一点是，在 <code>getMeta</code> 源码中，如果判断出 <code>cls</code> 是 <code>元类</code>，那么就 <code>不会</code> 再继续往下 <code>递归查找</code>，会直接返回 <code>this</code> ，其目的是为了 <code>防止元类的无限递归查找</code></p>
 <p><strong>【结论】</strong><br>由源码可知：</p>
@@ -425,17 +435,22 @@
 <li><p><code>zjIMP_classToMetaclass</code> 函数：用于获取 <code>类和元类</code> 中的方法实现</p>
 </li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">void zjIMP_classToMetaclass(Class pClass)&#123;</span><br><span class="line">    </span><br><span class="line">    const char *className = class_getName(pClass);</span><br><span class="line">    Class metaClass = objc_getMetaClass(className);</span><br><span class="line"></span><br><span class="line">    // - (void)sayHello;</span><br><span class="line">    // + (void)sayHappy;</span><br><span class="line">    IMP imp1 = class_getMethodImplementation(pClass, @selector(sayHello));</span><br><span class="line">    IMP imp2 = class_getMethodImplementation(metaClass, @selector(sayHello));</span><br><span class="line"></span><br><span class="line">    IMP imp3 = class_getMethodImplementation(pClass, @selector(sayHappy));</span><br><span class="line">    IMP imp4 = class_getMethodImplementation(metaClass, @selector(sayHappy));</span><br><span class="line"></span><br><span class="line">    NSLog(@&quot;%p-%p-%p-%p&quot;,imp1,imp2,imp3,imp4);</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">void zjIMP_classToMetaclass(Class pClass)&#123;</span><br><span class="line">    </span><br><span class="line">    const char *className = class_getName(pClass);</span><br><span class="line">    Class metaClass = objc_getMetaClass(className);</span><br><span class="line"></span><br><span class="line">    // - (void)sayHello;</span><br><span class="line">    // + (void)sayHappy;</span><br><span class="line">    IMP imp1 = class_getMethodImplementation(pClass, @selector(sayHello));</span><br><span class="line">    IMP imp2 = class_getMethodImplementation(metaClass, @selector(sayHello));</span><br><span class="line"></span><br><span class="line">    IMP imp3 = class_getMethodImplementation(pClass, @selector(sayHappy));</span><br><span class="line">    IMP imp4 = class_getMethodImplementation(metaClass, @selector(sayHappy));</span><br><span class="line"></span><br><span class="line">    NSLog(@&quot;%p-%p-%p-%p&quot;,imp1,imp2,imp3,imp4);</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>查看一下打印结果:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x1000017c0-0x7fff72080580-0x7fff72080580-0x1000017f0</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x1000017c0-0x7fff72080580-0x7fff72080580-0x1000017f0</span><br></pre></td></tr></table></figure></div>
 
 <p>下面我们来分析一下打印结果:</p>
 <p><code>class_getMethodImplementation</code> ：用于获取 <code>类或类的父类</code> 的 <code>方法实现</code>，根据官方文档的解释:</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95673682-785d7200-0bdd-11eb-9d80-94b19d82a1c9.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95673682-785d7200-0bdd-11eb-9d80-94b19d82a1c9.png"
+                     
+                ></p>
 <p>其大致含义就是：该函数在向类实例发送消息时会被调用，并返回一个指向 <code>方法实现函数的指针</code>。这个函数会比 <code>method_getImplementation(class_getInstanceMethod(cls, name))</code> 更快。返回的函数指针可能是一个指向 <code>runtime内部的函数</code>，而不一定是方法的实际实现。如果类实例无法响应 <code>selector</code> ，则返回的函数指针将是运行时 <code>消息转发机制</code> 的一部分</p>
 <p>下面我们也可以通过这个方法的源码来印证上面的这个说法，</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">IMP class_getMethodImplementation(Class cls, SEL sel)</span><br><span class="line">&#123;</span><br><span class="line">    IMP imp;</span><br><span class="line"></span><br><span class="line">    if (!cls  ||  !sel) return nil;</span><br><span class="line"></span><br><span class="line">    //查找方法实现</span><br><span class="line">    imp = lookUpImpOrNil(nil, sel, cls, LOOKUP_INITIALIZE | LOOKUP_RESOLVER);</span><br><span class="line"></span><br><span class="line">    //如果没有找到，则进行消息转发</span><br><span class="line">    if (!imp) &#123;</span><br><span class="line">        return _objc_msgForward;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return imp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">IMP class_getMethodImplementation(Class cls, SEL sel)</span><br><span class="line">&#123;</span><br><span class="line">    IMP imp;</span><br><span class="line"></span><br><span class="line">    if (!cls  ||  !sel) return nil;</span><br><span class="line"></span><br><span class="line">    //查找方法实现</span><br><span class="line">    imp = lookUpImpOrNil(nil, sel, cls, LOOKUP_INITIALIZE | LOOKUP_RESOLVER);</span><br><span class="line"></span><br><span class="line">    //如果没有找到，则进行消息转发</span><br><span class="line">    if (!imp) &#123;</span><br><span class="line">        return _objc_msgForward;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return imp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>从上面的代码可知传入的 <code>pClass</code> 是 <code>ZJPerson 类</code>，<code>metaClass</code> 是 <code>ZJPerson元类</code>,函数中4个打印结果分别是：</p>
 <ul>
@@ -460,47 +475,52 @@
 <h1 id="【面试题】iskindOfClass-amp-isMemberOfClass-的理解"><a href="#【面试题】iskindOfClass-amp-isMemberOfClass-的理解" class="headerlink" title="【面试题】iskindOfClass &amp; isMemberOfClass 的理解"></a>【面试题】iskindOfClass &amp; isMemberOfClass 的理解</h1><ul>
 <li><code>iskindOfClass &amp; isMemberOfClass</code> 类方法调用</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">BOOL re1 = [(id)[NSObject class] isKindOfClass:[NSObject class]];       </span><br><span class="line">BOOL re2 = [(id)[NSObject class] isMemberOfClass:[NSObject class]];</span><br><span class="line">BOOL re3 = [(id)[ZJPerson class] isKindOfClass:[ZJPerson class]];</span><br><span class="line">BOOL re4 = [(id)[ZJPerson class] isMemberOfClass:[ZJPerson class]];</span><br><span class="line">NSLog(@&quot; re1 :%hhd\n re2 :%hhd\n re3 :%hhd\n re4 :%hhd\n&quot;,re1,re2,re3,re4);</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">BOOL re1 = [(id)[NSObject class] isKindOfClass:[NSObject class]];       </span><br><span class="line">BOOL re2 = [(id)[NSObject class] isMemberOfClass:[NSObject class]];</span><br><span class="line">BOOL re3 = [(id)[ZJPerson class] isKindOfClass:[ZJPerson class]];</span><br><span class="line">BOOL re4 = [(id)[ZJPerson class] isMemberOfClass:[ZJPerson class]];</span><br><span class="line">NSLog(@&quot; re1 :%hhd\n re2 :%hhd\n re3 :%hhd\n re4 :%hhd\n&quot;,re1,re2,re3,re4);</span><br></pre></td></tr></table></figure></div>
 
 <p>查看打印结果:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2020-09-16 23:45:31.732090+0800 KCObjc[41895:1261834]  re1 :1</span><br><span class="line"> re2 :0</span><br><span class="line"> re3 :0</span><br><span class="line"> re4 :0</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2020-09-16 23:45:31.732090+0800 KCObjc[41895:1261834]  re1 :1</span><br><span class="line"> re2 :0</span><br><span class="line"> re3 :0</span><br><span class="line"> re4 :0</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li><code>iskindOfClass &amp; isMemberOfClass</code> 实例方法调用</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">BOOL re5 = [(id)[NSObject alloc] isKindOfClass:[NSObject class]];       </span><br><span class="line">BOOL re6 = [(id)[NSObject alloc] isMemberOfClass:[NSObject class]];     </span><br><span class="line">BOOL re7 = [(id)[ZJPerson alloc] isKindOfClass:[ZJPerson class]];      </span><br><span class="line">BOOL re8 = [(id)[ZJPerson alloc] isMemberOfClass:[ZJPerson class]];     </span><br><span class="line"></span><br><span class="line">NSLog(@&quot; re5 :%hhd\n re6 :%hhd\n re7 :%hhd\n re8 :%hhd\n&quot;,re5,re6,re7,re8);</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">BOOL re5 = [(id)[NSObject alloc] isKindOfClass:[NSObject class]];       </span><br><span class="line">BOOL re6 = [(id)[NSObject alloc] isMemberOfClass:[NSObject class]];     </span><br><span class="line">BOOL re7 = [(id)[ZJPerson alloc] isKindOfClass:[ZJPerson class]];      </span><br><span class="line">BOOL re8 = [(id)[ZJPerson alloc] isMemberOfClass:[ZJPerson class]];     </span><br><span class="line"></span><br><span class="line">NSLog(@&quot; re5 :%hhd\n re6 :%hhd\n re7 :%hhd\n re8 :%hhd\n&quot;,re5,re6,re7,re8);</span><br></pre></td></tr></table></figure></div>
 
 <p>查看打印结果：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2020-09-16 23:45:31.733480+0800 KCObjc[41895:1261834]  re5 :1</span><br><span class="line"> re6 :1</span><br><span class="line"> re7 :1</span><br><span class="line"> re8 :1</span><br><span class="line">Program ended with exit code: 0</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2020-09-16 23:45:31.733480+0800 KCObjc[41895:1261834]  re5 :1</span><br><span class="line"> re6 :1</span><br><span class="line"> re7 :1</span><br><span class="line"> re8 :1</span><br><span class="line">Program ended with exit code: 0</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>【问题】</strong>：那么是为什么呢？接下来我们通过 <code>objc4</code> 源码来分析一下：</p>
 <ul>
 <li>要想分析源码，我们需要深入理解 <code>isa</code> 流程图，如下：</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/94944488-e930ca00-050b-11eb-80ca-e204a449909c.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/94944488-e930ca00-050b-11eb-80ca-e204a449909c.png"
+                     
+                ></p>
 <p><strong>注：NSObject类 和 NSObject根元类 不相等</strong></p>
 <ul>
 <li><p>接下来我们查一下 <code>isKindOfClass</code> 调用的源码:</p>
 <ul>
 <li>查看 <code>类</code> 调用的源码：</li>
 </ul>
-  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+ (BOOL)isKindOfClass:(Class)cls &#123;</span><br><span class="line">    for (Class tcls = self-&gt;ISA(); tcls; tcls = tcls-&gt;superclass) &#123;</span><br><span class="line">        if (tcls == cls) return YES;</span><br><span class="line">    &#125;</span><br><span class="line">    return NO;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+ (BOOL)isKindOfClass:(Class)cls &#123;</span><br><span class="line">    for (Class tcls = self-&gt;ISA(); tcls; tcls = tcls-&gt;superclass) &#123;</span><br><span class="line">        if (tcls == cls) return YES;</span><br><span class="line">    &#125;</span><br><span class="line">    return NO;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>查看 <code>实例对象</code> 调用的源码:</li>
 </ul>
-  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)isKindOfClass:(Class)cls &#123;</span><br><span class="line">    for (Class tcls = [self class]; tcls; tcls = tcls-&gt;superclass) &#123;</span><br><span class="line">        if (tcls == cls) return YES;</span><br><span class="line">    &#125;</span><br><span class="line">    return NO;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)isKindOfClass:(Class)cls &#123;</span><br><span class="line">    for (Class tcls = [self class]; tcls; tcls = tcls-&gt;superclass) &#123;</span><br><span class="line">        if (tcls == cls) return YES;</span><br><span class="line">    &#125;</span><br><span class="line">    return NO;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 </li>
 <li><p>我们再查看一下 <code>isMemberOfClass</code> 调用的源码：</p>
 <ul>
 <li>查看 <code>类</code> 调用的源码：</li>
 </ul>
-  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+ (BOOL)isMemberOfClass:(Class)cls &#123;</span><br><span class="line">    return self-&gt;ISA() == cls;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+ (BOOL)isMemberOfClass:(Class)cls &#123;</span><br><span class="line">    return self-&gt;ISA() == cls;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>查看 <code>实例对象</code> 调用的源码:</li>
 </ul>
-  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)isMemberOfClass:(Class)cls &#123;</span><br><span class="line">    return [self class] == cls;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+  <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)isMemberOfClass:(Class)cls &#123;</span><br><span class="line">    return [self class] == cls;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div></li>
 </ul>
 <p><strong>【源码分析总结】</strong></p>
 <ul>
@@ -532,7 +552,12 @@
 </li>
 </ul>
 <p><code>[NSObject class] isKindOfClass:[NSObject class]]</code> 内部调用分析图：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95671775-43e1ba00-0bcd-11eb-8697-64d59be5c414.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95671775-43e1ba00-0bcd-11eb-8697-64d59be5c414.png"
+                     
+                ></p>
 <p>由上面的分析图可知：打印结果为 <code>1</code></p>
 <ul>
 <li><p>re2：0，是 <code>NSObject</code> 和 <code>NSObject</code> 的对比，使用 <code>+isMemberOfClass</code></p>
@@ -542,7 +567,12 @@
 </li>
 </ul>
 <p><code>[NSObject class] isMemberOfClass:[NSObject class]</code> 内部调用分析图：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95671830-b8b4f400-0bcd-11eb-8c87-1aa969615eb2.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95671830-b8b4f400-0bcd-11eb-8c87-1aa969615eb2.png"
+                     
+                ></p>
 <ul>
 <li><p>re3：0，是 <code>ZJPerson</code> 与 <code>ZJPerson</code> 的对比，使用 <code>+isKindOfClass</code></p>
 <ul>
@@ -554,7 +584,12 @@
 </li>
 </ul>
 <p><code>[ZJPerson class] isKindOfClass:[ZJPerson class]</code> 内部调用分析图：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95671878-3d077700-0bce-11eb-904d-35fd090a71f5.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95671878-3d077700-0bce-11eb-904d-35fd090a71f5.png"
+                     
+                ></p>
 <ul>
 <li><p>re4：0，是 <code>ZJPerson</code> 与 <code>ZJPerson</code> 的对比，使用 <code>+isMemberOfClass</code></p>
 <ul>
@@ -563,7 +598,12 @@
 </li>
 </ul>
 <p><code>[ZJPerson class] isMemberOfClass:[ZJPerson class]</code> 内部调用分析图：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95671897-7fc94f00-0bce-11eb-8360-b07aca28d359.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95671897-7fc94f00-0bce-11eb-8360-b07aca28d359.png"
+                     
+                ></p>
 <p><strong>【使用实例方法结果分析】</strong></p>
 <ul>
 <li><p>re5：1，是 <code>NSObject对象</code> 和 <code>NSObject</code> 的对比，使用 <code>-isKindOfClass</code></p>
@@ -573,7 +613,12 @@
 </li>
 </ul>
 <p><code>[NSObject alloc] isKindOfClass:[NSObject class]</code> 内部调用分析图：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95671973-4e9d4e80-0bcf-11eb-9cc9-154398a78df7.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95671973-4e9d4e80-0bcf-11eb-9cc9-154398a78df7.png"
+                     
+                ></p>
 <ul>
 <li><p>re6：1，是 <code>NSObject对象</code> 和 <code>NSObject</code> 的对比，使用 <code>-isMemberOfClass</code></p>
 <ul>
@@ -582,7 +627,12 @@
 </li>
 </ul>
 <p><code>[NSObject alloc] isMemberOfClass:[NSObject class]</code>内部调用分析图：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95672004-8906eb80-0bcf-11eb-980d-6440b23696d3.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95672004-8906eb80-0bcf-11eb-980d-6440b23696d3.png"
+                     
+                ></p>
 <ul>
 <li><p>re7：1，是 <code>ZJPerson对象</code> 和 <code>ZJPerson</code> 的对比，使用 <code>-isKindOfClass</code></p>
 <ul>
@@ -591,7 +641,12 @@
 </li>
 </ul>
 <p><code>[ZJPerson alloc] isKindOfClass:[ZJPerson class]</code>内部调用分析图：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/95672086-66290700-0bd0-11eb-8506-b6d6a914f54e.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/95672086-66290700-0bd0-11eb-8506-b6d6a914f54e.png"
+                     
+                ></p>
 <ul>
 <li><p>re8：1，是 <code>ZJPerson对象</code> 和 <code>ZJPerson</code> 的对比，使用 <code>-isMemberOfClass</code></p>
 <ul>

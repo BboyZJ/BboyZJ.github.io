@@ -432,7 +432,12 @@
 </ul>
 <h1 id="dyld-2-工作流程"><a href="#dyld-2-工作流程" class="headerlink" title="dyld 2 工作流程"></a>dyld 2 工作流程</h1><p>dyld 2是纯粹的in-process，即在程序进程内执行的，也就意味着只有当应用程序被启动时，dyld 2才能开始执行任务</p>
 <p>以下是dyld 2的工作流程图示</p>
-<p><img src="/BboyZJ.github.io/assets/16773573816475.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773573816475.png"
+                     
+                ></p>
 <ul>
 <li>1、dyld的初始化，主要代码在dyldbootstrap::start，接着执行dyld::_main，dyld::_main代码较多，是dyld加载的核心部分；</li>
 <li>2、检查并准备环境，例如获取二进制路径、检查环境配置，解析主二进制的image header等信息</li>
@@ -495,10 +500,20 @@
 </ul>
 <p><strong>dyld 2 改进和优化</strong></p>
 <p>以下是dyld 2 向 dyld 3 的一些改变，主要是将安全敏感的部分 和 占用大量资源的部分移动到上层，然后将一个closure写入磁盘进行缓存，然后我们在程序进程中使用closure。以下是图示</p>
-<p><img src="/BboyZJ.github.io/assets/16773575713620.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773575713620.png"
+                     
+                ></p>
 <p><strong>dyld 3 组成部分&#x2F;工作流程</strong></p>
 <p>dyld 3的工作流程主要分为3部分，如下所示</p>
-<p><img src="/BboyZJ.github.io/assets/16773575862753.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773575862753.png"
+                     
+                ></p>
 <p><strong>第一部分：out-of-process ：mach-o parser</strong></p>
 <p>进程外的mach-o分析器和编译器，是普通的后台程序，用于提高测试基础架构的性能。</p>
 <p>第一部分主要在App进程之外做以下工作：</p>

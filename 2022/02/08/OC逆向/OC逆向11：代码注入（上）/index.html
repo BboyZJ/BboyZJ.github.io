@@ -335,7 +335,12 @@
 * MachOView 二进制文件分析工具（注：分析时可能出现无法分析的情况，可以通过CMD + O打开）
 </code></pre>
 <p><code>Mach-O</code> 文件中主要看 <code>load Commands（即加载命令集）</code>，从这里可以看出动态库的加载等，其中大部分格式为：LC_LOAD_DYLIB（xxx），是在指定路径下加载xxx，如下所示</p>
-<p><img src="/BboyZJ.github.io/assets/16443094108857.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16443094108857.jpg"
+                     
+                ></p>
 <p>所以，综上所述，如果需要注入代码，是 <code>以动态库的形式注入</code></p>
 <h1 id="方式一：Framework手动注入"><a href="#方式一：Framework手动注入" class="headerlink" title="方式一：Framework手动注入"></a>方式一：Framework手动注入</h1><ol>
 <li>第一步：动态库进入App包，即Framework注入</li>
@@ -343,16 +348,26 @@
 <ul>
 <li>创建一个 <code>Framework</code>，命令为ZJHook（创建位置：<code>target -&gt; + -&gt; ios -&gt; Framework</code>）</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16443096456885.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16443096456885.jpg"
+                     
+                ></p>
 <ul>
 <li>在 ZJHook中创建 <code>inject</code> 文件，在声明周期方法load函数中写注入代码</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+(void)load&#123;</span><br><span class="line">    NSLog(@&quot;CJLHook ------ 注入成功&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+(void)load&#123;</span><br><span class="line">    NSLog(@&quot;CJLHook ------ 注入成功&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>编译工程<code>Demo</code>（注：这里的工程依然需要重签名），然后查看工程的可执行文件Demo，查找其中的<code>Frameworks</code>，从这里可以看到<code>ZJHook</code>，但是此时并不会执行其中的load函数</li>
 </ul>
-<p><img src="/BboyZJ.github.io/assets/16443110052513.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16443110052513.jpg"
+                     
+                ></p>
 <p><code>load不会执行的原因</code>：查看此时的Mach-O文件中的 Load Commands，并没有发现ZJHook，随意此时是不会执行其中的load函数的</p>
 <ol start="2">
 <li>第二步：yololib手动注入，修改Mach-O字段</li>

@@ -327,7 +327,12 @@
             <div class="article-content markdown-body">
                 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文主要介绍Mach-O的结构演示</p>
 <h1 id="Mach-O内部结构"><a href="#Mach-O内部结构" class="headerlink" title="Mach-O内部结构"></a>Mach-O内部结构</h1><p>因为Mach-O文件本身是一种文件格式，所以我们一定需要了解其文件内部结构，其内部结构如下图所示：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/152944951-e0b4435a-4a9e-476c-bd3a-fc7df90b7205.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152944951-e0b4435a-4a9e-476c-bd3a-fc7df90b7205.jpg"
+                     
+                ></p>
 <p><code>Mach-O</code> 的组成结构主要分为 <code>三部分</code></p>
 <ul>
 <li><p><code>Header</code> 包含该 二进制文件的一般信息</p>
@@ -348,12 +353,12 @@
 </li>
 </ul>
 <h1 id="终端命令：otool"><a href="#终端命令：otool" class="headerlink" title="终端命令：otool"></a>终端命令：otool</h1><p>在终端中，我们通过 <code>otool</code> 查看Mach-O的一些指令</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"> % otool</span><br><span class="line">Usage: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool [-arch arch_type] [-fahlLDtdorSTMRIHGvVcXmqQjCP] [-mcpu=arg] [--version] &lt;object file&gt; ...</span><br><span class="line">	-f print the fat headers</span><br><span class="line">	-a print the archive header</span><br><span class="line">	-h print the mach header</span><br><span class="line">	-l print the load commands</span><br><span class="line">	-L print shared libraries used</span><br><span class="line">	-D print shared library id name</span><br><span class="line">	-t print the text section (disassemble with -v)</span><br><span class="line">	-x print all text sections (disassemble with -v)</span><br><span class="line">	-p &lt;routine name&gt;  start dissassemble from routine name</span><br><span class="line">	-s &lt;segname&gt; &lt;sectname&gt; print contents of section</span><br><span class="line">	-d print the data section</span><br><span class="line">	-o print the Objective-C segment</span><br><span class="line">	-r print the relocation entries</span><br><span class="line">	-S print the table of contents of a library (obsolete)</span><br><span class="line">	-T print the table of contents of a dynamic shared library (obsolete)</span><br><span class="line">	-M print the module table of a dynamic shared library (obsolete)</span><br><span class="line">	-R print the reference table of a dynamic shared library (obsolete)</span><br><span class="line">	-I print the indirect symbol table</span><br><span class="line">	-H print the two-level hints table (obsolete)</span><br><span class="line">	-G print the data in code table</span><br><span class="line">	-v print verbosely (symbolically) when possible</span><br><span class="line">	-V print disassembled operands symbolically</span><br><span class="line">	-c print argument strings of a core file</span><br><span class="line">	-X print no leading addresses or headers</span><br><span class="line">	-m don&#x27;t use archive(member) syntax</span><br><span class="line">	-B force Thumb disassembly (ARM objects only)</span><br><span class="line">	-q use llvm&#x27;s disassembler (the default)</span><br><span class="line">	-Q use otool(1)&#x27;s disassembler</span><br><span class="line">	-mcpu=arg use `arg&#x27; as the cpu for disassembly</span><br><span class="line">	-j print opcode bytes</span><br><span class="line">	-P print the info plist section as strings</span><br><span class="line">	-C print linker optimization hints</span><br><span class="line">	--version print the version of /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"> % otool</span><br><span class="line">Usage: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool [-arch arch_type] [-fahlLDtdorSTMRIHGvVcXmqQjCP] [-mcpu=arg] [--version] &lt;object file&gt; ...</span><br><span class="line">	-f print the fat headers</span><br><span class="line">	-a print the archive header</span><br><span class="line">	-h print the mach header</span><br><span class="line">	-l print the load commands</span><br><span class="line">	-L print shared libraries used</span><br><span class="line">	-D print shared library id name</span><br><span class="line">	-t print the text section (disassemble with -v)</span><br><span class="line">	-x print all text sections (disassemble with -v)</span><br><span class="line">	-p &lt;routine name&gt;  start dissassemble from routine name</span><br><span class="line">	-s &lt;segname&gt; &lt;sectname&gt; print contents of section</span><br><span class="line">	-d print the data section</span><br><span class="line">	-o print the Objective-C segment</span><br><span class="line">	-r print the relocation entries</span><br><span class="line">	-S print the table of contents of a library (obsolete)</span><br><span class="line">	-T print the table of contents of a dynamic shared library (obsolete)</span><br><span class="line">	-M print the module table of a dynamic shared library (obsolete)</span><br><span class="line">	-R print the reference table of a dynamic shared library (obsolete)</span><br><span class="line">	-I print the indirect symbol table</span><br><span class="line">	-H print the two-level hints table (obsolete)</span><br><span class="line">	-G print the data in code table</span><br><span class="line">	-v print verbosely (symbolically) when possible</span><br><span class="line">	-V print disassembled operands symbolically</span><br><span class="line">	-c print argument strings of a core file</span><br><span class="line">	-X print no leading addresses or headers</span><br><span class="line">	-m don&#x27;t use archive(member) syntax</span><br><span class="line">	-B force Thumb disassembly (ARM objects only)</span><br><span class="line">	-q use llvm&#x27;s disassembler (the default)</span><br><span class="line">	-Q use otool(1)&#x27;s disassembler</span><br><span class="line">	-mcpu=arg use `arg&#x27; as the cpu for disassembly</span><br><span class="line">	-j print opcode bytes</span><br><span class="line">	-P print the info plist section as strings</span><br><span class="line">	-C print linker optimization hints</span><br><span class="line">	--version print the version of /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/otool</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>查看Mach-O的header信息：<code>otool -f Demo</code></li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">% cd /Users/zhangjian/Library/Developer/Xcode/DerivedData/Demo-edwjvapoqaffzeeiyzyhfryhfrsr/Build/Products/Release-iphoneos/Demo.app zhangjian@zhangjiandeMBP Demo.app % otool -f Demo</span><br><span class="line">Fat headers</span><br><span class="line">fat_magic 0xcafebabe</span><br><span class="line">nfat_arch 3</span><br><span class="line">architecture 0</span><br><span class="line">    cputype 12</span><br><span class="line">    cpusubtype 9</span><br><span class="line">    capabilities 0x0</span><br><span class="line">    offset 16384</span><br><span class="line">    size 79280</span><br><span class="line">    align 2^14 (16384)</span><br><span class="line">architecture 1</span><br><span class="line">    cputype 12</span><br><span class="line">    cpusubtype 11</span><br><span class="line">    capabilities 0x0</span><br><span class="line">    offset 98304</span><br><span class="line">    size 79280</span><br><span class="line">    align 2^14 (16384)</span><br><span class="line">architecture 2</span><br><span class="line">    cputype 16777228</span><br><span class="line">    cpusubtype 0</span><br><span class="line">    capabilities 0x0</span><br><span class="line">    offset 180224</span><br><span class="line">    size 80000</span><br><span class="line">    align 2^14 (16384)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">% cd /Users/zhangjian/Library/Developer/Xcode/DerivedData/Demo-edwjvapoqaffzeeiyzyhfryhfrsr/Build/Products/Release-iphoneos/Demo.app zhangjian@zhangjiandeMBP Demo.app % otool -f Demo</span><br><span class="line">Fat headers</span><br><span class="line">fat_magic 0xcafebabe</span><br><span class="line">nfat_arch 3</span><br><span class="line">architecture 0</span><br><span class="line">    cputype 12</span><br><span class="line">    cpusubtype 9</span><br><span class="line">    capabilities 0x0</span><br><span class="line">    offset 16384</span><br><span class="line">    size 79280</span><br><span class="line">    align 2^14 (16384)</span><br><span class="line">architecture 1</span><br><span class="line">    cputype 12</span><br><span class="line">    cpusubtype 11</span><br><span class="line">    capabilities 0x0</span><br><span class="line">    offset 98304</span><br><span class="line">    size 79280</span><br><span class="line">    align 2^14 (16384)</span><br><span class="line">architecture 2</span><br><span class="line">    cputype 16777228</span><br><span class="line">    cpusubtype 0</span><br><span class="line">    capabilities 0x0</span><br><span class="line">    offset 180224</span><br><span class="line">    size 80000</span><br><span class="line">    align 2^14 (16384)</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <h1 id="MachOView-软件"><a href="#MachOView-软件" class="headerlink" title="MachOView 软件"></a>MachOView 软件</h1><ul>
 <li><p>首先 Show in finder 找到Demo.app程序包 -&gt; 右键显示包内容 -&gt; 找打exex可执行文件</p>
@@ -361,11 +366,21 @@
 <li><p>将demo拖拽到 MachOView 查看 Mach-O 文件</p>
 </li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/152945054-6272275f-3742-45c8-9f45-7a8dcd08e1a6.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152945054-6272275f-3742-45c8-9f45-7a8dcd08e1a6.jpg"
+                     
+                ></p>
 <ul>
 <li>验证 ARM-V7 与 ARM_V7S  之间是否是分页？</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/152945122-c621d978-0b67-4f98-a28b-95a9ddc44d78.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152945122-c621d978-0b67-4f98-a28b-95a9ddc44d78.jpg"
+                     
+                ></p>
 <pre><code>* ARM_V7 与 ARM_V7S 的差值：16384 + 79280 - 98304 = -2640
 * ARM_V7 的大小：-2640 - 79280 = -81920，查看这个值是否 pageSize(4096)的倍数
 * 是否是PageSize的倍数：91920/4096 = -20（MacOs中），但是由于是iOS，所以 20/4 = 5页，说明是分页了，即按页对齐
@@ -373,17 +388,37 @@
 <h1 id="两者对比"><a href="#两者对比" class="headerlink" title="两者对比"></a>两者对比</h1><ul>
 <li>otool 与 MachOView 查看的Mach-O进行对比</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/152945261-e2b14d64-d084-4493-882b-444b7fe778ca.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152945261-e2b14d64-d084-4493-882b-444b7fe778ca.jpg"
+                     
+                ></p>
 <h1 id="MachOView演示"><a href="#MachOView演示" class="headerlink" title="MachOView演示"></a>MachOView演示</h1><p>通过 <code>MachOView</code> 查看Mach-O结构，分为三部分：<code>Header、Load Commands、Data</code></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/152945321-b9275a16-f95b-40a8-8bb4-fd6b0dddf538.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152945321-b9275a16-f95b-40a8-8bb4-fd6b0dddf538.jpg"
+                     
+                ></p>
 <ul>
 <li>查看 arm64 下 Mach-O 的header</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/152945395-a24af1cf-0bb2-4efa-b9c6-63f96c50ac09.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152945395-a24af1cf-0bb2-4efa-b9c6-63f96c50ac09.jpg"
+                     
+                ></p>
 <ul>
 <li>查看 Load Commands</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/152945649-42956103-9867-4044-9ead-7aedbd74866c.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152945649-42956103-9867-4044-9ead-7aedbd74866c.jpg"
+                     
+                ></p>
 <pre><code>* VM Addr：虚拟内存地址
 
 * VM Size：虚拟内存大小，在运行时，在内存中的大小，4g
@@ -401,7 +436,7 @@
 <h1 id="Header-的数据结构"><a href="#Header-的数据结构" class="headerlink" title="Header 的数据结构"></a>Header 的数据结构</h1><ul>
 <li>在 <code>CMD + shift + O</code> 搜索 <code>loader.h</code>，找到 <code>Mach_Header_64</code>（arm64架构）的数据结构如下所示，与 <code>mach_header</code> 相比，只是多了一个 <code>reverse</code></li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// 1.mach_header</span><br><span class="line">struct mach_header &#123;</span><br><span class="line">	uint32_t	magic;		/* 魔数，快速定位属于64位还是32位 */</span><br><span class="line">	cpu_type_t	cputype;	/* cpu类型 */</span><br><span class="line">	cpu_subtype_t	cpusubtype;	/* cpu具体类型 */</span><br><span class="line">	uint32_t	filetype;	/* 文件类型 */</span><br><span class="line">	uint32_t	ncmds;		/* Load commands的条数 */</span><br><span class="line">	uint32_t	sizeofcmds;	/* Load commands的大小 */</span><br><span class="line">	uint32_t	flags;		/* 标志位标识二进制文件支持的功能，主要是和系统加载、链接有关 */</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// 2.mach_header_64</span><br><span class="line">struct mach_header_64 &#123;</span><br><span class="line">	uint32_t	magic;		/* 魔数，快速定位属于64位还是32位 */</span><br><span class="line">	cpu_type_t	cputype;	/* cpu类型 */</span><br><span class="line">	cpu_subtype_t	cpusubtype;	/* cpu具体类型 */</span><br><span class="line">	uint32_t	filetype;	/* 文件类型 */</span><br><span class="line">	uint32_t	ncmds;		/* Load commands的条数 */</span><br><span class="line">	uint32_t	sizeofcmds;	/* Load commands的大小 */</span><br><span class="line">	uint32_t	flags;		/* 标志位标识二进制文件支持的功能，主要是和系统加载、链接有关 */</span><br><span class="line">	uint32_t	reserved;	/* reserved */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// 1.mach_header</span><br><span class="line">struct mach_header &#123;</span><br><span class="line">	uint32_t	magic;		/* 魔数，快速定位属于64位还是32位 */</span><br><span class="line">	cpu_type_t	cputype;	/* cpu类型 */</span><br><span class="line">	cpu_subtype_t	cpusubtype;	/* cpu具体类型 */</span><br><span class="line">	uint32_t	filetype;	/* 文件类型 */</span><br><span class="line">	uint32_t	ncmds;		/* Load commands的条数 */</span><br><span class="line">	uint32_t	sizeofcmds;	/* Load commands的大小 */</span><br><span class="line">	uint32_t	flags;		/* 标志位标识二进制文件支持的功能，主要是和系统加载、链接有关 */</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// 2.mach_header_64</span><br><span class="line">struct mach_header_64 &#123;</span><br><span class="line">	uint32_t	magic;		/* 魔数，快速定位属于64位还是32位 */</span><br><span class="line">	cpu_type_t	cputype;	/* cpu类型 */</span><br><span class="line">	cpu_subtype_t	cpusubtype;	/* cpu具体类型 */</span><br><span class="line">	uint32_t	filetype;	/* 文件类型 */</span><br><span class="line">	uint32_t	ncmds;		/* Load commands的条数 */</span><br><span class="line">	uint32_t	sizeofcmds;	/* Load commands的大小 */</span><br><span class="line">	uint32_t	flags;		/* 标志位标识二进制文件支持的功能，主要是和系统加载、链接有关 */</span><br><span class="line">	uint32_t	reserved;	/* reserved */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li><p>查看filetype种类</p>
@@ -431,13 +466,28 @@
 <h1 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h1><ol>
 <li><code>LC_SEGMENT_64</code> 中 <code>__TEXT、__DATA、LINKERDIT</code> 的对应关系如下图所示</li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/152945718-0add234b-5c71-4f17-b4b3-ad74f51b8f16.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152945718-0add234b-5c71-4f17-b4b3-ad74f51b8f16.jpg"
+                     
+                ></p>
 <ol start="2">
 <li>查看 LC_DYLD_INFO_ONLY 动态链接信息</li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/152945808-13348397-e953-4a61-9031-c1666f88488a.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152945808-13348397-e953-4a61-9031-c1666f88488a.jpg"
+                     
+                ></p>
 <p>其中 Rebase 是重定向，重定向过程简述如下：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/152945877-bf26baf5-a753-4303-a2cb-dffe1cd38b8c.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152945877-bf26baf5-a753-4303-a2cb-dffe1cd38b8c.jpg"
+                     
+                ></p>
 <ul>
 <li><p><code>代码段</code> 放入Mach-O文件，在编译时期，会生成一个 <code>偏移地址</code></p>
 </li>
@@ -449,51 +499,111 @@
 <ol start="3">
 <li>查看 <code>LC_SYMTAB</code> 符号地址</li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/152945949-7fa1cb84-ebf7-4d1c-9388-86f9c2b6f7da.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152945949-7fa1cb84-ebf7-4d1c-9388-86f9c2b6f7da.jpg"
+                     
+                ></p>
 <ol start="4">
 <li>查看 <code>LC_LOAD_DYLINKER</code> ，使用谁链接，这里使用的是<code>dyld</code></li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/152945970-09e4c7ad-be94-49be-9eed-9f5141db11b8.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152945970-09e4c7ad-be94-49be-9eed-9f5141db11b8.jpg"
+                     
+                ></p>
 <ol start="5">
 <li>查看 LC_UUID，mach-o文件识别的唯一标识</li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/152946058-f4a87c51-ede7-48f6-b2ef-46fde5cde6c6.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152946058-f4a87c51-ede7-48f6-b2ef-46fde5cde6c6.jpg"
+                     
+                ></p>
 <ol start="6">
 <li>查看 LC_VERSION_MIN_MACOSX，支持的最低版本信息</li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/152946133-185624c4-c420-453c-b727-d62488ad7e7a.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152946133-185624c4-c420-453c-b727-d62488ad7e7a.jpg"
+                     
+                ></p>
 <ol start="7">
 <li>查看 LC_SOURCE_VERSION，代码版本</li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/152946159-0eef7477-70d2-430e-a697-a8b5e796a908.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152946159-0eef7477-70d2-430e-a697-a8b5e796a908.jpg"
+                     
+                ></p>
 <ol start="8">
 <li>查看 LC_MAIN，入口函数</li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/152946275-27d16de3-ad6b-405c-909e-abc523d52466.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152946275-27d16de3-ad6b-405c-909e-abc523d52466.jpg"
+                     
+                ></p>
 <p>作用：用于你想时找不到切入点时（例如：做了防护，运行就闪退），可以从这里找到</p>
 <ol start="9">
 <li>查看 <code>LC_ENCRYPTION_INFO_64</code> ，此时 <code>Crypt ID</code> 为 <code>0</code>，表示还没有加密</li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/152946291-d1c1cf92-5136-4ec2-9ff8-30aa011389f0.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152946291-d1c1cf92-5136-4ec2-9ff8-30aa011389f0.jpg"
+                     
+                ></p>
 <h1 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h1><ol>
 <li>如果我们想快速定位代码段，需要通过 <code>LC_SEGMENT_64(__TEXT)</code> 中的 <code>VM Adress</code></li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/152946311-17ac476f-2a7c-4fa1-8819-3f1b3a106a3e.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152946311-17ac476f-2a7c-4fa1-8819-3f1b3a106a3e.jpg"
+                     
+                ></p>
 <ol start="2">
 <li>查看 代码段 的 起始位置</li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/152946404-f9c198be-4d98-487c-993d-e82ed09ac324.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152946404-f9c198be-4d98-487c-993d-e82ed09ac324.jpg"
+                     
+                ></p>
 <p>也可以通过 objdump 命令来查看： objdump –macho -d Demo</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/152946418-e360948a-8f7d-494e-beb3-ebb1135441ed.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152946418-e360948a-8f7d-494e-beb3-ebb1135441ed.jpg"
+                     
+                ></p>
 <p>从这里看出，正好与Mach-O文件中的对应</p>
 <ol start="3">
 <li>查看stub、stub_helper：主要是用于符号绑定，这里的 <code>0x10006574</code> 全是指向的 <code>00006574</code> 偏移，且前面6句汇编都是在做 <code>符号绑定</code></li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/152946428-d44d88a5-a2dd-4f16-99b9-34283455cd1e.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152946428-d44d88a5-a2dd-4f16-99b9-34283455cd1e.jpg"
+                     
+                ></p>
 <ol start="4">
 <li>查看外部符号表（即 调用外部函数，只有在运行时才绑定），有两个：懒加载、非懒加载</li>
 </ol>
-<p><img src="https://user-images.githubusercontent.com/25925248/152946602-1d20b0ed-b440-4708-85d2-31791d0d9a0c.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/152946602-1d20b0ed-b440-4708-85d2-31791d0d9a0c.jpg"
+                     
+                ></p>
 <p>这里是先 <code>绑定</code> 专门 <code>用来绑定外部的函数</code>，在用这个函数去绑定其他函数</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
 <li><p>Mach-O 内部结构</p>

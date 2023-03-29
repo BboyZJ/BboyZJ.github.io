@@ -333,22 +333,22 @@
 <ul>
 <li><code>ZJLog</code>：打印结果描述</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#ifdef DEBUG</span><br><span class="line">#define ZJLog(format, ...) printf(&quot;%s\n&quot;, [[NSString stringWithFormat:format, ## __VA_ARGS__] UTF8String]);</span><br><span class="line">#else</span><br><span class="line">#define ZJLog(format, ...);</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#ifdef DEBUG</span><br><span class="line">#define ZJLog(format, ...) printf(&quot;%s\n&quot;, [[NSString stringWithFormat:format, ## __VA_ARGS__] UTF8String]);</span><br><span class="line">#else</span><br><span class="line">#define ZJLog(format, ...);</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li><code>zjTypes</code> 函数：打印各种类型编码函数</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - 各种类型编码</span><br><span class="line">void zjTypes()&#123;</span><br><span class="line">    NSLog(@&quot;char --&gt; %s&quot;,@encode(char));</span><br><span class="line">    NSLog(@&quot;int --&gt; %s&quot;,@encode(int));</span><br><span class="line">    NSLog(@&quot;short --&gt; %s&quot;,@encode(short));</span><br><span class="line">    NSLog(@&quot;long --&gt; %s&quot;,@encode(long));</span><br><span class="line">    NSLog(@&quot;long long --&gt; %s&quot;,@encode(long long));</span><br><span class="line">    NSLog(@&quot;unsigned char --&gt; %s&quot;,@encode(unsigned char));</span><br><span class="line">    NSLog(@&quot;unsigned int --&gt; %s&quot;,@encode(unsigned int));</span><br><span class="line">    NSLog(@&quot;unsigned short --&gt; %s&quot;,@encode(unsigned short));</span><br><span class="line">    NSLog(@&quot;unsigned long --&gt; %s&quot;,@encode(unsigned long long));</span><br><span class="line">    NSLog(@&quot;float --&gt; %s&quot;,@encode(float));</span><br><span class="line">    NSLog(@&quot;bool --&gt; %s&quot;,@encode(bool));</span><br><span class="line">    NSLog(@&quot;void --&gt; %s&quot;,@encode(void));</span><br><span class="line">    NSLog(@&quot;char * --&gt; %s&quot;,@encode(char *));</span><br><span class="line">    NSLog(@&quot;id --&gt; %s&quot;,@encode(id));</span><br><span class="line">    NSLog(@&quot;Class --&gt; %s&quot;,@encode(Class));</span><br><span class="line">    NSLog(@&quot;SEL --&gt; %s&quot;,@encode(SEL));</span><br><span class="line">    int array[] = &#123;1,2,3&#125;;</span><br><span class="line">    NSLog(@&quot;int[] --&gt; %s&quot;,@encode(typeof(array)));</span><br><span class="line">    typedef struct person&#123;</span><br><span class="line">        char *name;</span><br><span class="line">        int age;</span><br><span class="line">    &#125;Person;</span><br><span class="line">    NSLog(@&quot;struct --&gt; %s&quot;,@encode(Person));</span><br><span class="line">    </span><br><span class="line">    typedef union union_type&#123;</span><br><span class="line">        char *name;</span><br><span class="line">        int a;</span><br><span class="line">    &#125;Union;</span><br><span class="line">    NSLog(@&quot;union --&gt; %s&quot;,@encode(Union));</span><br><span class="line"></span><br><span class="line">    int a = 2;</span><br><span class="line">    int *b = &#123;&amp;a&#125;;</span><br><span class="line">    NSLog(@&quot;int[] --&gt; %s&quot;,@encode(typeof(b)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - 各种类型编码</span><br><span class="line">void zjTypes()&#123;</span><br><span class="line">    NSLog(@&quot;char --&gt; %s&quot;,@encode(char));</span><br><span class="line">    NSLog(@&quot;int --&gt; %s&quot;,@encode(int));</span><br><span class="line">    NSLog(@&quot;short --&gt; %s&quot;,@encode(short));</span><br><span class="line">    NSLog(@&quot;long --&gt; %s&quot;,@encode(long));</span><br><span class="line">    NSLog(@&quot;long long --&gt; %s&quot;,@encode(long long));</span><br><span class="line">    NSLog(@&quot;unsigned char --&gt; %s&quot;,@encode(unsigned char));</span><br><span class="line">    NSLog(@&quot;unsigned int --&gt; %s&quot;,@encode(unsigned int));</span><br><span class="line">    NSLog(@&quot;unsigned short --&gt; %s&quot;,@encode(unsigned short));</span><br><span class="line">    NSLog(@&quot;unsigned long --&gt; %s&quot;,@encode(unsigned long long));</span><br><span class="line">    NSLog(@&quot;float --&gt; %s&quot;,@encode(float));</span><br><span class="line">    NSLog(@&quot;bool --&gt; %s&quot;,@encode(bool));</span><br><span class="line">    NSLog(@&quot;void --&gt; %s&quot;,@encode(void));</span><br><span class="line">    NSLog(@&quot;char * --&gt; %s&quot;,@encode(char *));</span><br><span class="line">    NSLog(@&quot;id --&gt; %s&quot;,@encode(id));</span><br><span class="line">    NSLog(@&quot;Class --&gt; %s&quot;,@encode(Class));</span><br><span class="line">    NSLog(@&quot;SEL --&gt; %s&quot;,@encode(SEL));</span><br><span class="line">    int array[] = &#123;1,2,3&#125;;</span><br><span class="line">    NSLog(@&quot;int[] --&gt; %s&quot;,@encode(typeof(array)));</span><br><span class="line">    typedef struct person&#123;</span><br><span class="line">        char *name;</span><br><span class="line">        int age;</span><br><span class="line">    &#125;Person;</span><br><span class="line">    NSLog(@&quot;struct --&gt; %s&quot;,@encode(Person));</span><br><span class="line">    </span><br><span class="line">    typedef union union_type&#123;</span><br><span class="line">        char *name;</span><br><span class="line">        int a;</span><br><span class="line">    &#125;Union;</span><br><span class="line">    NSLog(@&quot;union --&gt; %s&quot;,@encode(Union));</span><br><span class="line"></span><br><span class="line">    int a = 2;</span><br><span class="line">    int *b = &#123;&amp;a&#125;;</span><br><span class="line">    NSLog(@&quot;int[] --&gt; %s&quot;,@encode(typeof(b)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>我们在 <code>main.m</code> 函数中调用上面的函数</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        zjTypes();</span><br><span class="line">        NSLog(@&quot;Hello, World!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        zjTypes();</span><br><span class="line">        NSLog(@&quot;Hello, World!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 
 <p>查看输出的打印结果：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">2020-10-17 14:45:23.857263+0800 001-类的属性与变量[24305:733568] char --&gt; c</span><br><span class="line">2020-10-17 14:45:23.857725+0800 001-类的属性与变量[24305:733568] int --&gt; i</span><br><span class="line">2020-10-17 14:45:23.857763+0800 001-类的属性与变量[24305:733568] short --&gt; s</span><br><span class="line">2020-10-17 14:45:23.857818+0800 001-类的属性与变量[24305:733568] long --&gt; q</span><br><span class="line">2020-10-17 14:45:23.857887+0800 001-类的属性与变量[24305:733568] long long --&gt; q</span><br><span class="line">2020-10-17 14:45:23.857936+0800 001-类的属性与变量[24305:733568] unsigned char --&gt; C</span><br><span class="line">2020-10-17 14:45:23.857965+0800 001-类的属性与变量[24305:733568] unsigned int --&gt; I</span><br><span class="line">2020-10-17 14:45:23.857989+0800 001-类的属性与变量[24305:733568] unsigned short --&gt; S</span><br><span class="line">2020-10-17 14:45:23.858012+0800 001-类的属性与变量[24305:733568] unsigned long --&gt; Q</span><br><span class="line">2020-10-17 14:45:23.858065+0800 001-类的属性与变量[24305:733568] float --&gt; f</span><br><span class="line">2020-10-17 14:45:23.858105+0800 001-类的属性与变量[24305:733568] bool --&gt; B</span><br><span class="line">2020-10-17 14:45:23.858143+0800 001-类的属性与变量[24305:733568] void --&gt; v</span><br><span class="line">2020-10-17 14:45:23.858172+0800 001-类的属性与变量[24305:733568] char * --&gt; *</span><br><span class="line">2020-10-17 14:45:23.858196+0800 001-类的属性与变量[24305:733568] id --&gt; @</span><br><span class="line">2020-10-17 14:45:23.858222+0800 001-类的属性与变量[24305:733568] Class --&gt; #</span><br><span class="line">2020-10-17 14:45:23.862415+0800 001-类的属性与变量[24305:733568] SEL --&gt; :</span><br><span class="line">2020-10-17 14:45:23.862459+0800 001-类的属性与变量[24305:733568] int[] --&gt; [3i]</span><br><span class="line">2020-10-17 14:45:23.862516+0800 001-类的属性与变量[24305:733568] struct --&gt; &#123;person=*i&#125;</span><br><span class="line">2020-10-17 14:45:23.862591+0800 001-类的属性与变量[24305:733568] union --&gt; (union_type=*i)</span><br><span class="line">2020-10-17 14:45:23.862647+0800 001-类的属性与变量[24305:733568] int[] --&gt; ^i</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">2020-10-17 14:45:23.857263+0800 001-类的属性与变量[24305:733568] char --&gt; c</span><br><span class="line">2020-10-17 14:45:23.857725+0800 001-类的属性与变量[24305:733568] int --&gt; i</span><br><span class="line">2020-10-17 14:45:23.857763+0800 001-类的属性与变量[24305:733568] short --&gt; s</span><br><span class="line">2020-10-17 14:45:23.857818+0800 001-类的属性与变量[24305:733568] long --&gt; q</span><br><span class="line">2020-10-17 14:45:23.857887+0800 001-类的属性与变量[24305:733568] long long --&gt; q</span><br><span class="line">2020-10-17 14:45:23.857936+0800 001-类的属性与变量[24305:733568] unsigned char --&gt; C</span><br><span class="line">2020-10-17 14:45:23.857965+0800 001-类的属性与变量[24305:733568] unsigned int --&gt; I</span><br><span class="line">2020-10-17 14:45:23.857989+0800 001-类的属性与变量[24305:733568] unsigned short --&gt; S</span><br><span class="line">2020-10-17 14:45:23.858012+0800 001-类的属性与变量[24305:733568] unsigned long --&gt; Q</span><br><span class="line">2020-10-17 14:45:23.858065+0800 001-类的属性与变量[24305:733568] float --&gt; f</span><br><span class="line">2020-10-17 14:45:23.858105+0800 001-类的属性与变量[24305:733568] bool --&gt; B</span><br><span class="line">2020-10-17 14:45:23.858143+0800 001-类的属性与变量[24305:733568] void --&gt; v</span><br><span class="line">2020-10-17 14:45:23.858172+0800 001-类的属性与变量[24305:733568] char * --&gt; *</span><br><span class="line">2020-10-17 14:45:23.858196+0800 001-类的属性与变量[24305:733568] id --&gt; @</span><br><span class="line">2020-10-17 14:45:23.858222+0800 001-类的属性与变量[24305:733568] Class --&gt; #</span><br><span class="line">2020-10-17 14:45:23.862415+0800 001-类的属性与变量[24305:733568] SEL --&gt; :</span><br><span class="line">2020-10-17 14:45:23.862459+0800 001-类的属性与变量[24305:733568] int[] --&gt; [3i]</span><br><span class="line">2020-10-17 14:45:23.862516+0800 001-类的属性与变量[24305:733568] struct --&gt; &#123;person=*i&#125;</span><br><span class="line">2020-10-17 14:45:23.862591+0800 001-类的属性与变量[24305:733568] union --&gt; (union_type=*i)</span><br><span class="line">2020-10-17 14:45:23.862647+0800 001-类的属性与变量[24305:733568] int[] --&gt; ^i</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>【方式二】</strong>：查看官方文档</p>
-<p><a target="_blank" rel="noopener" href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html#//apple_ref/doc/uid/TP40008048-CH100-SW1">Type Encoding-官方文档</a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html#//apple_ref/doc/uid/TP40008048-CH100-SW1" >Type Encoding-官方文档 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
 <p><strong>【结论】：</strong></p>
 <p>由上面的结果我们可知：</p>
 <ul>
@@ -356,14 +356,29 @@
 </ul>
 <p><strong>【Property Type String】：属性类型编码</strong></p>
 <p>属性类型编码可以通过下面的官方文档学习：</p>
-<p><a target="_blank" rel="noopener" href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtPropertyIntrospection.html#//apple_ref/doc/uid/TP40008048-CH101-SW1">Property Type String-官方文档</a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtPropertyIntrospection.html#//apple_ref/doc/uid/TP40008048-CH101-SW1" >Property Type String-官方文档 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
 <p>我们前面学习了，<code>属性</code> 通过 <code>clang</code> 编译 <code>cpp</code> 后，会生成对应的 <code>成员变量</code>、<code>方法列表 </code>、<code>属性列表</code>，如下:</p>
 <p><strong>【方法列表】：</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/96331241-57d66180-108e-11eb-93f9-dd45e4fa8fb1.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96331241-57d66180-108e-11eb-93f9-dd45e4fa8fb1.png"
+                     
+                ></p>
 <p><strong>【属性列表】：</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/96331255-7177a900-108e-11eb-9f12-0df2c5c5c3a1.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96331255-7177a900-108e-11eb-9f12-0df2c5c5c3a1.png"
+                     
+                ></p>
 <p><strong>【成员变量列表】：</strong></p>
-<p><img src="https://user-images.githubusercontent.com/25925248/96331267-85230f80-108e-11eb-93d9-76e25e80ec8e.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96331267-85230f80-108e-11eb-93d9-76e25e80ec8e.png"
+                     
+                ></p>
 <p>方法列表中<code>@16@0:8</code> 到底是什么意思？</p>
 <ul>
 <li><p>以 <code>@16@0:8</code> 为例:</p>
@@ -392,16 +407,26 @@
 <h1 id="copy-amp-strong-amp-weak-底层分析"><a href="#copy-amp-strong-amp-weak-底层分析" class="headerlink" title="copy &amp; strong &amp; weak 底层分析"></a>copy &amp; strong &amp; weak 底层分析</h1><ul>
 <li>在 <code>ZJPerson</code> 中声明两个属性 <code>nickName</code> 和 <code>name</code> ,分别用 <code>copy</code> 和 <code>strong</code> 修饰</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">@property (nonatomic, copy) NSString *nickName;</span><br><span class="line">@property (nonatomic, strong) NSString *name;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">@property (nonatomic, copy) NSString *nickName;</span><br><span class="line">@property (nonatomic, strong) NSString *name;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>通过 <code>clang</code> 将 <code>main.m</code> 文件编译成 <code>main.cpp</code>,然后发现 <code>copy</code> 和 <code>strong</code> 修饰的属性的 <code>set方法</code> 是有区别的，如下图：</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/96333015-08962e00-109a-11eb-98bc-1acfe13e2edd.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96333015-08962e00-109a-11eb-98bc-1acfe13e2edd.png"
+                     
+                ></p>
 <p>这里就有了疑问，为什么 <code>copy</code> 修饰的 <code>nickName属性</code> 使用了 <code>objc_setProperty</code> ，而 <code>strong</code> 的没有？</p>
-<p>想要分析 <code>copy</code> 和 <code>strong</code> 在底层是如何实现的，需要分析 <a target="_blank" rel="noopener" href="https://github.com/apple/llvm-project">LLVM源码</a></p>
+<p>想要分析 <code>copy</code> 和 <code>strong</code> 在底层是如何实现的，需要分析 <a class="link"   target="_blank" rel="noopener" href="https://github.com/apple/llvm-project" >LLVM源码 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
 <p>下载好 <code>LLVM源码</code> 后，在 <code>LLVM</code> 中搜索 <code>objc_setProperty</code> ，找到如下所示的 <code>getOptimizedSetPropertyFn</code> 方法中：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/96333463-a4c13480-109c-11eb-8d42-838c1c089a4f.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96333463-a4c13480-109c-11eb-8d42-838c1c089a4f.png"
+                     
+                ></p>
 <p>由上图可以看出:</p>
 <ul>
 <li><p>如果是 <code>atomic &amp; copy</code> 修饰，<code>name</code> 为 <code>objc_setProperty_atomic_copy</code></p>
@@ -414,23 +439,38 @@
 </li>
 </ul>
 <p>我们可以通过 <code>汇编调试</code> 查看最终到底会执行哪个命令：</p>
-<p><img src="https://user-images.githubusercontent.com/25925248/96334036-40a06f80-10a0-11eb-9be7-921e4d4336b3.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96334036-40a06f80-10a0-11eb-9be7-921e4d4336b3.png"
+                     
+                ></p>
 <p>我们发现 不管是 <code>copy修饰</code> 还是 <code>strong修饰</code> 还是 <code>weak修饰</code> 的属性，最终都会执行 <code>objc_storeStrong</code></p>
 <ul>
 <li><code>objc4源码</code> 中搜索 <code>objc_storeStrong</code>，如下：</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">objc_storeStrong(id *location, id obj)</span><br><span class="line">&#123;</span><br><span class="line">    id prev = *location;</span><br><span class="line">    if (obj == prev) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    objc_retain(obj); // retain新值</span><br><span class="line">    *location = obj;</span><br><span class="line">    objc_release(prev); // release旧值</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">objc_storeStrong(id *location, id obj)</span><br><span class="line">&#123;</span><br><span class="line">    id prev = *location;</span><br><span class="line">    if (obj == prev) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    objc_retain(obj); // retain新值</span><br><span class="line">    *location = obj;</span><br><span class="line">    objc_release(prev); // release旧值</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 
 <p>主要也是 <code>retain新值，release旧值</code></p>
 <ul>
 <li>回到 <code>LLVM</code> 源码中搜索 <code>objc_storeStrong</code>，我们发现其底层调用的是 <code>EmitARCStoreStrongCall</code> ，如下图：</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/96334522-0638d180-10a4-11eb-859c-47b065ce2c46.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96334522-0638d180-10a4-11eb-859c-47b065ce2c46.png"
+                     
+                ></p>
 <ul>
 <li>LLVM 中搜索 <code>EmitARCStoreStrongCall</code> 方法，在<code>GenerateCopyHelperFunction</code> 方法有调用，然后在这里发现了 <code>strong</code> 和 <code>weak</code> 的不同处理</li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/96334647-de963900-10a4-11eb-9486-8f68bcdbda08.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/96334647-de963900-10a4-11eb-9486-8f68bcdbda08.png"
+                     
+                ></p>
 
             </div>
 

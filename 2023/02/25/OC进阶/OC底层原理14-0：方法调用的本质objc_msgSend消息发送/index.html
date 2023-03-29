@@ -345,7 +345,12 @@
 <li><p>通过 <code>Runtime API</code>，例如 <code>class_getInstanceSize</code></p>
 </li>
 </ul>
-<p><img src="https://user-images.githubusercontent.com/25925248/160736327-80d52458-3fd6-4717-90af-279d89403d61.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160736327-80d52458-3fd6-4717-90af-279d89403d61.png"
+                     
+                ></p>
 <ul>
 <li><p><code>complier</code> 就是我们了解的 <code>编译器</code>，即 <code>LLVM</code>，例如 <code>OC</code> 的 <code>alloc</code> 对应底层的 <code>objc_alloc</code></p>
 </li>
@@ -359,59 +364,94 @@
 <ul>
 <li>mian.m 内实现如下代码：</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 👇main.m中</span><br><span class="line">ZJPerson * person = [ZJPerson alloc];</span><br><span class="line">[person sayNB];</span><br><span class="line">[person sayHello];</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 👇main.m中</span><br><span class="line">ZJPerson * person = [ZJPerson alloc];</span><br><span class="line">[person sayNB];</span><br><span class="line">[person sayHello];</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>终端 <code>clang</code> 编译 <code>miam.m -&gt; main.cpp</code> 后的代码</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 👇clang编译后的底层实现</span><br><span class="line">ZJPerson * person = ((ZJPerson *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass(&quot;ZJPerson&quot;), sel_registerName(&quot;alloc&quot;));</span><br><span class="line">((void (*)(id, SEL))(void *)objc_msgSend)((id)person, sel_registerName(&quot;sayNB&quot;));</span><br><span class="line">((void (*)(id, SEL))(void *)objc_msgSend)((id)person, sel_registerName(&quot;sayHello&quot;));</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 👇clang编译后的底层实现</span><br><span class="line">ZJPerson * person = ((ZJPerson *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass(&quot;ZJPerson&quot;), sel_registerName(&quot;alloc&quot;));</span><br><span class="line">((void (*)(id, SEL))(void *)objc_msgSend)((id)person, sel_registerName(&quot;sayNB&quot;));</span><br><span class="line">((void (*)(id, SEL))(void *)objc_msgSend)((id)person, sel_registerName(&quot;sayHello&quot;));</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>总结： 通过上述代码可以看出，<code>方法的本质</code> 就是 <code>objc_msgSend消息发送</code></strong></p>
 <h1 id="验证方法本质"><a href="#验证方法本质" class="headerlink" title="验证方法本质"></a>验证方法本质</h1><p>方法：消息（消息的接受者，消息主体）</p>
 <ul>
 <li>为了验证，通过 <code>objc_msgSend</code> 方法来完成 <code>[person sayNB]</code> 的调用，查看其打印是否一致</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">注：👇 objc_msgSend 消息发送流程是在 &lt;objc/message.h&gt; 系统库中</span><br><span class="line">1、直接调用 `objc_msgSend`，导入头文件 `#import&lt;objc/message.h&gt;`</span><br><span class="line">2、需要将 target --&gt; Build Setting --&gt; 搜索msg --&gt; 将 enable strict checking of objc_msgSend calls 由 YES 改为 NO，将严厉的检查机制关掉，否则 `objc_msgSend` 的参数会报错</span><br><span class="line">3. `sel_registerName = @selector() = NNSelectorFromString()`</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">注：👇 objc_msgSend 消息发送流程是在 &lt;objc/message.h&gt; 系统库中</span><br><span class="line">1、直接调用 `objc_msgSend`，导入头文件 `#import&lt;objc/message.h&gt;`</span><br><span class="line">2、需要将 target --&gt; Build Setting --&gt; 搜索msg --&gt; 将 enable strict checking of objc_msgSend calls 由 YES 改为 NO，将严厉的检查机制关掉，否则 `objc_msgSend` 的参数会报错</span><br><span class="line">3. `sel_registerName = @selector() = NNSelectorFromString()`</span><br></pre></td></tr></table></figure></div>
 
-<p><img src="/BboyZJ.github.io/assets/16773117718962.jpg"></p>
-<p><img src="/BboyZJ.github.io/assets/16773118268896.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773117718962.jpg"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773118268896.jpg"
+                     
+                ></p>
 <ul>
 <li>再次编译运行 <code>command + R</code></li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ZJPerson * person = [ZJPerson alloc];</span><br><span class="line">[person sayNB];</span><br><span class="line">objc_msgSend(person,sel_registerName(&quot;sayNB&quot;));</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ZJPerson * person = [ZJPerson alloc];</span><br><span class="line">[person sayNB];</span><br><span class="line">objc_msgSend(person,sel_registerName(&quot;sayNB&quot;));</span><br></pre></td></tr></table></figure></div>
 
 <p>其打印结果如下，发现是一致的，所以 <code>[person sayNB]</code> 等价于 <code>objc_msgSend(person,sel_registerName(&quot;sayNB&quot;))</code></p>
-<p><img src="/BboyZJ.github.io/assets/16773118832853.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773118832853.jpg"
+                     
+                ></p>
 <h1 id="子类对象方法调用-执行父类的实现"><a href="#子类对象方法调用-执行父类的实现" class="headerlink" title="子类对象方法调用-执行父类的实现"></a>子类对象方法调用-执行父类的实现</h1><ul>
 <li>首先我们定义两个类 <code>子类ZJStudent</code> 和 <code>父类ZJPerson</code></li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 父类 ZJPerson</span><br><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">- (void)sayNB;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJPerson</span><br><span class="line">- (void)sayNB&#123;</span><br><span class="line">    NSLog(@&quot;666&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// ZJStudent 继承父类 ZJPerson</span><br><span class="line">@interface ZJStudent : ZJPerson</span><br><span class="line">- (void)sayNB;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJStudent</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 父类 ZJPerson</span><br><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">- (void)sayNB;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJPerson</span><br><span class="line">- (void)sayNB&#123;</span><br><span class="line">    NSLog(@&quot;666&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// ZJStudent 继承父类 ZJPerson</span><br><span class="line">@interface ZJStudent : ZJPerson</span><br><span class="line">- (void)sayNB;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJStudent</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>在 <code>main.m</code> 中让子类调用 <code>sayNB</code> 方法，查看是否能输出结果</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ZJPerson * person = [ZJPerson alloc];</span><br><span class="line">ZJStudent * student = [ZJStudent alloc];</span><br><span class="line">    </span><br><span class="line">// 消息的接收者还是自己 - 父类 - 请你直接找我的父亲要</span><br><span class="line">[student sayNB];</span><br><span class="line">objc_msgSend(student,sel_registerName(&quot;sayNB&quot;));</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ZJPerson * person = [ZJPerson alloc];</span><br><span class="line">ZJStudent * student = [ZJStudent alloc];</span><br><span class="line">    </span><br><span class="line">// 消息的接收者还是自己 - 父类 - 请你直接找我的父亲要</span><br><span class="line">[student sayNB];</span><br><span class="line">objc_msgSend(student,sel_registerName(&quot;sayNB&quot;));</span><br></pre></td></tr></table></figure></div>
 
 <p>运行程序，查看结果</p>
-<p><img src="/BboyZJ.github.io/assets/16773128271287.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773128271287.jpg"
+                     
+                ></p>
 <p>由打印结果可知,子类方法的调用，可以 <code>执行父类方法的实现</code></p>
 <p><strong>那么子类是如何调用父类的方法实现的呢？我们往下探索</strong></p>
 <h1 id="子类调用父类方法的原理"><a href="#子类调用父类方法的原理" class="headerlink" title="子类调用父类方法的原理"></a>子类调用父类方法的原理</h1><p>我们先说结论：我们还可以尝试让 <code>person</code> 的调用执行父类中的实现，通过 <code>objc_msgSendSuper</code> 实现</p>
 <ul>
 <li>在 <code>main.m</code> 函数中的调用</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ZJPerson * person = [ZJPerson alloc];</span><br><span class="line">ZJStudent * student = [ZJStudent alloc];</span><br><span class="line">    </span><br><span class="line">struct objc_super zjsuper;</span><br><span class="line">zjsuper.receiver = person; // 消息的接收者还是person</span><br><span class="line">zjsuper.super_class = [ZJPerson class]; // 告诉父类是谁</span><br><span class="line">    </span><br><span class="line">// 消息的接收者还是自己 - 父类 - 请你直接找我的父亲要</span><br><span class="line">[student sayNB];</span><br><span class="line">objc_msgSendSuper(&amp;zjsuper, sel_registerName(&quot;sayNB&quot;));      </span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ZJPerson * person = [ZJPerson alloc];</span><br><span class="line">ZJStudent * student = [ZJStudent alloc];</span><br><span class="line">    </span><br><span class="line">struct objc_super zjsuper;</span><br><span class="line">zjsuper.receiver = person; // 消息的接收者还是person</span><br><span class="line">zjsuper.super_class = [ZJPerson class]; // 告诉父类是谁</span><br><span class="line">    </span><br><span class="line">// 消息的接收者还是自己 - 父类 - 请你直接找我的父亲要</span><br><span class="line">[student sayNB];</span><br><span class="line">objc_msgSendSuper(&amp;zjsuper, sel_registerName(&quot;sayNB&quot;));      </span><br></pre></td></tr></table></figure></div>
 
 <p><strong>进入objc_msgSendSuper内，查看一下结构</strong></p>
-<p><img src="/BboyZJ.github.io/assets/16773136641990.jpg"></p>
-<p><img src="/BboyZJ.github.io/assets/16773137255456.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773136641990.jpg"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773137255456.jpg"
+                     
+                ></p>
 <p>由上图可知 <code>objc_msgSendSuper</code> 方法中有两个参数 <code>（结构体，sel）</code>，其结构体类型是 <code>objc_super</code> 定义的结构体对象，且需要指定 <code>receiver</code> 和 <code>super_class</code> 两个属性</p>
 <ul>
 <li>运行程序，查看打印结果：</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2023-02-25 16:31:22.959805+0800 msg_seng继承父类[53476:1503775] 666</span><br><span class="line">2023-02-25 16:31:22.961094+0800 msg_seng继承父类[53476:1503775] 666</span><br><span class="line">Program ended with exit code: 0</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2023-02-25 16:31:22.959805+0800 msg_seng继承父类[53476:1503775] 666</span><br><span class="line">2023-02-25 16:31:22.961094+0800 msg_seng继承父类[53476:1503775] 666</span><br><span class="line">Program ended with exit code: 0</span><br></pre></td></tr></table></figure></div>
 
-<p><img src="/BboyZJ.github.io/assets/16773139042426.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773139042426.jpg"
+                     
+                ></p>
 <p>由打印结果，我们发现不论是 <code>[person sayHello]</code> 还是 <code>objc_msgSendSuper</code> 都执行的是 <code>父类</code> 中的 <code>sayHello</code> 的实现，所以这里，我们可以可以猜想：<code>方法调用、首先是在类中查找，如果类中没有找到，会到父类中查找。</code></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
 <li><p>由上面的结论我们知道 <code>方法的调用</code> 实际上是 <code>消息发送objc_msgSend</code></p>

@@ -327,21 +327,36 @@
             <div class="article-content markdown-body">
                 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近Gitee突然加了防盗链，导致基于Gitee的图床直接GG了！好家伙还带这样玩的，数据要是没有备份真的心惊胆跳的，不白嫖了，直接付费转战阿里云OSS去。</p>
 <p>​分享一下搭建过程:<br>​</p>
-<h1 id="阿里云OSS开通及配置"><a href="#阿里云OSS开通及配置" class="headerlink" title="阿里云OSS开通及配置"></a>阿里云OSS开通及配置</h1><p>​<br>​1、开通及购买服务包<br>​<br>​登录 <a target="_blank" rel="noopener" href="https://www.aliyun.com/?utm_content=se_1013083955">阿里云官网</a>，开通对象存储OSS，开通对象存储OSS不用扣费，只有使用OSS才需要扣费。<br>​​<br>​​<br>​​<img src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150611729.png"></p>
+<h1 id="阿里云OSS开通及配置"><a href="#阿里云OSS开通及配置" class="headerlink" title="阿里云OSS开通及配置"></a>阿里云OSS开通及配置</h1><p>​<br>​1、开通及购买服务包<br>​<br>​登录 <a class="link"   target="_blank" rel="noopener" href="https://www.aliyun.com/?utm_content=se_1013083955" >阿里云官网 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>，开通对象存储OSS，开通对象存储OSS不用扣费，只有使用OSS才需要扣费。<br>​​<br>​​<br>​​<img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150611729.png"
+                     
+                ></p>
 <p>2、OSS有两种扣费方式（产品计费详细介绍）：</p>
 <ul>
-<li><p><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/450471.html">按量付费</a></p>
+<li><p><a class="link"   target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/450471.html" >按量付费 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/48291.html">资源包</a></p>
+<li><p><a class="link"   target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/48291.html" >资源包 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
 </li>
 </ul>
 <p>根据需要按需购买对应的 <code>资源包</code> 即可，作为一个只是搭建个人向图床的我，只需要购买一个 <code>40GB</code> 的《标准(LRS)存储包》即可，半年只要4.98，四舍五入相当于白嫖……</p>
 <p>我每个月也用不了多少流量，《下行流量包》先暂时不购买，要是后续那天顶不住后再考虑购买即可。</p>
-<p><img src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150610052.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150610052.png"
+                     
+                ></p>
 <ul>
 <li>根据需求选择 <code>购买时长</code>，最后支付</li>
 </ul>
-<p><img src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150610166.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150610166.png"
+                     
+                ></p>
 <blockquote>
 <p>注意事项：<br>记得给阿里云账户充值！！！别到时候欠费停用了</p>
 </blockquote>
@@ -349,24 +364,49 @@
 <ul>
 <li>创建 Bucket</li>
 </ul>
-<p>打开 <a target="_blank" rel="noopener" href="https://oss.console.aliyun.com/bucket">OSS管理控制台Bucket页面</a>，按需创建一个Bucket。</p>
-<p><img src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150610062.png"></p>
+<p>打开 <a class="link"   target="_blank" rel="noopener" href="https://oss.console.aliyun.com/bucket" >OSS管理控制台Bucket页面 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>，按需创建一个Bucket。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150610062.png"
+                     
+                ></p>
 <blockquote>
 <p>Bucket 名称：bboy-blog（自定义）<br>地域：华北2（选择最近）<br>存储类型：标准存储<br>读写权限：公共读<br>其他：默认不改动</p>
 </blockquote>
-<p><img src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150610598.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150610598.png"
+                     
+                ></p>
 <p>创建完成你的 <code>Bucket</code> 就在列表显示了</p>
-<p><img src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150610981.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150610981.png"
+                     
+                ></p>
 <ul>
 <li>找到你的地域节点</li>
 </ul>
 <p>点击你的 <code>bucket</code>，然后点击 <code>bucket</code> 下的 <code>概览</code>，在 <code>访问域名</code> 一栏找你的 <code>地域节点</code>，后面会用到</p>
-<p><img src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150609099.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150609099.png"
+                     
+                ></p>
 <ul>
 <li>找到你的 key</li>
 </ul>
 <p>右上角找到头像，在弹出框里选择 <code>AccessKey</code> 管理，在弹出框选择 <code>继续使用</code></p>
-<p><img src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150609401.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150609401.png"
+                     
+                ></p>
 <p>进入后，创建一个新的 <code>AccessKey</code>，在弹出框里，复制你的 <code>AccessKeyId和AccessKeySecret</code>，保存好，以便后续使用</p>
 <h1 id="配置-picgo"><a href="#配置-picgo" class="headerlink" title="配置 picgo"></a>配置 picgo</h1><p>1、打开picgo，在图床设置里选择 <code>阿里云OSS</code>，一招以下步骤填写信息</p>
 <blockquote>
@@ -375,7 +415,12 @@
 <p>2、配置完成之后，<code>确定</code>，并点击 <code>设置为默认图床</code></p>
 <p>3、PicGo设置</p>
 <p>打开 <code>时间戳重命名</code> 和 <code>上传后自动赋值URL</code> 选项</p>
-<p><img src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150608665.png"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303150608665.png"
+                     
+                ></p>
 <p>4、至此，你已经配置成功了，可以随意用 <code>PicGo</code> 上传图片了</p>
 
             </div>

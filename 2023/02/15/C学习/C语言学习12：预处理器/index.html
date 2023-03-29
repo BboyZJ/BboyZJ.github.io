@@ -327,47 +327,57 @@
             <div class="article-content markdown-body">
                 <h1 id="C-预处理器"><a href="#C-预处理器" class="headerlink" title="C 预处理器"></a>C 预处理器</h1><p>预处理器 <code>不是</code> 编译器的组成部分，是编译过程的一个单独的步骤。简言之，C预处理器是一个 <code>文本替换工具</code>，它会指示编译器在实际编译前完成所需的 <code>预处理</code>；我们把 C 预处理器(C Preprocessor) 简写成(CPP)</p>
 <p>所有的预处理器都是以 <code>#</code> 开头，非空字符，为增加可读性，从第一列开始，下面列出了所有的预处理命令：</p>
-<p><img src="/BboyZJ.github.io/assets/16766967005229.jpg"></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16766967005229.jpg"
+                     
+                ></p>
 <h1 id="预处理实例"><a href="#预处理实例" class="headerlink" title="预处理实例"></a>预处理实例</h1><p><code>#define MAX_LENGTH 20</code></p>
 <p>这个指令告诉 <code>CPP</code> 把所有的 <code>MAX_LENGTH</code> 定义为 <code>20</code>，使用 <code>#define</code> 定义常量来增强可读性</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio,h&gt;</span><br><span class="line">#include &quot;myheader.h&quot;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio,h&gt;</span><br><span class="line">#include &quot;myheader.h&quot;</span><br></pre></td></tr></table></figure></div>
 
 <p>这个指令告诉 <code>CPP</code> 从 <code>系统库</code> 中读取 <code>stdio.h</code>，并添加到 <code>当前源文件</code> 中；下一行告诉 <code>CPP</code> 从 <code>本地目录</code> 中获取 <code>myheader.h</code>，并添加到 <code>当前源文件中</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#undef FILE_SIZE</span><br><span class="line">#define FILE_SIZE 30</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#undef FILE_SIZE</span><br><span class="line">#define FILE_SIZE 30</span><br></pre></td></tr></table></figure></div>
 
 <p>这个指令告诉 CPP 取消已定义的 FILE_SIZE，并定义它为 30</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#ifndef MESSAGE</span><br><span class="line">   #define MESSAGE &quot;You wish!&quot;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#ifndef MESSAGE</span><br><span class="line">   #define MESSAGE &quot;You wish!&quot;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure></div>
 
 <p>这个指令告诉 <code>CPP</code> 只要当 <code>MESSAGE</code> 未定义时，才定义 <code>MESSAGE</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#ifdef DEBUG</span><br><span class="line">    /*debug here*/</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#ifdef DEBUG</span><br><span class="line">    /*debug here*/</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure></div>
 
 <p>这个指令告诉 <code>CPP</code> ，如果定义了 <code>DEBUG</code>,则执行语句。</p>
 <h1 id="预定义宏"><a href="#预定义宏" class="headerlink" title="预定义宏"></a>预定义宏</h1><p>ANSI C 定义了许多宏</p>
-<p><img src="/BboyZJ.github.io/assets/16766975236082.jpg"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"> </span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line">   printf(&quot;File :%s\n&quot;, __FILE__ );</span><br><span class="line">   printf(&quot;Date :%s\n&quot;, __DATE__ );</span><br><span class="line">   printf(&quot;Time :%s\n&quot;, __TIME__ );</span><br><span class="line">   printf(&quot;Line :%d\n&quot;, __LINE__ );</span><br><span class="line">   printf(&quot;ANSI :%d\n&quot;, __STDC__ );</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16766975236082.jpg"
+                     
+                ></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"> </span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line">   printf(&quot;File :%s\n&quot;, __FILE__ );</span><br><span class="line">   printf(&quot;Date :%s\n&quot;, __DATE__ );</span><br><span class="line">   printf(&quot;Time :%s\n&quot;, __TIME__ );</span><br><span class="line">   printf(&quot;Line :%d\n&quot;, __LINE__ );</span><br><span class="line">   printf(&quot;ANSI :%d\n&quot;, __STDC__ );</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>当上面的代码在 main.c 中编译和执行时，它会产生下列结果：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">File :/Users/mac/Desktop/预处理器/预处理器/main.m</span><br><span class="line">Date :Feb 18 2023</span><br><span class="line">Time :13:22:02</span><br><span class="line">Line :16</span><br><span class="line">ANSI :1</span><br><span class="line">Program ended with exit code: 0</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">File :/Users/mac/Desktop/预处理器/预处理器/main.m</span><br><span class="line">Date :Feb 18 2023</span><br><span class="line">Time :13:22:02</span><br><span class="line">Line :16</span><br><span class="line">ANSI :1</span><br><span class="line">Program ended with exit code: 0</span><br></pre></td></tr></table></figure></div>
 
 <h1 id="预处理器运算符"><a href="#预处理器运算符" class="headerlink" title="预处理器运算符"></a>预处理器运算符</h1><ul>
 <li>宏延续运算符 ()</li>
 </ul>
 <p>一个宏通常写在一个单行上。但是如果宏太长，一个单行容纳不下，则使用 宏延续运算符（\）。例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define msg(a,b) \</span><br><span class="line">    printf(#a &quot;and&quot; #b &quot;\n&quot;)</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define msg(a,b) \</span><br><span class="line">    printf(#a &quot;and&quot; #b &quot;\n&quot;)</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>字符串常量化运算符（#）</li>
 </ul>
 <p>在宏定义中，把一个 <code>宏参数</code> 转为 <code>字符串常量</code></p>
 <p>在 main.c 中 编译和运行上面的代码，得到下面的结果</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1and&#x27;a&#x27;</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1and&#x27;a&#x27;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>标记粘贴运算符（##）</li>
 </ul>
 <p>宏定义内标记粘贴运算符（##）会合并两个参数</p>
 <h1 id="参数化宏"><a href="#参数化宏" class="headerlink" title="参数化宏"></a>参数化宏</h1><p><code>#define square(x) (x*x)</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define max(x,y) \</span><br><span class="line">    printf(&quot;%d\n&quot;,x&gt;y?x:y);</span><br></pre></td></tr></table></figure>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define max(x,y) \</span><br><span class="line">    printf(&quot;%d\n&quot;,x&gt;y?x:y);</span><br></pre></td></tr></table></figure></div>
 
 
             </div>
