@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-09 05:33:57</span>
-            <span class="mobile">2023-03-09 05:33</span>
+            <span class="pc">2023-03-30 10:25:46</span>
+            <span class="mobile">2023-03-30 10:25</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -325,7 +325,36 @@
             
 
             <div class="article-content markdown-body">
-                
+                <h1 id="Leaks"><a href="#Leaks" class="headerlink" title="Leaks"></a>Leaks</h1><p>先看看 <code>Leaks</code>，从苹果的开发者文档里可以看到，一个 <code>app</code> 的内存分三类：</p>
+<ul>
+<li>Leaked memory: Memory unreferenced by your application that cannot be used again or freed (also detectable by using the Leaks instrument).</li>
+</ul>
+<p><code>真正的内存泄漏</code>：在第一次 <code>pop</code> 的时候报 <code>Memory Leak</code>，在之后的重复 <code>push</code> 并 <code>pop</code> 同一个 <code>ViewController</code> 过程中，不报 <code>Object Deallocated</code>，但每次 <code>pop</code> 之后又报 <code>Memory Leak</code>。这种情况下每回进入并退出一个页面后，就报有新的内存泄漏，同时被报泄漏的对象又从来没有释放过，可以确定是真正的内存泄漏。</p>
+<ul>
+<li><code>Abandoned memory</code>: Memory still referenced by your application that has no useful purpose.</li>
+</ul>
+<p><code>释放不及时</code>：在第一次 <code>pop</code> 的时候报 <code>Memory Leak</code>，在之后的重复 <code>push</code> 并 <code>pop</code> 同一个 <code>ViewController</code> 过程中，对于同一个类不断地报 <code>Object Deallocated</code> 和 <code>Memory Leak</code>。这种情况属于释放不及时的情况。</p>
+<ul>
+<li><code>Cached memory</code>: Memory still referenced by your application that might be used again for better performance.</li>
+</ul>
+<p><code>单例</code> 或者被 <code>cache</code> 起来复用：在第一次 <code>pop</code> 的时候报 <code>Memory Leak</code>，在之后的重复 <code>push</code> 并 <code>pop</code> 同一个 <code>ViewController</code> 过程中，即不报 <code>Object Deallocated</code>，也不报 <code>Memory Leak</code>。这种情况下我们可以确定该对象被设计成单例或者 <code>cache</code> 起来了。</p>
+<blockquote>
+<p>总结：<br>其中 <code>Leaked memory</code> 和 <code>Abandoned memory</code> 都属于 <code>应该释放而没释放的内存</code>，都是内存泄露，而 <code>Leaks</code> 工具只负责检测 <code>Leaked memory</code>，而不管 <code>Abandoned memory</code>。在 <code>MRC</code> 时代 <code>Leaked memory</code> 很常见，因为很容易忘了调用 <code>release</code>，但在 <code>ARC</code> 时代更常见的内存泄露是 <code>循环引用</code> 导致的 <code>Abandoned memory</code>，<code>Leaks</code> 工具查不出这类内存泄露，应用有限。</p>
+</blockquote>
+<h1 id="Allocations"><a href="#Allocations" class="headerlink" title="Allocations"></a>Allocations</h1><ul>
+<li><p>对于 <code>Abandoned memory</code>，可以用 <code>Instrument</code> 的 <code>Allocations</code> 检测出来。检测方法是用 <code>Mark Generation</code> 的方式，当你每次点击 <code>Mark Generation</code> 时，<code>Allocations</code> 会生成当前 <code>App</code> 的内存快照，而且 <code>Allocations</code> 会记录从上回内存快照到这次内存快照这个时间段内，新分配的内存信息。举一个最简单的例子：</p>
+</li>
+<li><p>我们可以不断重复 <code>push</code> 和 <code>pop</code> 同一个 <code>UIViewController</code>，理论上来说，<code>push</code> 之前跟 <code>pop</code> 之后，<code>app</code> 会回到相同的状态。因此，在 <code>push</code> 过程中新分配的内存，在 <code>pop</code> 之后应该被 <code>dealloc</code> 掉，除了前几次 <code>push</code> 可能有预热数据和 <code>cache</code> 数据的情况。如果在数次 <code>push</code> 跟 <code>pop</code> 之后，内存还不断增长，则有内存泄露。因此，我们在每回 <code>push</code> 之前跟 <code>pop</code> 之后，都 <code>Mark Generation</code> 一下，以此观察内存是不是无限制增长。</p>
+</li>
+<li><p>用这种方法来发现内存泄露还是很不方便的：</p>
+<ul>
+<li>首先，你得打开 <code>Allocations</code></li>
+<li>其次，你得一个个场景去重复的操作</li>
+<li>无法及时得知泄露，得专门做一遍上述操作，十分繁琐</li>
+</ul>
+</li>
+</ul>
+
             </div>
 
             
@@ -406,7 +435,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">性能优化01：内存泄漏检测</div>
-        
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Leaks"><span class="nav-text">Leaks</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Allocations"><span class="nav-text">Allocations</span></a></li></ol>
 
     </div>
 </div>

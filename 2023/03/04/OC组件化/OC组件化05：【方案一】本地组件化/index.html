@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-23 06:59:12</span>
-            <span class="mobile">2023-03-23 06:59</span>
+            <span class="pc">2023-03-30 09:32:52</span>
+            <span class="mobile">2023-03-30 09:32</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -326,31 +326,40 @@
 
             <div class="article-content markdown-body">
                 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><ul>
-<li><code>本地组件化</code>：主要是通过在 <code>工程中创建library</code>，利用 <code>cocoapods</code> 的 <code>workspec</code> 进行本地管理，不需要将项目上传git，而是直接在本项目中以 <code>framework</code> 的方法进行调用</li>
+<li><code>本地组件化</code>：主要是通过在 <code>工程中创建framework</code>，利用 <code>cocoapods</code> 的 <code>workspec</code> 进行本地管理，不需要将项目上传 <code>git仓库</code>，而是直接在本项目中以 <code>framework</code> 的方法进行调用</li>
 </ul>
 <h1 id="创建主工程"><a href="#创建主工程" class="headerlink" title="创建主工程"></a>创建主工程</h1><ul>
-<li>首先创建一个名为 <code>Modularization</code> 的工程</li>
+<li>首先创建一个名为 <code>LocalModularization</code> 的工程</li>
 </ul>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211558621.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303300826422.png"
                      
                 ></p>
 <ul>
-<li>集成 cocoapods，进行本地管理</li>
+<li>集成 <code>cocoapods</code>，进行本地管理</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">zhangjian@zhangjiandeMBP ~ % cd /Users/zhangjian/Desktop/Modularization </span><br><span class="line">zhangjian@zhangjiandeMBP Modularization % pod init</span><br><span class="line">Ignoring ffi-1.13.1 because its extensions are not built. Try: gem pristine ffi --version 1.13.1</span><br><span class="line">zhangjian@zhangjiandeMBP Modularization % pod install</span><br></pre></td></tr></table></figure></div>
+<blockquote>
+<p>注：Podfile 文件中设置适配平台 platform :ios, ‘9.0’</p>
+</blockquote>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % cd /Users/mac/Desktop/OC学习/OC\ 面试重点/组件化/LocalModularization</span><br><span class="line">mac@bogon LocalModularization % pod init</span><br><span class="line">mac@bogon LocalModularization % pod install</span><br></pre></td></tr></table></figure></div>
 
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303300829366.png"
+                     
+                ></p>
 <h1 id="创建组件"><a href="#创建组件" class="headerlink" title="创建组件"></a>创建组件</h1><p>假设有以下几个模块</p>
 <ul>
 <li><p><code>主工程</code>：承载主要的表层业务代码</p>
 </li>
 <li><p><code>Core</code>：独立存在，应用加密、接口请求等敏感代码</p>
 </li>
-<li><p><code>Base</code>：基类封装，拓展，基本的数据处理</p>
+<li><p><code>Base</code>：<code>基类封装</code>，拓展，基本的数据处理</p>
 </li>
-<li><p><code>Service</code>：服务层，封装业务工具类，例如网络层服务、持久化服务等</p>
+<li><p><code>Service</code>：服务层，封装 <code>业务</code> 工具类，例如网络层服务、持久化服务等</p>
 </li>
 <li><p><code>Pods</code>：三方依赖</p>
 </li>
@@ -362,57 +371,57 @@
                      data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211620171.png"
                      
                 ></p>
-<p>下面，我们来进行模块的创建，以 <code>Core</code> 模块为例：</p>
+<p>下面，我们来进行模块的创建，以 <code>Base</code> 模块为例：</p>
 <ul>
-<li>选择  <code>File -&gt; new -&gt; project -&gt; iOS -&gt; Framework</code>，新建一个 <code>ZJCore</code> 模块</li>
+<li>选择  <code>File -&gt; new -&gt; project -&gt; iOS -&gt; Framework</code>，新建一个 <code>ZJBase</code> 模块</li>
 </ul>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211613321.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303300913551.png"
                      
                 ></p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211613461.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303300849806.png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303300849849.png"
                      
                 ></p>
 <ul>
-<li>选择正确的 <code>Group</code> 和 <code>WorkSpace</code>（这里注意：创建的 <code>library</code> 最好放在 <code>主工程根目录下</code>，否则后续的 <code>podfile</code> 执行 <code>pod install</code> 会报错）</li>
+<li>选择正确的 <code>Group</code> 和 <code>WorkSpace</code>（这里注意：创建的 <code>framework</code> 最好放在 <code>主工程根目录下</code>，否则后续的 <code>podfile</code> 执行 <code>pod install</code> 会报错）</li>
 </ul>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211613143.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303300914248.png"
                      
                 ></p>
 <p>创建成功后，看到的结果如下：</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211613113.png"
-                     
-                ></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211613565.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303300915346.png"
                      
                 ></p>
 <ul>
-<li>将创建的 <code>library</code> 的 <code>Build Settings -&gt; Mach-O Type</code> 修改为静态库 <code>Static Library</code></li>
+<li>将创建的 <code>framework</code> 的 <code>Build Settings -&gt; Mach-O Type</code> 修改为静态库 <code>Static Library</code></li>
 </ul>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211613442.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303300919649.png"
                      
                 ></p>
-<h1 id="主工程调用Library"><a href="#主工程调用Library" class="headerlink" title="主工程调用Library"></a>主工程调用Library</h1><ul>
-<li>在 <code>ZJCore</code> 中新建一个文件，并添加如下代码</li>
+<h1 id="主工程调用-Static-Library"><a href="#主工程调用-Static-Library" class="headerlink" title="主工程调用 Static Library"></a>主工程调用 Static Library</h1><ul>
+<li>在 <code>ZJBase</code> 中新建一个文件，并添加如下代码</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJCoreSetting : NSObject</span><br><span class="line">// 声明属性</span><br><span class="line">@property (nonatomic,copy)NSString * name;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ZJCoreSetting</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJBaseLog : NSObject</span><br><span class="line">// 打印</span><br><span class="line">- (void)print;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">#import &quot;ZJBaseLog.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation ZJBaseLog</span><br><span class="line">// 打印</span><br><span class="line">- (void)print&#123;</span><br><span class="line">    NSLog(@&quot;hello world&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>在 <code>Build Phases -&gt; Headers -&gt; Public</code> 中将新建的文件拖拽到 <code>Puclic</code> 中，这样主工程才能访问该文件</li>
@@ -420,35 +429,56 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211614740.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303300856386.png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303300857511.png"
                      
                 ></p>
 <ul>
-<li>在ZJCore文件中添加引用</li>
+<li>在 <code>ZJBase</code> 文件中添加引用 <code>#import &lt;ZJBase/ZJBaseLog.h&gt;</code></li>
 </ul>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211614397.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303300858206.png"
                      
                 ></p>
 <ul>
-<li>在主工程中，选择 <code>target -&gt; Frameworks,Libraries,and Embedded Content -&gt; + 号 -&gt; 添加 ZJCore</code>，只需要build主工程，library能够自动联编</li>
+<li>在 <code>主工程</code> 中，选择 <code>target -&gt; Frameworks,Libraries,and Embedded Content -&gt; + 号 -&gt; 添加 ZJBase</code>，只需要 <code>build</code> 主工程，<code>library</code> 能够自动联编</li>
 </ul>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211614737.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303300922276.png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303300859286.png"
+                     
+                ></p>
+<ul>
+<li>Embed 改为 <code>Do Not Embed</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303300928364.png"
                      
                 ></p>
 <h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>首先 <code>#import &lt;ZJCore/ZJCoreSetting.h&gt;</code>，然后使用</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211614550.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303300932568.png"
                      
                 ></p>
-<p>这里需要注意的是，子library之间的互相调用，与主工程调用library类似，主需要添加依赖、暴露header即可</p>
+<p>这里需要注意的是，子 <code>Static Library</code> 之间的互相调用，与主工程调用 <code>Static Library</code> 类似，需要 <code>添加依赖、暴露header</code> 即可</p>
 
             </div>
 
@@ -530,7 +560,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC组件化05：【方案一】本地组件化</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%BB%E5%B7%A5%E7%A8%8B"><span class="nav-text">创建主工程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%BB%84%E4%BB%B6"><span class="nav-text">创建组件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BB%E5%B7%A5%E7%A8%8B%E8%B0%83%E7%94%A8Library"><span class="nav-text">主工程调用Library</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-text">使用</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%BB%E5%B7%A5%E7%A8%8B"><span class="nav-text">创建主工程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%BB%84%E4%BB%B6"><span class="nav-text">创建组件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BB%E5%B7%A5%E7%A8%8B%E8%B0%83%E7%94%A8-Static-Library"><span class="nav-text">主工程调用 Static Library</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-text">使用</span></a></li></ol>
 
     </div>
 </div>

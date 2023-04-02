@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2021/05/17/oc进阶/oc底层原理34：启动优化（三）二进制重排/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC底层原理34：启动优化（三）二进制重排">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2021/05/17/OC进阶/OC底层原理34：启动优化（三）二进制重排/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC底层原理34：启动优化（三）二进制重排">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC底层原理34：启动优化（三）二进制重排 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC底层原理34：启动优化（三）二进制重排</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2021-05-17 14:44:54</span>
+        <span class="mobile">2021-05-17 14:44</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-21 12:15:37</span>
+            <span class="mobile">2023-03-21 12:15</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在之前的两篇文章中，大致介绍了一些基本概念以及启动优化的思路，下面来着重介绍一个 <code>pre-main阶段</code> 的优化方案，即 <code>二进制重排</code>，这个方案最开始是由抖音的这篇文章<a class="link"   target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI1MzYzMjE0MQ==&mid=2247485101&idx=1&sn=abbbb6da1aba37a04047fc210363bcc9&chksm=e9d0cd4fdea7445989cf26623a16fc8ce2876bf3bda95a5532bb0e5e5b1420765653df0b94d1&mpshare=1&scene=1&srcid=0316fLf0VRLHLhRPFDH6LuQo&sharer_sharetime=1595570815854&sharer_shareid=ff29c649ff1b5cea91081f325b5ada59#rd" >抖音研发实践：基于二进制文件重排的解决方案 APP启动速度提升超15% <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>提出来的。</p>
+<h1 id="二进制重排实现"><a href="#二进制重排实现" class="headerlink" title="二进制重排实现"></a>二进制重排实现</h1><ol>
+<li><p>在虚拟内存部分，我们知道，当进程访问一个虚拟内存page，而对应的物理内存不存在时，会触发 <code>缺页中断（Page Fault）</code>，因此阻塞进程，此时就需要先加载数据到物理内存，然后继续访问，这个对性能有一定影响的。如果存在大量的 <code>缺页中断</code>，会非常的耗时。</p>
+</li>
+<li><p>基于 <code>Page fault</code>，我们思考，APP在冷却启动过程中，会有大量的类、分类、三方等需要加载和执行，此时产生的 <code>Page Fault</code> 所带来的的耗时是很大的，以 <code>实际项目</code> 为例，我们来看下，在启动阶段的 <code>Page Fault</code> 的次数</p>
+</li>
+</ol>
+<ul>
+<li><code>CMD + i</code> 快捷键，选择 <code>System Trace</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211154473.png"
+                     
+                ></p>
+<ul>
+<li>点击启动（启动前需要重启手机，清除缓存数据），第一个界面出来后，停掉，按照下图中操作</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211155821.png"
+                     
+                ></p>
+<p>从图中可以看出 实际项目 发生的 <code>Page Fault</code> 有 <code>1101</code> 次，可想而知，这个是非常影响性能的。</p>
+<ol start="3">
+<li>下面，我们通过 <code>Demo</code> 查看方法在编译时期的排列顺序，在 <code>ViewController</code> 中按下列顺序定义以下几个方法</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">void test1()&#123;</span><br><span class="line">    printf(&quot;1&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void test2()&#123;</span><br><span class="line">    printf(&quot;2&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    test1();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (void)load&#123;</span><br><span class="line">    printf(&quot;3&quot;);</span><br><span class="line">    test2();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<ol start="4">
+<li>在 <code>Build Setting</code> -&gt; <code>write Link Map File</code> 设置为 <code>YES</code></li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/153550546-dffc25ce-e7b9-4724-a110-9b56ec581bbb.jpg"
+                     
+                ></p>
+<ol start="5">
+<li><code>CMD + B</code> 编译 <code>Demo</code>，查看 <code>执行顺序</code> 打印结果为 <code>3 2 1</code>，那么代码的 <code>加载顺序</code> 是什么？<code>show in finder</code> 在对应路径下查找 <code>link map</code> 文件，如下图所示：</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211157433.png"
+                     
+                ></p>
+<ul>
+<li>打开 <code>.txt</code> 文件，可以发现类中 <code>函数的加载顺序是从上到下</code> 的，而 <code>文件</code> 的顺序是根据 <code>Buid Phases</code> -&gt; <code>Compile Source</code> 中的顺序加载的</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211158814.png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211158148.png"
+                     
+                ></p>
+<ol start="6">
+<li>从上面的 <code>Page fault</code> 的次数以及加载顺序，可以发现其实 <code>导致 Page Fault 次数过多的根本原因是启动时刻需要调用的方法，处于不同的 Page Fault 导致的</code>，因此我们的优化思路就是：<code>将所有启动时刻需要调用的方法，排列在一起，即放在一个页中，这样就从多个 Page Fault变成了一个Page Fault</code>，这就是 <code>二进制重排</code> 的核心原理，如下所示：</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211159209.png"
+                     
+                ></p>
+<blockquote>
+<p>注意：在iOS生成环境中的APP，在发生 Page Fault 进行重新加载时，iOS系统还会对其做一次 签名验证，因此 iOS 生产环境的 Page Fault 比 Debug环境下所产生的耗时更多</p>
+</blockquote>
+<h1 id="二进制重排实践"><a href="#二进制重排实践" class="headerlink" title="二进制重排实践"></a>二进制重排实践</h1><p>下面，我们来进行具体的实践，首先先理解几个名词：</p>
+<ol>
+<li>Link Map</li>
+</ol>
+<p><code>linkmap</code> 是iOS编译过程的中间产物，<code>记录了二进制文件的布局</code>，需要在Xcode的 <code>Build Settings</code> 里面开启 <code>Write Link Map File</code>，<code>Link Map</code> 主要包含三个部分：</p>
+<ul>
+<li><p><code>Object Files</code> ：生成二进制用到的link单元的路径和文件编号</p>
+</li>
+<li><p><code>Sections</code> ：记录 <code>Mach-O</code> 每个 <code>Segment/Section</code> 的地址范围</p>
+</li>
+<li><p><code>Symbols</code> ：按照顺序记录每个符号的地址范围</p>
+</li>
+</ul>
+<ol start="2">
+<li>ld</li>
+</ol>
+<p><code>ld</code> 是Xcode使用的链接器，有一个参数 <code>order_file</code>，我们可以通过在 <code>Build Settings</code> -&gt; <code>Order Files</code> 配置一个后缀为 <code>order</code> 的文件路径，在这个 <code>order</code> 文件中，将所需要的符号按照顺序写在里面，在项目编译时，会找找这个文件的顺序进行加载，以此来达到我们的优化</p>
+<p>所以说，<code>二进制重排的本质就是对启动加载的符号进行重新排列</code></p>
+<p>到目前为止，原理我们基本弄清楚了，如果项目比较小，完全可以自定义一个 <code>order</code> 文件，将方法的顺序手动添加，但是如果项目比较大，设计到的方法特别多，此时我们如何获取启动运行的函数呢？有以下几种思路：</p>
+<ul>
+<li><p><code>hook objc_msgsSend</code>：我们知道，函数的本质就是发送消息，在底层都会来到 <code>objc_msgSend</code>，但是由于 <code>objc_msgSend</code> 的参数是可变的，需要通过 <code>汇编</code> 获取，对开发人员要求较高，而且也只能拿到 <code>oc</code> 和 <code>swift</code> 中 <code>@objc</code> 后的方法</p>
+</li>
+<li><p><code>静态扫描</code>：扫描 <code>mach-o</code> 特定段和节里面所存储的符号一级函数数据</p>
+</li>
+<li><p><code>Clang插桩</code>：即 <code>批量hook</code>，可以实现 <code>100%符号覆盖</code>，即完全获取 <code>swift、oc、block</code>函数</p>
+</li>
+</ul>
+<h1 id="自定义-order-文件，改变执行顺序"><a href="#自定义-order-文件，改变执行顺序" class="headerlink" title="自定义 order 文件，改变执行顺序"></a>自定义 order 文件，改变执行顺序</h1><ul>
+<li>cd 到 <code>Demo</code> 根目录，新建 <code>order</code> 文件</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zhangjian@zhangjiandeMBP ~ % cd /Users/zhangjian/Desktop/Demo </span><br><span class="line">zhangjian@zhangjiandeMBP Demo % touch zj.order</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>order 文件中书写如下内容</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211203021.png"
+                     
+                ></p>
+<ul>
+<li>在 <code>build setting</code> 搜索 <code>order file</code> 将根目录下的order文件路径填入：<code>./zj.order</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211204618.png"
+                     
+                ></p>
+<ul>
+<li><code>cmd + b</code> 重新编译，没有报错，说明有一个符号没有找不到会自动或略掉，继续查看 <code>link map</code> 文件</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211204061.png"
+                     
+                ></p>
+<p>由上图可知，<code>main</code> 变成第一位、<code>viewDidLoad</code> 变成第二位、<code>test1</code> 变成第三位，这就是 <code>二进制重排</code></p>
+<h1 id="Clang-插桩"><a href="#Clang-插桩" class="headerlink" title="Clang 插桩"></a>Clang 插桩</h1><p><code>llvm</code> 内置了一个简单的代码覆盖率检测（<code>SanitizerCoverage</code>），它在函数级、基本块级和边缘级插入对用户定义函数的调用，我们这里的 <code>批量hook</code>，就需要借助于 <code>SanitizerCoverage</code></p>
+<p>关于clang的插桩覆盖的官方文档如下：<a class="link"   target="_blank" rel="noopener" href="http://clang.llvm.org/docs/SanitizerCoverage.html" >clang自带代码覆盖工具 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 文档中有详细概述，以及简短Demo演示</p>
+<ol>
+<li>【第一步：配置】开启 <code>SanitizerCoverage</code></li>
+</ol>
+<ul>
+<li>OC项目，需要在：<code>Build Settings</code> 里面的 <code>Other C Flags</code> 中添加 <code>-fsanitize-coverage=trace-pc-guard</code></li>
+</ul>
+<p> <img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211205796.png"
+                     
+                ></p>
+<ul>
+<li>此时 <code>CMD + B</code> 编译，会报两个符号错误，说明添加了上面就会调用下面的两个符号： <code>__sanitizer_cov_trace_pc_guard_init</code> 和 <code>__sanitizer_cov_trace_pc_guard</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211206012.png"
+                     
+                ></p>
+<ol start="2">
+<li>【第二步：重写方法】</li>
+</ol>
+<ul>
+<li>将官方文档中的两个方法拷贝到 <code>TraceDemo</code> 项目中，如下图所示并运行，会报错找不 到 <code>__sanitizer_symbolize_pc</code>，我们将其注释，再次运行，成功</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ViewController.h&quot;</span><br><span class="line">// trace-pc-guard-cb.cc</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;sanitizer/coverage_interface.h&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@interface ViewController ()</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    // Do any additional setup after loading the view.</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void test1()&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void (^block1)(void) = ^&#123;</span><br><span class="line">    </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">void __sanitizer_cov_trace_pc_guard_init(uint32_t *start,</span><br><span class="line">                                                    uint32_t *stop) &#123;</span><br><span class="line">  static uint64_t N;  // Counter for the guards.</span><br><span class="line">  if (start == stop || *start) return;  // Initialize only once.</span><br><span class="line">  printf(&quot;INIT: %p %p\n&quot;, start, stop);</span><br><span class="line">  for (uint32_t *x = start; x &lt; stop; x++)</span><br><span class="line">    *x = ++N;  // Guards should start from 1.</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void __sanitizer_cov_trace_pc_guard(uint32_t *guard) &#123;</span><br><span class="line">  // 将load方法过滤掉了，所以需要注释掉</span><br><span class="line">  if (!*guard) return;</span><br><span class="line">  // 获取PC</span><br><span class="line">  /*</span><br><span class="line">    - PC 当前函数返回上一个调用的地址</span><br><span class="line">    - 0 当前这个函数地址，即当前函数的返回地址</span><br><span class="line">    - 1 当前函数调用者的地址，即上一个函数的返回地址</span><br><span class="line">  */</span><br><span class="line">  void *PC = __builtin_return_address(0);</span><br><span class="line">  char PcDescr[1024];</span><br><span class="line">  // 再次运行这个符号找不到，找不到我就不调用了吗，删掉</span><br><span class="line">  // __sanitizer_symbolize_pc(PC, &quot;%p %F %L&quot;, PcDescr, sizeof(PcDescr));</span><br><span class="line">  printf(&quot;guard: %p %x PC %s\n&quot;, guard, *guard, PcDescr);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event&#123;</span><br><span class="line">    test1();</span><br><span class="line">    block1();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>__sanitizer_cov_trace_pc_guard_init 方法</li>
+</ol>
+<ul>
+<li>由上面运行结果可知，<code>start</code> &#x3D; <code>0x10204d3a0</code>，<code>stop</code> &#x3D; <code>0x10204d3d8</code>,那么这个是什么意思呢？</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211207660.png"
+                     
+                ></p>
+<ul>
+<li>参数1 <code>start</code> 是一个指针，指向无符号intl类型，4个字节，相当于一个数组的 <code>起始位置</code>，即符号的起始位置（是从高位往低位读）</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211207107.png"
+                     
+                ></p>
+<ul>
+<li>参数2 <code>stop</code> ，由于数据的地址是往下读的（即 从高往低读，所以此时获取的地址并不是stop真正的地址，而是标记的最后的地址，读取stop时，由于stop占了4个字节，stop 真实地址 &#x3D; stop打印的地址-0x4）</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211208571.png"
+                     
+                ></p>
+<ul>
+<li>stop 内存地址中存储的值表示什么？在增加一个 <code>方法/block/属性</code> 后，发现其值也会增加对应的数，例如增加一个 touchesBegan方法，运行并打印得到 <code>INIT: 0x104f0d3a8 0x104f0d3e4</code>，重新查看 <code>start</code> 和 <code>stop</code> 的值：</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211208937.png"
+                     
+                ></p>
+<blockquote>
+<p>由此可见 <code>增加一个方法</code> 对应 stop值就增加一个</p>
+</blockquote>
+<ol start="4">
+<li>【第三步：通过返回地址拿到符号】</li>
+</ol>
+<ul>
+<li><p><code>__sanitizer_cov_trace_pc_guard</code> 方法，主要是捕获所有的启动时刻的符号，将所有符号入队</p>
+</li>
+<li><p>参数 <code>guard</code> 是一个 <code>哨兵</code>，告诉我们是 <code>第几个被调用的</code></p>
+</li>
+<li><p>引入库 <code>#import &lt;dlfcn.h&gt;</code> ，并点击屏幕可以通过返回地址拿到符号</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">void __sanitizer_cov_trace_pc_guard(uint32_t *guard) &#123;</span><br><span class="line">    if (!*guard) return;</span><br><span class="line">    // 当前返回上一个调用的地址</span><br><span class="line">    void *PC = __builtin_return_address(0);</span><br><span class="line">    // 通过返回地址PC，获取符号</span><br><span class="line">    Dl_info info;</span><br><span class="line">    dladdr(PC, &amp;info);</span><br><span class="line">    printf(&quot;frame:%s \nfbase:%p \nsname:%s \nsaddr:%p\n\n&quot;,info.dli_fname,info.dli_fbase,info.dli_sname,info.dli_saddr);</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    char PcDescr[1024];</span><br><span class="line">    // 再次运行这个符号找不到，找不到我就不调用了吗，删掉</span><br><span class="line">    // y__sanitizer_symbolize_pc(PC, &quot;%p %F %L&quot;, PcDescr, sizeof(PcDescr));</span><br><span class="line">    // printf(&quot;guard: %p %x PC %s\n&quot;, guard, *guard, PcDescr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>查看打印结果：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 文件的内存地址</span><br><span class="line">frame:/private/var/containers/Bundle/Application/A9B590E7-FC2A-4C54-85C1-FFFE55ACE448/TraceDemo.app/TraceDemo </span><br><span class="line">// 文件内存地址</span><br><span class="line">fbase:0x10251c000 </span><br><span class="line">// 符号名称</span><br><span class="line">sname:-[ViewController touchesBegan:withEvent:] </span><br><span class="line">// 起始位置地址</span><br><span class="line">saddr:0x102521b78</span><br><span class="line"></span><br><span class="line">frame:/private/var/containers/Bundle/Application/A9B590E7-FC2A-4C54-85C1-FFFE55ACE448/TraceDemo.app/TraceDemo </span><br><span class="line">fbase:0x10251c000 </span><br><span class="line">sname:test1 </span><br><span class="line">saddr:0x1025219e0</span><br><span class="line"></span><br><span class="line">frame:/private/var/containers/Bundle/Application/A9B590E7-FC2A-4C54-85C1-FFFE55ACE448/TraceDemo.app/TraceDemo </span><br><span class="line">fbase:0x10251c000 </span><br><span class="line">sname:block1_block_invoke </span><br><span class="line">saddr:0x1025219fc</span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>【第四步：创建队列保存符号】</li>
+</ol>
+<ul>
+<li><p>引入头文件 <code>#import &lt;OSAtomic.h&gt;</code>，符号的存储需要借助于链表，所以需要定义链表节点 ZJNode</p>
+</li>
+<li><p>通过 OSQueueHead 创建原子队列，其目的是保证线程安全</p>
+</li>
+<li><p>通过 OSAtomicEnqueue 方法将 node 入队，通过链表 next 指针可以访问下一个符号</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">// 原子队列-线程安全</span><br><span class="line">static OSQueueHead symbolList = OS_ATOMIC_QUEUE_INIT;</span><br><span class="line"></span><br><span class="line">// 定义符号结构体，以链表的形式</span><br><span class="line">typedef struct&#123;</span><br><span class="line">    // 指针8个字节</span><br><span class="line">    void *pc;</span><br><span class="line">    void *next;</span><br><span class="line">&#125;ZJNode;</span><br><span class="line"></span><br><span class="line">void __sanitizer_cov_trace_pc_guard(uint32_t *guard) &#123;</span><br><span class="line">    // 将load方法过滤掉了，所以需要注释掉</span><br><span class="line">    if (!*guard) return;</span><br><span class="line">    // 当前返回上一个调用的地址</span><br><span class="line">    void *PC = __builtin_return_address(0);</span><br><span class="line">    </span><br><span class="line">    // 创建结构体</span><br><span class="line">    ZJNode * node = malloc(sizeof(ZJNode));</span><br><span class="line">    *node = (ZJNode)&#123;PC,NULL&#125;;</span><br><span class="line">    </span><br><span class="line">    // 加入结构体</span><br><span class="line">    // 符号的访问不是通过下标访问，是通过链表的next指针，所以需要借用offsetof（结构体类型，下一个的地址即next）</span><br><span class="line">    OSAtomicEnqueue(&amp;symbolList, node, offsetof(ZJNode, next));</span><br><span class="line">    </span><br><span class="line">    // 通过返回地址PC，获取符号</span><br><span class="line">    Dl_info info;</span><br><span class="line">    dladdr(PC, &amp;info);</span><br><span class="line">    // printf(&quot;frame:%s \nfbase:%p \nsname:%s \nsaddr:%p\n\n&quot;,info.dli_fname,info.dli_fbase,info.dli_sname,info.dli_saddr);</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    char PcDescr[1024];</span><br><span class="line">    // 再次运行这个符号找不到，找不到我就不调用了吗，删掉</span><br><span class="line">    // y__sanitizer_symbolize_pc(PC, &quot;%p %F %L&quot;, PcDescr, sizeof(PcDescr));</span><br><span class="line">    // printf(&quot;guard: %p %x PC %s\n&quot;, guard, *guard, PcDescr);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event&#123;</span><br><span class="line">    while (YES) &#123; // 一次循环！也会被HOOK一次</span><br><span class="line">        ZJNode * node = OSAtomicDequeue(&amp;symbolList, offsetof(ZJNode, next));</span><br><span class="line">        if (node == NULL) &#123;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">        Dl_info info = &#123;0&#125;;</span><br><span class="line">        dladdr(node-&gt;pc, &amp;info);</span><br><span class="line">        printf(&quot;%s \n&quot;,info.dli_sname);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<ol start="6">
+<li>【第五步：解决死循环问题】</li>
+</ol>
+<ul>
+<li>当我们重新运行，点击屏幕，会发现一直重新打印，出现死循环 <code>touchesBegan</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211210382.png"
+                     
+                ></p>
+<ul>
+<li>我们打开汇编调式，发现有 <code>3</code> 个 <code>__sanitizer_cov_trace_pc_guard</code> 调用</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211210561.png"
+                     
+                ></p>
+<ul>
+<li><p>第一次 bl 是 <code>touchBegin</code>；第二次是因为 <code>while</code> 循环，即只要是 <code>跳转</code>，就会被 <code>hook</code>，即有 <code>bl/b</code> 的指令，就会被 <code>hook</code>；第三次就 <code>printf</code></p>
+</li>
+<li><p>解决方式：将 <code>Build Setting</code> 中的 <code>Other C Flags</code> 的 <code>-fsanitize-coverage=trace-pc-guard</code> 改成 <code>-fsanitize-coverage=func,trace-pc-guard</code>，再次运行，看下面的结果显示已经没有死循环了</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211211367.png"
+                     
+                ></p>
+<blockquote>
+<p>由上面的结果可知，还有几个问题需要解决：<code>重复、顺序是反的，并且没有load</code></p>
+</blockquote>
+<ol start="6">
+<li>【第六步：生成数组去重、取反】</li>
+</ol>
+<ul>
+<li>添加 <code>+ load</code> 方法（需要注释掉<code>if (!*guard) return;</code>这句代码）、调用<code>test、block</code>方法，重新点击屏幕并查看结果</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">+ (void)load&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    test();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void test()&#123;</span><br><span class="line">    block();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void (^block)(void) = ^&#123;</span><br><span class="line">    </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<p>查看打印结果：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211211114.png"
+                     
+                ></p>
+<ul>
+<li>取反、去重</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">- (void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event&#123;</span><br><span class="line">    // 定义数组</span><br><span class="line">    NSMutableArray&lt;NSString *&gt; * symbolNames = [NSMutableArray array];</span><br><span class="line">    </span><br><span class="line">    while (YES) &#123;</span><br><span class="line">        ZJNode * node = OSAtomicDequeue(&amp;symbolList, offsetof(ZJNode, next));</span><br><span class="line">        if (node == NULL) &#123;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">        Dl_info info = &#123;0&#125;;</span><br><span class="line">        dladdr(node-&gt;pc, &amp;info);</span><br><span class="line">//        printf(&quot;%s \n&quot;,info.dli_sname);</span><br><span class="line">        // 转成字符串</span><br><span class="line">        NSString * name = @(info.dli_sname);</span><br><span class="line">        </span><br><span class="line">        if ([name hasPrefix:@&quot;+[&quot;] ||</span><br><span class="line">            [name hasPrefix:@&quot;-[&quot;]) &#123;</span><br><span class="line">            // 如果是oc方法名称直接存</span><br><span class="line">            [symbolNames addObject:name];</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line">        // 如果不是oc直接加个_存</span><br><span class="line">        [symbolNames addObject:[@&quot;_&quot; stringByAppendingString:name]];</span><br><span class="line">    &#125;</span><br><span class="line">    // 反向遍历数组</span><br><span class="line">    symbolNames = (NSMutableArray&lt;NSString *&gt; *)[[symbolNames reverseObjectEnumerator] allObjects];</span><br><span class="line">    // 去重</span><br><span class="line">    NSEnumerator * enumerator = [symbolNames reverseObjectEnumerator];</span><br><span class="line">    NSMutableArray * funcs = [NSMutableArray arrayWithCapacity:symbolNames.count];</span><br><span class="line">    NSString * name;</span><br><span class="line">    while (name = [enumerator nextObject])&#123;</span><br><span class="line">        // 数组中不包含name</span><br><span class="line">        if (![funcs containsObject:name]) &#123;</span><br><span class="line">            [funcs addObject:name];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    NSLog(@&quot;%@&quot;,funcs);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>重新运行，查看打印结果：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211212119.png"
+                     
+                ></p>
+<ol start="7">
+<li>【第七步：生成order文件】</li>
+</ol>
+<ul>
+<li>数组转成字符串</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 数组转成字符串</span><br><span class="line">NSString * funcStr = [symbolNames componentsJoinedByString:@&quot;\n&quot;];</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>字符串写入文件</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 字符串写入文件</span><br><span class="line">// 文件路径</span><br><span class="line">NSString * filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@&quot;zj.order&quot;];</span><br><span class="line">// 文件内容</span><br><span class="line">NSData * fileContents = [funcStr dataUsingEncoding:NSUTF8StringEncoding];</span><br><span class="line">[[NSFileManager defaultManager] createFileAtPath:filePath contents:fileContents attributes:nil];</span><br></pre></td></tr></table></figure></div>
+
+<ol start="8">
+<li>【第八步：找到order文件，并配置order文件】</li>
+</ol>
+<ul>
+<li>CMD + shift + 2 -&gt; Devices -&gt; TraceDemo -&gt; Download Container 将文件下载到桌面 -&gt; 显示包内容 -&gt; tmp -&gt; 找到 zj.order</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211212188.png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211213499.png"
+                     
+                ></p>
+<ul>
+<li>配置 <code>zj.order</code> 到项目中，首先 <code>link map</code> 设值为 <code>YES</code>，配置前：</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211213821.png"
+                     
+                ></p>
+<ul>
+<li>将 <code>zj.order</code> 放在根目录，配置 <code>order file</code> 为 <code>./zj.order</code> ，配置后：</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211213648.png"
+                     
+                ></p>
+<ul>
+<li>此时发现配置后的执行顺序和配置前的执行顺序有明显的区别，此时此时 <code>二进制重排成功</code>。</li>
+</ul>
+<h1 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h1><ul>
+<li><p>如果是Swift项目，还需要额外在 <code>Other Swift Flags</code> 中加入 <code>-sanitize-coverage=func</code> 和 <code>-sanitize=undefined</code></p>
+</li>
+<li><p>OC 和 swift 混编</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211214398.png"
+                     
+                ></p>
+<ul>
+<li>OC 中引入头文件</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211214045.png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211214934.png"
+                     
+                ></p>
+<ul>
+<li>按照上面的进行配置并查看 <code>zj.order</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211215216.png"
+                     
+                ></p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC底层原理34：启动优化（三）二进制重排</li>
+        <li>Post author：张建</li>
+        <li>Create time：2021-05-17 14:44:54</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2021/05/17/OC进阶/OC底层原理34：启动优化（三）二进制重排/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">#OC-底层原理探索篇</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2021/05/22/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8635%EF%BC%9A%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89TaggedPointer-retain-release-dealloc-retainCount-%E5%BA%95%E5%B1%82%E5%88%86%E6%9E%90/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理35：内存管理（一）TaggedPointer/retain/release/dealloc/retainCount 底层分析</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2021/05/11/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8633%EF%BC%9A%E5%90%AF%E5%8A%A8%E4%BC%98%E5%8C%96%EF%BC%88%E4%BA%8C%EF%BC%89%E4%BC%98%E5%8C%96%E5%BB%BA%E8%AE%AE/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理33：启动优化（二）优化建议</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC底层原理34：启动优化（三）二进制重排</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E9%87%8D%E6%8E%92%E5%AE%9E%E7%8E%B0"><span class="nav-text">二进制重排实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E9%87%8D%E6%8E%92%E5%AE%9E%E8%B7%B5"><span class="nav-text">二进制重排实践</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89-order-%E6%96%87%E4%BB%B6%EF%BC%8C%E6%94%B9%E5%8F%98%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="nav-text">自定义 order 文件，改变执行顺序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Clang-%E6%8F%92%E6%A1%A9"><span class="nav-text">Clang 插桩</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A1%A5%E5%85%85"><span class="nav-text">补充</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

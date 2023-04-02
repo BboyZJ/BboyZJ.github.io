@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2020/09/25/oc学习/oc学习30：项目代码量和行数统计/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC学习30：项目代码行数统计">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2020/09/25/OC学习/OC学习30：项目代码量和行数统计/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC学习30：项目代码行数统计">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC学习30：项目代码行数统计 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC学习30：项目代码行数统计</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2020-09-25 11:06:11</span>
+        <span class="mobile">2020-09-25 11:06</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-29 13:07:23</span>
+            <span class="mobile">2023-03-29 13:07</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>iOS代码量的统计，其实就是代码 <code>行数</code> 的统计，其中你自己写的代码 <code>不包括</code> 用 <code>pods</code> 集成第<code>三方</code> 库的&#96;代码。</p>
+<h1 id="行数统计方式"><a href="#行数统计方式" class="headerlink" title="行数统计方式"></a>行数统计方式</h1><ul>
+<li>【方法一】：查看每一行的行数，再得出总行数，其中不包括空行，但是包括注释。</li>
+<li>【方法二】：直接查看总行数，没有中间过程，不包括空行，但是包括注释。</li>
+</ul>
+<h1 id="方法一："><a href="#方法一：" class="headerlink" title="方法一："></a>方法一：</h1><ol>
+<li><p>打开终端</p>
+</li>
+<li><p>cd 进入项目目录（我的是Classes）</p>
+</li>
+<li><p>输入命令 <code>find . &quot;(&quot; -name &quot;*.m&quot; -or -name &quot;*.mm&quot; -or -name &quot;*.cpp&quot; -or -name &quot;*.h&quot; -or -name &quot;*.rss&quot; &quot;)&quot; -print | xargs wc -l</code></p>
+</li>
+<li><p>得出结果，如下：</p>
+</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">mac@MacdeMBP ERBC % cd /Users/mac/Desktop/ERBC/ERBC/Classes </span><br><span class="line">mac@MacdeMBP Classes % find . &quot;(&quot; -name &quot;*.m&quot; -or -name &quot;*.mm&quot; -or -name &quot;*.cpp&quot; -or -name &quot;*.h&quot; -or -name &quot;*.rss&quot; &quot;)&quot; -print | xargs wc -l</span><br><span class="line">      49 ./UI(用户界面)/Home(首页)/ERHomeVC.m</span><br><span class="line">      17 ./UI(用户界面)/Home(首页)/ERHomeVC.h</span><br><span class="line">      32 ./UI(用户界面)/Base(基础)/NavBar/ERNavgationC.m</span><br><span class="line">      17 ./UI(用户界面)/Base(基础)/NavBar/ERNavgationC.h</span><br><span class="line">      22 ./UI(用户界面)/Base(基础)/TabBar/Controller/ERTabBarC.h</span><br><span class="line">      92 ./UI(用户界面)/Base(基础)/TabBar/Controller/ERTabBarC.m</span><br><span class="line">     124 ./UI(用户界面)/Base(基础)/TabBar/View/ERTabBarBtn.m</span><br><span class="line">      25 ./UI(用户界面)/Base(基础)/TabBar/View/ERTabBarV.h</span><br><span class="line">      18 ./UI(用户界面)/Base(基础)/TabBar/View/ERTabBarBadgeBtn.h</span><br><span class="line">      25 ./UI(用户界面)/Base(基础)/TabBar/View/ERTabBarBtn.h</span><br><span class="line">      35 ./UI(用户界面)/Base(基础)/TabBar/View/ERTabBarBadgeBtn.m</span><br><span class="line">      98 ./UI(用户界面)/Base(基础)/TabBar/View/ERTabBarV.m</span><br><span class="line">      23 ./Other(其他)/ControlCat(控件分类)/NSDictionary/NSDictionary+ZJ.h</span><br><span class="line">      68 ./Other(其他)/ControlCat(控件分类)/NSDictionary/NSDictionary+ZJ.m</span><br><span class="line">      18 ./Other(其他)/ControlCat(控件分类)/UIScrollView/UIScrollView+ZJ.h</span><br><span class="line">      29 ./Other(其他)/ControlCat(控件分类)/UIScrollView/UIScrollView+ZJ.m</span><br><span class="line">      32 ./Other(其他)/ControlCat(控件分类)/UILabel/UILabel+ZJ.h</span><br><span class="line">      93 ./Other(其他)/ControlCat(控件分类)/UILabel/UILabel+ZJ.m</span><br><span class="line">     127 ./Other(其他)/ControlCat(控件分类)/UIButton/UIButton+ZJ.m</span><br><span class="line">      42 ./Other(其他)/ControlCat(控件分类)/UIButton/UIButton+ZJ.h</span><br><span class="line">      66 ./Other(其他)/ControlCat(控件分类)/UIColor/UIColor+ZJ.m</span><br><span class="line">      23 ./Other(其他)/ControlCat(控件分类)/UIColor/UIColor+ZJ.h</span><br><span class="line">     123 ./Other(其他)/ControlCat(控件分类)/UIView/UIView+Frame.m</span><br><span class="line">      46 ./Other(其他)/ControlCat(控件分类)/UIView/UIView+ZJ.h</span><br><span class="line">      40 ./Other(其他)/ControlCat(控件分类)/UIView/UIView+Frame.h</span><br><span class="line">     101 ./Other(其他)/ControlCat(控件分类)/UIView/UIView+ZJ.m</span><br><span class="line">      45 ./Other(其他)/ControlCat(控件分类)/NSNull/NSNull+ZJ.m</span><br><span class="line">      17 ./Other(其他)/ControlCat(控件分类)/NSNull/NSNull+ZJ.h</span><br><span class="line">      22 ./Other(其他)/ControlCat(控件分类)/PinYin/PinYin.h</span><br><span class="line">     246 ./Other(其他)/ControlCat(控件分类)/PinYin/PinYin.m</span><br><span class="line">      50 ./Other(其他)/ControlCat(控件分类)/KVO/KVO+ZJ.m</span><br><span class="line">      19 ./Other(其他)/ControlCat(控件分类)/KVO/KVO+ZJ.h</span><br><span class="line">      76 ./Other(其他)/ControlCat(控件分类)/NSMutableDictionary/NSMutableDictionary+ZJ.m</span><br><span class="line">      23 ./Other(其他)/ControlCat(控件分类)/NSMutableDictionary/NSMutableDictionary+ZJ.h</span><br><span class="line">      90 ./Other(其他)/ControlCat(控件分类)/UITextView/UITextView+ZJ.m</span><br><span class="line">      28 ./Other(其他)/ControlCat(控件分类)/UITextView/UITextView+ZJ.h</span><br><span class="line">      19 ./Other(其他)/ControlCat(控件分类)/UICollectionView/UICollectionViewFlowLayout+ZJ.h</span><br><span class="line">      18 ./Other(其他)/ControlCat(控件分类)/UICollectionView/UICollectionView+ZJ.m</span><br><span class="line">      25 ./Other(其他)/ControlCat(控件分类)/UICollectionView/UICollectionViewFlowLayout+ZJ.m</span><br><span class="line">      19 ./Other(其他)/ControlCat(控件分类)/UICollectionView/UICollectionView+ZJ.h</span><br><span class="line">      18 ./Other(其他)/ControlCat(控件分类)/UIImageView/UIImageView+ZJ.h</span><br><span class="line">      23 ./Other(其他)/ControlCat(控件分类)/UIImageView/UIImageView+ZJ.m</span><br><span class="line">     248 ./Other(其他)/ControlCat(控件分类)/NSString/NSString+ZJ.m</span><br><span class="line">      58 ./Other(其他)/ControlCat(控件分类)/NSString/NSString+ZJ.h</span><br><span class="line">      19 ./Other(其他)/ControlCat(控件分类)/UITableView/UITableView+ZJ.h</span><br><span class="line">      32 ./Other(其他)/ControlCat(控件分类)/UITableView/UITableView+ZJ.m</span><br><span class="line">      23 ./Other(其他)/ControlCat(控件分类)/NSArry/NSArray+ZJ.h</span><br><span class="line">      82 ./Other(其他)/ControlCat(控件分类)/NSArry/NSArray+ZJ.m</span><br><span class="line">      23 ./Other(其他)/ControlCat(控件分类)/NSMutableArray/NSMutableArray+ZJ.h</span><br><span class="line">     114 ./Other(其他)/ControlCat(控件分类)/NSMutableArray/NSMutableArray+ZJ.m</span><br><span class="line">      18 ./Other(其他)/ControlCat(控件分类)/NSTimer/NSTimer+ZJ.h</span><br><span class="line">      22 ./Other(其他)/ControlCat(控件分类)/NSTimer/NSTimer+ZJ.m</span><br><span class="line">      40 ./Other(其他)/ControlCat(控件分类)/NSObject/NSObject+ZJ.m</span><br><span class="line">      26 ./Other(其他)/ControlCat(控件分类)/NSObject/NSObject+ZJ.h</span><br><span class="line">      22 ./Other(其他)/ControlCat(控件分类)/UITextField/UITextField+ZJ.h</span><br><span class="line">      57 ./Other(其他)/ControlCat(控件分类)/UITextField/UITextField+ZJ.m</span><br><span class="line">      68 ./Other(其他)/ThirdTool(三方工具)/AFNetworkMonitor(网络监测)/AFNetworkMonitorTool.m</span><br><span class="line">      27 ./Other(其他)/ThirdTool(三方工具)/AFNetworkMonitor(网络监测)/AFNetworkMonitorTool.h</span><br><span class="line">      57 ./Other(其他)/GlobalTool(全局工具)/ZJ(全局方法)/ZJ.h</span><br><span class="line">     350 ./Other(其他)/GlobalTool(全局工具)/ZJ(全局方法)/ZJ.m</span><br><span class="line">      20 ./Other(其他)/GlobalView(全局视图)/PlaceholderView(占位视图)/ERPlaceholderV.h</span><br><span class="line">      44 ./Other(其他)/GlobalView(全局视图)/PlaceholderView(占位视图)/ERPlaceholderV.m</span><br><span class="line">      64 ./Define(宏定义)/ERMixDefine.h</span><br><span class="line">      27 ./Define(宏定义)/ERColorDefine.h</span><br><span class="line">      13 ./Define(宏定义)/ERH5Define.h</span><br><span class="line">      83 ./Define(宏定义)/ERImportDefine.h</span><br><span class="line">      13 ./Define(宏定义)/ERNotificationDefine.h</span><br><span class="line">      15 ./Define(宏定义)/ERImageDefine.h</span><br><span class="line">      13 ./Define(宏定义)/ERHttpsDefine.h</span><br><span class="line">      16 ./Define(宏定义)/ERFontDefine.h</span><br><span class="line">      35 ./Applegate(主程序)/LanuchManager(启动管理)/ERLanuchManager.m</span><br><span class="line">      22 ./Applegate(主程序)/LanuchManager(启动管理)/ERLanuchManager.h</span><br><span class="line">      14 ./Applegate(主程序)/AppDelegate/AppDelegate.h</span><br><span class="line">      27 ./Applegate(主程序)/AppDelegate/AppDelegate.m</span><br><span class="line">    3815 total</span><br><span class="line">mac@MacdeMBP Classes % </span><br></pre></td></tr></table></figure></div>
+
+<p>代码行总数：<code>3815</code>行</p>
+<h1 id="方法二："><a href="#方法二：" class="headerlink" title="方法二："></a>方法二：</h1><ol>
+<li>和上面的流程一样，只不过终端中输入的命令不一样，如下：</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . &quot;(&quot; -name &quot;*.m&quot; -or -name &quot;*.mm&quot; -or -name &quot;*.cpp&quot; -or -name &quot;*.h&quot; -or -name &quot;*.rss&quot; &quot;)&quot; -print | xargs grep -v &quot;^$&quot;|wc -l    </span><br></pre></td></tr></table></figure></div>
+
+<p><code>grep -v &quot;^$&quot;</code>：是 <code>去掉空行</code> 的意思</p>
+<ol start="2">
+<li>得出结果，如下:</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mac@MacdeMBP Classes % find . &quot;(&quot; -name &quot;*.m&quot; -or -name &quot;*.mm&quot; -or -name &quot;*.cpp&quot; -or -name &quot;*.h&quot; -or -name &quot;*.rss&quot; &quot;)&quot; -print | xargs grep -v &quot;^$&quot;|wc -l</span><br><span class="line">    3363</span><br><span class="line">mac@MacdeMBP Classes % </span><br></pre></td></tr></table></figure></div>
+
+<p>总行数：<code>3363</code></p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC学习30：项目代码行数统计</li>
+        <li>Post author：张建</li>
+        <li>Create time：2020-09-25 11:06:11</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2020/09/25/OC学习/OC学习30：项目代码量和行数统计/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">#OC-学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2020/09/26/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8611%EF%BC%9A%E7%B1%BB%20&amp;%20isa%20%E5%BA%95%E5%B1%82%E9%9D%A2%E8%AF%95%E9%A2%98%E5%88%86%E6%9E%90/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理11：类 &amp; isa 底层面试题分析</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2020/09/24/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8610%EF%BC%9A%E7%B1%BB%20&amp;%20%E7%B1%BB%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理10：类 &amp; 类结构分析</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC学习30：项目代码行数统计</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A1%8C%E6%95%B0%E7%BB%9F%E8%AE%A1%E6%96%B9%E5%BC%8F"><span class="nav-text">行数统计方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A"><span class="nav-text">方法一：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A"><span class="nav-text">方法二：</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

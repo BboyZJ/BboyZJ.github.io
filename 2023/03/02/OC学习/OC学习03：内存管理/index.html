@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-23 18:31:16</span>
-            <span class="mobile">2023-03-23 18:31</span>
+            <span class="pc">2023-03-30 15:17:25</span>
+            <span class="mobile">2023-03-30 15:17</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -530,7 +530,7 @@
 <p>在苹果规定中，使用 <code>alloc/new/copy/mutableCopy</code> 创建返回的对象归调用者所有，例如以下</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/* NSMutableArray类对象A */</span><br><span class="line">NSMutableArray *array = [[NSMutableArray alloc] init];    </span><br><span class="line">NSLog(@&quot;%p&quot;, array);</span><br><span class="line">[array release]; // 释放</span><br></pre></td></tr></table></figure></div>
 
-<p>由于对象 <code>A</code> 由 <code>alloc</code> 生成，符合苹果规定，<code>指针变量array指向并持有对象A</code>，引用计数器会加 1。另外，array在使用完对象A后需要对其进行释放。当调用release后，释放了其对对象A的引用，计数器减1。对象A此时引用计数值为零，所以对象A被回收。不能访问已经被回收的对象，会发生崩溃。</p>
+<p>由于对象 <code>A</code> 由 <code>alloc</code> 生成，符合苹果规定，<code>指针变量array指向并持有对象A</code>，引用计数器会加 <code>1</code>。另外，array在使用完对象A后需要对其进行释放。当调用release后，释放了其对对象A的引用，计数器减1。对象A此时引用计数值为零，所以对象A被回收。不能访问已经被回收的对象，会发生崩溃。</p>
 <ul>
 <li>别人创建的对象，可以通过 <code>retain</code> 来获得拥有权</li>
 </ul>
@@ -740,7 +740,7 @@
 <h2 id="ARC-下-AutoReleasePool-内部实现"><a href="#ARC-下-AutoReleasePool-内部实现" class="headerlink" title="ARC 下 AutoReleasePool 内部实现"></a>ARC 下 AutoReleasePool 内部实现</h2><h3 id="使用-autoreleasepool"><a href="#使用-autoreleasepool" class="headerlink" title="使用@autoreleasepool{}"></a>使用@autoreleasepool{}</h3><p>我们在main函数中写入自动释放池相关的测试代码如下：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        NSLog(@&quot;Hello, World!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-<p>为了探究释放池的底层实现，我们在终端使用 clang -rewrite-objc + 文件名命令将上述OC代码转化为 <code>C++</code> 源码：</p>
+<p>为了探究释放池的底层实现，我们在终端使用 <code>clang -rewrite-objc +</code> 文件名命令将上述OC代码转化为 <code>C++</code> 源码：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    /* @autoreleasepool */</span><br><span class="line">    &#123;</span><br><span class="line">        __AtAutoreleasePool __autoreleasepool;</span><br><span class="line">        NSLog((NSString *)&amp;__NSConstantStringImpl__var_folders_3f_crl5bnj956d806cp7d3ctqhm0000gn_T_main_d37e0d_mi_0);</span><br><span class="line">     &#125; // 大括号对应释放池的作用域</span><br><span class="line">     </span><br><span class="line">     return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>在经过编译器 <code>clang</code> 命令转化后，我们看到的所谓的 <code>@autoreleasePool块</code>，其实对应着<br><code>__AtAutoreleasePool的结构体</code>。</p>

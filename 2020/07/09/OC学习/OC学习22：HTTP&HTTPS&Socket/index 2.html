@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2020/07/09/oc学习/oc学习22：http&https&socket/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC学习22：HTTP&amp;HTTPS&amp;Socket探索">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2020/07/09/OC学习/OC学习22：HTTP&amp;HTTPS&amp;Socket/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC学习22：HTTP&amp;HTTPS&amp;Socket探索">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC学习22：HTTP&amp;HTTPS&amp;Socket探索 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC学习22：HTTP&amp;HTTPS&amp;Socket探索</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2020-07-09 13:07:02</span>
+        <span class="mobile">2020-07-09 13:07</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-26 09:59:53</span>
+            <span class="mobile">2023-03-26 09:59</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h1><ol>
+<li><p><code>URL</code> 全称是 <code>Uniform Resource Locator</code>(统一资源定位符)，通过一个URL能找到 <code>互联网唯一一个资源</code>，URL就是资源的地址、位置，互联网上的每个资源都有一个唯一的URL</p>
+</li>
+<li><p>URL基本格式 &#x3D; 协议:&#x2F;&#x2F;主机地址:端口号&#x2F;&#x2F;路径</p>
+</li>
+</ol>
+<p>例如： <a class="link"   target="_blank" rel="noopener" href="http://www.bboyzj.top//2020" >http://www.bboyzj.top:80//2020 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<ul>
+<li>协议：不同协议，代表着不通的资源查找路径、传输路径</li>
+<li>主机地址：存放资源的主机（服务器）的IP地址（域名）</li>
+<li>端口：跟在域名后面的是端口，默认是省略的</li>
+<li>路径：资源在主机（服务器）中的具体位置</li>
+</ul>
+<h1 id="HTTP协议"><a href="#HTTP协议" class="headerlink" title="HTTP协议"></a>HTTP协议</h1><ol>
+<li><p>简介：HTTP的全称是 <code>Hypertext Transfer Protocol</code>，超文本传输协议 </p>
+</li>
+<li><p>作用:</p>
+</li>
+</ol>
+<ul>
+<li>规定客户端和服务端的数据传输格式</li>
+<li>让客户端和服务器进行有效的数据沟通</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303260908423.png"
+                     
+                ></p>
+<ol start="3">
+<li>为什么选HTTP？</li>
+</ol>
+<p>1）简单快速：因为HTTP协议简单，所有的HTTP服务器的程序规模小，因而通信速度很快<br>2）灵活：HTTP允许传输任意类型的数据<br>3）持续链接：限制每次链接只处理一个请求，服务器对客户端的请求作出响应后，马上断开链接，这种方式可以节省传输时间</p>
+<ol start="4">
+<li>通信过程</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303260908409.png"
+                     
+                ></p>
+<ol>
+<li>请求：客户端向服务器索要数据</li>
+</ol>
+<ul>
+<li>请求行：包含了 请求方法，请求资源路径，HTTP协议版本</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GET // 请求方法</span><br><span class="line">/MJServer/resources/images/1.jpg // 请求资源路径</span><br><span class="line">HTTP/1.1 // HTTP协议版本</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>请求头：包含了对客户端的环境描述，客服端请求的主机地址等信息</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Host:192.168.1.105:80 //客户端想访问的服务器主机地址 </span><br><span class="line">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9) Firefox/30.0// 客户端的类型，客户端的软件环境 </span><br><span class="line">Accept: text/html, // 客户端所能接收的数据类型 </span><br><span class="line">Accept-Language: zh-cn // 客户端的语言环境 </span><br><span class="line">Accept-Encoding: gzip // 客户端支持的数据压缩格式 </span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>请求体：客户端发给服务器的具体数据，比如文件数据</li>
+</ul>
+<ol start="2">
+<li>响应：服务器返回客户端响应的数据</li>
+</ol>
+<ul>
+<li>状态行：包含了HTTP协议版本，状态码，状态英文名称：</li>
+</ul>
+<p><code>HTTP/1.1 200 OK</code></p>
+<p>常用的响应状态码：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303260909798.png"
+                     
+                ></p>
+<ul>
+<li>响应头：包含了对服务器的描述，对返回数据的描述</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Server: Apache-Coyote/1.1 // 服务器的类型 </span><br><span class="line">Content-Type: image/jpeg // 返回数据的类型 </span><br><span class="line">Content-Length: 56811 // 返回数据的长度 </span><br><span class="line">Date: Mon, 23 Jun 2014 12:54:52 GMT // 响应的时间 </span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<ul>
+<li>实体内容：服务器返回给客户端的具体数据，比如文件数据</li>
+</ul>
+<ol start="5">
+<li>发送请求的方法：</li>
+</ol>
+<ol>
+<li>简单说明 : 在HTTP&#x2F;1.1协议中，定义了8种发送http请求的方法</li>
+</ol>
+<p>Get,Post,Options,Head,Put,Delete,Trace,Connect,Patch </p>
+<ol start="2">
+<li>get和post请求 ，要想使用Get和Post请求跟服务器进行交互，得先了解一个概念:参数就是传递给服务器的具体数据，比如登录时的账号，密码 ，Get和Post对比:</li>
+</ol>
+<ul>
+<li>Get ：在请求URL后面以?的形式跟上发给服务器的参数，多个参数之间用&amp;隔开。 注意:由于客户端和服务器对URL长度有限，因此在URL后面附带的参数是有限期的，通常不能超过1KB </li>
+<li>Post ：发给服务器的参数全部放在请求体中 ，理论上，Post传递的数据量没有限制(具体还得看服务器的处理能力)</li>
+</ul>
+<ol start="3">
+<li>Get和Post的选择  选择Get和Post的建议</li>
+</ol>
+<ul>
+<li>如果要传递大量数据，比如文件上传，只能用Post请求 </li>
+<li>Get的安全性比Post要差些，如果包含机密&#x2F;敏感信息，建议用Post </li>
+<li>如果仅仅要索取数据(数据查询)，建议使用Get </li>
+<li>如果是增加，修改，删除数据，建议使用Post</li>
+</ul>
+<h1 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h1><ol>
+<li><p>简介：HTTPS （全称：Hyper Text Transfer Protocol over SecureSocket Layer）<code>超文本传输安全协议</code>。</p>
+</li>
+<li><p>组成：HTTPS协议 &#x3D; HTTP协议 + SSL&#x2F;TLS协议</p>
+</li>
+</ol>
+<ul>
+<li>SSL：全称是Secure Sockets Layer，即 <code>安全套接层协议</code>，视为网络通信提供安全及数据完成性的一种安全协议。</li>
+<li>TLS：全称Transport Layer Security，即 <code>安全传输层协议</code></li>
+</ul>
+<ol start="3">
+<li>HTTPS建立流程：</li>
+</ol>
+<p>HTTPS为了兼顾安全与效率，同时使用了 <code>对称加密和非对称加密</code>。在传输的过程中会涉及到三个密钥：</p>
+<p>1）服务器端的公钥和私钥，用来进行非对称加密<br>2）客户端生成的随机密钥，用来进行对称加密</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303260918741.png"
+                     
+                ></p>
+<ol start="3">
+<li>如上图，HTTPS连接过程大致可分为八步:</li>
+</ol>
+<ul>
+<li>客户端访问HTTPS连接：客户端会把 <code>安全协议版本号、客户端支持的加密算法列表、随机数C</code> 发给服务端。</li>
+<li>服务端发送证书给客户端：服务端接收密钥算法配件后，会和自己支持的加密算法列表进行比对，如果不符合，则断开连接。否则，服务端会在该算法列表中，选择一种对称算法（如AES）、一种公钥算法（如具有特定秘钥长度的RSA）和一种MAC算法发给客户端。服务器端有一个密钥对，即公钥和私钥，是用来进行非对称加密使用的，服务器端保存着私钥，不能将其泄露，公钥可以发送给任何人。在发送加密算法的同时还会把数字证书和随机数S发送给客户端。</li>
+<li>客户端验证server证书：会对server公钥进行检查，验证其合法性，如果发现发现公钥有问题，那么HTTPS传输就无法继续。</li>
+<li>客户端组装会话秘钥：如果公钥合格，那么客户端会用服务器公钥来生成一个前主秘钥(Pre-Master Secret，PMS)，并通过该前主秘钥和随机数C、S来组装成会话秘钥</li>
+<li>客户端将前主秘钥加密发送给服务端：是通过服务端的公钥来对前主秘钥进行非对称加密，发送给服务端</li>
+<li>服务端通过私钥解密得到前主秘钥：服务端接收到加密信息后，用私钥解密得到主秘钥。</li>
+<li>服务端组装会话秘钥：服务端通过前主秘钥和随机数C、S来组装会话秘钥。至此，服务端和客户端都已经知道了用于此次会话的会话密码。</li>
+<li>数据传输：客户端收到服务器发送来的密文，用客户端密钥对其进行对称解密，得到服务器发送的数据。同理，服务端收到客户端发送来的密文，用服务端密钥对其进行对称解密，得到客户端发送的数据。</li>
+</ul>
+<ol start="4">
+<li>注：</li>
+</ol>
+<p>会话秘钥 &#x3D; random S + random C + 前主秘钥</p>
+<h1 id="HTTPS和HTTP的区别？-重点"><a href="#HTTPS和HTTP的区别？-重点" class="headerlink" title="HTTPS和HTTP的区别？ 重点"></a>HTTPS和HTTP的区别？ <strong>重点</strong></h1><ul>
+<li><p>HTTP：超文本传输协议，信息明文传输；端口号80；响应速度快（使用TCP三次握手，客户端和服务端需要交换3个包）；</p>
+</li>
+<li><p>HTTPS：是由 HTTP+SSL&#x2F;TLS 加密传输；端口号443；响应速度慢（除了使用TCP三个包，还要加上SSL握手的9个包）；需要到CA申请证书</p>
+</li>
+</ul>
+<h1 id="对称加密和非对称加密-重点"><a href="#对称加密和非对称加密-重点" class="headerlink" title="对称加密和非对称加密 重点"></a>对称加密和非对称加密 <strong>重点</strong></h1><ol>
+<li><p>对称加密：用同一套密钥来进行加密解密。对称加密通常有 <code>AES,DES,3DES</code> 等。</p>
+</li>
+<li><p>非对称加密：用公钥和私钥来加解密的算法。非对称加密通常有 <code>RSA,ECC</code> 等。</p>
+</li>
+</ol>
+<h1 id="证书机制"><a href="#证书机制" class="headerlink" title="证书机制"></a>证书机制</h1><ol>
+<li>服务器首先把自己的 <code>公钥等</code> 信息发给证书颁发机构，向证书颁发机构申请证书。</li>
+<li>证书颁发机构自己也有一对公钥私钥，机构利用自己的 <code>私钥</code> 对服务器的公钥、网址等信息进行签名加密，生成一个证书。</li>
+<li>机构把证书发送给服务端，服务端把证书发送给客户端</li>
+<li>客户端到指定的机构验证证书，根据机构公钥去解密，得到服务器的公钥。</li>
+</ol>
+<h1 id="OSI模型"><a href="#OSI模型" class="headerlink" title="OSI模型"></a>OSI模型</h1><ul>
+<li>物理层</li>
+<li>数据链路层</li>
+<li>网络层（IP）</li>
+<li>传输层（TCP&#x2F;UDP）</li>
+<li>会话层（SSL&#x2F;TLS）</li>
+<li>表达层</li>
+<li>应用层（HTTP）</li>
+</ul>
+<p><strong>问：那么SSL和TLS在哪一层呢？</strong><br>答：SSL&#x2F;TLS作用于应用层和传输层之间，如果硬要说在哪个位置，那就是：会话层</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303260952378.png"
+                     
+                ></p>
+<h1 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h1><ol>
+<li>什么是socket？</li>
+</ol>
+<ol>
+<li><p><code>socket</code> 俗称 <code>套接字</code>，是通信的基石，是支持 <code>TCP/IP</code> 协议的 <code>网络通信的基本操作单元</code>。</p>
+</li>
+<li><p>它包含五种信息：</p>
+<ul>
+<li>链接使用的协议</li>
+<li>本地主机的IP地址</li>
+<li>本地进程的协议端口</li>
+<li>远程主机的IP地址</li>
+<li>远程进程的协议端口</li>
+</ul>
+</li>
+<li><p>socket连接可以基于TCP连接，也有可能基于UDP。</p>
+</li>
+</ol>
+<ol start="2">
+<li><p>基于TCP协议的socket连接同样需要通过三次握手建立连接，是可靠的；</p>
+</li>
+<li><p>基于UDP一些的socket的连接是不需要建立连接的过程，不管对方能不能接收到消息都会发送，是不可靠的，大多数即时通讯IM都是不可靠的。</p>
+</li>
+</ol>
+<h1 id="HTTP和Socket的区别-重点"><a href="#HTTP和Socket的区别-重点" class="headerlink" title="HTTP和Socket的区别 重点"></a>HTTP和Socket的区别 <strong>重点</strong></h1><ul>
+<li>HTTP</li>
+</ul>
+<ol>
+<li><p>HTTP是短链接，HTTP是基于TCP的，客户端往服务端发送一个HTTP请求时第一步就是要建立与服务端的TCP连接，也就是先三次握手，“你好，你好，你好”。从HTTP 1.1开始支持持久连接，也就是一次TCP连接可以发送多次的HTTP请求。</p>
+</li>
+<li><p>HTTP采用“请求-响应”机制，在客户端还没发送消息给服务端前，服务端无法推送消息给客户端。必须满足客户端发送消息在前，服务端回复在后。</p>
+</li>
+<li><p>双方不需要时刻保持在线，比如客户端资源的获取，文件上传等。</p>
+</li>
+</ol>
+<ul>
+<li>Socket</li>
+</ul>
+<ol>
+<li><p>Socket(基于TCP协议的)是 <code>长连接</code>，而Socket连接一旦建立TCP三次握手，除非一方主动断开，否则连接状态一直保持。</p>
+</li>
+<li><p>大部分即时通讯应用(QQ、微信)、聊天室、苹果APNs等。</p>
+</li>
+</ol>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC学习22：HTTP&amp;HTTPS&amp;Socket探索</li>
+        <li>Post author：张建</li>
+        <li>Create time：2020-07-09 13:07:02</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2020/07/09/OC学习/OC学习22：HTTP&amp;HTTPS&amp;Socket/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">#OC-学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2020/07/11/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A031%EF%BC%9A%E7%BC%96%E8%AF%91%E5%99%A8Clang%E5%92%8CLLVM%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习31：编译器Clang和LLVM探索</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC学习22：HTTP&amp;HTTPS&amp;Socket探索</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#URL"><span class="nav-text">URL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%E5%8D%8F%E8%AE%AE"><span class="nav-text">HTTP协议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTPS"><span class="nav-text">HTTPS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTPS%E5%92%8CHTTP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">HTTPS和HTTP的区别？ 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E5%92%8C%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86-%E9%87%8D%E7%82%B9"><span class="nav-text">对称加密和非对称加密 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%81%E4%B9%A6%E6%9C%BA%E5%88%B6"><span class="nav-text">证书机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OSI%E6%A8%A1%E5%9E%8B"><span class="nav-text">OSI模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Socket"><span class="nav-text">Socket</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%E5%92%8CSocket%E7%9A%84%E5%8C%BA%E5%88%AB-%E9%87%8D%E7%82%B9"><span class="nav-text">HTTP和Socket的区别 重点</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

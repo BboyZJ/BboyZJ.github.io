@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/12/swift课程/swift学习42：初始化器/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Swift学习42：初始化器">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/03/12/Swift课程/Swift学习42：初始化器/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Swift学习42：初始化器">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            Swift学习42：初始化器 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">Swift学习42：初始化器</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-03-12 17:43:58</span>
+        <span class="mobile">2023-03-12 17:43</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-15 03:28:40</span>
+            <span class="mobile">2023-03-15 03:28</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><ul>
+<li><p><code>类、枚举、结构体</code> 可以引入 <code>初始化器</code>。初始化器使用 <code>关键字init来声明</code></p>
+</li>
+<li><p><code>结构体、枚举、类</code> 可以有任意数量的初始化器，但是 <code>类</code> 的初始化器不同 <code>于结构体和枚举</code>，<code>类有两种初始化器，即指定初始化器和便捷初始化器。</code></p>
+</li>
+</ul>
+<h1 id="存储属性的初始赋值"><a href="#存储属性的初始赋值" class="headerlink" title="存储属性的初始赋值"></a>存储属性的初始赋值</h1><ul>
+<li><p><code>类</code> 的 <code>存储属性需要有默认值</code>，而 <code>结构体、枚举不需要</code></p>
+</li>
+<li><p>类设置默认值方式也有两种：一种是 <code>定义存储属性时设置默认值（Optional）</code>，另一种是通过 <code>初始化器为存储属性设置默认值</code> </p>
+</li>
+<li><p>类的初始化器有两种，一种 <code>指定初始化器</code>，另一种 <code>便捷初始化器</code></p>
+</li>
+<li><p>指定初始化器又分为两种：一种 <code>初始化器</code> 不带参数，另一种 <code>自定义初始化器</code> 带参数</p>
+</li>
+</ul>
+<h1 id="默认值"><a href="#默认值" class="headerlink" title="默认值"></a>默认值</h1><blockquote>
+<p><code>可选类型</code> 的存储属性，不需要设置默认值，因为它本身 <code>可能有值</code> 或 <code>可能没有值</code>，编译器会自动设置默认的初始化器</p>
+</blockquote>
+<ul>
+<li>直接设置默认值</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class Person &#123;</span><br><span class="line">    // 1、声明一个 Optional 默认值</span><br><span class="line">    var name: String?</span><br><span class="line">    // 2、直接设置默认值</span><br><span class="line">    var name: String = &quot;&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>也可以通过 <code>闭包</code> 设置默认值</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class Person &#123;</span><br><span class="line">    var name: String &#123;</span><br><span class="line">        // 在这个闭包中给 name 创建一个默认值</span><br><span class="line">        return &quot;ZJ&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="指定初始化器为存储属性设置默认值"><a href="#指定初始化器为存储属性设置默认值" class="headerlink" title="指定初始化器为存储属性设置默认值"></a>指定初始化器为存储属性设置默认值</h1><blockquote>
+<p> 初始化器创建实例时被调用，最简答的形式是不带任何参数的实例方法，已关键字 <code>init</code> 命名，即 <code>指定初始化器</code></p>
+</blockquote>
+<ul>
+<li>可选类型的存储属性</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">clas Person &#123;</span><br><span class="line">    var name: String？</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>自定义初始化器设置默认值，带参数</li>
+</ul>
+<p>可以通过 <code>输入参数</code> 来自定义初始化器</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class Person &#123;</span><br><span class="line">    var name: String</span><br><span class="line">    // 0.不带参数</span><br><span class="line">    init() &#123;</span><br><span class="line">        self.name = &quot;ZJ&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    // 1.实际参数和形式参数相同</span><br><span class="line">    init(name: String) &#123;</span><br><span class="line">        self.name = name</span><br><span class="line">    &#125;</span><br><span class="line">    // 2.实际参数 和 形式参数 不同</span><br><span class="line">    init(to name: String) &#123;</span><br><span class="line">        self.name = name</span><br><span class="line">    &#125;</span><br><span class="line">    // 3.通配符实际参数</span><br><span class="line">    init(_ name: String) &#123;</span><br><span class="line">        self.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let p = Person(name: &quot;ZJ&quot;)</span><br><span class="line">let p1 = Person(to: &quot;ZJ&quot;)</span><br><span class="line">let p2 = Person(&quot;ZJ&quot;)</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>注：指定初始化器分为两种：一种是不带参数，一种是带参数<br>初始化器可以有任意数量</p>
+</blockquote>
+<h1 id="类的继承和构造"><a href="#类的继承和构造" class="headerlink" title="类的继承和构造"></a>类的继承和构造</h1><p>类中的所有存储属性-&gt;包括继承父类的所有存储属性：都必须在构造过程中 <code>设置默认值</code></p>
+<p>1、<code>swift</code> 中为类提供了两种初始化器：<code>指定初始化器</code> 和 <code>便捷初始化器</code></p>
+<ul>
+<li>指定初始化器</li>
+</ul>
+<p>类中主要的初始化器，设置类中所有属性默认值，并往上调用父类的初始化器设置所有属性的默认值</p>
+<ul>
+<li>便捷初始化器</li>
+</ul>
+<p>类中次要的、辅助型的初始化器，可以调用类中的指定初始化器，并提供默认值</p>
+<p>2、指定初始化器和便捷初始化器语法</p>
+<ul>
+<li>指定初始化器和简单初始化器一样</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">init(parameters) &#123;</span><br><span class="line">    statements</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>便捷初始化器，需要在 <code>init</code> 前放置 <code>convenience</code> 关键字</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class Person &#123;</span><br><span class="line">    // 未设置默认值的存储属性</span><br><span class="line">    var name: String</span><br><span class="line">    // 指定初始化器 用来给存储属性设置默认值</span><br><span class="line">    init(name: String) &#123;</span><br><span class="line">        self.name = name</span><br><span class="line">    &#125;</span><br><span class="line">    // 便捷初始化器</span><br><span class="line">    convenience init() &#123;</span><br><span class="line">        // 横向代理：必须调用一个指定的初始化器</span><br><span class="line">        self.init(name: &quot;ZJ&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let p = Person()</span><br><span class="line">print(p.name)</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>类的初始化器代理规则<br>1、指定初始化器必须调用其直接父类的指定初始化器<br>2、便捷初始化器必须调从同类调用一个指定初始化器<br>3、便捷初始化器最终必须调用一个指定初始化器</p>
+<p>更方便的记忆方法<br>1、指定初始化器必须总是向上代理<br>2、便捷初始化器必须是横向代理</p>
+</blockquote>
+<p>3、初始化器继承和重写</p>
+<ul>
+<li>子类默认是 <code>不继承</code> 父类的初始化器，实际上是通过 <code>重写</code> 父类的初始化器，切需要带上 <code>override</code> 关键字</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 继承和重写</span><br><span class="line">class Person &#123;</span><br><span class="line">    var name: String</span><br><span class="line">    init(name:String) &#123;</span><br><span class="line">        self.name = name</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Student: Person &#123;</span><br><span class="line">    // 重写父类的初始化器</span><br><span class="line">    override init(name: String) &#123;</span><br><span class="line">        var newName = &quot;my name is \(name)&quot;</span><br><span class="line">        super .init(name: newName)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let s = Student(name: &quot;ZJ&quot;)</span><br><span class="line">print(s.name)</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">my name is ZJ</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>初始化器的自动继承</li>
+</ul>
+<blockquote>
+<p>1、如果子类没有定义任何初始化器，它将自动继承父类的所有指定初始化器<br>2、如果子类实现了继承自父类的指定初始化器，那么它将自动继承父类的便捷初始化器</p>
+</blockquote>
+<p>示例</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">class Person &#123;</span><br><span class="line">    var name: String</span><br><span class="line">    init(name:String) &#123;</span><br><span class="line">        self.name = name</span><br><span class="line">    &#125;</span><br><span class="line">    convenience init() &#123;</span><br><span class="line">        self.init(name: &quot;ZJ&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let p = Person()</span><br><span class="line">print(p.name)</span><br><span class="line">// 打印结果 ZJ</span><br><span class="line"></span><br><span class="line">// 子类</span><br><span class="line">class Student: Person &#123;</span><br><span class="line">    var age: Int</span><br><span class="line">    // 本类的指定初始化器</span><br><span class="line">    init(name: String,age: Int) &#123;</span><br><span class="line">        self.age = age</span><br><span class="line">        // 实现父类的指定初始化器</span><br><span class="line">        super.init(name: name)</span><br><span class="line">    &#125;</span><br><span class="line">    convenience override init(name: String) &#123;</span><br><span class="line">        self.init(name: name, age: 32)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let s = Student()</span><br><span class="line">let s1 = Student(name: &quot;ZJ&quot;)</span><br><span class="line">let s2 = Student(name: &quot;ZJ&quot;, age: 32)</span><br><span class="line">print(s.age)</span><br><span class="line">// 打印结果 32</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="安全检查"><a href="#安全检查" class="headerlink" title="安全检查"></a>安全检查</h1><ul>
+<li>子类指定初始化器向上委托父类初始化器前，子类的所有属性都要完成初始化</li>
+<li>之类指定初始化器必须先向上委托父类初始化器，才能修改父类的所有属性</li>
+<li>便捷初始化器必须先委托同类初始化器，才能为任意属性赋值</li>
+<li>方法的调用在所有指定初始化器之后。</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">// 安全检查</span><br><span class="line">class Person &#123;</span><br><span class="line">    var name: String</span><br><span class="line">    var age: Int</span><br><span class="line">    // 指定初始化器</span><br><span class="line">    init(name: String, age: Int) &#123;</span><br><span class="line">        self.name = name</span><br><span class="line">        self.age = age</span><br><span class="line">    &#125;</span><br><span class="line">    convenience init()&#123;</span><br><span class="line">        self.init(name: &quot;[Unnamed]&quot;, age: 0)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Teacher: Person &#123;</span><br><span class="line">    // 工资</span><br><span class="line">    var salary: Int</span><br><span class="line">    // 自己的指定初始化器</span><br><span class="line">    init(name: String, age: Int, salary: Int) &#123;</span><br><span class="line">        // 1.先赋值自己的所有属性</span><br><span class="line">        self.salary = salary</span><br><span class="line">        // 2.调用父类的指定初始化器</span><br><span class="line">        super.init(name: name, age: age)</span><br><span class="line">        // 3.修改父类的所有属性</span><br><span class="line">        self.name = name + &quot;老师&quot;</span><br><span class="line">        // 6.调用方法</span><br><span class="line">        test()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    func test() &#123;</span><br><span class="line">        print(&quot;test&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    convenience init(salary: Int) &#123;</span><br><span class="line">        // 4.必须调用本类的指定初始化器</span><br><span class="line">        self.init(name: &quot;ZJ&quot;, age: 32, salary: salary)</span><br><span class="line">        // 5.调用本类的指定初始化器后，才能赋值本类的所有属性</span><br><span class="line">        self.salary = self.salary + 1000</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="失败初始化器"><a href="#失败初始化器" class="headerlink" title="失败初始化器"></a>失败初始化器</h1><p>如果在构造过程有可能失败，则需要定义一个可失败的初始化器，在 <code>init</code> 关键字 <code>后面</code> 添加 <code>?</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class Person &#123;</span><br><span class="line">    var age: Int</span><br><span class="line">    init?(age: Int) &#123;</span><br><span class="line">        if age &gt; 200 &#123;</span><br><span class="line">            return nil</span><br><span class="line">        &#125;</span><br><span class="line">        age = age</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let p = Person(age: 300)</span><br><span class="line">print(p)</span><br><span class="line"></span><br><span class="line">=====</span><br><span class="line">nil</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="反初始化器"><a href="#反初始化器" class="headerlink" title="反初始化器"></a>反初始化器</h1><ul>
+<li><p>类实例 <code>被释放时</code>，反初始化器立即被调用。用 <code>deinit</code> 关键字写反初始化器。</p>
+</li>
+<li><p>反初始化器在 <code>实例释放前自动被调用</code>。不能自己调用。可以被子类继承。先子类 -&gt; 父类</p>
+</li>
+<li><p>每个类只能有一个</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">deinit &#123;</span><br><span class="line">    // perform the deinitialization</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="必要初始化器"><a href="#必要初始化器" class="headerlink" title="必要初始化器"></a>必要初始化器</h1><ul>
+<li>在类的初始化器前加 <code>required</code> 修饰符表明所有该子类必须实现该初始化器</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 必要初始化器</span><br><span class="line">class SomeClass &#123;</span><br><span class="line">    required init()&#123;</span><br><span class="line">        // 初始化器的实现代码</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>子类重写父类的必要初始化器时，子类的初始化器前也添加 <code>required</code> 关键字，表明可继承</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 必要初始化器</span><br><span class="line">class SomeSubClass: SomeClass &#123;</span><br><span class="line">    required init()&#123;</span><br><span class="line">        // 初始化器的实现代码</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：Swift学习42：初始化器</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-03-12 17:43:58</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/03/12/Swift课程/Swift学习42：初始化器/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">#Swift-课程篇</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/03/12/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A050%EF%BC%9A%E5%A4%9A%E6%80%81%E5%92%8C%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习50：多态和类型转换</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/03/11/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A041%EF%BC%9A%E6%B3%9B%E5%9E%8B/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习41：泛型</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">Swift学习42：初始化器</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%B1%9E%E6%80%A7%E7%9A%84%E5%88%9D%E5%A7%8B%E8%B5%8B%E5%80%BC"><span class="nav-text">存储属性的初始赋值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4%E5%80%BC"><span class="nav-text">默认值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E5%88%9D%E5%A7%8B%E5%8C%96%E5%99%A8%E4%B8%BA%E5%AD%98%E5%82%A8%E5%B1%9E%E6%80%A7%E8%AE%BE%E7%BD%AE%E9%BB%98%E8%AE%A4%E5%80%BC"><span class="nav-text">指定初始化器为存储属性设置默认值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E7%BB%A7%E6%89%BF%E5%92%8C%E6%9E%84%E9%80%A0"><span class="nav-text">类的继承和构造</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E6%A3%80%E6%9F%A5"><span class="nav-text">安全检查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%B1%E8%B4%A5%E5%88%9D%E5%A7%8B%E5%8C%96%E5%99%A8"><span class="nav-text">失败初始化器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E5%99%A8"><span class="nav-text">反初始化器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BF%85%E8%A6%81%E5%88%9D%E5%A7%8B%E5%8C%96%E5%99%A8"><span class="nav-text">必要初始化器</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

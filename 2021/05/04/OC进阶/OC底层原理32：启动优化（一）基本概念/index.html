@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-21 11:20:55</span>
-            <span class="mobile">2023-03-21 11:20</span>
+            <span class="pc">2023-03-30 14:06:52</span>
+            <span class="mobile">2023-03-30 14:06</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -326,35 +326,35 @@
 
             <div class="article-content markdown-body">
                 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>早期的 <code>数据访问</code> 是直接通过 <code>物理地址</code> 访问 <code>物理内存</code>，而物理内存是有 <code>固定大小的</code>，这种方式有以下两个问题：</p>
-<ul>
-<li><code>1.内存不够用</code></li>
-<li><code>2.内存数据的安全问题</code></li>
-</ul>
+<ol>
+<li>内存不够用</li>
+<li>内存数据的安全问题</li>
+</ol>
 <h1 id="内存不够用的解决方案：虚拟内存"><a href="#内存不够用的解决方案：虚拟内存" class="headerlink" title="内存不够用的解决方案：虚拟内存"></a>内存不够用的解决方案：虚拟内存</h1><p>针对问题1，我们在 <code>进程和物理内存</code> 之间增加一个 <code>中间层</code>，这个中间层就是所谓的 <code>虚拟内存</code>，主要用于解决当多个进程同时存在时，对物理内存的管理，<code>提高了CPU的利用率，使多个进程可以同时、按需加载</code>，所以虚拟内存其本质就是 <code>一张虚拟地址和物理地址对应关系的映射表</code></p>
 <ul>
-<li><p><code>每个进程</code>都有一个独立的 <code>虚拟内存</code>，其地址都是 <code>从0开始</code>，到最后结束，大小是 <code>4G</code>固定的，每个虚拟内存又划分为一个一个的 <code>页</code>，所有页放在一起组成 <code>页表</code>，统称 <code>虚拟内存分页管理</code>，页的大小在 <code>iOS中是16K，Linux、MacOS等是4K</code>，每次加载都是以<code>页</code>为单位加载的，进程间是无法互相访问的，保证了进程间数据的安全性。</p>
+<li><p><code>每个进程</code>都有一个独立的 <code>虚拟内存</code>，其地址都是 <code>从0开始</code>，到最后结束，大小是 <code>4G</code> 固定的，每个虚拟内存又划分为一个一个的 <code>页</code>，所有页放在一起组成 <code>页表</code>，统称 <code>虚拟内存分页管理</code>，页的大小在 <code>iOS中是16K，Linux、MacOS等是4K</code>，每次加载都是以<code>页</code>为单位加载的，进程间是无法互相访问的，保证了进程间数据的安全性。</p>
 </li>
 <li><p>一个进程中，只有部分功能是活跃的，所以只需要 <code>将进程中活跃的部分放入物理内存</code>，避免物理内存的浪费</p>
 </li>
 <li><p>当 <code>CPU</code> 需要 <code>访问数据</code> 时，首先是访问<code>虚拟内存</code>，然后通过<code>虚拟内存地址寻址</code>，这个虚拟地址在被送到内存条之前先转换为物理地址，这个转换的过程叫 <code>地址翻译（需要CPU的硬件MMU和操作系统配合）</code>，即可以理解为在 <code>虚拟地址和物理地址对应表</code> 中找到对应的 <code>物理地址</code>，然后对相应的物理地址进行访问</p>
 </li>
-<li><p>如果在访问时，虚拟地址的内容未加载到物理内存，会发生<code>缺页异常（pagefault）</code>，将当前进程阻塞掉，此时操作系统需要先将数据载入到物理内存中，这个过程很快用户感知不到（每页16K），然后再寻址，进行读取。这样就避免了内存浪费。</p>
+<li><p>如果在访问时，虚拟地址的内容未加载到物理内存，会发生 <code>缺页异常（pagefault）</code>，将当前进程阻塞掉，此时操作系统需要先将数据载入到物理内存中，这个过程很快用户感知不到（每页16K），然后再寻址，进行读取。这样就避免了内存浪费。</p>
 </li>
 <li><p>如果在访问时，物理内存满了，操作系统会将 <code>新数据将旧数据覆盖</code></p>
 </li>
 </ul>
-<p>如下图所示，<code>虚拟内存与物理内存</code>间的关系：</p>
+<p>如下图所示，<code>虚拟内存与物理内存</code> 间的关系：</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211105961.png"
                      
                 ></p>
-<h1 id="内存数据安全问题的解决方案：ASLR技术"><a href="#内存数据安全问题的解决方案：ASLR技术" class="headerlink" title="内存数据安全问题的解决方案：ASLR技术"></a>内存数据安全问题的解决方案：ASLR技术</h1><p>在上面解释的虚拟内存中，我们提到了<code>虚拟内存的起始地址与大小都是固定的</code>，这意味着，当我们访问时，其数据的地址也是固定的，这会导致我们的数据非常容易被破解，为了解决这个问题，所以苹果为了解决这个问题，在iOS4.3开始引入了 <code>ASLR</code>技术。</p>
-<p><code>ASLR</code> 的概念：（Address Space Layout Randomization）<code>地址空间配置随机加载</code>，是一种 <code>针对缓冲区溢出</code> 的 <code>安全保护技术</code>，通过对<code>堆、栈、共享库映射等线性区布局的随机化</code>，通过增加攻击者预测目的地址的难度，防止攻击者直接定位攻击代码位置，达到阻止溢出攻击的目的的一种技术。</p>
+<h1 id="内存数据安全问题的解决方案：ASLR技术"><a href="#内存数据安全问题的解决方案：ASLR技术" class="headerlink" title="内存数据安全问题的解决方案：ASLR技术"></a>内存数据安全问题的解决方案：ASLR技术</h1><p>在上面解释的虚拟内存中，我们提到了 <code>虚拟内存的起始地址与大小都是固定的</code>，这意味着，当我们访问时，其数据的地址也是固定的，这会导致我们的数据非常容易被破解，为了解决这个问题，所以苹果为了解决这个问题，在iOS4.3开始引入了 <code>ASLR</code> 技术。</p>
+<p><code>ASLR</code> 的概念：（Address Space Layout Randomization）<code>地址空间配置随机加载</code>，是一种 <code>针对缓冲区溢出</code> 的 <code>安全保护技术</code>，通过对 <code>堆、栈、共享库映射等线性区布局的随机化</code>，通过增加攻击者预测目的地址的难度，防止攻击者直接定位攻击代码位置，达到阻止溢出攻击的目的的一种技术。</p>
 <p>其目的通过 <code>利用随机方式配置数据地址空间</code>，使某些敏感数据（例如App登录注册、支付相关代码）配置到一个恶意程序无法事先获知的地址，令攻击者难以进行攻击</p>
-<p>由于<code>ASLR</code>的存在，导致<code>可执行文件和动态链接库</code>在虚拟内存中的 <code>记载地址每次启动都不固定</code> ，所以需要在编译时来修复镜像中的资源指针，来指向正确的地址，即 <code>正确的内存地址 = ASLR地址 + 偏移值</code></p>
-<h1 id="可执行文件"><a href="#可执行文件" class="headerlink" title="可执行文件"></a>可执行文件</h1><p>不同的操作系统，其可执行文件的格式也不同，<code>系统内核</code> 将 <code>可执行文件</code> 读取到 <code>内存</code>，然后根据可执行文件的 <code>头签名（magic魔数）</code>判断二进制文件的格式。</p>
+<p>由于 <code>ASLR</code> 的存在，导致 <code>可执行文件和动态链接库</code> 在虚拟内存中的 <code>记载地址每次启动都不固定</code> ，所以需要在编译时来修复镜像中的资源指针，来指向正确的地址，即 <code>正确的内存地址 = ASLR地址 + 偏移值</code></p>
+<h1 id="可执行文件"><a href="#可执行文件" class="headerlink" title="可执行文件"></a>可执行文件</h1><p>不同的操作系统，其可执行文件的格式也不同，<code>系统内核</code> 将 <code>可执行文件</code> 读取到 <code>内存</code>，然后根据可执行文件的 <code>头签名（magic魔数）</code> 判断二进制文件的格式。</p>
 <table>
 <thead>
 <tr>
@@ -389,8 +389,8 @@
 <td>iOS和OS X支持的格式</td>
 </tr>
 </tbody></table>
-<p>其中 <code>PE、ELF、Mach-O</code> 这三种可执行文件格式都是 <code>COFF(Command file format)</code>格式的变种，COFF的主要贡献是目标文件里面 <code>引入了 段 的机制</code>，不同的目标文件可以拥有不同数量和不同类型的 <code>段</code>、</p>
-<h1 id="通用二进制文件"><a href="#通用二进制文件" class="headerlink" title="通用二进制文件"></a>通用二进制文件</h1><p>因为不同的<code>CPU</code>平台支持的指令不同，比如 <code>arm64</code> 和 <code>x86</code>，苹果中的通用二进制格式就是 <code>将多种架构的Mach-O文件打包在一起</code>，然后系统根据自己的CPU平台，选择合适的 <code>Mach-O</code>，所以 <code>通用二进制格式</code>又被称为 <code>胖二进制格式</code>，如下图所示：</p>
+<p>其中 <code>PE、ELF、Mach-O</code> 这三种可执行文件格式都是 <code>COFF(Command file format)</code> 格式的变种，COFF的主要贡献是目标文件里面 <code>引入了段的机制</code>，不同的目标文件可以拥有不同数量和不同类型的 <code>段</code>、</p>
+<h1 id="通用二进制文件"><a href="#通用二进制文件" class="headerlink" title="通用二进制文件"></a>通用二进制文件</h1><p>因为不同的 <code>CPU</code> 平台支持的指令不同，比如 <code>arm64</code> 和 <code>x86</code>，苹果中的通用二进制格式就是 <code>将多种架构的Mach-O文件打包在一起</code>，然后系统根据自己的CPU平台，选择合适的 <code>Mach-O</code>，所以 <code>通用二进制格式</code> 又被称为 <code>胖二进制格式</code>，如下图所示：</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
@@ -408,18 +408,17 @@
 </li>
 <li><p>还可以通过指令来进行Mach-O的合并与拆分</p>
 <ul>
-<li>查看当前Mach-O的架构：<code>lipo -info MachO文件</code></li>
+<li>查看当前 <code>Mach-O</code> 的架构：<code>lipo -info MachO文件</code></li>
 <li>合并：<code>lipo -create MachO1 MachO2 -output 输出文件路径</code></li>
 <li>拆分：<code>lipo MachO文件 –thin 架构 –output 输出文件路径</code></li>
 </ul>
 </li>
 </ul>
-<h1 id="Mach-O文件"><a href="#Mach-O文件" class="headerlink" title="Mach-O文件"></a>Mach-O文件</h1><p><code>Mach-O</code>文件是<code>Mach Object</code>文件格式的缩写，它是用于可执行文件、动态库、目标代码的文件格式。作为<code>a.out</code>格式的替代，<code>Mach-O</code>格式提供了更强的扩展性，以及更快的符号表信息访问速度</p>
-<p>熟悉Mach-O文件格式，有助于更好的理解苹果底层的运行机制，更好的掌握dyld加载Mach-O的步骤。</p>
-<p><strong>查看Mach-O文件</strong></p>
-<p>如果想要查看具体的 <code>Mach-O</code> 文件信息，可以通过以下 <code>两种</code> 方式，<code>推荐</code> 使用 <code>第二种</code> 方式，更直观：</p>
+<h1 id="Mach-O文件"><a href="#Mach-O文件" class="headerlink" title="Mach-O文件"></a>Mach-O文件</h1><p><code>Mach-O</code> 文件是 <code>Mach Object</code> 文件格式的缩写，它是用于可执行文件、动态库、目标代码的文件格式。作为 <code>a.out</code> 格式的替代，<code>Mach-O</code> 格式提供了更强的扩展性，以及更快的符号表信息访问速度</p>
+<p>熟悉Mach-O文件格式，有助于更好的理解苹果底层的运行机制，更好的掌握 <code>dyld</code> 加载 <code>Mach-O</code> 的步骤。</p>
+<h1 id="查看Mach-O文件"><a href="#查看Mach-O文件" class="headerlink" title="查看Mach-O文件"></a>查看Mach-O文件</h1><p>如果想要查看具体的 <code>Mach-O</code> 文件信息，可以通过以下 <code>两种</code> 方式，<code>推荐</code> 使用 <code>第二种</code> 方式，更直观：</p>
 <ul>
-<li>【方式一】<code>otool</code>终端命令：<code>otool -l Mach-O文件名</code></li>
+<li>【方式一】<code>otool</code> 终端命令：<code>otool -l Mach-O文件名</code></li>
 </ul>
 <p><img  
                      lazyload
@@ -428,7 +427,7 @@
                      
                 ></p>
 <ul>
-<li>【方式二】<code>MachOView</code> 工具（推荐）：将Mach-O可执行文件拖动到<code>MachOView</code>工具打开：</li>
+<li>【方式二】<code>MachOView</code> 工具（推荐）：将Mach-O可执行文件拖动到 <code>MachOView</code> 工具打开：</li>
 </ul>
 <p><img  
                      lazyload
@@ -436,7 +435,7 @@
                      data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211108456.png"
                      
                 ></p>
-<h1 id="Mach-O文件格式"><a href="#Mach-O文件格式" class="headerlink" title="Mach-O文件格式"></a>Mach-O文件格式</h1><p>对于OS X 和 iOS来说，Mach-O是其<code>可执行文件的格式</code>，主要包括以下几种文件类型</p>
+<h1 id="Mach-O文件格式"><a href="#Mach-O文件格式" class="headerlink" title="Mach-O文件格式"></a>Mach-O文件格式</h1><p>对于OS X 和 iOS来说，<code>Mach-O</code> 是其 <code>可执行文件的格式</code>，主要包括以下几种文件类型</p>
 <ul>
 <li><code>Excutable</code>：可执行文件</li>
 <li><code>Dylib</code>：动态链接库</li>
@@ -451,7 +450,7 @@
                      data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211108752.png"
                      
                 ></p>
-<p><strong>以上是Mach-O文件的格式，一个完成的Mach-O文件主要分为三大部分：</strong></p>
+<p>以上是Mach-O文件的格式，一个完整的Mach-O文件主要分为三大部分：</p>
 <ul>
 <li><p><code>Header Mach-O头部</code>：主要是Mach-O的cpu架构，文件类型以及加载命令等信息</p>
 </li>
@@ -460,7 +459,7 @@
 <li><p><code>Data 数据</code>：数据中的每个段（segment）的数据都保存在这里，段的概念与ELF文件中段的概念类似。每个段都有一个或多个部分，它们放置了具体的数据与代码，主要包含代码，数据，例如符号表，动态符号表等等</p>
 </li>
 </ul>
-<h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>Mach-O的 <code>Header</code> 包含了 <code>整个Mach-O文件的关键信息</code>，使得CPU能快速知道Mac-O的基本信息，其在 <code>Mach.h</code>（路径同前文的fat.h一致）针对<code>32</code>位和<code>64</code>位架构的cpu，分别使用了<code>mach_header</code> 和 <code>mach_header_64</code> 结构体来 <code>描述Mach-O头部</code>。<code>mach_header</code> 是连接器加载时最先读取的内容，决定了一些基础架构、系统类型、指令条数等信息，这里查看64位架构的<code>mach_header_64</code> 结构体定义，相比于32位架构的 <code>mach_header</code> ，只是多了一个 <code>reserved</code> 保留字段</p>
+<h1 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h1><p>Mach-O的 <code>Header</code> 包含了 <code>整个Mach-O文件的关键信息</code>，使得CPU能快速知道Mac-O的基本信息，其在 <code>Mach.h</code>（路径同前文的fat.h一致）针对 <code>32</code> 位和 <code>64</code> 位架构的cpu，分别使用了<code>mach_header</code> 和 <code>mach_header_64</code> 结构体来 <code>描述Mach-O头部</code>。<code>mach_header</code> 是连接器加载时最先读取的内容，决定了一些基础架构、系统类型、指令条数等信息，这里查看64位架构的<code>mach_header_64</code> 结构体定义，相比于32位架构的 <code>mach_header</code> ，只是多了一个 <code>reserved</code> 保留字段</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> - magic：0xfeedface(32位) 0xfeedfacf(64位)，系统内核用来判断是否是mach-o格式</span><br><span class="line"> - cputype：CPU类型，比如ARM</span><br><span class="line"> - cpusubtype：CPU的具体类型，例如arm64、armv7</span><br><span class="line"> - filetype：由于可执行文件、目标文件、静态库和动态库等都是mach-o格式，所以需要filetype来说明mach-o文件是属于哪种文件</span><br><span class="line"> - ncmds：sizeofcmds：LoadCommands加载命令的条数（加载命令紧跟header之后）</span><br><span class="line"> - sizeofcmds：LoadCommands加载命令的大小</span><br><span class="line"> - flags：标志位标识二进制文件支持的功能，主要是和系统加载、链接有关</span><br><span class="line"> - reserved：保留字段</span><br><span class="line"> */</span><br><span class="line">struct mach_header_64 &#123;</span><br><span class="line">    uint32_t    magic;      /* mach magic number identifier */</span><br><span class="line">    cpu_type_t  cputype;    /* cpu specifier */</span><br><span class="line">    cpu_subtype_t   cpusubtype; /* machine specifier */</span><br><span class="line">    uint32_t    filetype;   /* type of file */</span><br><span class="line">    uint32_t    ncmds;      /* number of load commands */</span><br><span class="line">    uint32_t    sizeofcmds; /* the size of all the load commands */</span><br><span class="line">    uint32_t    flags;      /* flags */</span><br><span class="line">    uint32_t    reserved;   /* reserved */</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <p>其中<code>filetype</code>主要记录Mach-O的文件类型，常用的有以下几种:</p>
@@ -473,7 +472,7 @@
                      data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211110024.png"
                      
                 ></p>
-<h1 id="Load-Commands"><a href="#Load-Commands" class="headerlink" title="Load Commands"></a>Load Commands</h1><p>在Mach-O文件中，<code>Load Commands</code>主要是用于 <code>加载指令</code>，其大小和数目在Header中已经被提供，其在Mach.h中的定义如下:</p>
+<h1 id="Load-Commands"><a href="#Load-Commands" class="headerlink" title="Load Commands"></a>Load Commands</h1><p>在Mach-O文件中，<code>Load Commands</code> 主要是用于 <code>加载指令</code>，其大小和数目在Header中已经被提供，其在Mach.h中的定义如下:</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> load_command用于加载指令</span><br><span class="line"> - cmd 加载命令的类型</span><br><span class="line"> - cmdsize 加载命令的大小</span><br><span class="line"> */</span><br><span class="line">struct load_command &#123;</span><br><span class="line">    uint32_t cmd;       /* type of load command */</span><br><span class="line">    uint32_t cmdsize;   /* total size of command in bytes */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
 
 <p>我们在<code>MachOView</code>中查看<code>Load Commands</code>，其中记录了很多信息，例如<code>动态链接器的位置、程序的入口、依赖库的信息、代码的位置、符号表的位置</code>等等，如下所示:</p>
@@ -486,13 +485,13 @@
 <p>其中<code>LC_SEGMENT_64</code>的类型<code>segment_command_64</code>定义如下：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> segment_command 段加载命令</span><br><span class="line"> - cmd：表示加载命令类型，</span><br><span class="line"> - cmdsize：表示加载命令大小（还包括了紧跟其后的nsects个section的大小）</span><br><span class="line"> - segname：16个字节的段名字</span><br><span class="line"> - vmaddr：段的虚拟内存起始地址</span><br><span class="line"> - vmsize：段的虚拟内存大小</span><br><span class="line"> - fileoff：段在文件中的偏移量</span><br><span class="line"> - filesize：段在文件中的大小</span><br><span class="line"> - maxprot：段页面所需要的最高内存保护（4 = r，2 = w，1 = x）</span><br><span class="line"> - initprot：段页面初始的内存保护</span><br><span class="line"> - nsects：段中section数量</span><br><span class="line"> - flags：其他杂项标志位</span><br><span class="line"> </span><br><span class="line"> - 从fileoff（偏移）处，取filesize字节的二进制数据，放到内存的vmaddr处的vmsize字节。（fileoff处到filesize字节的二进制数据，就是“段”）</span><br><span class="line"> - 每一个段的权限相同（或者说，编译时候，编译器把相同权限的数据放在一起，成为段），其权限根据initprot初始化。initprot指定了如何通过读/写/执行位初始化页面的保护级别</span><br><span class="line"> - 段的保护设置可以动态改变，但是不能超过maxprot中指定的值（在iOS中，+x和+w是互斥的）</span><br><span class="line"> */</span><br><span class="line">struct segment_command_64 &#123; /* for 64-bit architectures */</span><br><span class="line">    uint32_t    cmd;        /* LC_SEGMENT_64 */</span><br><span class="line">    uint32_t    cmdsize;    /* includes sizeof section_64 structs */</span><br><span class="line">    char        segname[16];    /* segment name */</span><br><span class="line">    uint64_t    vmaddr;     /* memory address of this segment */</span><br><span class="line">    uint64_t    vmsize;     /* memory size of this segment */</span><br><span class="line">    uint64_t    fileoff;    /* file offset of this segment */</span><br><span class="line">    uint64_t    filesize;   /* amount to map from the file */</span><br><span class="line">    vm_prot_t   maxprot;    /* maximum VM protection */</span><br><span class="line">    vm_prot_t   initprot;   /* initial VM protection */</span><br><span class="line">    uint32_t    nsects;     /* number of sections in segment */</span><br><span class="line">    uint32_t    flags;      /* flags */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
 
-<h1 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h1><p><code>Load Command</code>s 后就是<code>Data</code>区域，这个区域<code>存储了具体的只读、可读写代码</code>，例如方法、符号表、字符表、代码数据、连接器所需的数据（重定向、符号绑定等）。主要是存储具体的数据。其中大多数的Mach-O文件均包含以下三个段：</p>
+<h1 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h1><p><code>Load Commands</code> 后就是 <code>Data</code> 区域，这个区域 <code>存储了具体的只读、可读写代码</code>，例如方法、符号表、字符表、代码数据、连接器所需的数据（重定向、符号绑定等）。主要是存储具体的数据。其中大多数的Mach-O文件均包含以下三个段：</p>
 <ul>
 <li><code>__TEXT 代码段</code>：只读，包括函数，和只读的字符串</li>
 <li><code>__DATA 数据段</code>：读写，包括可读写的全局变量等</li>
 <li><code>__LINKEDIT</code>： __LINKEDIT包含了方法和变量的元数据（位置，偏移量），以及代码签名等信息。</li>
 </ul>
-<p>在<code>Data</code>区中，<code>Section</code>占了很大的比例，<code>Section</code>在<code>Mach.h</code>中是以结构体<code>section_64</code>（在arm64架构下）表示，其定义如下：</p>
+<p>在 <code>Data</code> 区中，<code>Section</code> 占了很大的比例，<code>Section</code> 在 <code>Mach.h</code> 中是以结构体<code>section_64</code>（在arm64架构下）表示，其定义如下：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> Section节在MachO中集中体现在TEXT和DATA两段里.</span><br><span class="line"> - sectname：当前section的名称</span><br><span class="line"> - segname：section所在的segment名称</span><br><span class="line"> - addr：内存中起始位置</span><br><span class="line"> - size：section大小</span><br><span class="line"> - offset：section的文件偏移</span><br><span class="line"> - align：字节大小对齐</span><br><span class="line"> - reloff：重定位入口的文件偏移</span><br><span class="line"> - nreloc：重定位入口数量</span><br><span class="line"> - flags：标志，section的类型和属性</span><br><span class="line"> - reserved1：保留（用于偏移量或索引）</span><br><span class="line"> - reserved2：保留（用于count或sizeof）</span><br><span class="line"> - reserved3：保留</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">struct section_64 &#123; /* for 64-bit architectures */</span><br><span class="line">    char        sectname[16];   /* name of this section */</span><br><span class="line">    char        segname[16];    /* segment this section goes in */</span><br><span class="line">    uint64_t    addr;       /* memory address of this section */</span><br><span class="line">    uint64_t    size;       /* size in bytes of this section */</span><br><span class="line">    uint32_t    offset;     /* file offset of this section */</span><br><span class="line">    uint32_t    align;      /* section alignment (power of 2) */</span><br><span class="line">    uint32_t    reloff;     /* file offset of relocation entries */</span><br><span class="line">    uint32_t    nreloc;     /* number of relocation entries */</span><br><span class="line">    uint32_t    flags;      /* flags (section type and attributes)*/</span><br><span class="line">    uint32_t    reserved1;  /* reserved (for offset or index) */</span><br><span class="line">    uint32_t    reserved2;  /* reserved (for count or sizeof) */</span><br><span class="line">    uint32_t    reserved3;  /* reserved */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
 
 <p><code>Section</code> 在 <code>MachOView</code> 中可以看出，主要集中体现在 <code>TEXT</code> 和 <code>DATA</code> 两段里，如下所示：</p>
@@ -603,7 +602,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC底层原理32：启动优化（一）基本概念</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E4%B8%8D%E5%A4%9F%E7%94%A8%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98"><span class="nav-text">内存不够用的解决方案：虚拟内存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9AASLR%E6%8A%80%E6%9C%AF"><span class="nav-text">内存数据安全问题的解决方案：ASLR技术</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6"><span class="nav-text">可执行文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6"><span class="nav-text">通用二进制文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mach-O%E6%96%87%E4%BB%B6"><span class="nav-text">Mach-O文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mach-O%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="nav-text">Mach-O文件格式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Header"><span class="nav-text">Header</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Load-Commands"><span class="nav-text">Load Commands</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Data"><span class="nav-text">Data</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E4%B8%8D%E5%A4%9F%E7%94%A8%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98"><span class="nav-text">内存不够用的解决方案：虚拟内存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9AASLR%E6%8A%80%E6%9C%AF"><span class="nav-text">内存数据安全问题的解决方案：ASLR技术</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6"><span class="nav-text">可执行文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6"><span class="nav-text">通用二进制文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mach-O%E6%96%87%E4%BB%B6"><span class="nav-text">Mach-O文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8BMach-O%E6%96%87%E4%BB%B6"><span class="nav-text">查看Mach-O文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mach-O%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="nav-text">Mach-O文件格式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Header"><span class="nav-text">Header</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Load-Commands"><span class="nav-text">Load Commands</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Data"><span class="nav-text">Data</span></a></li></ol>
 
     </div>
 </div>

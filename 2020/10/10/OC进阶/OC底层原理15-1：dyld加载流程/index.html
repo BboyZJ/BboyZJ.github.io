@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-02-26 04:29:31</span>
-            <span class="mobile">2023-02-26 04:29</span>
+            <span class="pc">2023-03-30 14:48:33</span>
+            <span class="mobile">2023-03-30 14:48</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -333,14 +333,14 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773526043566.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301435851.jpg"
                      
                 ></p>
 <p>main.m 中实现：</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773526784175.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301435165.jpg"
                      
                 ></p>
 <ul>
@@ -349,24 +349,24 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773527372947.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301436571.jpg"
                      
                 ></p>
 <p>那么问题来了？为什么是这么一个顺序？按照常规的思维理解，main不是入口函数吗？为什么不是main最先执行？</p>
 <p>下面根据这个问题，我们来探索在走到main之前，到底还做了什么。</p>
-<h1 id="编译过程及库"><a href="#编译过程及库" class="headerlink" title="编译过程及库"></a>编译过程及库</h1><p>在分析app启动之前，我们需要先了解iOSapp代码的 <code>编译过程</code>以及 <code>动态库和静态库</code>。</p>
+<h1 id="编译过程及库"><a href="#编译过程及库" class="headerlink" title="编译过程及库"></a>编译过程及库</h1><p>在分析app启动之前，我们需要先了解iOS app代码的 <code>编译过程</code> 以及 <code>动态库和静态库</code>。</p>
 <h1 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h1><p>其中 <code>编译过程</code> 如下图所示，主要分为以下几步：</p>
 <ul>
-<li><code>源文件</code>：载入.h、.m、.cpp等文件</li>
-<li><code>预处理</code>：替换宏，删除注释，展开头文件，产生.i文件</li>
-<li><code>编译</code>：将.i文件转换为汇编语言，产生.s文件</li>
-<li><code>汇编</code>：将汇编文件转换为机器码文件，产生.o文件</li>
-<li><code>链接</code>：对.o文件中引用其他库的地方进行引用，生成最后的 <code>可执行文件 MachO</code></li>
+<li><code>源文件</code>：载入 <code>.h、.m、.cpp</code> 等文件</li>
+<li><code>预处理</code>：替换宏，删除注释，展开头文件，产生 <code>.i</code> 文件</li>
+<li><code>编译</code>：将 <code>.i</code> 文件转换为汇编语言，产生 <code>.s</code> 文件</li>
+<li><code>汇编</code>：将汇编文件转换为机器码文件，产生 <code>.o</code> 文件</li>
+<li><code>链接</code>：对 <code>.o</code> 文件中引用其他库的地方进行引用，生成最后的 <code>可执行文件 MachO</code></li>
 </ul>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-8a18b8027c825c1f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/943"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301437075.png"
                      
                 ></p>
 <h1 id="静态库-和-动态库"><a href="#静态库-和-动态库" class="headerlink" title="静态库 和 动态库"></a>静态库 和 动态库</h1><ul>
@@ -399,7 +399,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-c74ad3d9bfccfcdc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/725"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301438870.png"
                      
                 ></p>
 <h1 id="dyld加载流程分析"><a href="#dyld加载流程分析" class="headerlink" title="dyld加载流程分析"></a>dyld加载流程分析</h1><p>根据 <code>dyld</code> 源码，以及 <code>libobjc、libSystem、libdispatch</code> 源码协同分析</p>
@@ -411,7 +411,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-eb35a99515de2d5d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/943"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301438795.png"
                      
                 ></p>
 <h1 id="app启动的起始点"><a href="#app启动的起始点" class="headerlink" title="app启动的起始点"></a>app启动的起始点</h1><ul>
@@ -420,7 +420,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773536398151.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301438817.jpg"
                      
                 ></p>
 <p>【app启动起点】：通过程序运行发现，是从 <code>dyld</code> 中的 <code>_dyld_start</code> 开始的，所以需要去 <a class="link"   target="_blank" rel="noopener" href="https://github.com/apple-oss-distributions/dyld/tags" >OpenSource <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 下载一份dyld的源码来进行分析</p>
@@ -430,7 +430,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773537621613.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301439781.jpg"
                      
                 ></p>
 <h1 id="dyld-main函数源码分析"><a href="#dyld-main函数源码分析" class="headerlink" title="dyld::_main函数源码分析"></a>dyld::_main函数源码分析</h1><ul>
@@ -439,7 +439,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773543591801.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301439232.jpg"
                      
                 ></p>
 <ul>
@@ -448,7 +448,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773545176271.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301439822.jpg"
                      
                 ></p>
 <ul>
@@ -456,24 +456,24 @@
 <ul>
 <li>【第一步：<code>环境变量配置</code>】：根据环境变量设置相应的值以及获取当前运行架构</li>
 </ul>
-<p>  <img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773547387711.jpg"
-                     
-                ></p>
 </li>
 </ul>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773549811847.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301439753.jpg"
                      
                 ></p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773550169856.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301440886.jpg"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301440541.jpg"
                      
                 ></p>
 <ul>
@@ -482,7 +482,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-d718ea23c090a716.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301440070.png"
                      
                 ></p>
 <ul>
@@ -491,7 +491,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-3a5c0cf92a9eba94.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301441821.png"
                      
                 ></p>
 <ul>
@@ -500,7 +500,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-e144ed876b86fddd.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301441523.png"
                      
                 ></p>
 <ul>
@@ -509,7 +509,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-4ec20029836b1921.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301441351.png"
                      
                 ></p>
 <ul>
@@ -518,7 +518,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-0f9136822af9abe6.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="/BboyZJ.github.io/assets/16801584980010.jpg"
                      
                 ></p>
 <ul>
@@ -527,7 +527,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-a66917606793296f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301441495.png"
                      
                 ></p>
 <ul>
@@ -536,7 +536,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-b7c68c0bb73eddb8.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301441927.png"
                      
                 ></p>
 <ul>
@@ -545,7 +545,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-14553a73b073cb47.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301441888.png"
                      
                 ></p>
 <h1 id="下面主要分析下【第三步】和【第八步】"><a href="#下面主要分析下【第三步】和【第八步】" class="headerlink" title="下面主要分析下【第三步】和【第八步】"></a>下面主要分析下【第三步】和【第八步】</h1><ul>
@@ -554,7 +554,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-de02e1d8ff385665.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301442558.png"
                      
                 ></p>
 <ul>
@@ -563,7 +563,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-08f24fbf00245282.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301442951.png"
                      
                 ></p>
 <ul>
@@ -572,7 +572,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-4f9ce223413a7dee.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="/BboyZJ.github.io/assets/16801585493876.jpg"
                      
                 ></p>
 <h1 id="【第八步：执行初始化方法】"><a href="#【第八步：执行初始化方法】" class="headerlink" title="【第八步：执行初始化方法】"></a>【第八步：执行初始化方法】</h1><ul>
@@ -581,7 +581,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-5febb85fb2010441.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301442788.png"
                      
                 ></p>
 <ul>
@@ -590,7 +590,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-f632f008f847362c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301442148.png"
                      
                 ></p>
 <ul>
@@ -599,7 +599,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-39bcc061763427e7.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301442869.png"
                      
                 ></p>
 <ul>
@@ -608,7 +608,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-5d69a52cde129280.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301443817.png"
                      
                 ></p>
 <p>在这里，需要分成两部分探索，一部分是notifySingle函数，一部分是doInitialization函数，首先探索notifySingle函数</p>
@@ -618,7 +618,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-ce8b1c6d82898ce0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301443485.png"
                      
                 ></p>
 <ul>
@@ -627,7 +627,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-79f4feb4181fcfb0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301443687.png"
                      
                 ></p>
 <ul>
@@ -636,7 +636,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-2204bfde72cb324a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301443029.png"
                      
                 ></p>
 <p>注意：<code>_dyld_objc_notify_register</code> 的函数需要在 <code>libobjc</code> 源码中搜索</p>
@@ -646,7 +646,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-d6cc44bd5a188b62.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301443430.png"
                      
                 ></p>
 <h1 id="load函数加载"><a href="#load函数加载" class="headerlink" title="load函数加载"></a>load函数加载</h1><p>下面我们进入 <code>load_images</code> 的源码看看其实现，以此来证明 <code>load_images</code> 中调用了所有的load函数</p>
@@ -656,7 +656,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-31c73be771fd482b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301444088.png"
                      
                 ></p>
 <ul>
@@ -665,7 +665,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-64fd9778a4df202f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301444183.png"
                      
                 ></p>
 <ul>
@@ -674,7 +674,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-9020a7e5b3d5c824.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301444897.png"
                      
                 ></p>
 <p>所以，<code>load_images</code> 调用了所有的 <code>load</code> 函数，以上的源码分析过程正好对应堆栈的打印信息</p>
@@ -686,7 +686,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-ec4a30b3e3d64738.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301444151.png"
                      
                 ></p>
 <ul>
@@ -695,7 +695,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-8005f3c8ca8be0ce.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301444925.png"
                      
                 ></p>
 <p>这里也需要分成两部分，一部分是 <code>doImageInit</code> 函数，一部分是 <code>doModInitFunctions</code> 函数</p>
@@ -705,7 +705,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-39b5de27cb83e21c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301444588.png"
                      
                 ></p>
 <ul>
@@ -714,7 +714,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-82cbaf86d0ebac6c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301444594.png"
                      
                 ></p>
 <p>走到这里，还是没有找到_objc_init的调用？怎么办呢？放弃吗？当然不行，我们还可以通过_objc_init加一个符号断点来查看调用_objc_init前的堆栈信息，</p>
@@ -724,7 +724,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-335d0b98450d5303.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301445232.png"
                      
                 ></p>
 <ul>
@@ -733,7 +733,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://upload-images.jianshu.io/upload_images/2251862-95dda0e83b493618.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301445486.png"
                      
                 ></p>
 <ul>
@@ -742,7 +742,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773564815157.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301445465.jpg"
                      
                 ></p>
 <ul>
@@ -751,7 +751,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773565157725.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301446250.jpg"
                      
                 ></p>
 <p>结合上面的分析，从初始化_objc_init注册的_dyld_objc_notify_register的参数2，即load_images，到sNotifySingle –&gt; sNotifyObjCInie&#x3D;参数2 到sNotifyObjcInit()调用，形成了一个闭环</p>
@@ -763,16 +763,16 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773566236678.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301446912.jpg"
                      
                 ></p>
 <ul>
-<li>继续执行，来到 kcFunc 的 <code>C++</code> 函数</li>
+<li>继续执行，来到 <code>kcFunc</code> 的 <code>C++</code> 函数</li>
 </ul>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773566403234.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301447381.jpg"
                      
                 ></p>
 <ul>
@@ -781,7 +781,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773566525978.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301447180.jpg"
                      
                 ></p>
 <ul>
@@ -790,20 +790,20 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773566686988.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301447408.jpg"
                      
                 ></p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773566739474.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301447202.jpg"
                      
                 ></p>
-<p>所以，综上所述，最终dyld加载流程，如下图所示，图中也诠释了前文中的问题：为什么是load–&gt;Cxx–&gt;main的调用顺序</p>
+<p>所以，综上所述，最终 <code>dyld</code> 加载流程，如下图所示，图中也诠释了前文中的问题：为什么是load–&gt;Cxx–&gt;main的调用顺序</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773566869545.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301448224.png"
                      
                 ></p>
 

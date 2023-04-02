@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2021/05/29/oc进阶/oc底层原理36：内存管理（二）強引用分析/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC底层原理36：内存管理（二）強引用分析">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2021/05/29/OC进阶/OC底层原理36：内存管理（二）強引用分析/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC底层原理36：内存管理（二）強引用分析">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC底层原理36：内存管理（二）強引用分析 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC底层原理36：内存管理（二）強引用分析</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2021-05-29 14:48:15</span>
+        <span class="mobile">2021-05-29 14:48</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2022-04-13 14:42:35</span>
+            <span class="mobile">2022-04-13 14:42</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/iOS-OC/">iOS-OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文主要是通过 <code>定时器</code> 来梳理 <code>强引用</code> 的几种解决方案</p>
+<h1 id="強应用（強持有）"><a href="#強应用（強持有）" class="headerlink" title="強应用（強持有）"></a>強应用（強持有）</h1><p>假设有 <code>A和B</code> 两个页面，从A <code>push</code> 到B页面，在B页面中有如下定时器代码，当从B <code>pop</code> 回到A界面时，发现定时器没有停止，其方法仍然在执行，为什么？</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">self.timer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(fireHome) userInfo:nil repeats:YES];</span><br><span class="line">[[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];</span><br></pre></td></tr></table></figure></div>
+
+<p>其主要原因是 <code>B页面没有释放</code>，即 <code>没有执行dealloc方法</code>，导致timer也无法停止和释放</p>
+<p><strong>解决方式一</strong></p>
+<ul>
+<li>重写 <code>didMoveParentViewController</code> 方法</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)didMoveToParentViewController:(UIViewController *)parent&#123;</span><br><span class="line">    // 无论push 进来 还是 pop 出去 正常跑</span><br><span class="line">    // 就算继续push 到下一层 pop 回去还是继续</span><br><span class="line">    if (parent == nil) &#123;</span><br><span class="line">       [self.timer invalidate];</span><br><span class="line">        self.timer = nil;</span><br><span class="line">        NSLog(@&quot;timer 走了&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>解决方式二</strong></p>
+<ul>
+<li>定义timer时，采用 <code>闭包</code> 的形式，因此不需要指定target</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (void)blockTimer&#123;</span><br><span class="line">    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">        NSLog(@&quot;timer fire - %@&quot;,timer);</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>现在，我们从底层来深入研究，为什么 <code>B</code> 页面有了 <code>timer</code> 之后，导致 <code>B</code> 页面释放不掉，即不会走到 <code>dealloc</code> 方法，我们可以通过官方文档查看 <code>timerWithTimeInterval:target:selector:userInfo:repeats:</code> 方法中对target的描述</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16497482156978.jpg"
+                     
+                ></p>
+<p>从文档中可以看出，timer对传入的target具有強持有，即 <code>timer</code> 持有 <code>self</code>。由于timer是定义在B页面中，所以 <code>self也持有timer</code>，因此 <code>self- &gt; timer -&gt; self</code> 构成了 <code>循环引用</code></p>
+<p>在 <a href="https://www.bboyzj.cn/2021/04/22/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8630%EF%BC%9ABlock%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">OC底层原理30：Block底层原理</a> 文章中，针对循环引用提供了几种解决方式，我们可以尝试通过 <code>__weak</code> 即 <code>弱引用</code> 来解决，代码修改如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">__weak typeof(self) weakSelf = self;</span><br><span class="line">self.timer = [NSTimer timerWithTimeInterval:1 target:weakSelf selector:@selector(fireHome) userInfo:nil repeats:YES];</span><br><span class="line">    [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];</span><br></pre></td></tr></table></figure></div>
+
+<p>我们再次运行程序，运行 <code>push-pop</code> 跳转，发现 <code>问题还是存在</code>，即定时器方法仍然在执行，并 <code>没有执行B的dealloc方法</code>，为什么呢?</p>
+<ul>
+<li>我们使用 <code>__weak</code> 虽然打破了 <code>self -&gt; timer -&gt; self</code> 之前的循环引用，即引用链变成了 <code>self -&gt; timer -&gt; weakSelf -&gt; self</code>。但是在这里我们分析的并不全面，此时还有一个 <code>Runloop对timer的強持有</code>，因为 <code>Runloop</code> 的 <code>生命周期</code> 比 <code>B</code> 页面 <code>更长</code>，所以导致了 <code>timer无法释放</code>，同时也导致了 <code>B</code> 页面的 <code>self也无法释放</code>。所以，<code>最初引用链</code> 应该是这样的：</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16497487564959.png"
+                     
+                ></p>
+<p>加上 <code>weakSelf</code> 之后，变成了这样</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16497487783801.png"
+                     
+                ></p>
+<p><strong>weakSelf 与 self</strong></p>
+<p>对于 <code>weakSelf</code> 和 <code>self</code> ，主要有以下两个疑问？</p>
+<ul>
+<li><p><code>weakSelf</code> 会对引用计数进行 <code>+1</code> 操作么？</p>
+</li>
+<li><p><code>weakSelf</code> 和 <code>self</code> 的指针地址相同么？是指向同一片内存么？</p>
+</li>
+<li><p>带着疑问，我们在 <code>weakSelf</code> 前后打印 <code>self</code> 的引用计数</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16497490452738.jpg"
+                     
+                ></p>
+<p>因此可以得出一个结论：<code>weakSelf没有对内存进行+1操作</code></p>
+<ul>
+<li>继续打印 <code>weakSelf</code> 和 <code>self</code> 对象，以及指针地址</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">po weakSelf</span><br><span class="line">po self</span><br><span class="line"></span><br><span class="line">p &amp;weakSelf</span><br><span class="line">p &amp;self</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果如下</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16497495278213.jpg"
+                     
+                ></p>
+<p>从打印结果可以看出，当前 <code>self</code> 取地址和 <code>weakSelf</code> 取地址的值是不一样的。意味着 <code>两个指针地址，指向的是同一片内存空间</code>，即 <code>weakSelf和self的内存地址是不一样的，都指向同一片内存空间</code> 的</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16497496531731.jpg"
+                     
+                ></p>
+<ul>
+<li><p>从上面打印可以看出，此时 <code>timer</code> 捕获的是 <code>&lt;LGTimerViewController: 0x102c04dd0&gt;</code> ，是一个 <code>对象</code>，所以 <code>无法通过weakSelf来解决強持有</code>。即引用链关系为 ：<code>NSRunloop -&gt; timer -&gt; weakSelf(&lt;LGTimerViewController: 0x102c04dd0&gt;)</code> 。所以 <code>RunLoop对整个对象的空间有強持有</code>，runloop没停，<code>timer</code> 和 <code>weakSelf</code> 是无法释放的</p>
+</li>
+<li><p>而我们在 <code>block</code> 原理中提及的 <code>block循环引用</code>，与 <code>timer</code> 是 <code>有区别</code> 的。通过block底层原理的方法 <code>__Block_object_assign</code> 可知，block捕获的是 <code>对象的指针地址</code>，即 <code>weakSelf是临时变量的指针地址</code>，跟 <code>self</code> 没有关系，因为 <code>weakSelf是新的地址空间</code>。所以此时的weakSelf相当于中间值。其引用关系链为 <code>self -&gt; block -&gt; weakSelf(临时变量的指针地址)</code>，可以通过 <code>地址</code> 拿到 <code>指针</code></p>
+</li>
+</ul>
+<p>所以在这里，我们需要区别下 <code>block</code> 和 <code>timer</code> 循环引用的模型</p>
+<ul>
+<li><p><strong>timer模型</strong>：<code>self -&gt; timer -&gt; weakSelf -&gt; self</code>，当前的 <code>timer</code> 捕获的是 <code>B页面的内存，即vc对象的内存</code>，即 <code>weakSelf表示的是vc对象</code></p>
+</li>
+<li><p><strong>block模型</strong>：<code>self -&gt; block -&gt; weakSelf -&gt; self</code>，当前的block捕获的是 <code>指针地址</code>，即 <code>weakSelf</code> 表示的是 <code>指向self的临时变量的指针地址</code></p>
+</li>
+</ul>
+<h1 id="解决-強引用（強持有）"><a href="#解决-強引用（強持有）" class="headerlink" title="解决 強引用（強持有）"></a>解决 強引用（強持有）</h1><p>有以下几种解决思路：依赖 <code>中介者模式、打破強持有</code>，其中 <code>推荐思路四</code></p>
+<h2 id="思路一：pop时在其他方法中销毁timer"><a href="#思路一：pop时在其他方法中销毁timer" class="headerlink" title="思路一：pop时在其他方法中销毁timer"></a>思路一：pop时在其他方法中销毁timer</h2><p>根据前面的解释，我们知道由于 <code>Runloop对timer的強持有</code>，导致了 <code>Runloop间接的強持有了self</code>（因为timer中捕获的是 <code>vc对象</code>）。所以导致 <code>dealloc</code> 方法无法执行。需要查看在pop时，是否还有其他方法可以销毁 <code>timer</code>。这个方法就是 <code>didMoveToParentViewController</code></p>
+<ul>
+<li><p><code>didMoveToParentViewController</code> 方法，是用于当一个视图控制器中添加或者移除 viewController后，必须调用的方法。目的是为了告诉iOS，已经完成添加&#x2F;删除子控制器的操作。</p>
+</li>
+<li><p>在B界面中重写 <code>didMoveToParentViewController</code> 方法</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)didMoveToParentViewController:(UIViewController *)parent&#123;</span><br><span class="line">    // 无论push 进来 还是 pop 出去 正常跑</span><br><span class="line">    // 就算继续push 到下一层 pop 回去还是继续</span><br><span class="line">    if (parent == nil) &#123;</span><br><span class="line">       [self.timer invalidate];</span><br><span class="line">        self.timer = nil;</span><br><span class="line">        NSLog(@&quot;timer 走了&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="思路二：中介者模式，即不使用self，依赖于其他对象"><a href="#思路二：中介者模式，即不使用self，依赖于其他对象" class="headerlink" title="思路二：中介者模式，即不使用self，依赖于其他对象"></a>思路二：中介者模式，即不使用self，依赖于其他对象</h2><p>在timer模式中，我们重点关注的是 <code>fireHome</code> 能执行，并 <code>不关心timer捕获target</code> 是谁，由于这里 <code>不方便使用self</code>（因为会有强持有问题），所以 <code>可以将target换成其他对象</code>，例如将target换成 <code>NSObject对象</code>，将 <code>fireHome</code> 交给 <code>target</code> 执行</p>
+<ul>
+<li>将timer的target由self改成objc</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// 1.定义成其他对象</span><br><span class="line">@property (nonatomic, strong)id target;</span><br><span class="line"></span><br><span class="line">// 2.修改target</span><br><span class="line">self.target = [[NSObject alloc] init];</span><br><span class="line">class_addMethod([NSObject class],@selector(fireHome),(IMP)fireHomeObjc,&quot;v@:&quot;);</span><br><span class="line">self.timer = [];</span><br><span class="line"></span><br><span class="line">// 3.imp</span><br><span class="line">- (void)fireHome&#123;</span><br><span class="line">    num++;</span><br><span class="line">    NSLog(@&quot;hello word - %d&quot;,num);</span><br><span class="line">&#125;</span><br><span class="line">void fireHomeObjc(id obj)&#123;</span><br><span class="line">    NSLog(@&quot;%s -- %@&quot;,__func__,obj);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 4.dealloc</span><br><span class="line">- (void)dealloc&#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>查看运行结果如下</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16498168708118.jpg"
+                     
+                ></p>
+<p>运行发现执行 <code>dealloc</code> 之后，timer还是会继续执行。原因是 <code>解决了中介者的释放</code>，但是 <code>没有解决中介者的回收</code>，即 <code>self.target的回收</code>。所以这种方式 <code>有缺陷</code></p>
+<p>可以通过在 dealloc 方法中，取消定时器来解决，代码如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (void)dealloc&#123;</span><br><span class="line">    [self.timer invalidate];</span><br><span class="line">    self.timer = nil;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行代码查看结果如下，发现 pop 之后，timer释放，从而中介者也会进行回收释放</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16498170423914.jpg"
+                     
+                ></p>
+<h2 id="思路三：自定义封装timer"><a href="#思路三：自定义封装timer" class="headerlink" title="思路三：自定义封装timer"></a>思路三：自定义封装timer</h2><p>这种方式是根据思路二的原理，自定义封装timer，其步骤如下：</p>
+<ul>
+<li><p>自定义<code>timerWapper</code></p>
+<ul>
+<li><p>在初始化方法中，定义一个timer，其target是自己。即 <code>timerWapper</code> 中的 timer，一直监听自己，判断 <code>selector</code>，此时的selector已交给了传入的target（即vc对象），此时有一个方法 <code>fireHomeWapper</code>，在方法中，判断target是否存在</p>
+<ul>
+<li><p>如果 <code>target存在</code>，则需要让vc知道，即向传入的target发送selector消息，并将此时的timer作为参数也一并传入，所以vc就可以得知 fireHome 方法，这种方式是定时器方法能够执行的原因</p>
+</li>
+<li><p>如果 <code>target不存在</code>，已经释放了，则释放当前的 <code>timerWapper</code> ，即打破了Runloop对timerWapper的強持有（<code>timerWapper &lt;- x - RunLoop</code>）</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>自定义 <code>zj_invalidate</code> 方法中释放timer。这个方法在vc的dealloc方法中调用，即 vc释放，从而导致timerWapper释放，打破了 <code>vc</code> 对 <code>timerWapper</code> 的強持有（<code>vc -&gt; x -&gt; timerWapper</code>）</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">//********** .h文件 *********</span><br><span class="line">@interface ZJTimerWapper : NSObject</span><br><span class="line">- (instancetype)zj_initWithTimeInterval:(NSTimeInterval)ti target:(id)aTarget selector:(SEL)aSelector userInfo:(nullable id)userInfo repeats:(BOOL)yesOrNo;</span><br><span class="line">- (void)zj_invalidate;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">//********** .m文件 ********</span><br><span class="line">@implementation ZJTimerWapper</span><br><span class="line">- (instancetype)zj_initWithTimeInterval:(NSTimeInterval)ti target:(id)aTarget selector:(SEL)aSelector userInfo:(nullable id)userInfo repeats:(BOOL)yesOrNo&#123;</span><br><span class="line">    if (self == [super init]) &#123;</span><br><span class="line">        // 传入vc</span><br><span class="line">        self.target = aTarget;</span><br><span class="line">        // 传入定时器方法</span><br><span class="line">        self.aSelector = aSelector;</span><br><span class="line">        </span><br><span class="line">        if ([self.target respondsToSelector:self.aSelector]) &#123; </span><br><span class="line">            Method method    = class_getInstanceMethod([self.target class], aSelector);</span><br><span class="line">            const char *type = method_getTypeEncoding(method);</span><br><span class="line">            // 给timerWapper添加方法</span><br><span class="line">            class_addMethod([self class], aSelector, (IMP)fireHomeWapper, type);</span><br><span class="line">            // 启动一个timer，target是self，即监听自己</span><br><span class="line">            self.timer = [NSTimer scheduledTimerWithTimeInterval:ti target:self selector:aSelector userInfo:userInfo repeats:yesOrNo];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 一直跑 runloop</span><br><span class="line">void fireHomeWapper(ZJTimerWapper *warpper)&#123;</span><br><span class="line">    // 判断target是否存在</span><br><span class="line">    if (warpper.target) &#123;</span><br><span class="line">    // 如果存在则需要vc知道，即向传入的target发送selector消息，并将此时的timer参数一并传入，所以vc就可以得知 fireHome 方法，这种方式就是定时器方法能够执行的原因</span><br><span class="line">        void (*zj_msgSend)(void *,SEL, id) = (void *)objc_msgSend;</span><br><span class="line">         zj_msgSend((__bridge void *)(warpper.target), warpper.aSelector,warpper.timer);</span><br><span class="line">    &#125;else&#123; </span><br><span class="line">        // 如果target不存在，已经释放，则释放当前的timerWrapper</span><br><span class="line">        [warpper.timer invalidate];</span><br><span class="line">        warpper.timer = nil;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 在vc的dealloc方法中调用，通过vc释放，从而让timer释放</span><br><span class="line">- (void)zj_invalidate&#123;</span><br><span class="line">    [self.timer invalidate];</span><br><span class="line">    self.timer = nil;</span><br><span class="line">&#125;</span><br><span class="line">- (void)dealloc&#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>timerWapper的使用</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 定义</span><br><span class="line">self.timerWapper = [[ZJTimerWapper alloc] zj_initWithTimeInterval:1 target:self selector:@selector(fireHome) userInfo:nil repeats:YES];</span><br><span class="line"></span><br><span class="line">// 释放</span><br><span class="line">- (void)dealloc&#123;</span><br><span class="line">     [self.timerWapper zj_invalidate];</span><br><span class="line">     NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行结果如下</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16498214951972.jpg"
+                     
+                ></p>
+<p>这种方式看起来比较繁琐，步骤很多，而且针对 <code>timerWapper</code>，需要不断的添加method，需要进行一系列的处理</p>
+<h2 id="思路四：利用NSProxy虚基类的子类"><a href="#思路四：利用NSProxy虚基类的子类" class="headerlink" title="思路四：利用NSProxy虚基类的子类"></a>思路四：利用NSProxy虚基类的子类</h2><p>下面来介绍一种 <code>timer</code> 強引用 <code>最常用</code> 的处理方式：<code>NSProxy子类</code></p>
+<p>可以通过 <code>NSProxy</code> 虚基类，可以交给其子类实现，NSproxy的介绍在前面的文章已经介绍过了，这里不再重复</p>
+<ul>
+<li>首先定义一个集成自 <code>NSProxy</code> 的子类</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">//**********NSProxy子类**********</span><br><span class="line">@interface ZJProxy : NSProxy</span><br><span class="line">+ (instancetype)proxyWithTransformObject:(id)object;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface ZJProxy()</span><br><span class="line">@property (nonatomic, weak) id object;</span><br><span class="line"></span><br><span class="line">@implementation ZJProxy</span><br><span class="line">+ (instancetype)proxyWithTransformObject:(id)object&#123;</span><br><span class="line">    ZJProxy *proxy = [ZJProxy alloc];</span><br><span class="line">    proxy.object = object;</span><br><span class="line">    return proxy;</span><br><span class="line">&#125;</span><br><span class="line">-(id)forwardingTargetForSelector:(SEL)aSelector &#123;</span><br><span class="line">    return self.object;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>将timer中的target传入NSProxy子类对象，即timer持有NSProxy子类对象</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//**********解决timer強持有的问题*********</span><br><span class="line">self.proxy = [ZJProxy proxyWithTransformObject:self];</span><br><span class="line">self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self.proxy selector:@selector(fireHome) userInfo:nil repeats:YES];</span><br><span class="line"></span><br><span class="line">//在dealloc中将timer正常释放</span><br><span class="line">- (void)dealloc&#123;</span><br><span class="line">    [self.timer invalidate];</span><br><span class="line">    self.timer = nil;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>这样做的目的是将 <code>強引用的注意力转移成了消息转发</code>。虚基类只负责消息转发，即使用 <code>NSProxy</code> 作为 <code>中间代理、中间者</code></p>
+<p>这里有个疑问，定义 <code>proxy</code> 对象，在dealloc释放时，还存在么？</p>
+<ul>
+<li><p>proxy对象会正常释放，因为 <code>vc</code> 正常释放了，所以可以释放其持有者，即 <code>timer和proxy</code>，timer的释放也打破了 <code>runloop对proxy的强持有</code>。完美的达到了 <code>两层释放</code>，即 <code>vc -&gt; proxy &lt;- runloop</code>，解释如下：</p>
+<ul>
+<li><p>vc释放，导致了 <code>proxy</code> 的释放</p>
+</li>
+<li><p>dealloc方法中，timer进行了释放，所以runloop强引用也释放了</p>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC底层原理36：内存管理（二）強引用分析</li>
+        <li>Post author：张建</li>
+        <li>Create time：2021-05-29 14:48:15</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2021/05/29/OC进阶/OC底层原理36：内存管理（二）強引用分析/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/iOS-OC/">#iOS-OC</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2021/06/02/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8637%EF%BC%9A%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%89%EF%BC%89AutoReleasePool-NSRunLoop-%E5%BA%95%E5%B1%82%E5%88%86%E6%9E%90/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理37：内存管理（三）AutoReleasePool &amp; NSRunLoop 底层分析</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2021/05/22/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8635%EF%BC%9A%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89TaggedPointer-retain-release-dealloc-retainCount-%E5%BA%95%E5%B1%82%E5%88%86%E6%9E%90/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理35：内存管理（一）TaggedPointer/retain/release/dealloc/retainCount 底层分析</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC底层原理36：内存管理（二）強引用分析</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%B7%E5%BA%94%E7%94%A8%EF%BC%88%E5%BC%B7%E6%8C%81%E6%9C%89%EF%BC%89"><span class="nav-text">強应用（強持有）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3-%E5%BC%B7%E5%BC%95%E7%94%A8%EF%BC%88%E5%BC%B7%E6%8C%81%E6%9C%89%EF%BC%89"><span class="nav-text">解决 強引用（強持有）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E4%B8%80%EF%BC%9Apop%E6%97%B6%E5%9C%A8%E5%85%B6%E4%BB%96%E6%96%B9%E6%B3%95%E4%B8%AD%E9%94%80%E6%AF%81timer"><span class="nav-text">思路一：pop时在其他方法中销毁timer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E4%BA%8C%EF%BC%9A%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F%EF%BC%8C%E5%8D%B3%E4%B8%8D%E4%BD%BF%E7%94%A8self%EF%BC%8C%E4%BE%9D%E8%B5%96%E4%BA%8E%E5%85%B6%E4%BB%96%E5%AF%B9%E8%B1%A1"><span class="nav-text">思路二：中介者模式，即不使用self，依赖于其他对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E4%B8%89%EF%BC%9A%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B0%81%E8%A3%85timer"><span class="nav-text">思路三：自定义封装timer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%9B%9B%EF%BC%9A%E5%88%A9%E7%94%A8NSProxy%E8%99%9A%E5%9F%BA%E7%B1%BB%E7%9A%84%E5%AD%90%E7%B1%BB"><span class="nav-text">思路四：利用NSProxy虚基类的子类</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

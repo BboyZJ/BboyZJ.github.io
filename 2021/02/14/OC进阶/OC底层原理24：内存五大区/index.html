@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-02 19:13</span>
-            <span class="mobile">2023-03-02 19:13</span>
+            <span class="pc">2023-03-30 14:33:38</span>
+            <span class="mobile">2023-03-30 14:33</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -329,10 +329,10 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/125901732-fa12526a-8600-4a06-b2c5-9052f6ce50c9.jpeg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301427727.png"
                      
                 ></p>
-<h1 id="栈区"><a href="#栈区" class="headerlink" title="栈区"></a>栈区</h1><p><strong>义</strong></p>
+<h1 id="栈区"><a href="#栈区" class="headerlink" title="栈区"></a>栈区</h1><p><strong>定义</strong></p>
 <ul>
 <li><p>栈是 <code>系统数据结构</code>，其对应的 <code>进程或者线程是唯一的</code></p>
 </li>
@@ -353,9 +353,9 @@
 </ul>
 <p><strong>优缺点</strong></p>
 <ul>
-<li><p>优点：因为栈是由<code>编译器自动分配并释放</code>的，不会产生内存碎片，所以<code>快速高效</code></p>
+<li><p>优点：因为栈是由 <code>编译器自动分配并释放</code> 的，不会产生内存碎片，所以 <code>快速高效</code></p>
 </li>
-<li><p>确定：栈的&#96;内存大小有限制，数据不灵活 </p>
+<li><p>确定：栈的内存大小有限制，数据不灵活 </p>
 <ul>
 <li><code>iOS主线程大小是1MB</code></li>
 <li>其他线程是<code>512KB</code></li>
@@ -367,50 +367,50 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/125901809-574ffd97-9226-4f40-99d7-0b573935a2a4.ng"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301430572.png"
                      
                 ></p>
 <h1 id="堆区"><a href="#堆区" class="headerlink" title="堆区"></a>堆区</h1><p>*<em>定义</em></p>
 <ul>
-<li><p>堆是<code>向高地址扩展</code>的数据结构</p>
+<li><p>堆是 <code>向高地址扩展</code> 的数据结构</p>
 </li>
-<li><p>堆是<code>不连续的内存区域</code>，类似于<code>链表结构</code>（便于增删，不便于查询），遵循<code>先进先出（FIFO）</code>原则</p>
+<li><p>堆是 <code>不连续的内存区域</code>，类似于 <code>链表结构</code>（便于增删，不便于查询），遵循 <code>先进先出（FIFO）</code> 原则</p>
 </li>
-<li><p>堆的<code>地址空间</code>在iOS中是是动态的</p>
+<li><p>堆的 <code>地址空间</code> 在iOS中是是动态的</p>
 </li>
-<li><p>堆区的分配一般是以在<code>运行时分配</code></p>
+<li><p>堆区的分配一般是以在 <code>运行时分配</code></p>
 </li>
 </ul>
-<p>*<em>存储</em></p>
-<p>堆区是<code>由程序员动态分配和释放</code>的，如果程序员不释放，程序结束后，可能由操作系统回收，主要用于存放：</p>
+<p><strong>存储</strong></p>
+<p>堆区是 <code>由程序员动态分配和释放</code> 的，如果程序员不释放，程序结束后，可能由操作系统回收，主要用于存放：</p>
 <ul>
-<li><p><code>OC</code>中使用<code>alloc</code>或者<code>new</code>开辟空间创建<code>对象</code></p>
+<li><p><code>OC</code> 中使用 <code>alloc</code> 或者 <code>new</code> 开辟空间创建 <code>对象</code></p>
 </li>
-<li><p><code>C</code>语言中使用<code>malloc、calloc、realloc</code>分配的空间，需要<code>free</code>释放</p>
+<li><p><code>C</code> 语言中使用 <code>malloc、calloc、realloc</code> 分配的空间，需要 <code>free</code> 释放</p>
 </li>
 </ul>
 <p><strong>优缺点</strong></p>
 <ul>
 <li><p>优点：灵活方便，数据适应面广泛</p>
 </li>
-<li><p>缺点：需<code>手动管理、速度慢</code>，容易产生内存碎片</p>
+<li><p>缺点：需 <code>手动管理、速度慢</code>，容易产生内存碎片</p>
 </li>
 </ul>
-<p>当需要访问堆中数据时，一般需要<code>先通过对象读取到栈区的指针地址</code>，然后通过<code>指针地址访问堆区</code></p>
-<h1 id="全局区（静态区，即-bss-amp-data）"><a href="#全局区（静态区，即-bss-amp-data）" class="headerlink" title="全局区（静态区，即.bss &amp; .data）"></a>全局区（静态区，即.bss &amp; .data）</h1><p>全局区是<code>编译时分配</code>的内存空间，在程序运行过程中，此内存中的数据一直存在，<code>程序结束后由系统释放</code>，主要存：</p>
+<p>当需要访问堆中数据时，一般需要 <code>先通过对象读取到栈区的指针地址</code>，然后通过 <code>指针地址访问堆区</code></p>
+<h1 id="全局区（静态区，即-bss-amp-data）"><a href="#全局区（静态区，即-bss-amp-data）" class="headerlink" title="全局区（静态区，即.bss &amp; .data）"></a>全局区（静态区，即.bss &amp; .data）</h1><p>全局区是 <code>编译时分配</code> 的内存空间，在程序运行过程中，此内存中的数据一直存在，<code>程序结束后由系统释放</code>，主要存：</p>
 <ul>
 <li><p><code>未初始化的全局变量和静态变量</code>，即BSS区（.bss）</p>
 </li>
 <li><p><code>已初始化的全局变量和静态变量</code>，即DATA区（.data）</p>
 </li>
 </ul>
-<p>其中，<code>全局变量</code>是指变量值可以在<code>运行时被动态修改</code>，而<code>静态变量</code>是<code>static</code>修饰的变量，包含<code>静态局部变量</code>和<code>静态全局变量</code></p>
-<h1 id="常量区（即-rodata）"><a href="#常量区（即-rodata）" class="headerlink" title="常量区（即.rodata）"></a>常量区（即.rodata）</h1><p>常量区是<code>编译时分配</code>的内存空间，在<code>程序结束后由系统释放</code>，主要存放：</p>
+<p>其中，<code>全局变量</code> 是指变量值可以在 <code>运行时被动态修改</code>，而 <code>静态变量</code> 是 <code>static</code> 修饰的变量，包含 <code>静态局部变量</code> 和 <code>静态全局变量</code></p>
+<h1 id="常量区（即-rodata）"><a href="#常量区（即-rodata）" class="headerlink" title="常量区（即.rodata）"></a>常量区（即.rodata）</h1><p>常量区是 <code>编译时分配</code> 的内存空间，在 <code>程序结束后由系统释放</code>，主要存放：</p>
 <ul>
-<li>已经使用了的，且没有指向的<code>字符串常量</code></li>
+<li>已经使用了的，且没有指向的 <code>字符串常量</code></li>
 </ul>
 <p>字符串常量因为可能在程序中被多次使用，所以在程序运行之前就会提前分配内存</p>
-<h1 id="代码区（即-text）"><a href="#代码区（即-text）" class="headerlink" title="代码区（即.text）"></a>代码区（即.text）</h1><p>代码区是<code>由编译时分配</code>，主要用于存放<code>程序运行时的代码</code>，代码会被编译成<code>二进制存进内存</code>的</p>
+<h1 id="代码区（即-text）"><a href="#代码区（即-text）" class="headerlink" title="代码区（即.text）"></a>代码区（即.text）</h1><p>代码区是 <code>由编译时分配</code>，主要用于存放 <code>程序运行时的代码</code>，代码会被编译成 <code>二进制存进内存</code> 的</p>
 <h1 id="内存五大区验证"><a href="#内存五大区验证" class="headerlink" title="内存五大区验证"></a>内存五大区验证</h1><p>运行下面的一段代码，看看变量在内存中是如何分配的：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">int a = 10; // 全局区（已初始化的全局变量）</span><br><span class="line">char * b; // 全局区(未初始化的全局变量)</span><br><span class="line">- (void)test&#123;</span><br><span class="line">    NSInteger i = 123; // 栈区（局部变量）</span><br><span class="line">    NSLog(@&quot;i的内存地址：%p&quot;, &amp;i);</span><br><span class="line">    </span><br><span class="line">    NSString *string = @&quot;ZJ&quot;; // 常量区（字符串常量）</span><br><span class="line">    NSLog(@&quot;string的内存地址：%p&quot;, string);</span><br><span class="line">    NSLog(@&quot;&amp;string的内存地址：%p&quot;, &amp;string);</span><br><span class="line">    </span><br><span class="line">    NSObject *obj = [[NSObject alloc] init]; // 堆区（alloc对象）</span><br><span class="line">    NSLog(@&quot;obj的内存地址：%p&quot;, obj);</span><br><span class="line">    NSLog(@&quot;&amp;obj的内存地址：%p&quot;, &amp;obj);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
@@ -419,18 +419,18 @@
 
 
 <ul>
-<li><p>对于<code>局部变量i</code>， 存放在栈区</p>
+<li><p>对于 <code>局部变量i</code>， 存放在栈区</p>
 </li>
-<li><p>对于<code>字符串对象string</code>，分别打印了<code>string得对象地址</code>和<code>string对象的指针地址</code></p>
+<li><p>对于 <code>字符串对象string</code>，分别打印了 <code>string得对象地址</code> 和 <code>string对象的指针地址</code></p>
 <ul>
-<li>string的<code>对象地址</code>是是存放在<code>常量区</code></li>
-<li>string<code>对象的指针地址</code>，是存放在<code>栈区</code></li>
+<li>string的 <code>对象地址</code> 是是存放在 <code>常量区</code></li>
+<li>string <code>对象的指针地址</code>，是存放在 <code>栈区</code></li>
 </ul>
 </li>
-<li><p>对于<code>alloc创建的对象obj</code>，分别打印了<code>obj得对象地址</code>和<code>obj对象的指针地址</code></p>
+<li><p>对于 <code>alloc创建的对象obj</code>，分别打印了 <code>obj得对象地址</code> 和 <code>obj对象的指针地址</code></p>
 <ul>
-<li>obj的<code>对象地址</code>是存放在<code>堆区</code> </li>
-<li>obj<code>对象的指针地址</code>是存放在<code>栈区</code></li>
+<li>obj的 <code>对象地址</code> 是存放在 <code>堆区</code> </li>
+<li>obj <code>对象的指针地址</code> 是存放在 <code>栈区</code></li>
 </ul>
 </li>
 </ul>
@@ -448,7 +448,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303021911717.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301433659.png"
                      
                 ></p>
 <ul>
@@ -487,7 +487,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://gitee.com/bboy-zhang-jian/picgo/raw/master/img/202303021912743.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301433241.png"
                      
                 ></p>
 

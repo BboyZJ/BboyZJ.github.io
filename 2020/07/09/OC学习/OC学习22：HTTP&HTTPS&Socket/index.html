@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-26 09:59:53</span>
-            <span class="mobile">2023-03-26 09:59</span>
+            <span class="pc">2023-03-30 23:38:13</span>
+            <span class="mobile">2023-03-30 23:38</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -427,7 +427,7 @@
 <li>如果仅仅要索取数据(数据查询)，建议使用Get </li>
 <li>如果是增加，修改，删除数据，建议使用Post</li>
 </ul>
-<h1 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h1><ol>
+<h1 id="HTTPS-重点面试题"><a href="#HTTPS-重点面试题" class="headerlink" title="HTTPS 重点面试题"></a>HTTPS <strong>重点面试题</strong></h1><ol>
 <li><p>简介：HTTPS （全称：Hyper Text Transfer Protocol over SecureSocket Layer）<code>超文本传输安全协议</code>。</p>
 </li>
 <li><p>组成：HTTPS协议 &#x3D; HTTP协议 + SSL&#x2F;TLS协议</p>
@@ -438,10 +438,10 @@
 <li>TLS：全称Transport Layer Security，即 <code>安全传输层协议</code></li>
 </ul>
 <ol start="3">
-<li>HTTPS建立流程：</li>
+<li>HTTPS建立流程： <strong>重点面试题</strong></li>
 </ol>
-<p>HTTPS为了兼顾安全与效率，同时使用了 <code>对称加密和非对称加密</code>。在传输的过程中会涉及到三个密钥：</p>
-<p>1）服务器端的公钥和私钥，用来进行非对称加密<br>2）客户端生成的随机密钥，用来进行对称加密</p>
+<p>HTTPS为了兼顾 <code>安全与效率</code>，同时使用了 <code>对称加密和非对称加密</code>。在传输的过程中会涉及到三个密钥：</p>
+<p>1）服务器端的 <code>公钥和私钥</code>，用来进行非对称加密<br>2）客户端生成的 <code>随机密钥</code>，用来进行对称加密</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
@@ -452,19 +452,19 @@
 <li>如上图，HTTPS连接过程大致可分为八步:</li>
 </ol>
 <ul>
-<li>客户端访问HTTPS连接：客户端会把 <code>安全协议版本号、客户端支持的加密算法列表、随机数C</code> 发给服务端。</li>
-<li>服务端发送证书给客户端：服务端接收密钥算法配件后，会和自己支持的加密算法列表进行比对，如果不符合，则断开连接。否则，服务端会在该算法列表中，选择一种对称算法（如AES）、一种公钥算法（如具有特定秘钥长度的RSA）和一种MAC算法发给客户端。服务器端有一个密钥对，即公钥和私钥，是用来进行非对称加密使用的，服务器端保存着私钥，不能将其泄露，公钥可以发送给任何人。在发送加密算法的同时还会把数字证书和随机数S发送给客户端。</li>
-<li>客户端验证server证书：会对server公钥进行检查，验证其合法性，如果发现发现公钥有问题，那么HTTPS传输就无法继续。</li>
-<li>客户端组装会话秘钥：如果公钥合格，那么客户端会用服务器公钥来生成一个前主秘钥(Pre-Master Secret，PMS)，并通过该前主秘钥和随机数C、S来组装成会话秘钥</li>
-<li>客户端将前主秘钥加密发送给服务端：是通过服务端的公钥来对前主秘钥进行非对称加密，发送给服务端</li>
-<li>服务端通过私钥解密得到前主秘钥：服务端接收到加密信息后，用私钥解密得到主秘钥。</li>
-<li>服务端组装会话秘钥：服务端通过前主秘钥和随机数C、S来组装会话秘钥。至此，服务端和客户端都已经知道了用于此次会话的会话密码。</li>
-<li>数据传输：客户端收到服务器发送来的密文，用客户端密钥对其进行对称解密，得到服务器发送的数据。同理，服务端收到客户端发送来的密文，用服务端密钥对其进行对称解密，得到客户端发送的数据。</li>
+<li>【第一步】<code>客户端访问HTTPS连接</code>：客户端会把 <code>安全协议版本号、客户端支持的加密算法列表、随机数C</code> 发给服务端。</li>
+<li>【第二步】<code>服务端发送证书和公钥给客户端</code>：服务端接收密钥算法配件后，会和自己支持的加密算法列表进行比对，如果不符合，则断开连接。否则，服务端会在该算法列表中，选择一种对称算法（如AES）、一种公钥算法（如具有特定秘钥长度的RSA）和一种MAC算法发给客户端。服务器端有一个密钥对，即公钥和私钥，是用来进行非对称加密使用的，服务器端保存着私钥，不能将其泄露，公钥可以发送给任何人。在发送加密算法的同时还会把数字证书和随机数S发送给客户端。</li>
+<li>【第三步】<code>客户端验证服务端证书和公钥</code>：会对server公钥进行检查，验证其合法性，如果发现发现公钥有问题，那么HTTPS传输就无法继续。</li>
+<li>【第四步】<code>客户端组装会话秘钥</code>：如果公钥合格，那么客户端会用服务器 <code>公钥</code> 来生成一个 <code>前主秘钥</code>(Pre-Master Secret，PMS)，并通过该前主秘钥和随机数C、S来组装成 <code>会话秘钥</code></li>
+<li>【第五步】<code>客户端将前主秘钥加密发送给服务端</code>：是通过服务端的公钥来对前主秘钥进行非对称加密，发送给服务端</li>
+<li>【第六步】<code>服务端通过私钥解密得到前主秘钥</code>：服务端接收到加密信息后，用私钥解密得到主秘钥。</li>
+<li>【第七步】<code>服务端组装会话秘钥</code>：服务端通过前主秘钥和随机数C、S来组装会话秘钥。至此，服务端和客户端都已经知道了用于此次会话的会话密码。</li>
+<li>【第八步】<code>数据传输</code>：客户端收到服务器发送来的密文，用客户端密钥对其进行对称解密，得到服务器发送的数据。同理，服务端收到客户端发送来的密文，用服务端密钥对其进行对称解密，得到客户端发送的数据。</li>
 </ul>
 <ol start="4">
 <li>注：</li>
 </ol>
-<p>会话秘钥 &#x3D; random S + random C + 前主秘钥</p>
+<p>会话秘钥 &#x3D; <code>random S + random C + 前主秘钥</code></p>
 <h1 id="HTTPS和HTTP的区别？-重点"><a href="#HTTPS和HTTP的区别？-重点" class="headerlink" title="HTTPS和HTTP的区别？ 重点"></a>HTTPS和HTTP的区别？ <strong>重点</strong></h1><ul>
 <li><p>HTTP：超文本传输协议，信息明文传输；端口号80；响应速度快（使用TCP三次握手，客户端和服务端需要交换3个包）；</p>
 </li>
@@ -609,7 +609,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC学习22：HTTP&amp;HTTPS&amp;Socket探索</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#URL"><span class="nav-text">URL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%E5%8D%8F%E8%AE%AE"><span class="nav-text">HTTP协议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTPS"><span class="nav-text">HTTPS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTPS%E5%92%8CHTTP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">HTTPS和HTTP的区别？ 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E5%92%8C%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86-%E9%87%8D%E7%82%B9"><span class="nav-text">对称加密和非对称加密 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%81%E4%B9%A6%E6%9C%BA%E5%88%B6"><span class="nav-text">证书机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OSI%E6%A8%A1%E5%9E%8B"><span class="nav-text">OSI模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Socket"><span class="nav-text">Socket</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%E5%92%8CSocket%E7%9A%84%E5%8C%BA%E5%88%AB-%E9%87%8D%E7%82%B9"><span class="nav-text">HTTP和Socket的区别 重点</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#URL"><span class="nav-text">URL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%E5%8D%8F%E8%AE%AE"><span class="nav-text">HTTP协议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTPS-%E9%87%8D%E7%82%B9%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-text">HTTPS 重点面试题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTPS%E5%92%8CHTTP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">HTTPS和HTTP的区别？ 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E5%92%8C%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86-%E9%87%8D%E7%82%B9"><span class="nav-text">对称加密和非对称加密 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%81%E4%B9%A6%E6%9C%BA%E5%88%B6"><span class="nav-text">证书机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OSI%E6%A8%A1%E5%9E%8B"><span class="nav-text">OSI模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Socket"><span class="nav-text">Socket</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%E5%92%8CSocket%E7%9A%84%E5%8C%BA%E5%88%AB-%E9%87%8D%E7%82%B9"><span class="nav-text">HTTP和Socket的区别 重点</span></a></li></ol>
 
     </div>
 </div>

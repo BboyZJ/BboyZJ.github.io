@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2020/10/20/oc进阶/oc底层原理16：dyld与objc的关联/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC底层原理16：dyld与objc的关联">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2020/10/20/OC进阶/OC底层原理16：dyld与objc的关联/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC底层原理16：dyld与objc的关联">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC底层原理16：dyld与objc的关联 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC底层原理16：dyld与objc的关联</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2020-10-20 15:21:21</span>
+        <span class="mobile">2020-10-20 15:21</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-02-26 04:57:46</span>
+            <span class="mobile">2023-02-26 04:57</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/iOS-OC/">iOS-OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文的主要目的是理解 <code>dyld</code> 与 <code>objc</code> 是如何关联的？</p>
+<p>在上两篇文章中，我们梳理了 <code>dyld</code> 的加载流程，下面来详细介绍下 <code>dyld</code> 和 <code>objc</code> 的关联</p>
+<h1 id="objc-init-源码解析"><a href="#objc-init-源码解析" class="headerlink" title="_objc_init 源码解析"></a>_objc_init 源码解析</h1><p>首先，来看下libObjc中的_objc_init方法源码</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">void _objc_init(void)</span><br><span class="line">&#123;</span><br><span class="line">    static bool initialized = false;</span><br><span class="line">    if (initialized) return;</span><br><span class="line">    initialized = true;</span><br><span class="line">    </span><br><span class="line">    // fixme defer initialization until an objc-using image is found?</span><br><span class="line">    //读取影响运行时的环境变量，如果需要，还可以打开环境变量帮助 export OBJC_HELP = 1</span><br><span class="line">    environ_init();</span><br><span class="line">    //关于线程key的绑定，例如线程数据的析构函数</span><br><span class="line">    tls_init();</span><br><span class="line">    //运行C++静态构造函数，在dyld调用我们的静态析构函数之前，libc会调用_objc_init(),因此我们必须自己做</span><br><span class="line">    static_init();</span><br><span class="line">    //runtime运行时环境初始化，里面主要是unattachedCategories、allocatedClasses -- 分类初始化</span><br><span class="line">    runtime_init();</span><br><span class="line">    //初始化libobjc的异常处理系统</span><br><span class="line">    exception_init();</span><br><span class="line">    //缓存条件初始化</span><br><span class="line">    cache_init();</span><br><span class="line">    //启动回调机制，通常这不会做什么，因为所有的初始化都是惰性的，但是对于某些进程，我们会迫不及待地加载trampolines dylib</span><br><span class="line">    _imp_implementationWithBlock_init();</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     _dyld_objc_notify_register -- dyld 注册的地方</span><br><span class="line">     - 仅供objc运行时使用</span><br><span class="line">     - 注册处理程序，以便在映射、取消映射 和初始化objc镜像文件时使用，dyld将使用包含objc_image_info的镜像文件数组，回调 mapped 函数</span><br><span class="line">     </span><br><span class="line">     map_images:dyld将image镜像文件加载进内存时，会触发该函数</span><br><span class="line">     load_images：dyld初始化image会触发该函数</span><br><span class="line">     unmap_image：dyld将image移除时会触发该函数</span><br><span class="line">     */</span><br><span class="line">    _dyld_objc_notify_register(&amp;map_images, load_images, unmap_image);</span><br><span class="line"></span><br><span class="line">#if __OBJC2__</span><br><span class="line">    didCallDyldNotifyRegister = true;</span><br><span class="line">#endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>根据源码所知，主要分为以下几部分：</p>
+<ul>
+<li><p>environ_init：初始化一系列环境变量，并读取影响运行时的环境变量</p>
+</li>
+<li><p>tls_init：关于线程key的绑定</p>
+</li>
+<li><p>static_init：运行C++静态构造函数（只会运行系统级别的构造函数），在dyld调用静态析构函数之前，libc会调用_objc_init</p>
+</li>
+<li><p>runtime_init：runtime运行时环境初始化，里面操作是unattachedCategories、allocatedClasses（表的初始化）</p>
+</li>
+<li><p>exception_init：初始化libObjc的异常处理系统</p>
+</li>
+<li><p>cache_init： cache缓存初始化</p>
+</li>
+<li><p>_imp_implementationWithBlock_init ：启动回调机制，通常这不会做什么，因为所有的初始化都是惰性的，但是对于某些进程，我们会迫不及待地加载trampolines dylib</p>
+</li>
+<li><p>_dyld_objc_notify_register： dyld的注册</p>
+</li>
+</ul>
+<p>下面主要针对以上几部分配合源码进行说明</p>
+<h1 id="environ-init方法：环境变量初始化"><a href="#environ-init方法：环境变量初始化" class="headerlink" title="environ_init方法：环境变量初始化"></a>environ_init方法：环境变量初始化</h1><p>environ_init方法的源码如下，其中的关键代码是 for 循环</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">void environ_init(void) </span><br><span class="line">&#123;</span><br><span class="line">    //...省略部分逻辑</span><br><span class="line">if (PrintHelp  ||  PrintOptions) &#123;</span><br><span class="line">        //...省略部分逻辑</span><br><span class="line">        for (size_t i = 0; i &lt; sizeof(Settings)/sizeof(Settings[0]); i++) &#123;</span><br><span class="line">            const option_t *opt = &amp;Settings[i];            </span><br><span class="line">            if (PrintHelp) _objc_inform(&quot;%s: %s&quot;, opt-&gt;env, opt-&gt;help);</span><br><span class="line">            if (PrintOptions &amp;&amp; *opt-&gt;var) _objc_inform(&quot;%s is set&quot;, opt-&gt;env);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>有以下两种方式可以打印所有的环境变量</p>
+<ul>
+<li>将for循环单独拿出来，去除所有条件，打印环境变量</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773579333765.jpg"
+                     
+                ></p>
+<ul>
+<li>通过终端命令export OBJC_hrlp &#x3D; 1,打印环境变量</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773579589190.jpg"
+                     
+                ></p>
+<p>这些环境变量，均可以通过target – Edit Scheme – Run –Arguments – Environment Variables配置，其中常用的环境变量主要有以下几个（环境变量汇总见文末！）：</p>
+<ul>
+<li><p>DYLD_PRINT_STATISTICS：设置 DYLD_PRINT_STATISTICS 为YES，控制台就会打印 App 的加载时长，包括整体加载时长和动态库加载时长，即main函数之前的启动时间（查看pre-main耗时），可以通过设置了解其耗时部分，并对其进行启动优化。</p>
+</li>
+<li><p>OBJC_DISABLE_NONPOINTER_ISA：杜绝生成相应的nonpointer isa（nonpointer isa指针地址 末尾为1 ），生成的都是普通的isa</p>
+</li>
+<li><p>OBJC_PRINT_LOAD_METHODS：打印 Class 及 Category 的 + (void)load 方法的调用信息</p>
+</li>
+<li><p>NSDoubleLocalizedStrings：项目做国际化本地化(Localized)的时候是一个挺耗时的工作，想要检测国际化翻译好的语言文字UI会变成什么样子，可以指定这个启动项。可以设置 NSDoubleLocalizedStrings 为YES。</p>
+</li>
+<li><p>NSShowNonLocalizedStrings：在完成国际化的时候，偶尔会有一些字符串没有做本地化，这时就可以设置NSShowNonLocalizedStrings 为YES，所有没有被本地化的字符串全都会变成大写。</p>
+</li>
+</ul>
+<h1 id="环境变量-OBJC-DISABLE-NONPOINTER-ISA"><a href="#环境变量-OBJC-DISABLE-NONPOINTER-ISA" class="headerlink" title="环境变量 - OBJC_DISABLE_NONPOINTER_ISA"></a>环境变量 - OBJC_DISABLE_NONPOINTER_ISA</h1><p>以OBJC_DISABLE_NONPOINTER_ISA为例，将其设置为YES，如下图所示</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773580099731.jpg"
+                     
+                ></p>
+<ul>
+<li>未设置 OBJC_DISABLE_NONPOINTER_ISA前， isa地址的二进制打印，末尾为1</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773580228270.jpg"
+                     
+                ></p>
+<ul>
+<li>设置OBJC_DISABLE_NONPOINTER_ISA环境变量后，末尾变成了0</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773580340549.jpg"
+                     
+                ></p>
+<p>所以OBJC_DISABLE_NONPOINTER_ISA可以控制isa优化开关，从而优化整个内存结构</p>
+<h1 id="环境变量-OBJC-PRINT-LOAD-METHODS"><a href="#环境变量-OBJC-PRINT-LOAD-METHODS" class="headerlink" title="环境变量 - OBJC_PRINT_LOAD_METHODS"></a>环境变量 - OBJC_PRINT_LOAD_METHODS</h1><ul>
+<li><p>配置打印load 方法的环境变量OBJC_PRINT_LOAD_METHODS，设置为YES</p>
+</li>
+<li><p>在LGPerson类中重写+load函数，运行程序，load函数的打印如下</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773580657204.jpg"
+                     
+                ></p>
+<p>所以，OBJC_PRINT_LOAD_METHODS可以监控所有的+load方法，从而处理启动优化（后续会总结下启动优化方法）</p>
+<h1 id="tls-init：线程key的绑定"><a href="#tls-init：线程key的绑定" class="headerlink" title="tls_init：线程key的绑定"></a>tls_init：线程key的绑定</h1><p>主要是本地线程池的初始化以及析构，源码如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void tls_init(void)</span><br><span class="line">&#123;</span><br><span class="line">#if SUPPORT_DIRECT_THREAD_KEYS//本地线程池，用来进行处理</span><br><span class="line">    pthread_key_init_np(TLS_DIRECT_KEY, &amp;_objc_pthread_destroyspecific);//初始init</span><br><span class="line">#else</span><br><span class="line">    _objc_pthread_key = tls_create(&amp;_objc_pthread_destroyspecific);//析构</span><br><span class="line">#endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="static-init：运行系统级别的C-静态构造函数"><a href="#static-init：运行系统级别的C-静态构造函数" class="headerlink" title="static_init：运行系统级别的C++静态构造函数"></a>static_init：运行系统级别的C++静态构造函数</h1><p>主要是运行系统级别的C++静态构造函数，在dyld调用我们的静态构造函数之前，libc调用_objc_init方法，即系统级别的C++构造函数 先于 自定义的C++构造函数 运行</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">static void static_init()</span><br><span class="line">&#123;</span><br><span class="line">    size_t count;</span><br><span class="line">    auto inits = getLibobjcInitializers(&amp;_mh_dylib_header, &amp;count);</span><br><span class="line">    for (size_t i = 0; i &lt; count; i++) &#123;</span><br><span class="line">        inits[i]();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="runtime-init：运行时环境初始化"><a href="#runtime-init：运行时环境初始化" class="headerlink" title="runtime_init：运行时环境初始化"></a>runtime_init：运行时环境初始化</h1><p>主要是运行时的初始化，主要分为两部分：<code>分类初始化、类的表初始化</code>（后续会详细讲解对应的函数）</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">void runtime_init(void)</span><br><span class="line">&#123;</span><br><span class="line">    objc::unattachedCategories.init(32);</span><br><span class="line">    objc::allocatedClasses.init(); //初始化 -- 开辟的类的表</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="exception-init：初始化libobjc的异常处理系统"><a href="#exception-init：初始化libobjc的异常处理系统" class="headerlink" title="exception_init：初始化libobjc的异常处理系统"></a>exception_init：初始化libobjc的异常处理系统</h1><p>主要是初始化libobjc的异常处理系统，注册异常处理的回调，从而监控异常的处理，源码如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void exception_init(void)</span><br><span class="line">&#123;</span><br><span class="line">    old_terminate = std::set_terminate(&amp;_objc_terminate);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>当有crash（crash是指系统发生的不允许的一些指令，然后系统给的一些信号）发生时，会来到_objc_terminate方法，走到uncaught_handler扔出异常</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">/***********************************************************************</span><br><span class="line">* _objc_terminate</span><br><span class="line">* Custom std::terminate handler.</span><br><span class="line">*</span><br><span class="line">* The uncaught exception callback is implemented as a std::terminate handler. </span><br><span class="line">* 1. Check if there&#x27;s an active exception</span><br><span class="line">* 2. If so, check if it&#x27;s an Objective-C exception</span><br><span class="line">* 3. If so, call our registered callback with the object.</span><br><span class="line">* 4. Finally, call the previous terminate handler.</span><br><span class="line">**********************************************************************/</span><br><span class="line">static void (*old_terminate)(void) = nil;</span><br><span class="line">static void _objc_terminate(void)</span><br><span class="line">&#123;</span><br><span class="line">    if (PrintExceptions) &#123;</span><br><span class="line">        _objc_inform(&quot;EXCEPTIONS: terminating&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (! __cxa_current_exception_type()) &#123;</span><br><span class="line">        // No current exception.</span><br><span class="line">        (*old_terminate)();</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">        // There is a current exception. Check if it&#x27;s an objc exception.</span><br><span class="line">        @try &#123;</span><br><span class="line">            __cxa_rethrow();</span><br><span class="line">        &#125; @catch (id e) &#123;</span><br><span class="line">            // It&#x27;s an objc object. Call Foundation&#x27;s handler, if any.</span><br><span class="line">            (*uncaught_handler)((id)e);//扔出异常</span><br><span class="line">            (*old_terminate)();</span><br><span class="line">        &#125; @catch (...) &#123;</span><br><span class="line">            // It&#x27;s not an objc object. Continue to C++ terminate.</span><br><span class="line">            (*old_terminate)();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>搜索uncaught_handler，在app层会传入一个函数用于处理异常，以便于调用函数，然后回到原有的app层中，如下所示，其中fn即为传入的函数，即 uncaught_handler 等于 fn</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">objc_uncaught_exception_handler </span><br><span class="line">objc_setUncaughtExceptionHandler(objc_uncaught_exception_handler fn)</span><br><span class="line">&#123;</span><br><span class="line">//    fn为设置的异常句柄 传入的函数，为外界给的</span><br><span class="line">    objc_uncaught_exception_handler result = uncaught_handler;</span><br><span class="line">    uncaught_handler = fn; //赋值</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="crash分类"><a href="#crash分类" class="headerlink" title="crash分类"></a>crash分类</h1><p>crash的主要原因是收到了未处理的信号，主要来源于三个地方：</p>
+<ul>
+<li>kernel 内核</li>
+<li>其他进行</li>
+<li>App本身</li>
+</ul>
+<p>所以相对应的，crash也分为了3种</p>
+<ul>
+<li><p>Mach异常：是指最底层的内核级异常。用户态的开发者可以直接通过Mach API设置thread，task，host的异常端口，来捕获Mach异常。</p>
+</li>
+<li><p>Unix信号：又称BSD 信号，如果开发者没有捕获Mach异常，则会被host层的方法ux_exception()将异常转换为对应的UNIX信号，并通过方法threadsignal()将信号投递到出错线程。可以通过方法signal(x, SignalHandler)来捕获single。</p>
+</li>
+<li><p>NSException 应用级异常：它是未被捕获的Objective-C异常，导致程序向自身发送了SIGABRT信号而崩溃，对于未捕获的Objective-C异常，是可以通过try catch来捕获的，或者通过NSSetUncaughtExceptionHandler()机制来捕获。</p>
+</li>
+</ul>
+<p>针对应用级异常，可以通过注册异常捕获的函数，即NSSetUncaughtExceptionHandler机制,实现线程保活, 收集上传崩溃日志</p>
+<h1 id="应用级crash拦截"><a href="#应用级crash拦截" class="headerlink" title="应用级crash拦截"></a>应用级crash拦截</h1><p>所以在开发中，会针对crash进行拦截处理，即app代码中给一个异常句柄NSSetUncaughtExceptionHandler，传入一个函数给系统，当异常发生后，调用函数（函数中可以线程保活、收集并上传崩溃日志），然后回到原有的app层中，其本质就是一个回调函数，如下图所示</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773582748130.png"
+                     
+                ></p>
+<p>上述方式只适合收集应用级异常，我们要做的就是用自定义的函数替代该ExceptionHandler即可</p>
+<h1 id="cache-init：缓存初始化"><a href="#cache-init：缓存初始化" class="headerlink" title="cache_init：缓存初始化"></a>cache_init：缓存初始化</h1><p>主要是缓存初始化，源码如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">void cache_init()</span><br><span class="line">&#123;</span><br><span class="line">#if HAVE_TASK_RESTARTABLE_RANGES</span><br><span class="line">    mach_msg_type_number_t count = 0;</span><br><span class="line">    kern_return_t kr;</span><br><span class="line"></span><br><span class="line">    while (objc_restartableRanges[count].location) &#123;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">    //为当前任务注册一组可重新启动的缓存</span><br><span class="line">    kr = task_restartable_ranges_register(mach_task_self(),</span><br><span class="line">                                          objc_restartableRanges, count);</span><br><span class="line">    if (kr == KERN_SUCCESS) return;</span><br><span class="line">    _objc_fatal(&quot;task_restartable_ranges_register failed (result 0x%x: %s)&quot;,</span><br><span class="line">                kr, mach_error_string(kr));</span><br><span class="line">#endif // HAVE_TASK_RESTARTABLE_RANGES</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="imp-implementationWithBlock-init：启动回调机制"><a href="#imp-implementationWithBlock-init：启动回调机制" class="headerlink" title="_imp_implementationWithBlock_init：启动回调机制"></a>_imp_implementationWithBlock_init：启动回调机制</h1><p>该方法主要是启动回调机制，通常这不会做什么，因为所有的初始化都是惰性的，但是对于某些进程，我们会迫不及待地加载libobjc-trampolines.dylib，其源码如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">_imp_implementationWithBlock_init(void)</span><br><span class="line">&#123;</span><br><span class="line">#if TARGET_OS_OSX</span><br><span class="line">    // Eagerly load libobjc-trampolines.dylib in certain processes. Some</span><br><span class="line">    // programs (most notably QtWebEngineProcess used by older versions of</span><br><span class="line">    // embedded Chromium) enable a highly restrictive sandbox profile which</span><br><span class="line">    // blocks access to that dylib. If anything calls</span><br><span class="line">    // imp_implementationWithBlock (as AppKit has started doing) then we&#x27;ll</span><br><span class="line">    // crash trying to load it. Loading it here sets it up before the sandbox</span><br><span class="line">    // profile is enabled and blocks it.</span><br><span class="line">    // 在某些进程中渴望加载libobjc-trampolines.dylib。一些程序（最著名的是嵌入式Chromium的较早版本使用的QtWebEngineProcess）启用了严格限制的沙箱配置文件，从而阻止了对该dylib的访问。如果有任何调用imp_implementationWithBlock的操作（如AppKit开始执行的操作），那么我们将在尝试加载它时崩溃。将其加载到此处可在启用沙箱配置文件之前对其进行设置并阻止它。</span><br><span class="line">    // This fixes EA Origin (rdar://problem/50813789)</span><br><span class="line">    // and Steam (rdar://problem/55286131)</span><br><span class="line">    if (__progname &amp;&amp;</span><br><span class="line">        (strcmp(__progname, &quot;QtWebEngineProcess&quot;) == 0 ||</span><br><span class="line">         strcmp(__progname, &quot;Steam Helper&quot;) == 0)) &#123;</span><br><span class="line">        Trampolines.Initialize();</span><br><span class="line">    &#125;</span><br><span class="line">#endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="dyld-objc-notify-register：dyld注册"><a href="#dyld-objc-notify-register：dyld注册" class="headerlink" title="_dyld_objc_notify_register：dyld注册"></a>_dyld_objc_notify_register：dyld注册</h1><p>_dyld_objc_notify_register方法</p>
+<p>这个方法的具体实现在 <a href="">iOS-底层原理 15-1：dyld加载流程</a> 已经有详细说明，其源码实现是在dyld源码中，以下是_dyld_objc_notify_register方法的声明</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">// Note: only for use by objc runtime</span><br><span class="line">// Register handlers to be called when objc images are mapped, unmapped, and initialized.</span><br><span class="line">// Dyld will call back the &quot;mapped&quot; function with an array of images that contain an objc-image-info section.</span><br><span class="line">// Those images that are dylibs will have the ref-counts automatically bumped, so objc will no longer need to</span><br><span class="line">// call dlopen() on them to keep them from being unloaded.  During the call to _dyld_objc_notify_register(),</span><br><span class="line">// dyld will call the &quot;mapped&quot; function with already loaded objc images.  During any later dlopen() call,</span><br><span class="line">// dyld will also call the &quot;mapped&quot; function.  Dyld will call the &quot;init&quot; function when dyld would be called</span><br><span class="line">// initializers in that image.  This is when objc calls any +load methods in that image.</span><br><span class="line">//</span><br><span class="line">void _dyld_objc_notify_register(_dyld_objc_notify_mapped    mapped,</span><br><span class="line">                                _dyld_objc_notify_init      init,</span><br><span class="line">                                _dyld_objc_notify_unmapped  unmapped);</span><br></pre></td></tr></table></figure></div>
+
+<p>从注释中，可以得出：</p>
+<ul>
+<li><p>仅供objc运行时使用</p>
+</li>
+<li><p>注册处理程序，以便在映射、取消映射和初始化objc图像时调用</p>
+</li>
+<li><p>dyld将会通过一个包含objc-image-info的镜像文件的数组回调mapped函数</p>
+</li>
+</ul>
+<p>方法中的三个参数分别表示的含义如下：</p>
+<ul>
+<li><p>map_images：dyld将image（镜像文件）加载进内存时，会触发该函数</p>
+</li>
+<li><p>load_image：dyld初始化image会触发该函数</p>
+</li>
+<li><p>unmap_image：dyld将image移除时，会触发该函数</p>
+</li>
+</ul>
+<h1 id="dyld与Objc的关联"><a href="#dyld与Objc的关联" class="headerlink" title="dyld与Objc的关联"></a>dyld与Objc的关联</h1><p>其方法的源码实现与调用如下，即dyld与Objc的关联可以通过源码体现</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">===&gt; dyld源码--具体实现</span><br><span class="line">void _dyld_objc_notify_register(_dyld_objc_notify_mapped    mapped,</span><br><span class="line">                                _dyld_objc_notify_init      init,</span><br><span class="line">                                _dyld_objc_notify_unmapped  unmapped)</span><br><span class="line">&#123;</span><br><span class="line">    dyld::registerObjCNotifiers(mapped, init, unmapped);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">🔽</span><br><span class="line">===&gt; libobjc源码中--调用</span><br><span class="line">_dyld_objc_notify_register(&amp;map_images, load_images, unmap_image);</span><br></pre></td></tr></table></figure></div>
+
+<p>从上可以得出</p>
+<ul>
+<li>mapped 等价于 map_images</li>
+<li>init 等价于 load_images</li>
+<li>unmapped 等价于 unmap_image</li>
+</ul>
+<p><a href="">在iOS-底层原理 15-1：dyld加载流程</a> 中，我们知道了load_images是在notifySingle方法中，通过sNotifyObjCInit调用的，如下所示</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773584642372.jpg"
+                     
+                ></p>
+<p>然后通过查找sNotifyObjCInit，最终找到了_dyld_objc_notify_register –&gt; registerObjCNotifiers,在该方法中将_dyld_objc_notify_register传入的参数赋值给了3个回调方法</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773584780090.png"
+                     
+                ></p>
+<p>所以 有以下等价关系</p>
+<ul>
+<li>sNotifyObjCMapped &#x3D;&#x3D; mapped &#x3D;&#x3D; map_images</li>
+<li>sNotifyObjCInit &#x3D;&#x3D; init &#x3D;&#x3D; load_images</li>
+<li>sNotifyObjCUnmapped &#x3D;&#x3D; unmapped &#x3D;&#x3D; unmap_image</li>
+</ul>
+<p><strong>map_images调用时机</strong></p>
+<p>关于load_images的调用时机已经在dyld加载流程中讲解过了，下面以map_images为例，看看其调用时机</p>
+<ul>
+<li>dyld中全局搜索 sNotifyObjcMapped ：registerObjCNotifiers – notifyBatchPartial – sNotifyObjCMapped</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773585169000.jpg"
+                     
+                ></p>
+<ul>
+<li>全局搜索notifyBatchPartial，在registerObjCNotifiers方法中调用</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773585293740.jpg"
+                     
+                ></p>
+<p>所以有以下结论：map_images是先于load_images调用，即先map_images ，再load_images</p>
+<h1 id="dyld与Objc关联"><a href="#dyld与Objc关联" class="headerlink" title="dyld与Objc关联"></a>dyld与Objc关联</h1><p>结合dyld加载流程，dyld与Objc的关联如下图所示</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773585533757.png"
+                     
+                ></p>
+<ul>
+<li><p>在dyld中注册回调函数，可以理解为 添加观察者</p>
+</li>
+<li><p>在objc中dyld注册，可以理解为发送通知</p>
+</li>
+<li><p>触发回调，可以理解为执行通知selector</p>
+</li>
+</ul>
+<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><p>环境变量汇总</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773586139259.jpg"
+                     
+                ><br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773586302636.jpg"
+                     
+                ><br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773586473283.jpg"
+                     
+                ><br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773586635126.jpg"
+                     
+                ></p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC底层原理16：dyld与objc的关联</li>
+        <li>Post author：张建</li>
+        <li>Create time：2020-10-20 15:21:21</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2020/10/20/OC进阶/OC底层原理16：dyld与objc的关联/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/iOS-OC/">#iOS-OC</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2020/11/03/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8617%EF%BC%9A%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%EF%BC%88%E4%B8%8A%EF%BC%89/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理17：类的加载（上）</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2020/10/10/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8615-1%EF%BC%9Adyld%E5%8A%A0%E8%BD%BD%E6%B5%81%E7%A8%8B/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理15：dyld源码分析</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC底层原理16：dyld与objc的关联</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#objc-init-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90"><span class="nav-text">_objc_init 源码解析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#environ-init%E6%96%B9%E6%B3%95%EF%BC%9A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">environ_init方法：环境变量初始化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F-OBJC-DISABLE-NONPOINTER-ISA"><span class="nav-text">环境变量 - OBJC_DISABLE_NONPOINTER_ISA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F-OBJC-PRINT-LOAD-METHODS"><span class="nav-text">环境变量 - OBJC_PRINT_LOAD_METHODS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tls-init%EF%BC%9A%E7%BA%BF%E7%A8%8Bkey%E7%9A%84%E7%BB%91%E5%AE%9A"><span class="nav-text">tls_init：线程key的绑定</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#static-init%EF%BC%9A%E8%BF%90%E8%A1%8C%E7%B3%BB%E7%BB%9F%E7%BA%A7%E5%88%AB%E7%9A%84C-%E9%9D%99%E6%80%81%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="nav-text">static_init：运行系统级别的C++静态构造函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#runtime-init%EF%BC%9A%E8%BF%90%E8%A1%8C%E6%97%B6%E7%8E%AF%E5%A2%83%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">runtime_init：运行时环境初始化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#exception-init%EF%BC%9A%E5%88%9D%E5%A7%8B%E5%8C%96libobjc%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F"><span class="nav-text">exception_init：初始化libobjc的异常处理系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#crash%E5%88%86%E7%B1%BB"><span class="nav-text">crash分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E7%BA%A7crash%E6%8B%A6%E6%88%AA"><span class="nav-text">应用级crash拦截</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cache-init%EF%BC%9A%E7%BC%93%E5%AD%98%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">cache_init：缓存初始化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#imp-implementationWithBlock-init%EF%BC%9A%E5%90%AF%E5%8A%A8%E5%9B%9E%E8%B0%83%E6%9C%BA%E5%88%B6"><span class="nav-text">_imp_implementationWithBlock_init：启动回调机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dyld-objc-notify-register%EF%BC%9Adyld%E6%B3%A8%E5%86%8C"><span class="nav-text">_dyld_objc_notify_register：dyld注册</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dyld%E4%B8%8EObjc%E7%9A%84%E5%85%B3%E8%81%94"><span class="nav-text">dyld与Objc的关联</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dyld%E4%B8%8EObjc%E5%85%B3%E8%81%94"><span class="nav-text">dyld与Objc关联</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%95"><span class="nav-text">附录</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

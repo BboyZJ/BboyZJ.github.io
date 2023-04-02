@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2021/03/10/oc进阶/oc底层原理26：gcd之函数与队列/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC底层原理26：GCD之函数与队列">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2021/03/10/OC进阶/OC底层原理26：GCD之函数与队列/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC底层原理26：GCD之函数与队列">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC底层原理26：GCD之函数与队列 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC底层原理26：GCD之函数与队列</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2021-03-10 14:45:48</span>
+        <span class="mobile">2021-03-10 14:45</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2022-03-08 11:55:35</span>
+            <span class="mobile">2022-03-08 11:55</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/iOS-OC/">iOS-OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="GCD简介"><a href="#GCD简介" class="headerlink" title="GCD简介"></a>GCD简介</h1><p>1、什么是GCD？</p>
+<p>全称是 <code>Grand Central Dispatch</code>，纯 <code>C</code> 语言，提供了非常强大的函数</p>
+<p>2、GCD 的优势</p>
+<ul>
+<li>GCD 是苹果公司为多核的并行运算提出的解决方案</li>
+<li>GCD 会自动利用更多的 <code>CPU</code> 内核（比如双核、四核）</li>
+<li>GCD 会自动管理线程的声明周期（创建线程、调度任务、销毁线程）</li>
+<li>程序员只需要告诉 GCD 想要执行什么任务，不需要编写任何线程管理代码</li>
+</ul>
+<p><strong>【重点】</strong>用一句话总结 GCD ： <code>将任务添加到队列，并且指定执行任务的函数。</code></p>
+<h1 id="GCD-核心"><a href="#GCD-核心" class="headerlink" title="GCD 核心"></a>GCD 核心</h1><p>在日常开发中，GCD一般写成下面的形式</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">diaptch_async(dispatch_queue_create(&quot;com.zj.Queue&quot;,NULL)), ^&#123;</span><br><span class="line">    NSLog(@&quot;GCD基本使用&quot;)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></div>
+
+<p>将上述代码拆分，方便我们来理解 <code>GCD</code> 的 <code>核心</code>，主要是由 <code>任务 + 队列 + 函数</code> 构成</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//*****GCD基础写法*****</span><br><span class="line">// 创建任务</span><br><span class="line">dispatch_block_t block= ^&#123;</span><br><span class="line">    NSLog(@&quot;hello GCD&quot;);</span><br><span class="line">&#125;</span><br><span class="line">// 创建队列</span><br><span class="line">dispatch_queue_t queue = dispatch_queue_create(&quot;com.zj.Queue&quot;,NULL);</span><br><span class="line">// 将任务添加到队列，并指定函数执行</span><br><span class="line">dispatch_async(queue,block);</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>dispatch_block_t：创建任务</li>
+<li>dispatch_queue_t：创建队列</li>
+<li>dispatch_async：函数</li>
+</ul>
+<h1 id="函数和队列"><a href="#函数和队列" class="headerlink" title="函数和队列"></a>函数和队列</h1><p>1、在GCD中函数按照执行方式分为 <code>同步函数</code> 和 <code>异步函数</code></p>
+<ul>
+<li><p>同步函数：<code>dispatch_sync</code></p>
+<ul>
+<li>必须等待当前语句执行完毕，才会执行下一条语句</li>
+<li>不会开启线程，即不具备开启新线程的能力</li>
+<li>在当前执行 <code>block</code> 任务</li>
+</ul>
+</li>
+<li><p>异步函数：<code>dispatch_async</code></p>
+<ul>
+<li>会开启新的线程执行 <code>block</code> 任务</li>
+<li>异步是多线程的代名词</li>
+</ul>
+</li>
+</ul>
+<p>综上所述，两种执行方式的 <code>主要区别</code> 有两点：</p>
+<ul>
+<li><code>是否等待</code> 队列的任务执行完毕</li>
+<li><code>是否具备开启新线程</code> 的能力</li>
+</ul>
+<p>2、队列</p>
+<p>在GCD中队列是用来 <code>存放任务</code>，是一种特殊的 <code>线性表</code>，遵循 <code>FIFO（先进先出）</code> 原则，新任务总是被 <code>插入到队尾</code>，而任务的读取是从 <code>队首开始读取</code>，每读一个任务，则队列中释放一个任务，如下图所示：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/149465279-a50d057c-c1c8-43a2-ba81-1d90363a8d30.jpg"
+                     
+                ></p>
+<p>队列主要分为 <code>串行队列（Serial Dispatch Queue）</code> 和 <code>并发队列(Concurrent Dispatch Queue)</code> 两种，如下图所示</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/149465296-06fbc7d7-d367-47c5-80d9-99a24ff0edcb.jpg"
+                     
+                ></p>
+<ul>
+<li><p>串行队列：每次 <code>只有一个任务被执行</code>，等待上一个任务执行完毕再执行下一个，即只开启一个线程（通俗理解：同一时刻只调度一个任务执行）</p>
+<ul>
+<li>使用 <code>dispatch_queue_create(&quot;xxx&quot;,DISPATCH_QUEUE_SERIAL)</code> 创建串行队列</li>
+<li>其中 <code>DISPATCH_QUEUE_SERIAL</code> 也可以用 <code>NULL</code> 表示，这两种均表示 默认的串行队列</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 串行队列的获取方法</span><br><span class="line">dispatch_queue_t serialQueue1 = dispatch_queue_create(&quot;com.ZJ.Queue&quot;,DISPATCH_QUQUQ_SERIAL);</span><br><span class="line"></span><br><span class="line">dispatch_quque_t serialQuquq2 = dispatch_ququq_create(&quot;com.ZJ.Queue&quot;,Null);</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>并发队列：一次可以 <code>并发执行多个任务</code>，即 <code>开启多个线程</code>，并同时执行任务（通俗理解：同意时刻可以调度多个任务执行）</p>
+<ul>
+<li>使用 <code>dispach_queue_create(&quot;xxx&quot;,DISPATCH_QUQUQ_CONCURRENT)</code> 创建并发队列</li>
+<li>注意：<code>并发队列</code> 的并发功能 <code>只有在异步函数下才有效</code></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 并发队列的获取方法</span><br><span class="line">dispatch_quque_t concurrentQueue = dispatch_quque_create(&quot;com.ZJ.Queue&quot;,DISPATCH_QUQUE_CONCURRENT);  </span><br></pre></td></tr></table></figure></div>
+
+<h1 id="主队列-和-全局并发队列"><a href="#主队列-和-全局并发队列" class="headerlink" title="主队列 和 全局并发队列"></a>主队列 和 全局并发队列</h1><p>在GCD中，针对这两种队列，分别提供了 <code>主队列（Main Dispatch Queue）</code> 和 <code>全局并发队列（Global Dispatch Queue）</code></p>
+<ul>
+<li><p><code>主队列（Main Dispatch Queue）</code>：GCD 中提供的 <code>特殊的串行队列</code></p>
+<ul>
+<li>专门用来 <code>在主线程上调度任务的串行队列</code>，依赖于主线程、主Runloop，在main函数调用之前 自动创建</li>
+<li>不会开启线程</li>
+<li>如果当前主线程正在有任务执行，那么无论主队列中当前被添加了什么任务，都不会被调用</li>
+<li>使用 <code>dispatch_get_main_queue()</code> 获得 主队列</li>
+<li>通常在返回 <code>主线程 更新UI</code> 时使用</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 主队列的获取方法</span><br><span class="line">dispatch_queue_t mainQueue = dispatch_get_main_queue();</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p><code>全局并发队列（Global Dispatch Queue）</code>：GCD 提供的默认的 <code>并发队列</code></p>
+<ul>
+<li>为了方便程序员使用，苹果提供了全局队列</li>
+<li>在使用多线程开发时，如果对队列没有特殊要求，<code>在执行异步任务时，可以直接使用全局队列</code></li>
+<li>使用 <code>dispatch_get_global_queue</code> 获取全局并发队列，最简单的是 <code>dispatch_get_global_queue(0,0)</code><ul>
+<li>第一个参数表示 队列优先级，默认优先级未 <code>DISPATCH_QUEUE_PRIORITY_DEFAULT=0</code>，在iOS9之后，已经被 <code>服务质量（quality-of-service）</code> 取代</li>
+<li>第二个参数使用 0</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 全集并发队列的获取方法</span><br><span class="line">dispatch_queue_t globalQueue = dispatch_get_global_queue(0,0);</span><br><span class="line"></span><br><span class="line">// 优先级从高到底（对应的服务质量）依次为</span><br><span class="line">- DISPATCH_QUEUE_PRIORITY_HIGH:         QOS_CLASS_USER_INITIATED</span><br><span class="line">- DISPATCH_QUEUE_PRIORITY_DEFAULT:      QOS_CLASS_DEFAULT</span><br><span class="line">- DISPATCH_QUEUE_PRIORITY_LOW:          QOS_CLASS_UTILITY</span><br><span class="line">- DISPATCH_QUEUE_PRIORITY_BACKGROUND:   QOS_CLASS_BACKGROUND</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="全局并发队列-主队列-配合使用"><a href="#全局并发队列-主队列-配合使用" class="headerlink" title="全局并发队列 + 主队列 配合使用"></a>全局并发队列 + 主队列 配合使用</h1><p>在日常开发中， <code>全局队列 + 并发队列</code> 一般是这样配合使用的</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 主队列 + 全局并发队列 的日常使用</span><br><span class="line">dispatch_async(dispatch_get_global_queue(0,0), ^&#123;</span><br><span class="line">    // 执行耗时操作</span><br><span class="line">    dispatch_async(dispatch_get_main_queue(),^&#123;</span><br><span class="line">        // 回到主线程进行UI操作</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="函数与队列的不同组合"><a href="#函数与队列的不同组合" class="headerlink" title="函数与队列的不同组合"></a>函数与队列的不同组合</h1><ol>
+<li>串行队列 + 同步函数</li>
+</ol>
+<p>【任务 <code>按顺序执行</code>】：任务一个接一个的在当前线程执行，<code>不会开辟新线程</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 串行队列 + 同步函数</span><br><span class="line">- (void)test1&#123;</span><br><span class="line">    NSLog(@&quot;串行 + 同步：%@&quot;,[NSThread currentThread]);</span><br><span class="line">    dispatch_queue_t serialQueue = dispatch_queue_create(&quot;com.ZJ.Queue&quot;, DISPATCH_QUEUE_SERIAL);</span><br><span class="line">    for (int i = 0; i &lt; 5; i ++) &#123;</span><br><span class="line">        dispatch_sync(serialQueue, ^&#123;</span><br><span class="line">            NSLog(@&quot;串行 + 同步：%d - %@&quot;,i,[NSThread currentThread]);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行代码，查看打印结果如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">2022-01-12 15:13:39.595134+0800 GCD之函数和队列[4500:155055] 串行 + 同步：&lt;_NSMainThread: 0x6000025d00c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 15:13:39.595275+0800 GCD之函数和队列[4500:155055] 串行 + 同步：0 - &lt;_NSMainThread: 0x6000025d00c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 15:13:39.595388+0800 GCD之函数和队列[4500:155055] 串行 + 同步：1 - &lt;_NSMainThread: 0x6000025d00c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 15:13:39.595512+0800 GCD之函数和队列[4500:155055] 串行 + 同步：2 - &lt;_NSMainThread: 0x6000025d00c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 15:13:39.595639+0800 GCD之函数和队列[4500:155055] 串行 + 同步：3 - &lt;_NSMainThread: 0x6000025d00c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 15:13:39.595759+0800 GCD之函数和队列[4500:155055] 串行 + 同步：4 - &lt;_NSMainThread: 0x6000025d00c0&gt;&#123;number = 1, name = main&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>串行队列 + 异步函数</li>
+</ol>
+<p>【任务 <code>按顺序执行</code>】：任务一个接一个的执行，会 <code>开辟新线程</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 串行队列 + 异步函数</span><br><span class="line">- (void)test2&#123;</span><br><span class="line">    NSLog(@&quot;串行 + 异步：%@&quot;,[NSThread currentThread]);</span><br><span class="line">    dispatch_queue_t serialQueue = dispatch_queue_create(&quot;com.ZJ.Queue&quot;, NULL);</span><br><span class="line">    for (int i = 0; i &lt; 5; i ++) &#123;</span><br><span class="line">        dispatch_async(serialQueue, ^&#123;</span><br><span class="line">            NSLog(@&quot;串行 + 异步：%d - %@&quot;,i,[NSThread currentThread]);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行代码，查看打印结果如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">2022-01-12 15:20:12.884840+0800 GCD之函数和队列[4590:160591] 串行 + 异步：&lt;_NSMainThread: 0x600000ee4140&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 15:20:12.885010+0800 GCD之函数和队列[4590:160734] 串行 + 异步：0 - &lt;NSThread: 0x600000eb01c0&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">2022-01-12 15:20:12.885136+0800 GCD之函数和队列[4590:160734] 串行 + 异步：1 - &lt;NSThread: 0x600000eb01c0&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">2022-01-12 15:20:12.885262+0800 GCD之函数和队列[4590:160734] 串行 + 异步：2 - &lt;NSThread: 0x600000eb01c0&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">2022-01-12 15:20:12.885392+0800 GCD之函数和队列[4590:160734] 串行 + 异步：3 - &lt;NSThread: 0x600000eb01c0&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">2022-01-12 15:20:12.885538+0800 GCD之函数和队列[4590:160734] 串行 + 异步：4 - &lt;NSThread: 0x600000eb01c0&gt;&#123;number = 3, name = (null)&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>并发队列 + 同步函数</li>
+</ol>
+<p>【任务 <code>按顺序执行</code>】：任务一个接一个的执行，<code>不开辟新线程</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 并发队列 + 同步函数</span><br><span class="line">- (void)test3&#123;</span><br><span class="line">    NSLog(@&quot;并发 + 同步：%@&quot;,[NSThread currentThread]);</span><br><span class="line">    dispatch_queue_t concurrentQueue = dispatch_queue_create(&quot;com.ZJ.Queue&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    for (int i = 0; i &lt; 5; i ++) &#123;</span><br><span class="line">        dispatch_sync(serialQueue, ^&#123;</span><br><span class="line">            NSLog(@&quot;并发 + 同步：%d - %@&quot;,i,[NSThread currentThread]);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行代码，查看打印结果如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">22-01-12 15:23:15.939687+0800 GCD之函数和队列[4630:163688] 并发 + 同步：&lt;_NSMainThread: 0x600000de8000&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 15:23:15.939830+0800 GCD之函数和队列[4630:163688] 并发 + 同步：0 - &lt;_NSMainThread: 0x600000de8000&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 15:23:15.939922+0800 GCD之函数和队列[4630:163688] 并发 + 同步：1 - &lt;_NSMainThread: 0x600000de8000&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 15:23:15.940014+0800 GCD之函数和队列[4630:163688] 并发 + 同步：2 - &lt;_NSMainThread: 0x600000de8000&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 15:23:15.940102+0800 GCD之函数和队列[4630:163688] 并发 + 同步：3 - &lt;_NSMainThread: 0x600000de8000&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 15:23:15.940217+0800 GCD之函数和队列[4630:163688] 并发 + 同步：4 - &lt;_NSMainThread: 0x600000de8000&gt;&#123;number = 1, name = main&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="4">
+<li>并发队列 + 异步函数</li>
+</ol>
+<p>【任务 <code>乱序执行</code>】：任务执行无顺序，会 <code>开辟新线程</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 并发队列 + 异步函数</span><br><span class="line">- (void)test4&#123;</span><br><span class="line">    NSLog(@&quot;并发 + 异步：%@&quot;,[NSThread currentThread]);</span><br><span class="line">    dispatch_queue_t concurrentQueue = dispatch_queue_create(&quot;com.ZJ.Queue&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    for (int i = 0; i &lt; 5; i ++) &#123;</span><br><span class="line">        dispatch_async(serialQueue, ^&#123;</span><br><span class="line">            NSLog(@&quot;并发 + 异步：%d - %@&quot;,i,[NSThread currentThread]);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行代码，查看打印结果如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">2022-01-12 15:26:35.249949+0800 GCD之函数和队列[4716:166604] 并发 + 异步：&lt;_NSMainThread: 0x600003344740&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 15:26:35.250144+0800 GCD之函数和队列[4716:166729] 并发 + 异步：0 - &lt;NSThread: 0x60000332c100&gt;&#123;number = 7, name = (null)&#125;</span><br><span class="line">2022-01-12 15:26:35.250153+0800 GCD之函数和队列[4716:166735] 并发 + 异步：1 - &lt;NSThread: 0x600003300d40&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">2022-01-12 15:26:35.250174+0800 GCD之函数和队列[4716:166734] 并发 + 异步：3 - &lt;NSThread: 0x60000330f0c0&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">2022-01-12 15:26:35.250238+0800 GCD之函数和队列[4716:166731] 并发 + 异步：4 - &lt;NSThread: 0x600003328040&gt;&#123;number = 8, name = (null)&#125;</span><br><span class="line">2022-01-12 15:26:35.250277+0800 GCD之函数和队列[4716:166733] 并发 + 异步：2 - &lt;NSThread: 0x600003305c40&gt;&#123;number = 3, name = (null)&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>主队列 + 同步函数</li>
+</ol>
+<p>【造成 <code>死锁</code>】：任务 <code>相互等待</code>，造成 <code>死锁</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/149465408-b09b2528-90b4-43d9-87f3-87e136a46d03.jpg"
+                     
+                ></p>
+<p>造成死锁的原因分析如下：</p>
+<ul>
+<li>主队列有两个任务，顺序为： <code>NSLog任务 - 同步block</code></li>
+<li>执行NSLog任务后，执行同步的block，会将 <code>任务1（即 i=1）</code> 加入到主队列，主队列顺序为 ：<code>NSLog任务 - 同步block - 任务1</code></li>
+<li><code>任务1</code> 的执行需要 <code>等待同步block执行完毕</code> 才会执行，而 <code>同步block</code> 的执行需要 <code>等待任务1执行完毕</code>，所以就造成了 <code>互相等待</code> 的情况，即造成 <code>死锁崩溃</code>。</li>
+</ul>
+<p>【死锁现象】</p>
+<ul>
+<li><code>主线程</code> 因为你 <code>同步函数</code> 的原因 <code>等着先执行任务</code></li>
+<li><code>主队列等着主线程的任务</code> 执行完毕再执行自己的任务</li>
+<li><code>主队列和主线程相互等待</code> 会造成死锁</li>
+</ul>
+<ol start="6">
+<li>主队列 + 异步函数</li>
+</ol>
+<p>【任务 <code>按顺序执行</code>】：任务一个接一个的执行，不开辟线程</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 主队列 + 异步函数</span><br><span class="line">- (void)test6&#123;</span><br><span class="line">    NSLog(@&quot;主队列 + 异步：%@&quot;,[NSThread currentThread]);</span><br><span class="line">    dispatch_queue_t mainQueue = dispatch_get_main_queue();</span><br><span class="line">    for (int i = 0; i &lt; 5; i ++) &#123;</span><br><span class="line">        dispatch_async(mainQueue, ^&#123;</span><br><span class="line">            NSLog(@&quot;主队列 + 异步：%d - %@&quot;,i,[NSThread currentThread]);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行代码，查看打印结果如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">2022-01-12 16:27:53.197940+0800 GCD之函数和队列[5926:204672] 主队列 + 异步：&lt;_NSMainThread: 0x600001880000&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 16:27:53.213528+0800 GCD之函数和队列[5926:204672] 主队列 + 异步：0 - &lt;_NSMainThread: 0x600001880000&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 16:27:53.213718+0800 GCD之函数和队列[5926:204672] 主队列 + 异步：1 - &lt;_NSMainThread: 0x600001880000&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 16:27:53.213879+0800 GCD之函数和队列[5926:204672] 主队列 + 异步：2 - &lt;_NSMainThread: 0x600001880000&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 16:27:53.214016+0800 GCD之函数和队列[5926:204672] 主队列 + 异步：3 - &lt;_NSMainThread: 0x600001880000&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 16:27:53.214196+0800 GCD之函数和队列[5926:204672] 主队列 + 异步：4 - &lt;_NSMainThread: 0x600001880000&gt;&#123;number = 1, name = main&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="7">
+<li>全局并发队列 + 同步函数</li>
+</ol>
+<p>【任务 <code>按顺序执行</code>】：任务一个接一个的执行，不开辟新线程</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 全局并发队列 + 同步函数</span><br><span class="line">- (void)test7&#123;</span><br><span class="line">    NSLog(@&quot;全局并发 + 同步：%@&quot;,[NSThread currentThread]);</span><br><span class="line">    dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);</span><br><span class="line">    for (int i = 0; i &lt; 5; i ++) &#123;</span><br><span class="line">        dispatch_sync(globalQueue, ^&#123;</span><br><span class="line">            NSLog(@&quot;全局并发 + 同步：%d - %@&quot;,i,[NSThread currentThread]);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行代码，查看打印结果如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">2022-01-12 16:32:08.207844+0800 GCD之函数和队列[6000:209221] 全局并发 + 同步：&lt;_NSMainThread: 0x60000031c140&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 16:32:08.207992+0800 GCD之函数和队列[6000:209221] 全局并发 + 同步：0 - &lt;_NSMainThread: 0x60000031c140&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 16:32:08.208098+0800 GCD之函数和队列[6000:209221] 全局并发 + 同步：1 - &lt;_NSMainThread: 0x60000031c140&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 16:32:08.208280+0800 GCD之函数和队列[6000:209221] 全局并发 + 同步：2 - &lt;_NSMainThread: 0x60000031c140&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 16:32:08.208400+0800 GCD之函数和队列[6000:209221] 全局并发 + 同步：3 - &lt;_NSMainThread: 0x60000031c140&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 16:32:08.208504+0800 GCD之函数和队列[6000:209221] 全局并发 + 同步：4 - &lt;_NSMainThread: 0x60000031c140&gt;&#123;number = 1, name = main&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="8">
+<li>全局并发队列 + 异步函数</li>
+</ol>
+<p>【任务 <code>乱序执行</code>】：任务乱序执行，会开辟新线程</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 全局并发队列 + 异步函数</span><br><span class="line">- (void)test8&#123;</span><br><span class="line">    NSLog(@&quot;全局并发 + 异步：%@&quot;,[NSThread currentThread]);</span><br><span class="line">    dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);</span><br><span class="line">    for (int i = 0; i &lt; 5; i ++) &#123;</span><br><span class="line">        dispatch_async(globalQueue, ^&#123;</span><br><span class="line">            NSLog(@&quot;全局并发 + 异步：%d - %@&quot;,i,[NSThread currentThread]);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行代码，查看打印结果如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">2022-01-12 16:34:18.147614+0800 GCD之函数和队列[6082:211916] 全局并发 + 异步：&lt;_NSMainThread: 0x600002cd8340&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 16:34:18.147839+0800 GCD之函数和队列[6082:212058] 全局并发 + 异步：1 - &lt;NSThread: 0x600002cdcdc0&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">2022-01-12 16:34:18.147859+0800 GCD之函数和队列[6082:212057] 全局并发 + 异步：0 - &lt;NSThread: 0x600002c97640&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">2022-01-12 16:34:18.147880+0800 GCD之函数和队列[6082:212052] 全局并发 + 异步：2 - &lt;NSThread: 0x600002cb9140&gt;&#123;number = 7, name = (null)&#125;</span><br><span class="line">2022-01-12 16:34:18.147880+0800 GCD之函数和队列[6082:212053] 全局并发 + 异步：3 - &lt;NSThread: 0x600002c972c0&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">2022-01-12 16:34:18.147892+0800 GCD之函数和队列[6082:212055] 全局并发 + 异步：4 - &lt;NSThread: 0x600002c80000&gt;&#123;number = 8, name = (null)&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><table>
+<thead>
+<tr>
+<th align="center">函数\队列</th>
+<th align="center">串行队列</th>
+<th align="center">并发队列</th>
+<th align="center">主队列</th>
+<th align="center">全局并发队列</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">同步函数</td>
+<td align="center">顺序执行，不开辟新线程</td>
+<td align="center">顺序执行，不开辟新线程</td>
+<td align="center">死锁</td>
+<td align="center">顺序执行，不开辟新线程</td>
+</tr>
+<tr>
+<td align="center">异步函数</td>
+<td align="center">顺序执行，开辟新线程</td>
+<td align="center">乱序执行，开辟新线程</td>
+<td align="center">顺序执行，不开破新线程</td>
+<td align="center">乱序执行，开辟先线程</td>
+</tr>
+</tbody></table>
+<h1 id="相关面试题解析"><a href="#相关面试题解析" class="headerlink" title="相关面试题解析"></a>相关面试题解析</h1><ol>
+<li>【面试题-1】：并行队列 + 异步函数</li>
+</ol>
+<p>下面代码的输出顺序是什么？</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- (void)interview01&#123;</span><br><span class="line">    // 并发队列</span><br><span class="line">    dispatch_queue_t queue = dispatch_queue_create(&quot;com.ZJ.Queue&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    NSLog(@&quot;1 %@&quot;,[NSThread currentThread]);</span><br><span class="line">    // 耗时</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        NSLog(@&quot;2 %@&quot;,[NSThread currentThread]);</span><br><span class="line">        // 耗时</span><br><span class="line">        dispatch_async(queue, ^&#123;</span><br><span class="line">            NSLog(@&quot;3 %@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;);</span><br><span class="line">        NSLog(@&quot;4 %@&quot;,[NSThread currentThread]);</span><br><span class="line">    &#125;);</span><br><span class="line">    NSLog(@&quot;5 %@&quot;,[NSThread currentThread]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行代码，查看打印结果如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2022-01-12 16:50:01.867461+0800 GCD之函数和队列[6319:225209] 1 &lt;_NSMainThread: 0x6000023f4840&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 16:50:01.867626+0800 GCD之函数和队列[6319:225209] 5 &lt;_NSMainThread: 0x6000023f4840&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 16:50:01.867695+0800 GCD之函数和队列[6319:225342] 2 &lt;NSThread: 0x600002399ec0&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">2022-01-12 16:50:01.867840+0800 GCD之函数和队列[6319:225342] 4 &lt;NSThread: 0x600002399ec0&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">2022-01-12 16:50:01.867852+0800 GCD之函数和队列[6319:225345] 3 &lt;NSThread: 0x6000023a8b00&gt;&#123;number = 4, name = (null)&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>异步函数</code> 并 <code>不会阻塞</code> 主队列，<code>会开辟新线程</code> 执行异步任务</li>
+</ul>
+<p>代码分析：如下图所示，红线表示任务的执行顺序</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/149465493-ce2e9bab-6238-4380-84ac-24d2ce38f36b.jpg"
+                     
+                ></p>
+<ul>
+<li><code>主线程</code> 的任务队列为：<code>任务1、异步block1、任务5</code>，其中 <code>异步block1</code> 会比较耗费性能，<code>任务1</code> 和 <code>任务5</code> 的任务复杂度是相同的，所以 <code>任务1</code> 和 <code>任务5</code> 优先于 <code>异步block1</code> 执行</li>
+<li>在 <code>异步block1</code> 中，任务队列为：<code>任务2、异步block2、任务4</code>，其中 <code>block2</code> 相对比较耗费性能，<code>任务2</code> 和 <code>任务4</code> 复杂度一样，所以 <code>任务2</code> 和 <code>任务4</code> 优先于 <code>block2</code> 执行</li>
+<li>最后执行 <code>block2</code> 中的 <code>任务3</code></li>
+<li>在极端情况下，可能会出现 <code>任务2</code> 优先 <code>任务1</code> 和 <code>任务5</code> 执行，原因是出现了当前<code>主线程卡顿或者延迟</code> 的情况</li>
+</ul>
+<p>代码修改</p>
+<ul>
+<li>【修改1】：将 <code>并行队列</code> 改成 <code>串行队列</code>，对结果没有任何影响，顺序仍然是 <code>15243</code></li>
+<li>【修改2】：在 <code>任务5</code> 之前，休眠2s，即 <code>sleep(2)</code>，执行的顺序为：<code>12435</code>，原因是因为 I&#x2F;O 的打印，相比于休眠 <code>2s</code>，复杂度更简单，所以 <code>异步block1</code> 会优先于任务5执行。当然如果主队列阻塞，会出现其他的执行顺序。</li>
+</ul>
+<ol start="2">
+<li>【面试题-2】：并发队列 + 异步函数嵌套同步函数</li>
+</ol>
+<p>下面代码的输出顺序是什么？</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- (void)interview2&#123;</span><br><span class="line">    // 并发队列</span><br><span class="line">    dispatch_queue_t queue = dispatch_queue_create(&quot;com.ZJ.Queue&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    NSLog(@&quot;1 %@&quot;,[NSThread currentThread]);</span><br><span class="line">    //异步函数</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        NSLog(@&quot;2 %@&quot;,[NSThread currentThread]);</span><br><span class="line">        // 同步函数</span><br><span class="line">        dispatch_sync(queue, ^&#123;</span><br><span class="line">            NSLog(@&quot;3 %@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;);</span><br><span class="line">        NSLog(@&quot;4 %@&quot;,[NSThread currentThread]);</span><br><span class="line">    &#125;);</span><br><span class="line">    NSLog(@&quot;5 %@&quot;,[NSThread currentThread]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行代码，查看打印结果如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2022-01-12 17:37:11.034204+0800 GCD之函数和队列[7126:263322] 1 &lt;_NSMainThread: 0x600000074300&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 17:37:11.034340+0800 GCD之函数和队列[7126:263322] 5 &lt;_NSMainThread: 0x600000074300&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-12 17:37:11.034378+0800 GCD之函数和队列[7126:263438] 2 &lt;NSThread: 0x600000039c40&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">2022-01-12 17:37:11.034494+0800 GCD之函数和队列[7126:263438] 3 &lt;NSThread: 0x600000039c40&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">2022-01-12 17:37:11.034625+0800 GCD之函数和队列[7126:263438] 4 &lt;NSThread: 0x600000039c40&gt;&#123;number = 3, name = (null)&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>代码分析：</p>
+<ul>
+<li><code>任务1、block1、任务5</code> 的分析和前面一致，执行顺序为：<code>任务1 任务5 block1</code></li>
+<li>在 <code>异步block1</code> 中，<code>任务2、block2、任务4</code> 的执行顺序，由于 block2 是同步函数会阻塞当前线程，所以 <code>任务4</code> 需要等待 <code>block2</code> 中的 <code>任务3</code> 执行完成后，才能执行，所以异步block中的执行顺序是：<code>任务2、任务3、任务4</code></li>
+</ul>
+<ol start="3">
+<li>【面试题-3】：串行队列 + 异步函数嵌套同步函数</li>
+</ol>
+<p>下面代码的输出顺序是什么？会出现什么情况？为什么？</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- (void)interview3&#123;</span><br><span class="line">    // 串行队列</span><br><span class="line">    dispatch_queue_t queue = dispatch_queue_create(&quot;com.ZJ.Queue&quot;, DISPATCH_QUEUE_SERIAL);</span><br><span class="line">    NSLog(@&quot;1 %@&quot;,[NSThread currentThread]);</span><br><span class="line">    //异步函数</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        NSLog(@&quot;2 %@&quot;,[NSThread currentThread]);</span><br><span class="line">        // 同步函数</span><br><span class="line">        dispatch_sync(queue, ^&#123;</span><br><span class="line">            NSLog(@&quot;3 %@&quot;,[NSThread currentThread]);</span><br><span class="line">        &#125;);</span><br><span class="line">        NSLog(@&quot;4 %@&quot;,[NSThread currentThread]);</span><br><span class="line">    &#125;);</span><br><span class="line">    NSLog(@&quot;5 %@&quot;,[NSThread currentThread]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>运行代码，查看打印结果如下</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/149465564-efec19c6-d93c-43c1-94be-0cc29c25a752.jpg"
+                     
+                ></p>
+<p>分析：</p>
+<p>如下图所示，红色代表任务执行顺序，黄色线表示等待</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/149465613-4365fe45-27a5-4dcb-a3b2-cc4203b6e5cb.jpg"
+                     
+                ></p>
+<ul>
+<li>首先，在主线程上有 <code>任务1、异步block、任务5</code>，首先执行 <code>任务1</code>，由于 <code>异步block</code> 复杂度高于 <code>任务5</code>，因此，执行顺序是 <code>任务1 -&gt; 任务5 -&gt; 异步block</code></li>
+<li>在异步block中，开启了新的线程，执行顺序首先是 <code>任务2</code>，然后是 <code>同步block</code>，<code>同步函数会阻塞当前线程</code>，所以执行 <code>任务4</code> 需要 <code>等待任务3完成</code>，由于 <code>任务3的执行</code>，需要 <code>等待异步block完成</code>，<code>异步block完成</code>需要 <code>等待任务4完成</code>，</li>
+<li>因此就会造成 <code>任务4等待任务3，任务3等待任务4</code>，即 <code>互相等待</code> 的局面，就会造成 <code>死锁</code>，这里有个重点是 <code>关键的堆栈slow</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/149465645-76bcee0b-5ed8-4297-9dea-54a87155dd29.jpg"
+                     
+                ></p>
+<p>修改</p>
+<p>去掉任务4，执行顺序是什么？</p>
+<ul>
+<li>还是会死锁，因为 <code>任务3等待的是异步block执行完毕，而异步block等待任务3完成</code></li>
+</ul>
+<p>4、【面试题4-新浪】：异步函数 + 同步函数 + 并发队列</p>
+<p>下面代码执行的顺序是什么？（答案是AC）<br>A：1230789<br>B：1237890<br>C：3120798<br>D：2137890</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">- (void)interview04&#123;</span><br><span class="line">    // 并发队列</span><br><span class="line">    dispatch_queue_t queue = dispatch_queue_create(&quot;com.ZJ.Queue&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line"></span><br><span class="line">    dispatch_async(queue, ^&#123; // 耗时</span><br><span class="line">        NSLog(@&quot;1 %@&quot;,[NSThread currentThread]);</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        NSLog(@&quot;2 %@&quot;,[NSThread currentThread]);</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    // 同步</span><br><span class="line">    dispatch_sync(queue, ^&#123;</span><br><span class="line">        NSLog(@&quot;3 %@&quot;,[NSThread currentThread]);</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;0 %@&quot;,[NSThread currentThread]);</span><br><span class="line"></span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        NSLog(@&quot;7 %@&quot;,[NSThread currentThread]);</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        NSLog(@&quot;8 %@&quot;,[NSThread currentThread]);</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        NSLog(@&quot;9 %@&quot;,[NSThread currentThread]);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>打印结果是： （1、2、3无序） 0 （7、8、9无序），可以确定的 0 一定在 3 之后， 在789之前</p>
+<p>分析：</p>
+<ul>
+<li><code>任务1</code> 和 <code>任务2</code> 是由于 <code>异步函数 + 并发队列</code>，会开启线程，所以没有固定顺序</li>
+<li><code>任务7、任务8、任务9</code>同理，会开启线程，所以没有固定顺序</li>
+<li><code>任务3</code> 是 <code>同步函数 + 并发队列</code>，同步函数会 <code>阻塞主线程</code>，但是也只会阻塞0，所以，可以确定的是 <code>0一定在3之后，在789之前</code></li>
+</ul>
+<p>以下是不同的打印结果：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">2022-01-14 14:45:42.843292+0800 GCD之函数和队列[18838:775240] 3 &lt;_NSMainThread: 0x600001198a00&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-14 14:45:42.843329+0800 GCD之函数和队列[18838:775341] 1 &lt;NSThread: 0x600001189cc0&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">2022-01-14 14:45:42.843361+0800 GCD之函数和队列[18838:775340] 2 &lt;NSThread: 0x600001195a40&gt;&#123;number = 7, name = (null)&#125;</span><br><span class="line">2022-01-14 14:45:42.843415+0800 GCD之函数和队列[18838:775240] 0 &lt;_NSMainThread: 0x600001198a00&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-14 14:45:42.843546+0800 GCD之函数和队列[18838:775340] 7 &lt;NSThread: 0x600001195a40&gt;&#123;number = 7, name = (null)&#125;</span><br><span class="line">2022-01-14 14:45:42.843628+0800 GCD之函数和队列[18838:775341] 8 &lt;NSThread: 0x600001189cc0&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">2022-01-14 14:45:42.843653+0800 GCD之函数和队列[18838:775343] 9 &lt;NSThread: 0x60000119ce80&gt;&#123;number = 6, name = (null)&#125;</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">2022-01-14 14:50:18.831754+0800 GCD之函数和队列[18899:780910] 3 &lt;_NSMainThread: 0x600000054a00&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-14 14:50:18.831835+0800 GCD之函数和队列[18899:781015] 2 &lt;NSThread: 0x600000010e00&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">2022-01-14 14:50:18.831801+0800 GCD之函数和队列[18899:781016] 1 &lt;NSThread: 0x600000052340&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">2022-01-14 14:50:18.831887+0800 GCD之函数和队列[18899:780910] 0 &lt;_NSMainThread: 0x600000054a00&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-14 14:50:18.832053+0800 GCD之函数和队列[18899:781016] 7 &lt;NSThread: 0x600000052340&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">2022-01-14 14:50:18.832058+0800 GCD之函数和队列[18899:781015] 8 &lt;NSThread: 0x600000010e00&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">2022-01-14 14:50:18.832082+0800 GCD之函数和队列[18899:781019] 9 &lt;NSThread: 0x600000011b80&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">2022-01-14 14:51:47.433576+0800 GCD之函数和队列[18934:784384] 3 &lt;_NSMainThread: 0x6000030280c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-14 14:51:47.433577+0800 GCD之函数和队列[18934:784516] 2 &lt;NSThread: 0x6000030741c0&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">2022-01-14 14:51:47.433578+0800 GCD之函数和队列[18934:784518] 1 &lt;NSThread: 0x60000304d540&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">2022-01-14 14:51:47.433718+0800 GCD之函数和队列[18934:784384] 0 &lt;_NSMainThread: 0x6000030280c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">2022-01-14 14:51:47.433880+0800 GCD之函数和队列[18934:784518] 7 &lt;NSThread: 0x60000304d540&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">2022-01-14 14:51:47.433890+0800 GCD之函数和队列[18934:784513] 9 &lt;NSThread: 0x600003040000&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">2022-01-14 14:51:47.433891+0800 GCD之函数和队列[18934:784516] 8 &lt;NSThread: 0x6000030741c0&gt;&#123;number = 4, name = (null)&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>5、【面试题-5-美团】：下面代码中，队列的类型有几种？</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 串行队列 - Serial Dispatch Queue</span><br><span class="line">dispatch_queue_t serialQueue = dispatch_queue_create(&quot;com.ZJ.Queue&quot;, NULL);</span><br><span class="line">    </span><br><span class="line">// 并发队列 - Concurrent Dispatch Queue</span><br><span class="line">dispatch_queue_t concurrentQueue = dispatch_queue_create(&quot;com.ZJ.Queue&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">    </span><br><span class="line">// 主队列 - Main Dispatch Queue</span><br><span class="line">dispatch_queue_t mainQueue = dispatch_get_main_queue();</span><br><span class="line">    </span><br><span class="line">// 全局并发队列 - Global Dispatch Queue</span><br><span class="line">dispatch_queue_t globalQueue = dispatch_get_global_queue(0, 0);</span><br></pre></td></tr></table></figure></div>
+
+<p>队列总共有两种：<code>串行队列</code> 和 <code>并发队列</code></p>
+<ul>
+<li>串行队列：serialQueue、mainQueue</li>
+<li>并发队列：concurrentQueue、globalQueue</li>
+</ul>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC底层原理26：GCD之函数与队列</li>
+        <li>Post author：张建</li>
+        <li>Create time：2021-03-10 14:45:48</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2021/03/10/OC进阶/OC底层原理26：GCD之函数与队列/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/iOS-OC/">#iOS-OC</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2021/03/23/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8627%EF%BC%9AGCD%E4%B9%8B%20NSThread%20&amp;%20GCD%20&amp;%20NSOperation/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理27：GCD之 NSThread &amp; GCD &amp; NSOperation</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2021/02/21/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8625%EF%BC%9A%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理25：多线程原理探索</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC底层原理26：GCD之函数与队列</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD%E7%AE%80%E4%BB%8B"><span class="nav-text">GCD简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GCD-%E6%A0%B8%E5%BF%83"><span class="nav-text">GCD 核心</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%92%8C%E9%98%9F%E5%88%97"><span class="nav-text">函数和队列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BB%E9%98%9F%E5%88%97-%E5%92%8C-%E5%85%A8%E5%B1%80%E5%B9%B6%E5%8F%91%E9%98%9F%E5%88%97"><span class="nav-text">主队列 和 全局并发队列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E5%B9%B6%E5%8F%91%E9%98%9F%E5%88%97-%E4%B8%BB%E9%98%9F%E5%88%97-%E9%85%8D%E5%90%88%E4%BD%BF%E7%94%A8"><span class="nav-text">全局并发队列 + 主队列 配合使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E4%B8%8E%E9%98%9F%E5%88%97%E7%9A%84%E4%B8%8D%E5%90%8C%E7%BB%84%E5%90%88"><span class="nav-text">函数与队列的不同组合</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E9%9D%A2%E8%AF%95%E9%A2%98%E8%A7%A3%E6%9E%90"><span class="nav-text">相关面试题解析</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

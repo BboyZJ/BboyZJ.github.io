@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2020/08/03/oc三方框架/oc三方框架02：sdcyclescrollview探索/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC三方框架02：SDCycleScrollView探索">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2020/08/03/OC三方框架/OC三方框架02：SDCycleScrollView探索/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC三方框架02：SDCycleScrollView探索">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC三方框架02：SDCycleScrollView探索 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC三方框架02：SDCycleScrollView探索</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2020-08-03 09:56:05</span>
+        <span class="mobile">2020-08-03 09:56</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-03-09 06:50:33</span>
+            <span class="mobile">2023-03-09 06:50</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC-%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B6%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-三方框架探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/iOS-OC/">iOS-OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p><code>SDSycleScrollView</code> 的 <code>原理</code> 是基于 <code>UICollectionView</code> 的 <code>重用机制</code> 和 <code>循环滚动</code>的方式实现图片的轮播滚动功能。</p>
+<h1 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a>主要功能</h1><p>1.简单易用的图片无限轮播<br>2.支持横向、竖向两种滑动方式<br>3.支持轮播自定义cell的代理方<br>法<br>4.增加禁止拖动手势api</p>
+<h1 id="集成-SDSyscleScrollView"><a href="#集成-SDSyscleScrollView" class="headerlink" title="集成 SDSyscleScrollView"></a>集成 SDSyscleScrollView</h1><p>现在的主流集成方式都是基于依赖管理工具<code>Cocoapods</code>来集成<code>SDSyscleScrollView</code>的，而 <code>SDSyscleScrollView</code> 是依赖 <code>SDWebImage</code> 显示<code>网络数据</code>的，但是这个框架不用我们自己去集成，当你集成 <code>SDSyscleScrollView</code> 时，会自动集成依赖的<code>SDWebImage</code> 库，具体集成流程如下：</p>
+<ol>
+<li><p>首先，保证你的项目是基于<code>Cocoapods</code>依赖管理工具集成的项目，具体的集成文档自行百度。</p>
+</li>
+<li><p>在终端输入 <code>pod search SDSyscleScrollView</code> 查看这个库的信息：</p>
+</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac@MacdeMBP ~ % pod search SDCycleScrollView</span><br><span class="line">/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib/ruby/2.6.0/universal-darwin19/rbconfig.rb:229: warning: Insecure world writable dir /usr/local/sbin in PATH, mode 040777</span><br></pre></td></tr></table></figure></div>
+
+<p>稍等一会，你会看到下面的列表信息：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/94383795-9a81d980-0173-11eb-8b6b-df2e3fa7f139.png"
+                     
+                ></p>
+<p>由列表信息我们知道当前的 <code>SDSyscleScrollView</code> 的版本是 <code>1.80</code>， 且 适配 <code>SDWebImage 5.0.0</code>版本。</p>
+<p>3.<code>复制</code>上面的 <code>pod &#39;SDCycleScrollView</code> , 在底部 <code>:</code> 号后面输入 <code>wq</code>，保存并退出，此时你可以到项目中的<code>Podfile</code>文件下 <code>粘贴</code> 你的复制的内容：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/94384327-e719e480-0174-11eb-9a54-797a578b4a3a.png"
+                     
+                ></p>
+<p>注：</p>
+<ul>
+<li><code>pod &#39;SDCycleScrollView</code>：意味着你只安装最新的版本</li>
+<li><code>pod &#39;SDCycleScrollView&#39;, &#39;~&gt; 1.80</code>‘：意味着你安装的是固定版本 <code>1.80</code></li>
+</ul>
+<ol start="4">
+<li>cd 到工程主目录下，终端输入 <code>pod install</code> 命令，等待安装完成：</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/94384868-3c0a2a80-0176-11eb-958c-054e19244d4e.png"
+                     
+                ></p>
+<h1 id="源码解读"><a href="#源码解读" class="headerlink" title="源码解读"></a>源码解读</h1><ol>
+<li>在 <code>SDSyscleScrollView</code> 类中可以看到初始化方式有四种：</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/** 初始轮播图（推荐使用） */</span><br><span class="line">+ (instancetype)cycleScrollViewWithFrame:(CGRect)frame delegate:(id&lt;SDCycleScrollViewDelegate&gt;)delegate placeholderImage:(UIImage *)placeholderImage;</span><br><span class="line"></span><br><span class="line">+ (instancetype)cycleScrollViewWithFrame:(CGRect)frame imageURLStringsGroup:(NSArray *)imageURLStringsGroup;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/** 本地图片轮播初始化方式 */</span><br><span class="line">+ (instancetype)cycleScrollViewWithFrame:(CGRect)frame imageNamesGroup:(NSArray *)imageNamesGroup;</span><br><span class="line"></span><br><span class="line">/** 本地图片轮播初始化方式2,infiniteLoop:是否无限循环 */</span><br><span class="line">+ (instancetype)cycleScrollViewWithFrame:(CGRect)frame shouldInfiniteLoop:(BOOL)infiniteLoop imageNamesGroup:(NSArray *)imageNamesGroup;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>数据源</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//////////////////////  数据源API //////////////////////</span><br><span class="line"></span><br><span class="line">/** 网络图片 url string 数组 */</span><br><span class="line">@property (nonatomic, strong) NSArray *imageURLStringsGroup;</span><br><span class="line"></span><br><span class="line">/** 每张图片对应要显示的文字数组 */</span><br><span class="line">@property (nonatomic, strong) NSArray *titlesGroup;</span><br><span class="line"></span><br><span class="line">/** 本地图片数组 */</span><br><span class="line">@property (nonatomic, strong) NSArray *localizationImageNamesGroup;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>滚动控制API</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">//////////////////////  滚动控制API //////////////////////</span><br><span class="line"></span><br><span class="line">/** 自动滚动间隔时间,默认2s */</span><br><span class="line">@property (nonatomic, assign) CGFloat autoScrollTimeInterval;</span><br><span class="line"></span><br><span class="line">/** 是否无限循环,默认Yes */</span><br><span class="line">@property (nonatomic,assign) BOOL infiniteLoop;</span><br><span class="line"></span><br><span class="line">/** 是否自动滚动,默认Yes */</span><br><span class="line">@property (nonatomic,assign) BOOL autoScroll;</span><br><span class="line"></span><br><span class="line">/** 图片滚动方向，默认为水平滚动 */</span><br><span class="line">@property (nonatomic, assign) UICollectionViewScrollDirection scrollDirection;</span><br><span class="line"></span><br><span class="line">@property (nonatomic, weak) id&lt;SDCycleScrollViewDelegate&gt; delegate;</span><br><span class="line"></span><br><span class="line">/** block方式监听点击 */</span><br><span class="line">@property (nonatomic, copy) void (^clickItemOperationBlock)(NSInteger currentIndex);</span><br><span class="line"></span><br><span class="line">/** block方式监听滚动 */</span><br><span class="line">@property (nonatomic, copy) void (^itemDidScrollOperationBlock)(NSInteger currentIndex);</span><br><span class="line"></span><br><span class="line">/** 可以调用此方法手动控制滚动到哪一个index */</span><br><span class="line">- (void)makeScrollViewScrollToIndex:(NSInteger)index;</span><br><span class="line"></span><br><span class="line">/** 解决viewWillAppear时出现时轮播图卡在一半的问题，在控制器viewWillAppear时调用此方法 */</span><br><span class="line">- (void)adjustWhenControllerViewWillAppera;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ol start="4">
+<li>自定义样式API</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">//////////////////////  自定义样式API  //////////////////////</span><br><span class="line"></span><br><span class="line">/** 轮播图片的ContentMode，默认为 UIViewContentModeScaleToFill */</span><br><span class="line">@property (nonatomic, assign) UIViewContentMode bannerImageViewContentMode;</span><br><span class="line"></span><br><span class="line">/** 占位图，用于网络未加载到图片时 */</span><br><span class="line">@property (nonatomic, strong) UIImage *placeholderImage;</span><br><span class="line"></span><br><span class="line">/** 是否显示分页控件 */</span><br><span class="line">@property (nonatomic, assign) BOOL showPageControl;</span><br><span class="line"></span><br><span class="line">/** 是否在只有一张图时隐藏pagecontrol，默认为YES */</span><br><span class="line">@property(nonatomic) BOOL hidesForSinglePage;</span><br><span class="line"></span><br><span class="line">/** 只展示文字轮播 */</span><br><span class="line">@property (nonatomic, assign) BOOL onlyDisplayText;</span><br><span class="line"></span><br><span class="line">/** pagecontrol 样式，默认为动画样式 */</span><br><span class="line">@property (nonatomic, assign) SDCycleScrollViewPageContolStyle pageControlStyle;</span><br><span class="line"></span><br><span class="line">/** 分页控件位置 */</span><br><span class="line">@property (nonatomic, assign) SDCycleScrollViewPageContolAliment pageControlAliment;</span><br><span class="line"></span><br><span class="line">/** 分页控件距离轮播图的底部间距（在默认间距基础上）的偏移量 */</span><br><span class="line">@property (nonatomic, assign) CGFloat pageControlBottomOffset;</span><br><span class="line"></span><br><span class="line">/** 分页控件距离轮播图的右边间距（在默认间距基础上）的偏移量 */</span><br><span class="line">@property (nonatomic, assign) CGFloat pageControlRightOffset;</span><br><span class="line"></span><br><span class="line">/** 分页控件小圆标大小 */</span><br><span class="line">@property (nonatomic, assign) CGSize pageControlDotSize;</span><br><span class="line"></span><br><span class="line">/** 当前分页控件小圆标颜色 */</span><br><span class="line">@property (nonatomic, strong) UIColor *currentPageDotColor;</span><br><span class="line"></span><br><span class="line">/** 其他分页控件小圆标颜色 */</span><br><span class="line">@property (nonatomic, strong) UIColor *pageDotColor;</span><br><span class="line"></span><br><span class="line">/** 当前分页控件小圆标图片 */</span><br><span class="line">@property (nonatomic, strong) UIImage *currentPageDotImage;</span><br><span class="line"></span><br><span class="line">/** 其他分页控件小圆标图片 */</span><br><span class="line">@property (nonatomic, strong) UIImage *pageDotImage;</span><br><span class="line"></span><br><span class="line">/** 轮播文字label字体颜色 */</span><br><span class="line">@property (nonatomic, strong) UIColor *titleLabelTextColor;</span><br><span class="line"></span><br><span class="line">/** 轮播文字label字体大小 */</span><br><span class="line">@property (nonatomic, strong) UIFont  *titleLabelTextFont;</span><br><span class="line"></span><br><span class="line">/** 轮播文字label背景颜色 */</span><br><span class="line">@property (nonatomic, strong) UIColor *titleLabelBackgroundColor;</span><br><span class="line"></span><br><span class="line">/** 轮播文字label高度 */</span><br><span class="line">@property (nonatomic, assign) CGFloat titleLabelHeight;</span><br><span class="line"></span><br><span class="line">/** 轮播文字label对齐方式 */</span><br><span class="line">@property (nonatomic, assign) NSTextAlignment titleLabelTextAlignment;</span><br><span class="line"></span><br><span class="line">/** 滚动手势禁用（文字轮播较实用） */</span><br><span class="line">- (void)disableScrollGesture;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>缓存</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//////////////////////  清除缓存API  //////////////////////</span><br><span class="line"></span><br><span class="line">/** 清除图片缓存（此次升级后统一使用SDWebImage管理图片加载和缓存）  */</span><br><span class="line">+ (void)clearImagesCache;</span><br><span class="line"></span><br><span class="line">/** 清除图片缓存（兼容旧版本方法） */</span><br><span class="line">- (void)clearCache;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="6">
+<li>代理</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@protocol SDCycleScrollViewDelegate &lt;NSObject&gt;</span><br><span class="line"></span><br><span class="line">@optional</span><br><span class="line"></span><br><span class="line">/** 点击图片回调 */</span><br><span class="line">- (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index;</span><br><span class="line"></span><br><span class="line">/** 图片滚动回调 */</span><br><span class="line">- (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didScrollToIndex:(NSInteger)index;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 不需要自定义轮播cell的请忽略以下两个的代理方法</span><br><span class="line"></span><br><span class="line">// ========== 轮播自定义cell ==========</span><br><span class="line"></span><br><span class="line">/** 如果你需要自定义cell样式，请在实现此代理方法返回你的自定义cell的class。 */</span><br><span class="line">- (Class)customCollectionViewCellClassForCycleScrollView:(SDCycleScrollView *)view;</span><br><span class="line"></span><br><span class="line">/** 如果你需要自定义cell样式，请在实现此代理方法返回你的自定义cell的Nib。 */</span><br><span class="line">- (UINib *)customCollectionViewCellNibForCycleScrollView:(SDCycleScrollView *)view;</span><br><span class="line"></span><br><span class="line">/** 如果你自定义了cell样式，请在实现此代理方法为你的cell填充数据以及其它一系列设置 */</span><br><span class="line">- (void)setupCustomCell:(UICollectionViewCell *)cell forIndex:(NSInteger)index cycleScrollView:(SDCycleScrollView *)view;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p>由代理可知，实际上有两个功能</p>
+<ul>
+<li>回调的滚动和点击事件</li>
+<li>自动以cell样式</li>
+</ul>
+<h1 id="项目中使用-SDSyscleScrollView"><a href="#项目中使用-SDSyscleScrollView" class="headerlink" title="项目中使用 SDSyscleScrollView"></a>项目中使用 SDSyscleScrollView</h1><p>由于实际项目中，<code>轮播图</code>的主要应用是展示<code>网络图片</code>，并<code>点击</code>能进入下一个控制器，因此，下面我主要介绍这种类型功能的使用：</p>
+<ol>
+<li>声明属性，并初始化（使用推荐方式），设置占位图</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">@interface SDSyscleScrollViewVC ()&lt;SDCycleScrollViewDelegate&gt;</span><br><span class="line">@property (nonatomic,strong)SDCycleScrollView * scrollV;</span><br><span class="line">@property (nonatomic,copy)NSArray * imgsArr;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">#pragma mark -懒加载</span><br><span class="line">- (SDCycleScrollView *)scrollV&#123;</span><br><span class="line">    if (!_scrollV) &#123;</span><br><span class="line">        _scrollV = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, kNavAndStatusHeight, kScreenWidth, 200) delegate:self placeholderImage:kImg(@&quot;placeholder&quot;)];</span><br><span class="line">        _scrollV.backgroundColor = kRandomColor;</span><br><span class="line">    &#125;</span><br><span class="line">    return _scrollV;</span><br><span class="line">&#125;</span><br><span class="line">- (NSArray *)imgsArr&#123;</span><br><span class="line">    if (!_imgsArr) &#123;</span><br><span class="line">        _imgsArr = @[</span><br><span class="line">            @&quot;https://user-images.githubusercontent.com/25925248/94383795-9a81d980-0173-11eb-8b6b-df2e3fa7f139.png&quot;,</span><br><span class="line">            @&quot;https://user-images.githubusercontent.com/25925248/94384327-e719e480-0174-11eb-9a54-797a578b4a3a.png&quot;,</span><br><span class="line">            @&quot;https://user-images.githubusercontent.com/25925248/94384868-3c0a2a80-0176-11eb-958c-054e19244d4e.png&quot;];</span><br><span class="line">    &#125;</span><br><span class="line">    return _imgsArr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>添加到要显示的view上</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    self.view.backgroundColor = kWhiteColor;</span><br><span class="line">    </span><br><span class="line">    // scrollV</span><br><span class="line">    [self.view addSubview:self.scrollV];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li><p>设置相关API<br>具体可以<code>参照上面API</code>去设置，得到你想要的效果</p>
+</li>
+<li><p>待网络请求成功，返回图片数据时，设置图片数据</p>
+</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.scrollV.imageURLStringsGroup = self.imgArr;    </span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>通过代码方法可以得到你要下标和你要跳转的设置</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark -SDCycleScrollViewDelegate</span><br><span class="line">// 点击图片的回调</span><br><span class="line">- (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index&#123;</span><br><span class="line">    NSLog(@&quot;index:%ld&quot;,index);</span><br><span class="line">&#125;</span><br><span class="line">// 图片滚动回调</span><br><span class="line">- (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didScrollToIndex:(NSInteger)index&#123;</span><br><span class="line">    NSLog(@&quot;index:%ld&quot;,index);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="6">
+<li>经过上面的基本设置，已经可以满足你的需求了，如果还未满足，那么你可以自定义<code>cell</code>去实现，是继承自 <code>CollectionViewCell</code> ：</li>
+</ol>
+<p>.h中实现</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@interface SDSyscleScrollViewVC ()&lt;SDCycleScrollViewDelegate&gt;</span><br><span class="line">@property (nonatomic,strong)SDCycleScrollView * scrollV;</span><br><span class="line">@property (nonatomic,copy)NSArray * imgsArr;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p>.m中实现</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">@implementation SDCell</span><br><span class="line">- (instancetype)initWithFrame:(CGRect)frame&#123;</span><br><span class="line">    self = [super initWithFrame:frame];</span><br><span class="line">    if (self) &#123;</span><br><span class="line">        [self initUI];</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)initUI&#123;</span><br><span class="line">    [self.contentView addSubview:self.img];</span><br><span class="line">    [self.img mas_makeConstraints:^(MASConstraintMaker *make) &#123;</span><br><span class="line">        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (UIImageView *)img&#123;</span><br><span class="line">    if (!_img) &#123;</span><br><span class="line">        _img = [UIImageView initImgVWithFrame:CGRectZero bgColor:kRandomColor img:kPlaceholder userInteractionEnabled:YES hidden:NO];</span><br><span class="line">    &#125;</span><br><span class="line">    return _img;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p>在viewDidLoad中实现</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 如果你需要自定义cell样式，请在实现此代理方法返回你的自定义cell的class</span><br><span class="line">- (Class)customCollectionViewCellClassForCycleScrollView:(SDCycleScrollView *)view&#123;</span><br><span class="line">    SDCell * cell = [[SDCell alloc] init];</span><br><span class="line">    cell.backgroundColor = kRandomColor;</span><br><span class="line">    </span><br><span class="line">    return cell.class;</span><br><span class="line">&#125;</span><br><span class="line">// 如果你自定义了cell样式，请在实现此代理方法为你的cell填充数据以及其它一系列设置</span><br><span class="line">- (void)setupCustomCell:(UICollectionViewCell *)cell forIndex:(NSInteger)index cycleScrollView:(SDCycleScrollView *)view&#123;</span><br><span class="line">    SDCell * sdCell = (SDCell *)cell;</span><br><span class="line">    [sdCell.img sd_setImageWithURL:kUrl(self.imgsArr[index])];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC三方框架02：SDCycleScrollView探索</li>
+        <li>Post author：张建</li>
+        <li>Create time：2020-08-03 09:56:05</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2020/08/03/OC三方框架/OC三方框架02：SDCycleScrollView探索/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/iOS-OC/">#iOS-OC</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2020/08/04/OC%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B6/OC%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B604%EF%BC%9AHDCollectionView%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC三方框架04：HDCollectionView探索</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2020/08/02/OC%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B6/OC%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B601%EF%BC%9AYYWebImage%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC：YYWebImage基本用法</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC三方框架02：SDCycleScrollView探索</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD"><span class="nav-text">主要功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%86%E6%88%90-SDSyscleScrollView"><span class="nav-text">集成 SDSyscleScrollView</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB"><span class="nav-text">源码解读</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8-SDSyscleScrollView"><span class="nav-text">项目中使用 SDSyscleScrollView</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

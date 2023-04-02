@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-26 03:04:26</span>
-            <span class="mobile">2023-03-26 03:04</span>
+            <span class="pc">2023-03-30 11:16:17</span>
+            <span class="mobile">2023-03-30 11:16</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -357,11 +357,11 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">RunLoop 顺序：</span><br><span class="line">     1、进入</span><br><span class="line">     </span><br><span class="line">     2、通知Timer</span><br><span class="line">     3、通知Source</span><br><span class="line">     4、处理Block</span><br><span class="line">     5、处理Source0</span><br><span class="line">     6、如果有 Source1 调转到 11</span><br><span class="line">     7、通知 BeforWaiting</span><br><span class="line">     8、休眠 wait：等待线程被唤醒</span><br><span class="line">     9、通知 afterWaiting</span><br><span class="line">     10、处理唤醒线程消息： timer、GCD相关、处理Source1</span><br><span class="line">     11、处理 dispatch 到 main_queue 的 block</span><br><span class="line">     12、根据情况，决定如何操作：回到 2、退出Runloop</span><br><span class="line">     </span><br><span class="line">     13、退出 Runloop</span><br></pre></td></tr></table></figure></div>
 
 <ul>
-<li><p>理清楚Runloop的运行机制，就很容易明白处理事件主要有两个时间段 <code>kCFRunLoopBeforeSources</code> 发送之后和 <code>kCFRunLoopAfterWaiting</code> 发送之后。</p>
+<li><p>理清楚Runloop的 <code>运行机制</code>，就很容易明白处理事件主要有两个时间段 <code>kCFRunLoopBeforeSources</code> 发送之后和 <code>kCFRunLoopAfterWaiting</code> 发送之后。</p>
 </li>
 <li><p><code>dispatch_semaphore_t</code> 是一个信号量机制，信号量到达、或者超时会继续向下进行，否则等待，如果超时则返回的结果必定不为0，信号量到达结果为0。</p>
 </li>
-<li><p>利用这个特性我们判断卡顿出现的条件为 <code>在信号量发送</code> <code>kCFRunLoopBeforeSources</code> 和<code>kCFRunLoopAfterWaiting</code> 后进行了大量的操作，在一段时间内没有再发送信号量，导致超时。也就是说主线程通知状态长时间的停留在这两个状态上了。转换为代码就是判断有没有超时，超时了，判断当前停留的状态是不是这两个状态，如果是，就判定为 <code>卡顿</code>。</p>
+<li><p>利用这个特性我们判断卡顿出现的条件为 <code>在信号量发送 kCFRunLoopBeforeSources</code> 和<code>kCFRunLoopAfterWaiting</code> 后进行了大量的操作，在一段时间内没有再发送信号量，导致超时。也就是说 <code>主线程通知</code> 状态 <code>长时间的停留在这两个状态上了</code>。转换为代码就是判断有没有超时， <code>超时</code> 了，判断当前停留的状态是不是这两个状态，如果是，就判定为 <code>卡顿</code>。</p>
 </li>
 </ul>
 <ol start="3">

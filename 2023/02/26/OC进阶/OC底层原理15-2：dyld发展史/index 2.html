@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/02/26/oc进阶/oc底层原理15-2：dyld发展史/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC底层原理15.5：dyld发展史">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/02/26/OC进阶/OC底层原理15-2：dyld发展史/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC底层原理15.5：dyld发展史">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC底层原理15.5：dyld发展史 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC底层原理15.5：dyld发展史</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-02-26 04:30:55</span>
+        <span class="mobile">2023-02-26 04:30</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-02-26 04:42:34</span>
+            <span class="mobile">2023-02-26 04:42</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/iOS-OC/">iOS-OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="dyld简介"><a href="#dyld简介" class="headerlink" title="dyld简介"></a>dyld简介</h1><ul>
+<li><p>dyld全名 The dynamic link editor；</p>
+</li>
+<li><p>是苹果的动态链接器；</p>
+</li>
+<li><p>是苹果操作系统的一个重要组成部分；</p>
+</li>
+<li><p>在应用被编译打包成可执行文件之后（即Mach-O），将其交由dyld负责链接，加载程序。</p>
+</li>
+<li><p>dyld贯穿了App启动的过程，包含加载依赖库、主程序，如果我们需要进行性能优化、启动优化等，不可避免的需要和dyld打交道</p>
+</li>
+<li><p>且dyld是开源的，我们可以在官网下载它的源码来阅读理解</p>
+</li>
+</ul>
+<h1 id="dyld-1-0（1996-2004）"><a href="#dyld-1-0（1996-2004）" class="headerlink" title="dyld 1.0（1996-2004）"></a>dyld 1.0（1996-2004）</h1><ul>
+<li><p>dyld 1包含在NeXTStep 3.3中，在此之前的NeXT使用静态二进制数据。作用并不是很大，</p>
+</li>
+<li><p>dyld 1是在系统广泛使用C++动态库之前编写的，由于C++有许多特性，例如其初始化器的工作，在静态环境工作良好，但是在动态环境中可能会降低性能。因此大型的C++动态库会导致dyld需要完成大量的工作，速度变慢</p>
+</li>
+<li><p>在发布macOS 10.0和Cheetah前，还增加了一个特性，即Prebinding预绑定。我们可以使用Prebinding技术为系统中的所有dylib和应用程序找到固定的地址。dyld将会加载这些地址的所有内容。如果加载成功，将会编辑所有dylib和程序的二进制数据，来获得所有预计算。当下次需要将所有数据放入相同地址时就不需要进行额外操作了，将大大的提高速度。但是这也意味着每次启动都需要编辑这些二进制数据，至少从安全性来说，这种方式并不友好。</p>
+</li>
+</ul>
+<h1 id="dyld-2（2004-2017）"><a href="#dyld-2（2004-2017）" class="headerlink" title="dyld 2（2004-2017）"></a>dyld 2（2004-2017）</h1><ul>
+<li>dyld 2从2004年发布至今，已经经过了多个版本迭代，我们现在常见的一些特性，例如ASLR、Code Sign、share cache等技术，都是在dyld 2中引入的</li>
+</ul>
+<h1 id="dyld-2-0（2004-2007）"><a href="#dyld-2-0（2004-2007）" class="headerlink" title="dyld 2.0（2004-2007）"></a>dyld 2.0（2004-2007）</h1><ul>
+<li><p>2004年在macOS Tiger中推出了dyld 2</p>
+</li>
+<li><p>dyld 2是dyld 1完全重写的版本，可以正确支持C++初始化器语义，同时扩展了mach-o格式并更新dyld。从而获得了高效率C++库的支持。</p>
+</li>
+<li><p>dyld 2具有完成的dlopen和dlsym（主要用于动态加载库和调用函数）实现，且具有正确的语义，因此弃用了旧版的API</p>
+<ul>
+<li><p>dlopen：打开一个库，获取句柄</p>
+</li>
+<li><p>dlsym：在打开的库中查找符号的值</p>
+</li>
+<li><p>dlclose：关闭句柄。</p>
+</li>
+<li><p>dlerror：返回一个描述最后一次调用dlopen、dlsym，或 dlclose 的错误信息的字符串。</p>
+</li>
+</ul>
+</li>
+<li><p>dyld 的 <code>设计目标</code> 是 <code>提升启动速度</code>。因此仅进行有限的健全性检查。主要是因为以前的恶意程序比较少</p>
+</li>
+<li><p>同时dyld也有一些安全问题，因此对一些功能进行了改进，来提高dyld在平台上的安全性</p>
+</li>
+<li><p>由于启动速度的大幅提升，因此我们可以减少Prebinding的工作量。与编辑程序数据的区别在于，在这里我们仅编辑系统库，且可以仅在软件更新时做这些事情。因此在软件更新过程中，可能会看到“优化系统性能”类似的文字。这就是在更新时进行Prebinding。现在dyld用于所有优化，其用途就是优化。因此后面有了dyld 2</p>
+</li>
+</ul>
+<h1 id="dyld-2-x（2007-2017）"><a href="#dyld-2-x（2007-2017）" class="headerlink" title="dyld 2.x（2007-2017）"></a>dyld 2.x（2007-2017）</h1><ul>
+<li><p>在2004-20017这几年间进行了大量改进，dyld 2的性能显著提高</p>
+</li>
+<li><p>首先，增加了大量的基础架构和平台。</p>
+<ul>
+<li><p>自从dyld 2在PowerPC发布之后，增加了x86、x86_64、arm、arm64和许多的衍生平台。</p>
+</li>
+<li><p>还推出了iOS、tvOS和watchOS，这些都需要新的dyld功能</p>
+</li>
+</ul>
+</li>
+<li><p>通过多种方式增加安全性</p>
+<ul>
+<li><p>增加 codeSigning代码签名、</p>
+</li>
+<li><p>ASLR（Address space layout randomization）地址空间配置随机加载：每次加载库时，可能位于不同的地址</p>
+</li>
+<li><p>bound checking边界检查：mach-o文件中增加了Header的边界检查功能，从而避免恶意二进制数据的注入</p>
+</li>
+</ul>
+</li>
+<li><p>增强了性能</p>
+<ul>
+<li>可以消除Prebinding，用share cache共享代码代替</li>
+</ul>
+</li>
+</ul>
+<h1 id="ASLR"><a href="#ASLR" class="headerlink" title="ASLR"></a>ASLR</h1><ul>
+<li><p>ASLR是一种防范内存损坏漏洞被利用的计算机安全技术，ASLR通过随机放置进程关键数据区域的地址空间来防止攻击者跳转到内存特定位置来利用函数</p>
+</li>
+<li><p>Linux已在内核版本2.6.12中添加ASLR</p>
+</li>
+<li><p>Apple在Mac OS X Leopard 10.5（2007年十月发行）中某些库导入了随机地址偏移，但其实现并没有提供ASLR所定义的完整保护能力。而Mac OS X Lion 10.7则对所有的应用程序均提供了ASLR支持。</p>
+</li>
+<li><p>Apple在iOS 4.3内导入了ASLR。</p>
+</li>
+</ul>
+<h1 id="bounds-checking-边界检查"><a href="#bounds-checking-边界检查" class="headerlink" title="bounds checking 边界检查"></a>bounds checking 边界检查</h1><ul>
+<li>对mach-o header中的许多内容添加了重要的边界检查功能，从而可以避免恶意二进制数据的注入</li>
+</ul>
+<h1 id="share-cache-共享代码"><a href="#share-cache-共享代码" class="headerlink" title="share cache 共享代码"></a>share cache 共享代码</h1><ul>
+<li><p>share cache最早实在iOS3.1和macOS Snow Leopard中被引入，用于完全取代Prebinding</p>
+</li>
+<li><p>share cache是一个单文件，包含大多数系统dylib，由于这些dylib合并成了一个文件，所以可以进行优化。</p>
+<ul>
+<li><p>重新调整所有文本段（_TEXT）和数据段（_DATA），并重写整个符号表，以此来减小文件的大小，从而在每个进程中仅挂载少量的区域。允许我们打包二进制数据段，从而节省大量的RAM</p>
+</li>
+<li><p>本质是一个dylib预链接器，它在RAM上的节约是显著的，在普通的iOS程序中运行可以节约500-1g内存</p>
+</li>
+<li><p>还可以预生成数据结构，用来供dyld和Ob-C在运行时使用。从而不必在程序启动时做这些事情，这也会节约更多的RAM和时间</p>
+</li>
+</ul>
+</li>
+<li><p>share cache在macOS上本地生成，运行dyld共享代码，将大幅优化系统性能</p>
+</li>
+</ul>
+<h1 id="dyld-2-工作流程"><a href="#dyld-2-工作流程" class="headerlink" title="dyld 2 工作流程"></a>dyld 2 工作流程</h1><p>dyld 2是纯粹的in-process，即在程序进程内执行的，也就意味着只有当应用程序被启动时，dyld 2才能开始执行任务</p>
+<p>以下是dyld 2的工作流程图示</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773573816475.png"
+                     
+                ></p>
+<ul>
+<li>1、dyld的初始化，主要代码在dyldbootstrap::start，接着执行dyld::_main，dyld::_main代码较多，是dyld加载的核心部分；</li>
+<li>2、检查并准备环境，例如获取二进制路径、检查环境配置，解析主二进制的image header等信息</li>
+<li>3、实例化主二进制的image loader，校验主二进制和dyld的版本是否匹配</li>
+<li>4、检查share cache是否已经map，如果没有则需要先执行map share cache操作</li>
+<li>5、检查DYLD_INSERT_LIBRARIES，如果有则加载插入的动态库（即实例化image loader）</li>
+<li>6、执行link操作，会先递归加载依赖的所有动态库（会对依赖库进行排序，被依赖的总是在前面），同时在这阶段将执行符号绑定，以及rebase，binding操作；</li>
+<li>7、执行初始化方法，OC的+load和C的constructor方法都会在这个阶段执行；</li>
+<li>8、读取Mach-o的LC_MAIN段获取程序的入口地址，调用main函数</li>
+</ul>
+<h1 id="简化版"><a href="#简化版" class="headerlink" title="简化版"></a>简化版</h1><ul>
+<li><p>解析 mach-o 文件，找到其依赖的库，并且递归的找到所有依赖的库，形成一张动态库的依赖图。iOS 上的大部分 app 都依赖几百个动态链接库（大部分是系统的动态库），所以这个步骤包含了较大的工作量。</p>
+</li>
+<li><p>匹配 mach-o 文件到自身的地址空间</p>
+</li>
+<li><p>进行符号查找（perform symbol lookups）</p>
+</li>
+<li><p>rebase和binding：由于 app 需要让地址空间配置随机加载，所以所有的指针都需要加上一个基地址</p>
+</li>
+<li><p>运行初始化程序，之后运行 main() 函数</p>
+</li>
+</ul>
+<h1 id="dyld-3（2017-至今）"><a href="#dyld-3（2017-至今）" class="headerlink" title="dyld 3（2017-至今）"></a>dyld 3（2017-至今）</h1><ul>
+<li><p>dyld 3是2017年WWDC推出的全新的动态链接器，它完全改变了动态链接的概念，且将成为大多数macOS系统程序的默认设置。2017 Apple OS平台上的所有系统程序都会默认使用dyld 3.</p>
+</li>
+<li><p>dyld 3最早是在2017年的iOS 11中引入，主要用来优化系统库。</p>
+</li>
+<li><p>而在iOS 13系统中，iOS全面采用新的dyld 3来替代之前的dyld 2，因为dyld 3完全兼容dyld 2，其API接口也是一样的，所以，在大部分情况下，开发者并不需要做额外的适配就能平滑过渡。</p>
+</li>
+</ul>
+<h1 id="为什么需要重新设计dyld-2，形成新的dyld-3-？"><a href="#为什么需要重新设计dyld-2，形成新的dyld-3-？" class="headerlink" title="为什么需要重新设计dyld 2，形成新的dyld 3 ？"></a>为什么需要重新设计dyld 2，形成新的dyld 3 ？</h1><p>重新设计dyld，主要从以下几方面进行考虑</p>
+<ul>
+<li><p>重新设计dyld，主要从以下几方面进行考虑</p>
+</li>
+<li><p>性能：想要尽可能的提高启动速度</p>
+</li>
+<li><p>安全性：在dyld 2中增加了安全特性，但是很难跟随现实情形，虽然做了很多工作，但是难以实现这个目标</p>
+</li>
+<li><p>可靠性和可测试性：为此Apple发布了很多不错的测试框架，例如XCTest，但是这些测试框架依赖于动态链接器的底层功能，然后将测试框架的库插入进程中，所以不能用于测试现有的dyld代码，且难以测试安全性和性能水平</p>
+</li>
+</ul>
+<h1 id="如何将-dyld-2-改进和优化为-dyld-3？"><a href="#如何将-dyld-2-改进和优化为-dyld-3？" class="headerlink" title="如何将 dyld 2 改进和优化为 dyld 3？"></a>如何将 dyld 2 改进和优化为 dyld 3？</h1><p><strong>改进和优化建议</strong></p>
+<p>从上面的dyld 2的工作流程中，我们了解了dyld 2的执行流程，可以从以下两个方面来改进和优化：</p>
+<ul>
+<li><p>确定安全敏感的部分</p>
+<ul>
+<li><p>Parse mach-o headers解析mach-o 和 Find dependencies找到依赖库，是安全敏感部分，即最大的安全隐患之一；</p>
+</li>
+<li><p>恶意撰改mach-o头部，可以进行某些攻击；</p>
+</li>
+<li><p>如果App使用了 @rpaths 即搜索路径，可以通过恶意撰改路径或者将一些库插入到特定的位置，来达到破坏程序的目的；</p>
+</li>
+</ul>
+</li>
+<li><p>确定大量占用资源的部分（即可缓存部分）</p>
+<ul>
+<li>Perform symbol lookups符号查找就是其中一个，因为在一个特定的库中，除非进行软件更新或者在磁盘上更改库，不然符号将始终位于库中的相同的偏移位置（即符号偏移量固定）；</li>
+</ul>
+</li>
+</ul>
+<p><strong>dyld 2 改进和优化</strong></p>
+<p>以下是dyld 2 向 dyld 3 的一些改变，主要是将安全敏感的部分 和 占用大量资源的部分移动到上层，然后将一个closure写入磁盘进行缓存，然后我们在程序进程中使用closure。以下是图示</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773575713620.png"
+                     
+                ></p>
+<p><strong>dyld 3 组成部分&#x2F;工作流程</strong></p>
+<p>dyld 3的工作流程主要分为3部分，如下所示</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773575862753.png"
+                     
+                ></p>
+<p><strong>第一部分：out-of-process ：mach-o parser</strong></p>
+<p>进程外的mach-o分析器和编译器，是普通的后台程序，用于提高测试基础架构的性能。</p>
+<p>第一部分主要在App进程之外做以下工作：</p>
+<ul>
+<li><p>解析所有搜索路径@rpath、环境变量，因为它们会影响启动速度</p>
+</li>
+<li><p>分析 mach-o二进制数据</p>
+</li>
+<li><p>执行符号查找</p>
+</li>
+<li><p>利用这些结果创建launch clourse</p>
+</li>
+</ul>
+<p><strong>第二部分：in-process ：engine</strong></p>
+<p>进程内的引擎，这部分常驻在内存中，且在dyld 3不再需要分析mach-o文件头或者执行符号查找就可以启动应用，因为分析mach-o和执行符号查找都是耗时操作，所以极大的提高了程序启动速度。</p>
+<p>第二部分主要在App进程中做以下工作：</p>
+<ul>
+<li><p>检查launch closure是否正确</p>
+</li>
+<li><p>映射到dylib中，再跳转main函数</p>
+</li>
+</ul>
+<p><strong>第三部分：launch closure ：cache</strong></p>
+<p>启动闭包launch closure缓存服务。其中大多数程序启动都会使用缓存，而不需要调用进程外 mach-o分析器和编译器。且launch closure比mach-o更简单，因为launch closure是内存映射文件，不需要用复杂的方法进行分析，我们可以进行简单的校验，目的是为了提高速度</p>
+<ul>
+<li><p>系统应用的launch closure直接加入到共享缓存 share cache</p>
+</li>
+<li><p>对于第三方应用，我们将在应用安装或者更新期间构建launch closure，因为此时 system library已发生更改</p>
+</li>
+<li><p>默认情况下，在iOS，tvOS和watchOS上，这些操作都将在运行之前为您预先构建。</p>
+</li>
+<li><p>在macOS上，由于可以侧向加载应用程序(这里应该是指非App Store安装的应用)，因此如果需要，in-process engine可以在首次启动时RPC(Remote Procedure Call)到out to the daemon，然后，它就可以使用缓存的closure了。</p>
+</li>
+</ul>
+<p>所以综上所述，dyld 3 把很多耗时的查找、计算和 I&#x2F;O 操作都预先处理好了，使得启动速度有了很大的提升。即dyld 3把很多耗时的操作都提前处理好了，极大提升了启动速度。</p>
+<h1 id="启动闭包（launch-closure）"><a href="#启动闭包（launch-closure）" class="headerlink" title="启动闭包（launch closure）"></a>启动闭包（launch closure）</h1><p>这是一个新引入的概念，指的是 app 在启动期间所需要的所有信息。比如这个 app 使用了哪些动态链接库，其中各个符号的偏移量，代码签名在哪里等等。</p>
+<h1 id="dyld-3符号缺失问题"><a href="#dyld-3符号缺失问题" class="headerlink" title="dyld 3符号缺失问题"></a>dyld 3符号缺失问题</h1><ul>
+<li><p>dyld 2中默认采取的是lazy symbol的符号加载方式</p>
+</li>
+<li><p>dyld 3中，在app启动之前，符号解析的结果已经在launch closure内了，所以lazy symbol就不再需要了。</p>
+</li>
+<li><p>如果此时，如果有符号缺失的情况，dyld 2 和 dyld 3的表现是不同的</p>
+<ul>
+<li><p>dyld 2中，首次调用缺失符号时App会crash</p>
+</li>
+<li><p>在dyld 3中，缺失符号会导致App一启动就会crash</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><strong>dyld 2工作流程</strong></p>
+<ul>
+<li><p>解析mach-o头部</p>
+</li>
+<li><p>查找依赖库</p>
+</li>
+<li><p>映射mach-o文件，放入地址空间中</p>
+</li>
+<li><p>执行符号查找</p>
+</li>
+<li><p>使用ASLR进行rebase和bind绑定</p>
+</li>
+<li><p>运行所有初始化器</p>
+</li>
+<li><p>执行main函数</p>
+</li>
+</ul>
+<p><strong>dyld 3工作流程</strong></p>
+<ul>
+<li><p>进程外：将dyld 2中的mach-o头部解析、符号查找移到了进程外执行，且将其执行结果放入启动闭包，存储到磁盘中</p>
+</li>
+<li><p>进程内：验证启动闭包正确性，并映射dylib，执行main函数</p>
+</li>
+<li><p>启动闭包缓存服务</p>
+</li>
+</ul>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC底层原理15.5：dyld发展史</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-02-26 04:30:55</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/02/26/OC进阶/OC底层原理15-2：dyld发展史/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/iOS-OC/">#iOS-OC</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/02/27/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A000%EF%BC%9AMVVM%E5%8F%8C%E5%90%91%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC架构00：MVVM双向数据绑定</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/02/25/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8614-1%EF%BC%9Aobjc-msgSend%E7%BC%93%E5%AD%98%E6%9F%A5%E6%89%BE(%E5%BF%AB%E9%80%9F%E6%9F%A5%E6%89%BE)%E6%B1%87%E7%BC%96%E5%88%86%E6%9E%90/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理14-1：objc-msgSend缓存查找(快速查找)汇编分析</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC底层原理15.5：dyld发展史</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#dyld%E7%AE%80%E4%BB%8B"><span class="nav-text">dyld简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dyld-1-0%EF%BC%881996-2004%EF%BC%89"><span class="nav-text">dyld 1.0（1996-2004）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dyld-2%EF%BC%882004-2017%EF%BC%89"><span class="nav-text">dyld 2（2004-2017）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dyld-2-0%EF%BC%882004-2007%EF%BC%89"><span class="nav-text">dyld 2.0（2004-2007）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dyld-2-x%EF%BC%882007-2017%EF%BC%89"><span class="nav-text">dyld 2.x（2007-2017）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ASLR"><span class="nav-text">ASLR</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#bounds-checking-%E8%BE%B9%E7%95%8C%E6%A3%80%E6%9F%A5"><span class="nav-text">bounds checking 边界检查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#share-cache-%E5%85%B1%E4%BA%AB%E4%BB%A3%E7%A0%81"><span class="nav-text">share cache 共享代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dyld-2-%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-text">dyld 2 工作流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E5%8C%96%E7%89%88"><span class="nav-text">简化版</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dyld-3%EF%BC%882017-%E8%87%B3%E4%BB%8A%EF%BC%89"><span class="nav-text">dyld 3（2017-至今）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E9%87%8D%E6%96%B0%E8%AE%BE%E8%AE%A1dyld-2%EF%BC%8C%E5%BD%A2%E6%88%90%E6%96%B0%E7%9A%84dyld-3-%EF%BC%9F"><span class="nav-text">为什么需要重新设计dyld 2，形成新的dyld 3 ？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%B0%86-dyld-2-%E6%94%B9%E8%BF%9B%E5%92%8C%E4%BC%98%E5%8C%96%E4%B8%BA-dyld-3%EF%BC%9F"><span class="nav-text">如何将 dyld 2 改进和优化为 dyld 3？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E9%97%AD%E5%8C%85%EF%BC%88launch-closure%EF%BC%89"><span class="nav-text">启动闭包（launch closure）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dyld-3%E7%AC%A6%E5%8F%B7%E7%BC%BA%E5%A4%B1%E9%97%AE%E9%A2%98"><span class="nav-text">dyld 3符号缺失问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
