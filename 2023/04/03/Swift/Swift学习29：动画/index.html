@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/04/03/swift/swift学习29：动画/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Swift学习29：动画">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/04/03/Swift/Swift学习29：动画/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Swift学习29：动画">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            Swift学习29：动画 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">Swift学习29：动画</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-04-03 13:43:21</span>
+        <span class="mobile">2023-04-03 13:43</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-04-03 15:52:48</span>
+            <span class="mobile">2023-04-03 15:52</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/Swift-%E5%B8%B8%E7%94%A8/">Swift-常用</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="iOS-动画框架"><a href="#iOS-动画框架" class="headerlink" title="iOS 动画框架"></a>iOS 动画框架</h1><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304031444314.png"
+                     
+                ></p>
+<ul>
+<li>从图中可以看出，iOS 从上层到底层你会接触到 <code>UIKit、Core Animation、Core Graphics</code>。使用难度依次递增，实现效果的复杂度越来越高</li>
+</ul>
+<h1 id="CALager-绘制的子类"><a href="#CALager-绘制的子类" class="headerlink" title="CALager 绘制的子类"></a>CALager 绘制的子类</h1><ul>
+<li>CAShapeLayer：用于绘制曲线等图形</li>
+<li>CATestLayer：用于绘制文字</li>
+<li>CAGradientLayer：用于绘制渐变</li>
+</ul>
+<h1 id="UIView和CALayer关系"><a href="#UIView和CALayer关系" class="headerlink" title="UIView和CALayer关系"></a>UIView和CALayer关系</h1><ul>
+<li>UIView 可以 <code>响应事件</code>；CALayer 不可以</li>
+<li>UIView 主要是对 <code>显示内容的管理</code>；CALayer 主要侧重 <code>显示内容的绘制</code></li>
+<li>UIView 是 iOS 平台对 <code>CALayer</code> 的 <code>封装</code>；CALayer 是 iOS 和 OSX 跨平台的类</li>
+<li>UIView 的很多属性其实是返回 <code>CALayer</code> 的属性，比如 <code>frame、center</code> 等等</li>
+</ul>
+<h1 id="导入头文件"><a href="#导入头文件" class="headerlink" title="导入头文件"></a>导入头文件</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import ImageIO</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="UIView的Block动画"><a href="#UIView的Block动画" class="headerlink" title="UIView的Block动画"></a>UIView的Block动画</h1><ol>
+<li><code>UIView</code> 的 <code>Block</code> 动画的适用范围</li>
+</ol>
+<p><code>UIView</code> 的动画可以修改一些 <code>属性</code>，将其以动画的形式展示出来。可修改的属性如下：<code>frame(尺寸)\bound(大小)\center(中心)\ transform(旋转)\alpha(透明度)\ backgroundColor(背景颜色)\ contentStretch(内容拉伸)</code> 等。</p>
+<ol start="2">
+<li>使用 <code>UIView</code> 实现普通动画</li>
+</ol>
+<ul>
+<li>只可以设置动画内容的动画函数</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/*!</span><br><span class="line"> 1、设置动画时间</span><br><span class="line"> 2、设置动画内容</span><br><span class="line"> */</span><br><span class="line">UIView.animate(withDuration:5) &#123;</span><br><span class="line">    // 位置和颜色的变换</span><br><span class="line">    animationView.frame = CGRect.init(x: self.view.frame.width - 200, y: 50, width:100, height: 200)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>可设置动画时间、动画内容、动画结束后的内容的函数</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> /*!</span><br><span class="line"> 1、设置动画时间</span><br><span class="line"> 2、设置动画内容</span><br><span class="line"> 3、设置动画结束后的处理事件</span><br><span class="line"> */</span><br><span class="line">UIView.animate(withDuration: 5, animations: &#123;</span><br><span class="line">    // 位置和颜色的变换</span><br><span class="line">    animationView.frame = CGRect.init(x: 100, y: 50, width: 100, height: 200)</span><br><span class="line">&#125;) &#123; (isFinish) in</span><br><span class="line">    if isFinish &#123;</span><br><span class="line">        // 变色</span><br><span class="line">        self.View1!.backgroundColor = UIColor.magenta</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>设置动画时间、动画延迟时间、动画内容、动画结束内容的动画函数</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/*!</span><br><span class="line"> 可设置延时时间的动画</span><br><span class="line"> </span><br><span class="line"> @withDuration : 设置动画时间</span><br><span class="line"> @delay : 设置动画延迟时间</span><br><span class="line"> @options : 设置动画的形式</span><br><span class="line"> */</span><br><span class="line">UIView.animate(withDuration: 5, delay: 2, options: .allowUserInteraction, animations: &#123;</span><br><span class="line">    // code.... 动画的内容</span><br><span class="line">&#125;) &#123; (isFinish) in</span><br><span class="line">    // code.... 动画结束后的处理内容</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>弹簧动画函数</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/*!</span><br><span class="line"> 弹簧式动画</span><br><span class="line"> </span><br><span class="line"> @withDuration : 设置动画时间</span><br><span class="line"> @delay : 设置动画延时时间</span><br><span class="line"> @usingSpringWithDamping : 设置阻尼系数(该数字越大，动画弹动的次数越少)</span><br><span class="line"> @initialSpringVelocity : 设置初始速度(该数字越大，震动的振幅越大)</span><br><span class="line"> @options : 设置动画的出现形式</span><br><span class="line"> */</span><br><span class="line">UIView.animate(withDuration: 5, delay: 2, usingSpringWithDamping: 0.1, initialSpringVelocity: 10, options: .curveEaseIn, animations: &#123;</span><br><span class="line">    // code.... 动画的内容</span><br><span class="line">    animationView.frame = CGRect.init(x: (self.View1?.center.x)!-20, y: 110, width: 40, height: 40)</span><br><span class="line">&#125;) &#123; (isFinish) in</span><br><span class="line">    // code.... 动画结束后的处理内容</span><br><span class="line">    animationView.frame = CGRect.init(x: self.View1!.center.x-40, y: 110, width: 80, height: 80)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>帧动画函数</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">/*!</span><br><span class="line"> 帧动画</span><br><span class="line"> </span><br><span class="line"> @withDuration : 设置动画时间</span><br><span class="line"> @delay : 设置动画延迟时间</span><br><span class="line"> @options ：设置动画形式</span><br><span class="line"> */</span><br><span class="line">UIView.animateKeyframes(withDuration: 8, delay: 0, options: .calculationModeLinear, animations: &#123;</span><br><span class="line">    // code.... 动画的内容</span><br><span class="line">    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1.0/4, animations: &#123;</span><br><span class="line">         animationView.backgroundColor = UIColor.red</span><br><span class="line">    &#125;)</span><br><span class="line">    UIView.addKeyframe(withRelativeStartTime: 1.0/4, relativeDuration: 1.0/4, animations: &#123;</span><br><span class="line">        animationView.backgroundColor = UIColor.green</span><br><span class="line">    &#125;)</span><br><span class="line">    UIView.addKeyframe(withRelativeStartTime: 2.0/4, relativeDuration: 1.0/4, animations: &#123;</span><br><span class="line">        animationView.backgroundColor = UIColor.blue</span><br><span class="line">    &#125;)</span><br><span class="line">    UIView.addKeyframe(withRelativeStartTime: 3.0/4, relativeDuration: 1.0/4, animations: &#123;</span><br><span class="line">        animationView.backgroundColor = UIColor.magenta</span><br><span class="line">    &#125;)</span><br><span class="line">    UIView.addKeyframe(withRelativeStartTime: 4.0/4, relativeDuration: 1.0/4, animations: &#123;</span><br><span class="line">        animationView.backgroundColor = UIColor.purple</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;) &#123; (isFinish) in</span><br><span class="line">    // code.... 动画结束后的处理内容</span><br><span class="line">    animationView.backgroundColor = UIColor.cyan</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>关键帧动画的单帧动画设置</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/*!</span><br><span class="line"> 帧动画</span><br><span class="line"> </span><br><span class="line"> @withRelativeStartTime : 设置动画的开始时间</span><br><span class="line"> @relativeDuration : 动画的持续时间</span><br><span class="line"> */</span><br><span class="line">UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1.0/4, animations: &#123;</span><br><span class="line">    animationView.backgroundColor = UIColor.purple</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>UIView 转场动画</li>
+</ol>
+<ul>
+<li>单个 <code>View</code> 转场动画</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/*！</span><br><span class="line"> 单个View的转场动画</span><br><span class="line"> </span><br><span class="line"> @with : 要转场的View</span><br><span class="line"> @duration : 转场时间</span><br><span class="line"> @options : 动画的类型</span><br><span class="line"> */</span><br><span class="line">UIView.transition(with: animationView, duration: 5, options:.transitionCurlUp, animations: &#123;</span><br><span class="line">    self.imageView4?.image = UIImage.init(named: &quot;2.jpg&quot;)</span><br><span class="line">&#125;) &#123; (isFinsish) in</span><br><span class="line">    // code .... 转场结束事件处理</span><br><span class="line">&#125;   </span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>两个 <code>View</code> 的转场动画</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/*!</span><br><span class="line"> 转场动画</span><br><span class="line"> </span><br><span class="line"> @from : 起始View</span><br><span class="line"> @to : 结束View</span><br><span class="line"> @duration : 动画时间</span><br><span class="line"> @options : 动画的形式</span><br><span class="line"> */</span><br><span class="line">UIView.transition(from: fromView, to: toView, duration: 5, options: [ .transitionFlipFromLeft,.showHideTransitionViews]) &#123; (isFinish) in</span><br><span class="line">    // code .... 两个View的其他处理内容</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="4">
+<li>UIView 基本动画写法</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">// TODO: 动画的一般写法</span><br><span class="line">func basicAnimation() -&gt; Void &#123;</span><br><span class="line">    // 开始某个动画</span><br><span class="line">    UIView.beginAnimations(&quot;animation&quot;, context: nil)</span><br><span class="line">    // 设置动画时间</span><br><span class="line">    UIView.setAnimationDuration(5)</span><br><span class="line">    // 设置动画的延时时间</span><br><span class="line">    UIView.setAnimationDelay(0.25)</span><br><span class="line">    // 设置动画的效果</span><br><span class="line">    UIView.setAnimationCurve(.easeInOut)</span><br><span class="line">    // 设置动画是否重复，0为无限重复</span><br><span class="line">    UIView.setAnimationRepeatCount(0)</span><br><span class="line">    // 设置动画的代理</span><br><span class="line">    UIView.setAnimationDelegate(self)</span><br><span class="line">    // 设置动画将要触发的时调用的方法</span><br><span class="line">    UIView.setAnimationWillStart(#selector(willStartMethod))</span><br><span class="line">    // 设置动画结束时触发的方法</span><br><span class="line">    UIView.setAnimationDidStop(#selector(didStopMethod))</span><br><span class="line">    // 设置动画是否可用</span><br><span class="line">    UIView.setAnimationsEnabled(true)</span><br><span class="line">    // 设置动画是否从当前状态开始（例如：一个动画正在播放时，我们要进行下一个动画，如果设置为 true 时，动画将从当前动画状态开始动画。为 false时是等上一个动画停止时，开始下一个动画）</span><br><span class="line">    UIView.setAnimationBeginsFromCurrentState(true)</span><br><span class="line">    // 设置动画开始的时间</span><br><span class="line">    UIView.setAnimationStart(Date.init())</span><br><span class="line">    // 设置动画是否执行动画回路,前提 UIView.setAnimationRepeatCount(0) 为 0</span><br><span class="line">    UIView.setAnimationRepeatAutoreverses(true)</span><br><span class="line">    // 设置单个View的转场动画</span><br><span class="line">    UIView.setAnimationTransition(.flipFromLeft, for: self.view, cache: true)</span><br><span class="line">    // 设置动画的结束</span><br><span class="line">    UIView.commitAnimations()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 动画代理触发事件</span><br><span class="line"></span><br><span class="line">@objc func willStartMethod() &#123;</span><br><span class="line">    // 动画将要开始执行触发的代理事件</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@objc func didStopMethod() &#123;</span><br><span class="line">    // 动画结束后触发的方法</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Core-Animation-动画"><a href="#Core-Animation-动画" class="headerlink" title="Core Animation 动画"></a>Core Animation 动画</h1><ol>
+<li><code>Core Animation</code> 动画的适用场景？</li>
+</ol>
+<ul>
+<li>当我们无法用 <code>Block</code> 动画解决动画问题时，就是 <code>Core Animation</code> 出场了</li>
+<li>比如：改变 <code>cornerRadius</code>，沿着一条曲线移动 <code>view</code> 等等</li>
+</ul>
+<ol start="2">
+<li><code>Core Animation</code> 的所有功能都是基于 <code>layer</code> 对吗？</li>
+</ol>
+<ul>
+<li>对，都基于 <code>layer</code></li>
+<li>当你通过 <code>Core Animation</code> 修改了 <code>layer</code> 的属性时，<code>Core Animation</code> 会通过<br><code>GPU</code> 来重新渲染位图，因为是硬件渲染，因此速度非常快。</li>
+</ul>
+<ol start="3">
+<li>几种常用的 <code>CALayer</code> 子类</li>
+</ol>
+<ul>
+<li><code>CAEmitterLayer</code> 类</li>
+</ul>
+<p><code>CAEmitterLayer</code> 是一个粒子发射器系统，负责粒子的创建和发射源属性的配置。它可以创建出炫酷的粒子效果动画</p>
+<ul>
+<li><code>CAGradientLayer</code> 类</li>
+</ul>
+<p>可以创建色彩渐变的图层效果</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// 创建图层对象</span><br><span class="line">let gradientLayer = CAGradientLayer()</span><br><span class="line">// 设置图层尺寸与位置</span><br><span class="line">gradientLayer.bounds = CGRect(x: 0, y: 100, width: 100, height: 100)</span><br><span class="line">gradientLayer.position = CGPoint(x: 100, y: 100)</span><br><span class="line">// 设置要进行色彩渐变的颜色</span><br><span class="line">gradientLayer.colors = [UIColor.red.cgColor,UIColor.green.cgColor,UIColor.blue.cgColor]</span><br><span class="line">// 设置要进行渐变的临界位置 当红色渲染到1/5后开始向绿色进行渐变，绿色渲染到1/2后开始向蓝色进行渐变，当到达7/10距离后完成渐变过程，开始渲染为纯蓝色</span><br><span class="line">gradientLayer.locations = [NSNumber(value: 0.2),NSNumber(value: 0.5),NSNumber(value: 0.7)]</span><br><span class="line">// 设置渐变的起始点与结束点 (0,0)左上角 (1,1)右下角</span><br><span class="line">gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)</span><br><span class="line">gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)</span><br><span class="line">// 添加视图</span><br><span class="line">self.view.layer.addSublayer(gradientLayer)</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>CAEAGLLayer 类</li>
+</ul>
+<p>可以通过 <code>OpenGL ES</code> 来进行界面的绘制</p>
+<ul>
+<li>CAReplicatorLayer 类</li>
+</ul>
+<p><code>CAReplicatorLayer</code> 是一个图层容器，会对其中的子图层进行复制和属性偏移。可以用来创建类型倒影效果，也可以进行图层的变换复制</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 创建拷贝图层</span><br><span class="line">let replicatorLayer = CAReplicatorLayer()</span><br><span class="line">replicatorLayer.position = CGPoint.zero</span><br><span class="line">// 创建内容图层</span><br><span class="line">let subLayer = CALayer()</span><br><span class="line">subLayer.bounds = CGRect(x: 0, y: 0, width: 20, height: 20)</span><br><span class="line">subLayer.position = CGPoint(x: 30, y: 100)</span><br><span class="line">subLayer.backgroundColor = UIColor.red.cgColor</span><br><span class="line">replicatorLayer.addSublayer(subLayer)</span><br><span class="line">// 设置每次拷贝将副本沿x轴平移30个单位</span><br><span class="line">replicatorLayer.instanceTransform = CATransform3DMakeTranslation(30, 0, 0)</span><br><span class="line">// 设置拷贝副本的个数</span><br><span class="line">replicatorLayer.instanceCount = 10</span><br><span class="line">// 添加视图</span><br><span class="line">self.view.layer.addSublayer(replicatorLayer)</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>CAScrollLayer类</li>
+</ul>
+<p>可以让其管理的多个子层进行滑动，但是只能通过代码进行管理，不能进行用户点按触发</p>
+<ul>
+<li>CAShapeLayer类</li>
+</ul>
+<p>可以在图层上直接绘制出自定义的形状</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// 创建图层</span><br><span class="line">let shapeLayer = CAShapeLayer()</span><br><span class="line">shapeLayer.position = CGPoint.zero</span><br><span class="line">// 创建图形路径</span><br><span class="line">let path = CGMutablePath()</span><br><span class="line">// 设置路径起点</span><br><span class="line">path.move(to: CGPoint(x: 100, y: 100))</span><br><span class="line">// 进行画线</span><br><span class="line">path.addLine(to: CGPoint(x: 300, y: 100))</span><br><span class="line">path.addLine(to: CGPoint(x: 200, y: 200))</span><br><span class="line">path.addLine(to: CGPoint(x: 100, y: 100))</span><br><span class="line">// 设置图层路径</span><br><span class="line">shapeLayer.path = path</span><br><span class="line">// 设置图形边缘线条起点</span><br><span class="line">shapeLayer.strokeStart = 0</span><br><span class="line">// 设置图形边缘线条终点</span><br><span class="line">shapeLayer.strokeEnd = 1</span><br><span class="line">// 设置填充规则</span><br><span class="line">shapeLayer.fillRule = CAShapeLayerFillRule.evenOdd</span><br><span class="line">// 设置填充颜色</span><br><span class="line">shapeLayer.fillColor = UIColor.red.cgColor</span><br><span class="line">// 设置边缘线条颜色</span><br><span class="line">shapeLayer.strokeColor = UIColor.blue.cgColor</span><br><span class="line">// 设置边缘线条宽度</span><br><span class="line">shapeLayer.lineWidth = 1</span><br><span class="line">self.view.layer.addSublayer(shapeLayer)</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>CATextLayer类</li>
+</ul>
+<p>用于进行文字的绘制</p>
+<ul>
+<li>CATiledLayer类</li>
+</ul>
+<p>瓦片视图，可以分区域绘制，常用于在一张大的图片中分区域绘制</p>
+<ul>
+<li>CATransformLayer类</li>
+</ul>
+<p>用于构建一些图层变化效果，包括3D效果的图层变换</p>
+<ol start="4">
+<li>CoreAnimation 框架中的属性动画</li>
+</ol>
+<p><code>CAAnimation</code> 类是 <code>CoreAnimation</code> 子类，主要分为：<code>CAPropertyAnimation</code>(CABasicAnimation属性过渡动画、CAKeyframeAnimation关键帧属性过渡动画)、<code>CATransition</code>、<code>CAAnimationGroup</code></p>
+<ul>
+<li>CABasicAnimation 属性过渡动画</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 创建动画实例，keyPath为要进行属性动画的属性路径 transform.rotation.z 表示图形属性中以 z 轴为中心轴的旋转属性</span><br><span class="line">let basicAni = CABasicAnimation(keyPath: &quot;transform.rotation.z&quot;)</span><br><span class="line">// 从0度开始旋转</span><br><span class="line">basicAni.fromValue = NSNumber(value: 0)</span><br><span class="line">// 旋转到180度</span><br><span class="line">basicAni.toValue = NSNumber(value: Double.pi)</span><br><span class="line">// 设置动画播放的时长</span><br><span class="line">basicAni.duration = 2</span><br><span class="line">// 将动画作用于当前界面的视图Layer层上</span><br><span class="line">self.view.layer.add(basicAni, forKey: nil)</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>CAKeyframeAnimation关键帧动画</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 创建动画实例，keyPath为要进行属性动画的属性路径 transform.rotation.z 表示图形属性中以z轴为中心轴的旋转属性</span><br><span class="line">let keyframeAni = CAKeyframeAnimation(keyPath: &quot;transform.rotation.z&quot;)</span><br><span class="line">// 从0度开始旋转</span><br><span class="line">keyframeAni.values = [NSNumber(value: 0),NSNumber(value: Double.pi/4),NSNumber(value: 0),NSNumber(value: Double.pi)]</span><br><span class="line">// 设置动画播放的时长</span><br><span class="line">keyframeAni.duration = 3</span><br><span class="line">// 将动画作用于当前界面的视图Layer层上</span><br><span class="line">self.view.layer.add(keyframeAni, forKey: &quot;&quot;)</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>CASpringAnimation类似弹簧的阻尼动画</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 创建动画实例</span><br><span class="line">let springAni = CASpringAnimation(keyPath: &quot;position.y&quot;)</span><br><span class="line">// 模拟重物质量，必须大于0，默认为1，会影响惯性</span><br><span class="line">springAni.mass = 2</span><br><span class="line">// 模拟弹簧劲度系数，必须大于0，这个值越大，则回弹越快</span><br><span class="line">springAni.stiffness = 5</span><br><span class="line">// 设置阻尼系数，必须大于0，这个值越大，回弹的幅度越小</span><br><span class="line">springAni.damping = 2</span><br><span class="line">springAni.toValue = 300</span><br><span class="line">springAni.duration = 3</span><br><span class="line">// 创建演示动画的Layer</span><br><span class="line">let layer = CALayer()</span><br><span class="line">layer.position = CGPoint(x: 100, y: 100)</span><br><span class="line">layer.bounds = CGRect(x: 0, y: 0, width: 100, height: 100)</span><br><span class="line">layer.backgroundColor = UIColor.red.cgColor</span><br><span class="line">self.view.layer.addSublayer(layer)</span><br><span class="line">layer.add(springAni, forKey: &quot;&quot;)</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>CATransition 实现转场动画</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 创建转场动画实例</span><br><span class="line">let transAni = CATransition()</span><br><span class="line">// 设置转场动画类型</span><br><span class="line">transAni.type = CATransitionType.reveal</span><br><span class="line">// 设置转场动画方向</span><br><span class="line">transAni.subtype = CATransitionSubtype.fromTop</span><br><span class="line">let layer = CALayer()</span><br><span class="line">layer.position = CGPoint(x: 100, y: 100)</span><br><span class="line">layer.bounds = CGRect(x: 0, y: 0, width: 100, height: 100)</span><br><span class="line">layer.backgroundColor = UIColor.red.cgColor</span><br><span class="line">layer.add(transAni, forKey: &quot;&quot;)</span><br><span class="line">self.view.layer.addSublayer(layer)</span><br></pre></td></tr></table></figure></div>
+
+<p>type转场动画属性</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 渐入效果</span><br><span class="line">transAni.type = CATransitionType.fade</span><br><span class="line">// 移入效果</span><br><span class="line">transAni.type = CATransitionType.moveIn</span><br><span class="line">// 压入效果</span><br><span class="line">transAni.type = CATransitionType.push</span><br><span class="line">// 溶解效果</span><br><span class="line">transAni.type = CATransitionType.reveal</span><br></pre></td></tr></table></figure></div>
+
+<p>subtype属性</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 从右侧执行</span><br><span class="line">transAni.subtype = CATransitionSubtype.fromRight</span><br><span class="line">// 从左侧执行</span><br><span class="line">transAni.subtype = CATransitionSubtype.fromLeft</span><br><span class="line">// 从上侧执行</span><br><span class="line">transAni.subtype = CATransitionSubtype.fromTop</span><br><span class="line">// 从下侧执行</span><br><span class="line">transAni.subtype = CATransitionSubtype.fromBottom</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>CAAnimationGroup组合动画</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 创建背景色过渡动画</span><br><span class="line">let basicAni = CABasicAnimation(keyPath: &quot;backgroundColor&quot;)</span><br><span class="line">basicAni.toValue = UIColor.green.cgColor</span><br><span class="line">// 创建形变动画</span><br><span class="line">let basicAni2 = CABasicAnimation(keyPath: &quot;transform.scale.x&quot;)</span><br><span class="line">basicAni2.toValue = NSNumber(value: 2)</span><br><span class="line">// 进行动画组合</span><br><span class="line">let groupAni = CAAnimationGroup()</span><br><span class="line">groupAni.animations = [basicAni,basicAni2]</span><br><span class="line">groupAni.duration = 3</span><br><span class="line">    </span><br><span class="line">let layer = CALayer()</span><br><span class="line">layer.position = CGPoint(x: 100, y: 100)</span><br><span class="line">layer.bounds = CGRect(x: 0, y: 0, width: 100, height: 100)</span><br><span class="line">layer.backgroundColor = UIColor.red.cgColor</span><br><span class="line">layer.add(groupAni, forKey: &quot;&quot;)</span><br><span class="line">self.view.layer.addSublayer(layer)</span><br></pre></td></tr></table></figure></div>
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：Swift学习29：动画</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-04-03 13:43:21</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/04/03/Swift/Swift学习29：动画/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/Swift-%E5%B8%B8%E7%94%A8/">#Swift-常用</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/09/10/OC%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%9606%EF%BC%9A%E5%90%AF%E5%8A%A8%E4%BC%98%E5%8C%96/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">性能优化06：启动优化</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/03/31/OC%E5%AD%A6%E4%B9%A0/OC%E5%AD%A6%E4%B9%A034%EF%BC%9A%E8%87%AA%E5%8A%A8%E8%AE%A2%E9%98%85%E5%92%8C%E9%9D%9E%E8%87%AA%E5%8A%A8%E8%AE%A2%E9%98%85%E5%86%85%E8%B4%AD%E4%B9%B0/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习34：自动订阅和非自动订阅内购买</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">Swift学习29：动画</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#iOS-%E5%8A%A8%E7%94%BB%E6%A1%86%E6%9E%B6"><span class="nav-text">iOS 动画框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CALager-%E7%BB%98%E5%88%B6%E7%9A%84%E5%AD%90%E7%B1%BB"><span class="nav-text">CALager 绘制的子类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UIView%E5%92%8CCALayer%E5%85%B3%E7%B3%BB"><span class="nav-text">UIView和CALayer关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E5%A4%B4%E6%96%87%E4%BB%B6"><span class="nav-text">导入头文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UIView%E7%9A%84Block%E5%8A%A8%E7%94%BB"><span class="nav-text">UIView的Block动画</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Core-Animation-%E5%8A%A8%E7%94%BB"><span class="nav-text">Core Animation 动画</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

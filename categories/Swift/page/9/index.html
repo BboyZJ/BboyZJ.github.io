@@ -9,18 +9,18 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://www.bboyzj.cn/2023/03/27/swift/swift学习25：通知notification/"/>
+    <link rel="canonical" href="https://www.bboyzj.cn/categories/swift/page/9/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="Swift学习25：通知Notification">
+    <meta property="og:title" content="张建的博客">
     <meta property="og:description" content="我是小J，关注我">
-    <meta property="og:url" content="https://www.bboyzj.cn2023/03/27/Swift/Swift学习25：通知Notification/">
+    <meta property="og:url" content="https://www.bboyzj.cncategories/Swift/page/9/index.html">
     <meta property="og:image" content="/images/redefine-logo.svg">
     <meta property="og:site_name" content="BboyZJ">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Swift学习25：通知Notification">
+    <meta name="twitter:title" content="张建的博客">
     <meta name="twitter:description" content="我是小J，关注我">
     <meta name="twitter:image" content="/images/redefine-logo.svg">
     <!--- Icon Part-->
@@ -31,7 +31,7 @@
     
     <title>
         
-            Swift学习25：通知Notification -
+            Category: Swift -
         
         BboyZJ
     </title>
@@ -145,7 +145,7 @@
                         
                             <li class="menu-item">
                                 <!-- Menu -->
-                                <a class="" 
+                                <a class="active" 
                                     href="/BboyZJ.github.io/categories/"  >
                                     
                                         
@@ -213,7 +213,7 @@
             
                 
                     <li class="drawer-menu-item flex-center">
-                        <a class="" 
+                        <a class="active" 
                         href="/BboyZJ.github.io/categories/"  >
                              
                                 
@@ -243,196 +243,46 @@
 
                 
                     <div class="fade-in-down-animation">
-    <div class="post-page-container">
-        <div class="article-content-container">
-
-            
-            
-                <div class="article-title">
-                    <h1 class="article-title-regular">Swift学习25：通知Notification</h1>
-                </div>
-            
-                
-            
-
-            
-                <div class="article-header">
-                    <div class="avatar">
-                        <img src="/BboyZJ.github.io/images/head_img.svg">
-                    </div>
-                    <div class="info">
-                        <div class="author">
-                            <span class="name">张建</span>
-                            
-                                <span class="author-label">lol</span>
-                            
-                        </div>
-                        <div class="meta-info">
-                            <div class="article-meta-info">
-    <span class="article-date article-meta-item">
-        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="pc">2023-03-27 11:43:29</span>
-        <span class="mobile">2023-03-27 11:43</span>
-        <span class="hover-info">Created</span>
-    </span>
-    
-        <span class="article-date article-meta-item">
-            <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-27 12:03:42</span>
-            <span class="mobile">2023-03-27 12:03</span>
-            <span class="hover-info">Updated</span>
-        </span>
-    
-
-    
-        <span class="article-categories article-meta-item">
-            <i class="fa-regular fa-folders"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
-    
-        <span class="article-tags article-meta-item">
-            <i class="fa-regular fa-tags"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/BboyZJ.github.io/tags/Swift-%E5%B8%B8%E7%94%A8/">Swift-常用</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
-    
-
-    
-    
-    
-    
-        <span class="article-pv article-meta-item">
-            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
-        </span>
-    
-</div>
-
-                        </div>
-                    </div>
-                </div>
-            
-
-            <div class="article-content markdown-body">
-                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>通知</code> 通常用于不相邻两个页面之间的 <code>传值</code></p>
-<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><ol>
-<li>初始化通知Notification</li>
-</ol>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 发送通知</span><br><span class="line">// 发送简单的数据</span><br><span class="line">// NotificationCenter.default.post(name: NSNotification.Name(rawValue:&quot;SimpleNotification&quot;), object: &quot;hello&quot;)</span><br><span class="line">// 发送复杂的数据</span><br><span class="line">let userInfo = [&quot;name&quot;:&quot;ZJ&quot;,&quot;age&quot;:32] as [String:Any]</span><br><span class="line">NotificationCenter.default.post(name: NSNotification.Name(rawValue:&quot;ComplexNotification&quot;), object: nil,userInfo: userInfo)</span><br></pre></td></tr></table></figure></div>
-
-<ol start="2">
-<li>接收通知</li>
-</ol>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 接收通知</span><br><span class="line">NotificationCenter.default.addObserver(self, selector: #selector(handleNotification(noti:)), name: NSNotification.Name(rawValue:&quot;ComplexNotification&quot;), object: nil)</span><br></pre></td></tr></table></figure></div>
-
-
-<ol start="3">
-<li>接收到通知执行的操作</li>
-</ol>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 接收到通知</span><br><span class="line">@objc func handleNotification(noti:NSNotification)  &#123;</span><br><span class="line">    print(noti.userInfo as Any)</span><br><span class="line">    print(noti.userInfo![&quot;name&quot;] as! String)</span><br><span class="line">    print(noti.userInfo![&quot;age&quot;] as! Int)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">Optional([AnyHashable(&quot;name&quot;): &quot;ZJ&quot;, AnyHashable(&quot;age&quot;): 32])</span><br><span class="line">ZJ</span><br><span class="line">32</span><br></pre></td></tr></table></figure></div>
-
-<ol start="4">
-<li>移除通知</li>
-</ol>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">deinit &#123;</span><br><span class="line">    NotificationCenter.default.removeObserver(self)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-            </div>
-
-            
-                <div class="post-copyright-info">
-                    <div class="article-copyright-info-container">
-    <ul>
-        <li>Post title：Swift学习25：通知Notification</li>
-        <li>Post author：张建</li>
-        <li>Create time：2023-03-27 11:43:29</li>
-        <li>
-            Post link：https://redefine.ohevan.com/2023/03/27/Swift/Swift学习25：通知Notification/
-        </li>
-        <li>
-            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
-        </li>
-    </ul>
-</div>
-
-                </div>
-            
-
-            
-                <ul class="post-tags-box">
-                    
-                        <li class="tag-item">
-                            <a href="/BboyZJ.github.io/tags/Swift-%E5%B8%B8%E7%94%A8/">#Swift-常用</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            
-
-            
-
-            
-                <div class="article-nav">
-                    
-                        <div class="article-prev">
-                            <a class="prev"
-                            rel="prev"
-                            href="/BboyZJ.github.io/2023/03/28/Swift/Swift%E5%AD%A6%E4%B9%A026%EF%BC%9AUITableView/"
-                            >
-                                <span class="left arrow-icon flex-center">
-                                    <i class="fa-solid fa-chevron-left"></i>
-                                </span>
-                                <span class="title flex-center">
-                                    <span class="post-nav-title-item">Swift学习26：UITableView</span>
-                                    <span class="post-nav-item">Prev posts</span>
-                                </span>
-                            </a>
-                        </div>
-                    
-                    
-                        <div class="article-next">
-                            <a class="next"
-                            rel="next"
-                            href="/BboyZJ.github.io/2023/03/26/Swift/Swift%E5%AD%A6%E4%B9%A024%EF%BC%9A%E5%8F%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E5%99%A8deinit/"
-                            >
-                                <span class="title flex-center">
-                                    <span class="post-nav-title-item">Swift学习24：反初始化器deinit</span>
-                                    <span class="post-nav-item">Next posts</span>
-                                </span>
-                                <span class="right arrow-icon flex-center">
-                                    <i class="fa-solid fa-chevron-right"></i>
-                                </span>
-                            </a>
-                        </div>
-                    
-                </div>
-            
-
-
-            
+    <div class="category-container">
+        <div class="category-name">
+            <i class="fa-solid fa-folder"></i>&nbsp;Swift
         </div>
-
-        
-            <div class="toc-content-container">
-                <div class="post-toc-wrap">
-    <div class="post-toc">
-        <div class="toc-title">On this page</div>
-        <div class="page-title">Swift学习25：通知Notification</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-text">使用</span></a></li></ol>
-
-    </div>
-</div>
+        <div class="category-post-list">
+            
+<div class="archive-list-container">
+    
+        <section class="archive-item">
+            <div class="archive-item-header">
+                <span class="archive-year">2020</span>
+                <span class="archive-year-post-count">[1]</span>
             </div>
-        
+            <ul class="article-list">
+                
+                    <li class="article-item">
+                        <a class="article-title"
+                           href="/BboyZJ.github.io/2020/08/11/Swift%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B6/Swift%E5%AD%A6%E4%B9%A019%EF%BC%9ASnapkit%E4%BD%BF%E7%94%A8%E6%8E%A2%E7%B4%A2/"
+                        >Swift学习19：Snapkit使用探索</a>
+                        <span class="article-date">08-11</span>
+                    </li>
+                
+            </ul>
+        </section>
+    
+</div>
+
+        </div>
+    </div>
+    <div class="category-paginator">
+        <div class="paginator">
+    
+        <a class="prev btn"
+           href="/BboyZJ.github.io/categories/Swift/page/8/"
+        >Prev</a>
+    
+
+    
+</div>
+
     </div>
 </div>
 
@@ -511,23 +361,6 @@
         </div>
     </div>
 
-    
-        <div class="post-tools">
-            <div class="post-tools-container">
-    <ul class="tools-list">
-        <!-- TOC aside toggle -->
-        
-            <li class="right-bottom-tools page-aside-toggle">
-                <i class="fa-regular fa-outdent"></i>
-            </li>
-        
-
-        <!-- go comment -->
-        
-    </ul>
-</div>
-
-        </div>
     
 
     <div class="right-bottom-side-tools">
@@ -659,16 +492,6 @@
 
 
 <div class="post-scripts pjax">
-    
-        
-<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
-
-<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
-
-<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
-
-<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
-
     
     
 </div>
