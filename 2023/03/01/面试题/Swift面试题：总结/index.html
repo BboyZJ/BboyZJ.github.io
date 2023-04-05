@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-31 16:01:12</span>
-            <span class="mobile">2023-03-31 16:01</span>
+            <span class="pc">2023-04-05 20:30:41</span>
+            <span class="mobile">2023-04-05 20:30</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -368,7 +368,7 @@
 <ul>
 <li><p>值类型：<code>传递和存储</code> 是一个 <code>副本</code>，使用过程中 <code>不会影响源数据</code>，存储在 <code>栈区</code>，访问一次拿到数据</p>
 </li>
-<li><p>引用类型：<code>传递和存储</code> 是 <code>本身（内存地址）</code>，使用过程中会 <code>影响源数据</code>，存储在 <code>堆区</code>，访问两次拿到数据</p>
+<li><p>引用类型：<code>传递和存储</code> 是 <code>本身（内存地址）</code>，使用过程中会 <code>影响源数据</code>，存储在 <code>堆区</code>，访问两次拿到数据，栈区拿到指针地址，指针地址到堆区拿到内存地址</p>
 </li>
 </ul>
 </li>
@@ -429,28 +429,22 @@
 </ul>
 </li>
 <li><p>struct、class 不同点：</p>
-</li>
-<li><p>class 定义 <code>属性</code>，必须赋值或包装成Optional。struct 定义属性不需要要赋值</p>
-</li>
-<li><p>class 是 <code>引用类型</code>，<code>浅拷贝</code>。struct 是 <code>值类型</code>，<code>深拷贝</code>。</p>
-</li>
-<li><p>class <code>可以继承</code>。struct <code>不能继承</code>。</p>
-</li>
-<li><p>class 有 <code>引用计数</code>，可以 <code>多次引用</code>。struct 没有引用计数</p>
-</li>
-<li><p>class 有 <code>类型转换</code>，允许在 <code>运行时检查和解释一个类实例的类型</code>。struct 没有</p>
-</li>
-<li><p>class 有 <code>反初始化器 deinit</code> 用于 <code>释放资源</code> </p>
-</li>
-<li><p>class 分配在 <code>堆</code> 中，动态分配释放内存，struct 分配在 <code>栈</code> 中，系统分配是否内存</p>
-</li>
-<li><p>struct 比 class <code>更轻量级</code>，<code>栈</code> 只访问一次拿到数据，<code>堆</code> 访问两次拿到数据（第一次获取指针，第二次获取数据）</p>
+<ul>
+<li>class 定义 <code>属性</code>，必须赋值或包装成Optional。struct 定义属性不需要要赋值</li>
+<li>class 是 <code>引用类型</code>，<code>浅拷贝</code>。struct 是 <code>值类型</code>，<code>深拷贝</code>。</li>
+<li>class <code>可以继承</code>。struct <code>不能继承</code>。</li>
+<li>class 有 <code>引用计数</code>，可以 <code>多次引用</code>。struct 没有引用计数</li>
+<li>class 有 <code>类型转换</code>，允许在 <code>运行时检查和解释一个类实例的类型</code>。struct 没有</li>
+<li>class 有 <code>反初始化器 deinit</code> 用于 <code>释放资源</code> </li>
+<li>class 分配在 <code>堆</code> 中，动态分配释放内存，struct 分配在 <code>栈</code> 中，系统分配是否内存</li>
+<li>struct 比 class <code>更轻量级</code>，<code>栈</code> 只访问一次拿到数据，<code>堆</code> 访问两次拿到数据（第一次获取指针，第二次获取数据）</li>
+</ul>
 </li>
 </ul>
 <h1 id="方法的调用？"><a href="#方法的调用？" class="headerlink" title="方法的调用？"></a>方法的调用？</h1><ul>
-<li><p>struct&#x2F;enum&#x2F;extension：值类型，方法调用是 <code>静态派发</code>，直接调用 <code>地址</code></p>
+<li><p>struct&#x2F;enum&#x2F;extension：<code>值类型</code>，方法调用是 <code>静态派发</code>，直接调用 <code>地址</code></p>
 </li>
-<li><p>class：引用类型，方法调用是 <code>动态派发</code>，也叫 <code>函数表调度</code></p>
+<li><p>class：<code>引用类型</code>，方法调用是 <code>动态派发</code>，也叫 <code>函数表调度</code></p>
 </li>
 </ul>
 <h1 id="什么是协议？作用？"><a href="#什么是协议？作用？" class="headerlink" title="什么是协议？作用？"></a>什么是协议？作用？</h1><ul>
