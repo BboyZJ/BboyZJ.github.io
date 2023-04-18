@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-19 23:13:22</span>
-            <span class="mobile">2023-03-19 23:13</span>
+            <span class="pc">2023-04-12 23:13:49</span>
+            <span class="mobile">2023-04-12 23:13</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -385,7 +385,7 @@
 <p>示例：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">protocol Student &#123;</span><br><span class="line">    //类方法</span><br><span class="line">    static func study()</span><br><span class="line">    //实例方法</span><br><span class="line">    func changeName()</span><br><span class="line">&#125;</span><br><span class="line">struct CollageStudent: Student &#123;</span><br><span class="line">    //类方法实现</span><br><span class="line">    static func study() &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    //实例方法实现</span><br><span class="line">    func changeName() &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">//方法的调用</span><br><span class="line">CollageStudent.study()</span><br><span class="line">var c1 = CollageStudent()</span><br><span class="line">c1.changeName()</span><br></pre></td></tr></table></figure></div>
 
-<p>注意：当我们在结构体中的方法修改到属性的时候需要在方法前面加上关键字 <code>mutating</code> 表示该属性能够被修改（如果是类不需要添加mutating 关键字）,这样的方法叫做：<code>异变方法</code>，和 “在实例方法中修改值类型” 的处理是一样的。</p>
+<p>注意：当我们在结构体中的方法修改到属性的时候需要在方法前面加上关键字 <code>mutating</code> 表示该属性能够被修改（如果是类不需要添加 <code>mutating</code> 关键字）,这样的方法叫做：<code>异变方法</code>，和 “在实例方法中修改值类型” 的处理是一样的。</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">protocol Student &#123;</span><br><span class="line">    mutating func changeName()</span><br><span class="line">&#125;</span><br><span class="line">struct CollageStudent: Student &#123;</span><br><span class="line">    mutating func changeName() &#123;</span><br><span class="line">        self.name = &quot;小明&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">var c1 = CollageStudent()</span><br><span class="line">c1.changeName()</span><br></pre></td></tr></table></figure></div>
 
 <h1 id="定义-mutating-异变方法"><a href="#定义-mutating-异变方法" class="headerlink" title="定义 mutating 异变方法"></a>定义 mutating 异变方法</h1><ul>

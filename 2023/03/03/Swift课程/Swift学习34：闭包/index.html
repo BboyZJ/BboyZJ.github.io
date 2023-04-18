@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-14 05:02</span>
-            <span class="mobile">2023-03-14 05</span>
+            <span class="pc">2023-04-12 23:05:51</span>
+            <span class="mobile">2023-04-12 23:05</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -360,7 +360,7 @@
 <h1 id="内嵌函数："><a href="#内嵌函数：" class="headerlink" title="内嵌函数："></a>内嵌函数：</h1><ul>
 <li>全局函数： 是一种特殊的闭包，可以捕获值的闭包。函数中的 <code>incrementer</code> 是一个 <code>内嵌函数</code>，可以从 <code>makeIncrementer</code> 中捕获变量 <code>runningTotal</code>。</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">func makeIncrementer() -&gt; () -&gt; Int&#123;</span><br><span class="line">    var runningTotal = 10</span><br><span class="line">    // 内嵌函数，有名字会从上下层函数补获值的闭包</span><br><span class="line">    func incrementer() -&gt; Int&#123;</span><br><span class="line">        runningTotal += 1</span><br><span class="line">        return runningTotal</span><br><span class="line">    &#125;</span><br><span class="line">    return incrementer</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let incre = makeIncrementer()</span><br><span class="line">print(incre()</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">func makeIncrementer() -&gt; () -&gt; Int&#123;</span><br><span class="line">    var runningTotal = 10</span><br><span class="line">    // 内嵌函数，有名字会从上下层函数补获值的闭包</span><br><span class="line">    func incrementer() -&gt; Int&#123;</span><br><span class="line">        runningTotal += 1</span><br><span class="line">        return runningTotal</span><br><span class="line">    &#125;</span><br><span class="line">    return incrementer</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let incre = makeIncrementer()</span><br><span class="line">print(incre())</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <h1 id="闭包表达式"><a href="#闭包表达式" class="headerlink" title="闭包表达式"></a>闭包表达式</h1><ul>
 <li>闭包表达式 &#x2F; 匿名函数：下面是一个 <code>闭包表达式</code>，即一个 <code>匿名函数</code>，而且可以 <code>从上下文中捕获变量和常量</code>。</li>
@@ -401,10 +401,10 @@
 </ul>
 <h1 id="闭包作为函数的参数"><a href="#闭包作为函数的参数" class="headerlink" title="闭包作为函数的参数"></a>闭包作为函数的参数</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">func exec(fn: (Int,Int) -&gt; Int, v1: Int, v2: Int) &#123;</span><br><span class="line">    /*</span><br><span class="line">     fn: (Int,Int) -&gt; Int = &#123;a,b -&gt; Int in return a + b&#125;</span><br><span class="line">     print(fn(1,2))</span><br><span class="line">     */</span><br><span class="line">    print(fn(v1,v2))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-<p>这个函数有 3 个参数：第一个参数是个闭包<br>下面是exec函数的调用</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func exec(fn: (Int,Int) -&gt; Int, v1: Int, v2: Int) &#123;</span><br><span class="line">    /*</span><br><span class="line">     fn: (Int,Int) -&gt; Int = &#123;a,b -&gt; Int in return a + b&#125;</span><br><span class="line">     print(fn(1,2))</span><br><span class="line">     */</span><br><span class="line">    print(fn(v1,v2)) // 打印结果 2</span><br><span class="line">&#125;</span><br><span class="line">exec(fn: &#123; a, b in</span><br><span class="line">    return a + b</span><br><span class="line">&#125;, v1: 1, v2: 2)</span><br></pre></td></tr></table></figure></div>
+<p>这个函数有 <code>3</code> 个参数：第一个参数是个闭包<br>下面是exec函数的调用</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">func exec(fn: (Int,Int) -&gt; Int, v1: Int, v2: Int) &#123;</span><br><span class="line">    /*</span><br><span class="line">     fn: (Int,Int) -&gt; Int = &#123;a,b -&gt; Int in return a + b&#125;</span><br><span class="line">     print(fn(1,2))</span><br><span class="line">     */</span><br><span class="line">    print(fn(v1,v2)) // 打印结果 2</span><br><span class="line">&#125;</span><br><span class="line">// 调用这个函数</span><br><span class="line">exec(fn: &#123; a, b in</span><br><span class="line">    return a + b</span><br><span class="line">&#125;, v1: 1, v2: 2)</span><br></pre></td></tr></table></figure></div>
 
-<p>exec函数调用时，{} 里就是一个闭包表达式，可以看做是函数第一个参数的实现<br>这样的函数调用形式看起来很不友好，如果闭包表达式有很多行的话，会更加不友好，不利于代码的阅读。swift提供了一个 <code>尾随闭包</code> 的概念</p>
+<p>exec函数调用时，<code>&#123;&#125;</code> 里就是一个闭包表达式，可以看做是函数第一个参数的实现<br>这样的函数调用形式看起来很不友好，如果闭包表达式有很多行的话，会更加不友好，不利于代码的阅读。swift提供了一个 <code>尾随闭包</code> 的概念</p>
 <h1 id="尾随闭包"><a href="#尾随闭包" class="headerlink" title="尾随闭包"></a>尾随闭包</h1><ul>
 <li>当函数的最后一个参数是函数时，在函数调用时可以把闭包表达式写在 <code>()</code> 外面</li>
 <li>尾随闭包是一个书写在函数 <code>()</code> 之后的闭包表达式</li>
@@ -423,7 +423,7 @@
 
 <p>还有很多简写方式就不一一举例了，太简写也不利于代码阅读</p>
 <ul>
-<li>如果闭包表达式是函数的唯一实参，而且使用了尾随闭包的语法，可以将函数名后边的 () 省略</li>
+<li>如果闭包表达式是函数的唯一实参，而且使用了尾随闭包的语法，可以将函数名后边的 <code>()</code> 省略</li>
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 只有一个闭包为实参</span><br><span class="line">func exec(fn: (Int,Int) -&gt; Int) &#123;</span><br><span class="line">    print(fn(1,2))</span><br><span class="line">&#125;</span><br><span class="line">exec &#123; a, b in</span><br><span class="line">    return a + b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
@@ -461,8 +461,8 @@
 <h1 id="自动闭包"><a href="#自动闭包" class="headerlink" title="自动闭包"></a>自动闭包</h1><ul>
 <li>在参数名的 <code>:</code> 后面加 <code>@autoclosure</code> 修饰符来说明 <code>自动闭包</code></li>
 <li>@autoclosure 只支持 <code>()-&gt; T</code> 格式的参数</li>
-<li>@autoclosure 会自动将 10 封装成闭包 {20}</li>
-<li>@autoclosure 并非只支持最后 1 个参数</li>
+<li>@autoclosure 会自动将 <code>10</code> 封装成闭包 <code>&#123;20&#125;</code></li>
+<li>@autoclosure 并非只支持最后 <code>1</code> 个参数</li>
 <li>有@autoclosure和无@autoclosure构成了函数重载</li>
 <li>空合并运算符 <code>??</code> 使用了@autoclosure技术</li>
 </ul>
@@ -476,7 +476,7 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func getInt(_ a: Int, _ b: @autoclosure () -&gt; Int) -&gt; Int &#123;</span><br><span class="line">    return a &gt; 0 ? a : b()</span><br><span class="line">&#125;</span><br><span class="line">func exec() -&gt; Int &#123;</span><br><span class="line">    print(&quot;执行了exec&quot;)</span><br><span class="line">    return 20</span><br><span class="line">&#125;</span><br><span class="line">getInt(1, exec())</span><br><span class="line">// 打印结果是 1</span><br></pre></td></tr></table></figure></div>
 
 <blockquote>
-<p><code>getInt(1, exec())</code> 函数调用时，很容易误以为 <code>exec()</code> 就已经调用了函数 <code>exec</code>，其实并没有，<code>exec</code> 内部没有执行。这是因为 <code>自动闭包有延迟执行的特点</code>。<br><code>getInt(1, exec())</code> 函数内部因为 a&gt;0 返回的结果是 a 的值，并没有调用到 b()，所以 exec 函数没有执行。<br>只有当 <code>getInt(1, exec())</code> 函数内部调用到了 <code>b()</code>，<code>exec</code> 函数才会被执行</p>
+<p><code>getInt(1, exec())</code> 函数调用时，很容易误以为 <code>exec()</code> 就已经调用了函数 <code>exec</code>，其实并没有，<code>exec</code> 内部没有执行。这是因为 <code>自动闭包有延迟执行的特点</code>。<br><code>getInt(1, exec())</code> 函数内部因为 <code>a&gt;0 </code>返回的结果是 <code>a</code> 的值，并没有调用到 <code>b()</code>，所以 <code>exec</code> 函数没有执行。<br>只有当 <code>getInt(1, exec())</code> 函数内部调用到了 <code>b()</code>，<code>exec</code> 函数才会被执行</p>
 </blockquote>
 <h1 id="闭包对变量的捕获"><a href="#闭包对变量的捕获" class="headerlink" title="闭包对变量的捕获"></a>闭包对变量的捕获</h1><ul>
 <li>闭包可以对外部函数的 <code>变量/常量</code> 进行捕获</li>
@@ -487,7 +487,7 @@
 <p>下面由几份代码来说明这个结论</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// 变量捕获</span><br><span class="line">// MARK:局部变量捕获</span><br><span class="line">typealias fn = (Int) -&gt; Void</span><br><span class="line">func exec() -&gt; fn &#123;</span><br><span class="line">    var num = 0</span><br><span class="line">    return &#123; a in</span><br><span class="line">        num += a</span><br><span class="line">        print(num)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let res = exec()</span><br><span class="line">res(1)</span><br><span class="line">res(2)</span><br><span class="line">res(3)</span><br></pre></td></tr></table></figure></div>
 
-<p>res(1)、res(2)、res(3) 输出的结果分别是 1、3、6<br>这是一个函数中返回的闭包，在闭包里对 num 进行了累加并输出结果</p>
+<p>res(1)、res(2)、res(3) 输出的结果分别是 1、3、6<br>这是一个函数中返回的闭包，在闭包里对 <code>num</code> 进行了累加并输出结果</p>
 <blockquote>
 <p>1、第一次调用res时，num为0，0加上参数1&#x3D;1<br>2、第二次调用res时，闭包里的num的值是第一次res里的累加结果1，1加上参数2&#x3D;3<br>3、第三次调用res时，闭包里num是第二次res里累加的结果3，3加上参数3&#x3D;6<br>从三次调用res来看，闭包里num都是保存了上次调用后num的值，这是因为闭包捕获了外部的num，并重新在<code> 堆</code> 上 <code>分配了内存</code>，实际上是修改 <code>堆区中的value值</code>，当执行let res &#x3D; exec()时，把闭包的内存地址给了res,所以每次调用res都是调用的同一块内存，同一个闭包，闭包里有保存中捕获后的num的内存地址，所以每次调用都是同一个num </p>
 </blockquote>
@@ -508,7 +508,7 @@
 <blockquote>
 <p>因为当函数里有多个闭包时，只会对变量&#x2F;常量捕获一次，多个闭包对捕获的变量&#x2F;常量共享。在调用m(4)时，前面已经调用过p(5)，此时num已经变为5，所以当调用m(4)，输出结果为1。</p>
 </blockquote>
-<h1 id="typedef-为闭包类型定义别名"><a href="#typedef-为闭包类型定义别名" class="headerlink" title="typedef 为闭包类型定义别名"></a>typedef 为闭包类型定义别名</h1><p>这里先介绍一下 <code>typealias</code> 的使用 : <code>typealias</code> 是Swift中用来为已经存在的类型重新定义名字的关键字（类似于OC语法中的 <code>typedef</code>），重新命名的新名字用来替代之前的类型，并且能够使代码变得更加清晰简单容易理解。<code>typealias</code> 的用法很简单，直接用 <code>=</code> 赋值就可以了：</p>
+<h1 id="typedef-为闭包类型定义别名"><a href="#typedef-为闭包类型定义别名" class="headerlink" title="typedef 为闭包类型定义别名"></a>typedef 为闭包类型定义别名</h1><p>这里先介绍一下 <code>typealias</code> 的使用 : <code>typealias</code> 是Swift中用来 <code>为已经存在的类型</code> 重新定义名字的关键字（类似于OC语法中的 <code>typedef</code>），重新命名的新名字用来替代之前的类型，并且能够使代码变得更加清晰简单容易理解。<code>typealias</code> 的用法很简单，直接用 <code>=</code> 赋值就可以了：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typealias &lt;type name&gt; = &lt;type expression&gt;</span><br></pre></td></tr></table></figure></div>
 
 <p>这里我们可以用 <code>typealias</code> 来为看似较为复杂的闭包类型定义别名，这样以后我们就可以用别名直接去声明这样类型的闭包了，例子如下：</p>
@@ -586,7 +586,13 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import UIKit</span><br><span class="line">class ThirdViewController: UIViewController &#123;</span><br><span class="line">    var callBack: ((String) -&gt; ())?</span><br><span class="line">    override func viewDidLoad() &#123;</span><br><span class="line">        super.viewDidLoad()</span><br><span class="line">        printString &#123; [unowned self]  (text) in</span><br><span class="line">            print(text)</span><br><span class="line">            self?.view.backgroundColor = UIColor.red</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    func printString(callBack:@escaping (String) -&gt; ()) &#123;</span><br><span class="line">        callBack(&quot;这个闭包返回一段文字&quot;)</span><br><span class="line">        // 控制器强引用于着callBack</span><br><span class="line">        self.callBack = callBack</span><br><span class="line">    &#125;</span><br><span class="line">    deinit &#123;</span><br><span class="line">        print(&quot;ThirdViewController---释放了&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>注意：<code>unowned</code> 是Swift中另外一种解决循环引用的申明无主引用类型的关键字，类似于Objective-C中的 <code>__unsafe_unretained</code>；大家都知道 <code>__weak</code> 和 <code>__unsafe_unretained</code> 的相同点是可以将该关键字修饰的对象变成弱引用解决可能存在的循环引用。不同点在于前者修饰的对象如果发现被销毁，那么指向该对象的指针会立即指向nil，而<code>__unsafe_unretained</code> 修饰的对象如果发现被销毁，指向该对象的指针依然指向原来的内存地址，如果此时继续访问该对象 <code>很容易产生坏内存访问/野指针/僵尸对象访问</code>。</p>
-<p>说明：同样的道理Swift中也是一样的。和弱引用类似，无主引用不会牢牢保持住引用的实例。但是不像弱引用，总之，<code>无主引用假定是永远有值的</code>。因此，<code>无主引用总是被定义为非可选类型</code>。你可以在声明属性或者变量时，在前面加上关键字 <code>unowned</code> 表示这是一个无主引用。由于无主引用是非可选类型，你不需要在使用它的时候将它展开。无主引用总是可以直接访问。不过 <code>ARC</code> 无法在实例被释放后将无主引用设为 <code>nil</code> ，因为非可选类型的变量不允许被赋值为 <code>nil</code> 。如果此时继续访问已经被释放实例很容易产生坏内存访问&#x2F;野指针&#x2F;僵尸对象访问。所以Swift建议我们如果被捕获的引用永远不为 <code>nil</code> ，应该用 <code>unowned</code> 而不是 <code>weak</code>，相反，如果你不确定闭包中捕获的引用是不是存在为<code>nil</code> 的可能，你应该使用 <code>weak</code>。</p>
+<p>说明：同样的道理 <code>Swift</code> 中也是一样的。和弱引用类似，无主引用不会牢牢保持住引用的实例。但是不像弱引用，总之，<code>无主引用假定是永远有值的</code>。因此，<code>无主引用总是被定义为非可选类型</code>。你可以在声明属性或者变量时，在前面加上关键字 <code>unowned</code> 表示这是一个无主引用。由于无主引用是非可选类型，你不需要在使用它的时候将它展开。无主引用总是可以直接访问。不过 <code>ARC</code> 无法在实例被释放后将无主引用设为 <code>nil</code> ，因为非可选类型的变量不允许被赋值为 <code>nil</code> 。如果此时继续访问已经被释放实例很容易产生坏内存访问&#x2F;野指针&#x2F;僵尸对象访问。所以Swift建议我们如果被捕获的引用永远不为 <code>nil</code> ，应该用 <code>unowned</code> 而不是 <code>weak</code>，相反，如果你不确定闭包中捕获的引用是不是存在为<code>nil</code> 的可能，你应该使用 <code>weak</code>。</p>
+<ul>
+<li>总结</li>
+</ul>
+<blockquote>
+<p>解决循环引用的方式：<br>被捕获的引用永远不为nil，用 <code>unowned</code> 即 <code>无主引用</code>。<br>被捕获的引用可能为nil，用 <code>weak</code> 即 <code>弱引用</code>。</p>
+</blockquote>
 
             </div>
 
