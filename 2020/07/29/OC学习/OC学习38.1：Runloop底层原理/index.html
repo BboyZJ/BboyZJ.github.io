@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-21 17:37:46</span>
-            <span class="mobile">2023-04-21 17:37</span>
+            <span class="pc">2023-04-22 11:03:28</span>
+            <span class="mobile">2023-04-22 11:03</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -335,7 +335,7 @@
                      
                 ></p>
 <ol start="2">
-<li>验证：<a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/CF/" >下载源码 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>,查看CFRunloop.c文件，找到CFRunLoopRun源码可知：确实是do…while循环。</li>
+<li>验证：<a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/CF/" >下载源码 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>,查看CFRunloop.c文件，找到CFRunLoopRun源码可知：确实是 <code>do...while</code> 循环。</li>
 </ol>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void CFRunLoopRun(void) &#123;	/* DOES CALLOUT */</span><br><span class="line">    int32_t result;</span><br><span class="line">    do &#123;</span><br><span class="line">        result = CFRunLoopRunSpecific(CFRunLoopGetCurrent(), kCFRunLoopDefaultMode, 1.0e10, false);</span><br><span class="line">        CHECK_FOR_FORK();</span><br><span class="line">    &#125; while (kCFRunLoopRunStopped != result &amp;&amp; kCFRunLoopRunFinished != result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
