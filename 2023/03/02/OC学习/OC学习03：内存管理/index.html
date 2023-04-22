@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-30 15:17:25</span>
-            <span class="mobile">2023-03-30 15:17</span>
+            <span class="pc">2023-04-22 12:16:09</span>
+            <span class="mobile">2023-04-22 12:16</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -497,9 +497,9 @@
 </li>
 <li><p>我们通常讲的内存管理，实际上从发展的角度来说，分为两个阶段：<code>MRC和ARC</code>。</p>
 <ul>
-<li><p>MRC指的是 <code>手动内存管理</code>，在开发过程中需要开发者手动去编写内存管理的代码；</p>
+<li><p>MRC指的是 <code>手动内存管理</code>，在开发过程中 <code>需要开发者手动去编写内存管理的代码</code>；</p>
 </li>
-<li><p>ARC指的是 <code>自动内存管理</code>，在此内存管理模式下由LLVM编译器和OC运行时库生成相应内存管理的代码。</p>
+<li><p>ARC指的是 <code>自动内存管理</code>，在此内存管理模式下由 <code>LLVM编译器和OC运行时库生成相应内存管理的代码</code>。</p>
 </li>
 </ul>
 </li>
@@ -530,7 +530,7 @@
 <p>在苹果规定中，使用 <code>alloc/new/copy/mutableCopy</code> 创建返回的对象归调用者所有，例如以下</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/* NSMutableArray类对象A */</span><br><span class="line">NSMutableArray *array = [[NSMutableArray alloc] init];    </span><br><span class="line">NSLog(@&quot;%p&quot;, array);</span><br><span class="line">[array release]; // 释放</span><br></pre></td></tr></table></figure></div>
 
-<p>由于对象 <code>A</code> 由 <code>alloc</code> 生成，符合苹果规定，<code>指针变量array指向并持有对象A</code>，引用计数器会加 <code>1</code>。另外，array在使用完对象A后需要对其进行释放。当调用release后，释放了其对对象A的引用，计数器减1。对象A此时引用计数值为零，所以对象A被回收。不能访问已经被回收的对象，会发生崩溃。</p>
+<p>由于对象 <code>A</code> 由 <code>alloc</code> 生成，符合苹果规定，<code>指针变量（*array） 指向并持有 [[NSMutableArray alloc] init]创建的 对象A</code>，引用计数器会加 <code>1</code>。另外，array在使用完 <code>对象A</code> 后需要对其进行释放。当调用 <code>release</code> 后，释放了其对对象A的引用，计数器减1。对象A此时引用计数值为零，所以对象A被回收。不能访问已经被回收的对象，会发生崩溃。</p>
 <ul>
 <li>别人创建的对象，可以通过 <code>retain</code> 来获得拥有权</li>
 </ul>
@@ -581,7 +581,7 @@
 <ol start="5">
 <li>autorelease</li>
 </ol>
-<p><code>autorelease</code> 指的是自动释放，当一个对象收到 <code>autorelease</code> 的时候，该 <code>对象就会被注册到当前处于栈顶的自动释放池（autorelease pool）</code>。如果没有主动生成自动释放池，则当前自动释放池对应的是主运行循环的自动释放池。在当前线程的RunLoop进入休眠前，就会对被注册到该自动释放池的所有对象进行一次release操作。</p>
+<p><code>autorelease</code> 指的是自动释放，当一个对象收到 <code>autorelease</code> 的时候，该 <code>对象就会被注册到当前处于栈顶的自动释放池（autorelease pool）</code>。如果没有主动生成自动释放池，则当前自动释放池对应的是 <code>主运行循环的自动释放池</code>。在当前线程的RunLoop进入 <code>休眠前</code>，就会对被注册到该自动释放池的所有对象进行一次 <code>release</code> 操作。</p>
 <p>autorelease和release的区别是：</p>
 <ul>
 <li><p>release：是马上释放对某个对象的强引用；</p>
@@ -600,8 +600,7 @@
 <ul>
 <li><code>autorelease pool</code> 和 <code>RunLoop(运行循环)</code></li>
 </ul>
-<p>当应用程序启动，系统默认会 <code>开启一条线程</code>，该线程就是 <code>主线程</code>。主线程也有一个与之对应的自动释放池。</p>
-<p><code>每条线程都包含一个与其对应的自动释放池</code>，当某条线程被终止的时候，对应该线程的自动释放池会被销毁。同时，处于该自动释放池的对象将会进行一次 <code>release</code> 操作。</p>
+<p>当应用程序启动，系统默认会 <code>开启一条线程</code>，该线程就是 <code>主线程</code>。主线程有一个与之对应的自动释放池。<code>每条线程都包含一个与其对应的自动释放池</code>，当某条线程被终止的时候，对应该线程的自动释放池会被销毁。同时，处于该自动释放池的对象将会进行一次 <code>release</code> 操作。</p>
 <p>，例如我们常见的 <code>ARC</code> 下的 <code>main.h</code> 文件：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
@@ -618,7 +617,7 @@
 <li>概述</li>
 </ol>
 <ul>
-<li><p>Automatic Reference Counting，<code>自动引用计数</code>，即 <code>ARC</code>，<code>WWDC2011</code> 和 <code>iOS5</code> 所引入的最大的变革和最激动人心的变化。ARC是新的LLVM 3.0编译器的一项特性，使用ARC，可以说举解决了广大iOS开发者所憎恨的手动内存管理的麻烦。</p>
+<li><p><code>Automatic Reference Counting</code>，<code>自动引用计数</code>，即 <code>ARC</code>，<code>WWDC2011</code> 和 <code>iOS5</code> 所引入的最大的变革和最激动人心的变化。ARC是新的LLVM 3.0编译器的一项特性，使用ARC，可以说举解决了广大iOS开发者所憎恨的手动内存管理的麻烦。</p>
 </li>
 <li><p>此处的 <code>A</code> 就是 <code>automatic</code>。其实 <code>ARC</code> 只是比 <code>MRC</code> 多了一步，就是在 <code>编译时编译器自动帮开发者添加 retain, release 以及 autorelease 的调用</code>，底层的内存管理机制还是和 <code>MRC</code> 一样。</p>
 </li>
@@ -637,7 +636,7 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@property(copy)Foo *foo;</span><br><span class="line">...</span><br><span class="line">self.foo = bar;  // 相当于 self.foo = [bar copy];</span><br></pre></td></tr></table></figure></div>
 
 <ul>
-<li>assign: 一般用于原始数据类型（primitive type）的赋值。可以用于对象，效果相当于 weak，可是有一个坑是当对象被释放后，assign 属性的变量不会变成 nil，而是成为 <code>野指针</code>（dangling pointer），因此不建议使用在对象上。</li>
+<li>assign: 一般用于原始数据类型（primitive type）的赋值。可以用于对象，效果相当于 <code>weak</code>，可是有一个坑是当对象被释放后，<code>assign</code> 属性的变量不会变成 <code>nil</code>，而是成为 <code>野指针</code>（dangling pointer），因此不建议使用在对象上。</li>
 </ul>
 <p>借助以上的属性标记符，我们可以在对象声明的时候集中制定它们的内存管理策略，清晰明了。</p>
 <ol start="3">
@@ -648,7 +647,7 @@
 <li><p>强指针</p>
 <ul>
 <li>默认所有对象的指针变量都是强指针</li>
-<li>被__strong修饰的指针</li>
+<li>被 <code>__strong</code> 修饰的指针</li>
 </ul>
 </li>
 </ul>
@@ -805,7 +804,7 @@
 </ul>
 <p>【原理】：</p>
 <ul>
-<li><p>自动释放池的本质是 <code>__AtAutoreleasePool</code> 结构体，包含构造函数和析构函数</p>
+<li><p>自动释放池的本质是 <code>__AtAutoreleasePool</code> 结构体，包含 <code>构造函数和析构函数</code></p>
 </li>
 <li><p>结构体声明，触发构造函数，调用 <code>objc_autoreleasePoolPush()</code> 函数，对象压栈</p>
 <ul>
@@ -857,7 +856,7 @@
 
 <p>结合RunLoop监听的事件类型，分析主线程上自动释放池的使用过程如下：</p>
 <ul>
-<li><p>App启动后，苹果在主线程RunLoop里注册了两个 Observer，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler();</p>
+<li><p>App启动后，苹果在主线程RunLoop里注册了两个 <code>Observer</code>，其回调都是 _wrapRunLoopWithAutoreleasePoolHandler();</p>
 </li>
 <li><p>第一个Observer监视的事件</p>
 <ul>

@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-22 11:03:28</span>
-            <span class="mobile">2023-04-22 11:03</span>
+            <span class="pc">2023-04-22 12:36:52</span>
+            <span class="mobile">2023-04-22 12:36</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -335,7 +335,7 @@
                      
                 ></p>
 <ol start="2">
-<li>验证：<a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/CF/" >下载源码 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>,查看CFRunloop.c文件，找到CFRunLoopRun源码可知：确实是 <code>do...while</code> 循环。</li>
+<li>验证：<a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/CF/" >下载源码 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>，查看CFRunloop.c文件，找到CFRunLoopRun源码可知：确实是 <code>do...while</code> 循环。</li>
 </ol>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void CFRunLoopRun(void) &#123;	/* DOES CALLOUT */</span><br><span class="line">    int32_t result;</span><br><span class="line">    do &#123;</span><br><span class="line">        result = CFRunLoopRunSpecific(CFRunLoopGetCurrent(), kCFRunLoopDefaultMode, 1.0e10, false);</span><br><span class="line">        CHECK_FOR_FORK();</span><br><span class="line">    &#125; while (kCFRunLoopRunStopped != result &amp;&amp; kCFRunLoopRunFinished != result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
@@ -481,17 +481,22 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">CF_EXPORT CFRunLoopRef _CFRunLoopGet0(pthread_t t) &#123;</span><br><span class="line">    if (pthread_equal(t, kNilPthreadT)) &#123;</span><br><span class="line">	t = pthread_main_thread_np();</span><br><span class="line">    &#125;</span><br><span class="line">    __CFLock(&amp;loopsLock);</span><br><span class="line">    if (!__CFRunLoops) &#123;</span><br><span class="line">        __CFUnlock(&amp;loopsLock);</span><br><span class="line">	CFMutableDictionaryRef dict = CFDictionaryCreateMutable(kCFAllocatorSystemDefault, 0, NULL, &amp;kCFTypeDictionaryValueCallBacks);</span><br><span class="line">	//获取mainloop</span><br><span class="line">	CFRunLoopRef mainLoop = __CFRunLoopCreate(pthread_main_thread_np());</span><br><span class="line">	//通过key value方式一一对应</span><br><span class="line">	CFDictionarySetValue(dict, pthreadPointer(pthread_main_thread_np()), mainLoop);</span><br><span class="line">	if (!OSAtomicCompareAndSwapPtrBarrier(NULL, dict, (void * volatile *)&amp;__CFRunLoops)) &#123;</span><br><span class="line">	    CFRelease(dict);</span><br><span class="line">	&#125;</span><br><span class="line">	CFRelease(mainLoop);</span><br><span class="line">        __CFLock(&amp;loopsLock);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></div>
 
 <ol start="2">
-<li><p>runloop保存在全局的NSMutableDictionaryRef字典当中，以线程为key，runloop为value。<br>由上面的源码可验证。</p>
-</li>
-<li><p>主线程的Runloop系统自动获取（创建），子线程默认没有开启runloop。</p>
-</li>
+<li>runloop保存在全局的 <code>NSMutableDictionaryRef</code> 字典当中，<code>以线程为key，runloop为value</code>。</li>
 </ol>
-<p>【问题1】：<br>看代码：问下面的 <code>子线程 timer</code> 会打印么？<br>答:不会，因为子线程的runloop默认没有开启，需要开启子线程的runloop</p>
+<p>由上面的源码可验证。</p>
+<ol start="3">
+<li>主线程的Runloop系统自动获取（创建），子线程默认没有开启runloop。</li>
+</ol>
+<p><strong>【问题1】：</strong></p>
+<p>看代码：问下面的 <code>子线程 timer</code> 会打印么？</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">NSThread * thread = [[NSThread alloc] initWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;hello:%@&quot;,[NSThread currentThread]);</span><br><span class="line">    [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">        NSLog(@&quot;子线程 timer&quot;);</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;];</span><br><span class="line">    </span><br><span class="line">thread.name = @&quot;zj&quot;;</span><br><span class="line">[thread start];</span><br></pre></td></tr></table></figure></div>
 
-<p>【问题2】<br>问：那要怎么写才能开启？并能控制其打印?<br>答：通过 <code>[[NSRunLoop currentRunLoop] run];</code> 获取子线程的runloop并开启子线程的runloop。通过控制线程退出-&gt;控制runloop退出-&gt;控制timer不打印</p>
+<p>答:不会，因为子线程的runloop默认没有开启，需要开启子线程的runloop</p>
+<p><strong>【问题2】</strong></p>
+<p>问：那要怎么写才能开启？并能控制其打印?</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">@interface ViewController ()</span><br><span class="line">@property (nonatomic,assign)BOOL isStop;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    self.isStop = NO;</span><br><span class="line">    </span><br><span class="line">    NSThread * thread = [[NSThread alloc] initWithBlock:^&#123;</span><br><span class="line">        NSLog(@&quot;hello:%@&quot;,[NSThread currentThread]);</span><br><span class="line">        [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">            NSLog(@&quot;子线程 timer&quot;);</span><br><span class="line">            if (self.isStop) &#123;</span><br><span class="line">                [NSThread exit];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;];</span><br><span class="line">        [[NSRunLoop currentRunLoop] run];</span><br><span class="line">    &#125;];</span><br><span class="line">    </span><br><span class="line">    thread.name = @&quot;zj&quot;;</span><br><span class="line">    [thread start];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event&#123;</span><br><span class="line">    self.isStop = YES;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
+<p>答：通过 <code>[[NSRunLoop currentRunLoop] run];</code> 获取子线程的runloop并开启子线程的runloop。通过控制线程退出-&gt;控制runloop退出-&gt;控制timer不打印</p>
 <ol start="3">
 <li><p>线程刚创建时是没有runloop对象，runloop会在第一次获取时创建。</p>
 </li>
@@ -501,7 +506,7 @@
 <h1 id="timer和runloop？"><a href="#timer和runloop？" class="headerlink" title="timer和runloop？"></a>timer和runloop？</h1><ol>
 <li>问：视图在滑动的时候为什么NSTimer会不走？</li>
 </ol>
-<p>答：因为默认在主线程 <code>NSTimer</code> 是加入到 <code>kCFRunLoopDefaultMode</code> 下的，而视图滑动的时候主线程的mode会切换到 <code>UITrackingRunLoopMode</code> 模式下，导致NSTimer不走，因而需要将NSTimer加入到UITrackingRunLoopMode或者KCFRunloopCommonMode下。</p>
+<p>答：因为默认在主线程 <code>NSTimer</code> 是加入到 <code>kCFRunLoopDefaultMode</code> 下的，而视图滑动的时候主线程的mode会切换到 <code>UITrackingRunLoopMode</code> 模式下，导致NSTimer不走，因而需要将NSTimer加入到 <code>UITrackingRunLoopMode或者KCFRunloopCommonMode</code> 下。</p>
 <p>代码如下:</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NSTimer * timer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">    NSLog(@&quot;aaaaa&quot;);</span><br><span class="line">&#125;];</span><br><span class="line">[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];</span><br></pre></td></tr></table></figure></div>
 
