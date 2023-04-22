@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2021/11/26/oc学习/oc学习37：coretext(一)coretext实现图文混排/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC学习37：CoreText(一)CoreText实现图文混排">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2021/11/26/OC学习/OC学习37：CoreText(一)CoreText实现图文混排/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC学习37：CoreText(一)CoreText实现图文混排">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC学习37：CoreText(一)CoreText实现图文混排 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC学习37：CoreText(一)CoreText实现图文混排</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2021-11-26 09:29</span>
+        <span class="mobile">2021-11-26 09</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-04-21 15:38:43</span>
+            <span class="mobile">2023-04-21 15:38</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/iOS/">iOS</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><code>CoreText</code> 是用于处理文字和字体的底层技术。它直接和 Core Graphics(又被称为Quartz)打交道。Quartz是一个2D图形渲染引擎，能够处理OSX和iOS中图形显示问题。与其他UI组件相比，由于CoreText直接和Quartz来交互，所以它具有更高效的排版功能。如果我们需要将文本内容直接渲染到图形上下文（Graphics context）时，从 <code>性能和实用性来看，最佳方案就是使用coreText</code> 。</p>
+<h1 id="富文本"><a href="#富文本" class="headerlink" title="富文本"></a>富文本</h1><p>为什么讲富文本呢，因为了解富文本是学习CoreText的基础，那么什么是富文本呢？简单点来说就是 <code>带有每一个文字属性的字符串</code>，就是富文本，在iOS中有一个专门处理的类 <code>AttributedString</code>。</p>
+<p><code>AttributedString</code> 和字符串相似，分为 <code>NSAttributedString</code> 和 <code>NSMutableAttributedString</code> 两个类，具体内容我就不过多描述，可以百度去学习一下如何使用，so easy，下面我直接上一段代码</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 初始化一个富文本对象</span><br><span class="line">NSMutableAttributedString * attributeStr = [[NSMutableAttributedString alloc] initWithString:@&quot;这里在测试图文混排，\n我是一个富文本&quot;];</span><br><span class="line">// 添加一个属性属性</span><br><span class="line">[attributeStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:25] range:NSMakeRange(4, 2)];</span><br><span class="line">// 添加多个属性</span><br><span class="line">NSDictionary * dicAdd = @&#123;NSBackgroundColorAttributeName:[UIColor yellowColor],NSLigatureAttributeName:@1&#125;;</span><br><span class="line">[attributeStr addAttributes:dicAdd range:NSMakeRange(7, 10)];</span><br><span class="line">// 移除属性</span><br><span class="line">[attributeStr removeAttribute:NSFontAttributeName range:NSMakeRange(32, 9)];</span><br><span class="line">// 赋值给属性文本</span><br><span class="line">UILabel * label = [[UILabel alloc] initWithFrame:CGRectMake(100,100,200,40)];</span><br><span class="line">label.numberOfLines = 0;</span><br><span class="line">label.attributedText = attributedStr;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="CoreText绘制富文本"><a href="#CoreText绘制富文本" class="headerlink" title="CoreText绘制富文本"></a>CoreText绘制富文本</h1><p><code>CoreText</code> 实现图文混排其实就是在富文本中 <code>插入一个空白的图片占位符</code> 的富文本字符串，通过 <code>代理设值相关的图片尺寸信息</code>，根据富文本得到的frame，<code>计算图片绘制的frame再绘制图片</code> 这么一个过程。</p>
+<p>先来看一下实现过程：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ZJTextImageV.h&quot;</span><br><span class="line">#import&lt;CoreText/CoreText.h&gt;</span><br><span class="line"></span><br><span class="line">@interface ZJTextImageV ()</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line">@implementation ZJTextImageV</span><br><span class="line">- (instancetype)initWithFrame:(CGRect)frame</span><br><span class="line">&#123;</span><br><span class="line">    self = [super initWithFrame:frame];</span><br><span class="line">    if (self) &#123;</span><br><span class="line">        self.backgroundColor = [UIColor orangeColor];</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)drawRect:(CGRect)rect&#123;</span><br><span class="line">    [super drawRect:rect];</span><br><span class="line"></span><br><span class="line">    // 初始化一个富文本对象</span><br><span class="line">    NSMutableAttributedString * attributeStr = [[NSMutableAttributedString alloc] initWithString:@&quot;这里在测试图文混排，\n我是一个富文本&quot;];</span><br><span class="line">    // 添加文本属性</span><br><span class="line">    [attributeStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:25] range:NSMakeRange(4, 2)];</span><br><span class="line">    </span><br><span class="line">    // 插入图片</span><br><span class="line">    // 创建一个回调结构体，设值相关参数</span><br><span class="line">    CTRunDelegateCallbacks callBacks;</span><br><span class="line">    // memset将开辟内存空间初始化</span><br><span class="line">    memset(&amp;callBacks, 0, sizeof(CTRunDelegateCallbacks));</span><br><span class="line">    // 设置回调版本</span><br><span class="line">    callBacks.version = kCTRunDelegateVersion1;</span><br><span class="line">    // 设置图片顶部距离基线的距离</span><br><span class="line">    callBacks.getAscent = ascentCallBacks;</span><br><span class="line">    // 设置图片底部距离基线的距离</span><br><span class="line">    callBacks.getDescent = descentCallBacks;</span><br><span class="line">    // 设置图片的宽度</span><br><span class="line">    callBacks.getWidth = widthCallBacks;</span><br><span class="line">    // 创建一个代理</span><br><span class="line">    NSDictionary * dicPic = @&#123;@&quot;height&quot;:@50,@&quot;width&quot;:@100&#125;;</span><br><span class="line">    CTRunDelegateRef delegate = CTRunDelegateCreate(&amp;callBacks,(__bridge void *)dicPic);</span><br><span class="line">    // 占位符</span><br><span class="line">    unichar placeHolder = 0xFFFC;</span><br><span class="line">    NSString * placeHolderStr = [NSString stringWithCharacters:&amp;placeHolder length:1];</span><br><span class="line">    // 占位富文本</span><br><span class="line">    NSMutableAttributedString * placeHolderAttriStr = [[NSMutableAttributedString alloc] initWithString:placeHolderStr];</span><br><span class="line">    // 给占位字符串设置代理</span><br><span class="line">    CFAttributedStringSetAttribute((CFMutableAttributedStringRef)placeHolderAttriStr, CFRangeMake(0, 1), kCTRunDelegateAttributeName, delegate);</span><br><span class="line">    CFRelease(delegate);</span><br><span class="line">    // 插入占位字符</span><br><span class="line">    [attributeStr insertAttributedString:placeHolderAttriStr atIndex:15];</span><br><span class="line">    </span><br><span class="line">    // 设置行间距</span><br><span class="line">    CGFloat lineSpacing = 30;</span><br><span class="line">    const CFIndex num = 1;</span><br><span class="line">    CTParagraphStyleSetting settings[num] = &#123;&#123;kCTParagraphStyleSpecifierLineSpacingAdjustment, sizeof(CGFloat), &amp;lineSpacing&#125;&#125;;//数组</span><br><span class="line">    CTParagraphStyleRef paragraphRef = CTParagraphStyleCreate(settings, num);</span><br><span class="line">    [attributeStr addAttribute:NSParagraphStyleAttributeName value:(__bridge id)(paragraphRef) range:NSMakeRange(0, attributeStr.length)];</span><br><span class="line">    // 释放</span><br><span class="line">    CFRelease(paragraphRef);</span><br><span class="line">    </span><br><span class="line">    // 绘制文本</span><br><span class="line">    // 一个frame工厂，负责生产frame</span><br><span class="line">    CTFramesetterRef frameSetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attributeStr);</span><br><span class="line">    // 创建绘制区域</span><br><span class="line">    CGMutablePathRef path = CGPathCreateMutable();</span><br><span class="line">    // 添加绘制尺寸</span><br><span class="line">    CGPathAddRect(path, NULL, self.bounds);</span><br><span class="line">    // 富文本长度</span><br><span class="line">    NSInteger length = attributeStr.length;</span><br><span class="line">    // 工厂根据绘制区域及富文本（可选范围，多次设置）设置frame</span><br><span class="line">    CTFrameRef frame = CTFramesetterCreateFrame(frameSetter, CFRangeMake(0, length), path, NULL);</span><br><span class="line">    </span><br><span class="line">    // 获取当前绘制上下文</span><br><span class="line">    CGContextRef context = UIGraphicsGetCurrentContext();</span><br><span class="line">    // 设值字形的变换矩阵为不做变换</span><br><span class="line">    CGContextSetTextMatrix(context, CGAffineTransformIdentity);</span><br><span class="line">    // 平移方法，将画布向上平移一个视图高度</span><br><span class="line">    CGContextTranslateCTM(context, 0, self.bounds.size.height);</span><br><span class="line">    // 缩放方法，x轴缩放系数为1，则不变，y轴缩放系数为-1，则相当于以x轴为轴旋转180度</span><br><span class="line">    CGContextScaleCTM(context, 1, -1);</span><br><span class="line">    // 整个区域绘制</span><br><span class="line">    CTFrameDraw(frame, context);</span><br><span class="line">    </span><br><span class="line">    // 绘制图片</span><br><span class="line">    UIImage * image = [UIImage imageNamed:@&quot;icon&quot;];</span><br><span class="line">    CGRect imgR = [self calculateImageRectWithFrame:frame];</span><br><span class="line">    CGContextDrawImage(context,imgR, image.CGImage);</span><br><span class="line">    </span><br><span class="line">    // 释放</span><br><span class="line">    CFRelease(frameSetter);</span><br><span class="line">    CFRelease(path);</span><br><span class="line">    CFRelease(frame);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static CGFloat ascentCallBacks(void * ref)</span><br><span class="line">&#123;</span><br><span class="line">    return [(NSNumber *)[(__bridge NSDictionary *)ref valueForKey:@&quot;height&quot;] floatValue];</span><br><span class="line">&#125;</span><br><span class="line">static CGFloat descentCallBacks(void * ref)</span><br><span class="line">&#123;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line">static CGFloat widthCallBacks(void * ref)</span><br><span class="line">&#123;</span><br><span class="line">    return [(NSNumber *)[(__bridge NSDictionary *)ref valueForKey:@&quot;width&quot;] floatValue];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(CGRect)calculateImageRectWithFrame:(CTFrameRef)frame</span><br><span class="line">&#123;</span><br><span class="line">    // 根据frame获取需要绘制的线的数组</span><br><span class="line">    NSArray * arrLines = (NSArray *)CTFrameGetLines(frame);</span><br><span class="line">    // 获取线的数量</span><br><span class="line">    NSInteger count = [arrLines count];</span><br><span class="line">    // 建立点的数组</span><br><span class="line">    CGPoint points[count];</span><br><span class="line">    // 获取起点</span><br><span class="line">    CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), points);</span><br><span class="line">    // 遍历线的数组</span><br><span class="line">    for (int i = 0; i &lt; count; i ++) &#123;</span><br><span class="line">        // 获取线对象</span><br><span class="line">        CTLineRef line = (__bridge CTLineRef)arrLines[i];</span><br><span class="line">        // 获取run数组</span><br><span class="line">        NSArray * arrGlyphRun = (NSArray *)CTLineGetGlyphRuns(line);</span><br><span class="line">        // 遍历run数组</span><br><span class="line">        for (int j = 0; j &lt; arrGlyphRun.count; j ++) &#123;</span><br><span class="line">            // 获取run对象</span><br><span class="line">            CTRunRef run = (__bridge CTRunRef)arrGlyphRun[j];</span><br><span class="line">            // 获取run属性</span><br><span class="line">            NSDictionary * attributes = (NSDictionary *)CTRunGetAttributes(run);</span><br><span class="line">            // 获取代理</span><br><span class="line">            CTRunDelegateRef delegate = (__bridge CTRunDelegateRef)[attributes valueForKey:(id)kCTRunDelegateAttributeName];</span><br><span class="line">            if (delegate == nil) &#123; // 非空</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">            // 判断代理字典</span><br><span class="line">            NSDictionary * dic = CTRunDelegateGetRefCon(delegate);</span><br><span class="line">            if (![dic isKindOfClass:[NSDictionary class]]) &#123; // 非空</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">            CGPoint point = points[i]; // 获取一个起点</span><br><span class="line">            CGFloat ascent; // 上距</span><br><span class="line">            CGFloat descent; // 下距</span><br><span class="line">            CGRect boundsRun; // frame</span><br><span class="line">            // 获取宽</span><br><span class="line">            boundsRun.size.width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &amp;ascent, &amp;descent, NULL);</span><br><span class="line">            // 获取高</span><br><span class="line">            boundsRun.size.height = ascent + descent;</span><br><span class="line">            // 获取x偏移量</span><br><span class="line">            CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL);</span><br><span class="line">            // point是行起点位置，加上每个字的偏移量得到每个字的x</span><br><span class="line">            boundsRun.origin.x = point.x + xOffset;</span><br><span class="line">            // 计算原点</span><br><span class="line">            boundsRun.origin.y = point.y - descent;</span><br><span class="line">            // 获取绘制区域</span><br><span class="line">            CGPathRef path = CTFrameGetPath(frame);</span><br><span class="line">            // 获取剪裁区域边框</span><br><span class="line">            CGRect colRect = CGPathGetBoundingBox(path);</span><br><span class="line">            CGRect imageBounds = CGRectOffset(boundsRun, colRect.origin.x, colRect.origin.y);</span><br><span class="line">            return imageBounds;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return CGRectZero;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>下面进行分段分析</p>
+<h1 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h1><p><strong>1、首先来看这一段</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 获取当前绘制上下文</span><br><span class="line">CGContextRef context = UIGraphicsGetCurrentContext();</span><br><span class="line">// 设值字形的变换矩阵为不做变换</span><br><span class="line">CGContextSetTextMatrix(context, CGAffineTransformIdentity);</span><br><span class="line">// 平移方法，将画布向上平移一个视图高度</span><br><span class="line">CGContextTranslateCTM(context, 0, self.bounds.size.height);</span><br><span class="line">// 缩放方法，x轴缩放系数为1，则不变，y轴缩放系数为-1，则相当于以x轴为轴旋转180度</span><br><span class="line">CGContextScaleCTM(context, 1, -1);</span><br><span class="line">// 整个区域绘制</span><br><span class="line">CTFrameDraw(frame, context);</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>第一句，获取当前绘制上下文</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CGContextRef context = UIGraphicsGetCurrentContext();</span><br></pre></td></tr></table></figure></div>
+
+<p>为什么要获取上下文呢，因为我们所有的绘制操作都是在上下文中进行的。</p>
+<ul>
+<li>下面三句，是翻转画布的固定写法</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 设值字形的变换矩阵为不做变换</span><br><span class="line">CGContextSetTextMatrix(context, CGAffineTransformIdentity);</span><br><span class="line">// 平移方法，将画布向上平移一个视图高度</span><br><span class="line">CGContextTranslateCTM(context, 0, self.bounds.size.height);</span><br><span class="line">// 缩放方法，x轴缩放系数为1，则不变，y轴缩放系数为-1，则相当于以x轴为轴旋转180度</span><br><span class="line">CGContextScaleCTM(context, 1, -1);</span><br></pre></td></tr></table></figure></div>
+
+<p>CoreText 期初是为OSX设计的，而OSX的坐标圆点在左下角，y轴正正方向朝上，iOS中坐标圆点是左上角，y轴正方向下，所以要进行翻转屏幕，进行坐标转换</p>
+<p><strong>2、图片的代理设置</strong></p>
+<p>事实上，图文混排就是要插入图片的位置插入一个富文本类型占位符，通过 <code>CTRunDelegate</code> 设置图片。</p>
+<ul>
+<li>先设置一个回调的结构体，告诉代理应该回调哪些方法</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CTRunDelegateCallbacks callBacks;// 创建一个回调结构体，设置相关参数</span><br><span class="line">memset(&amp;callBacks,0,sizeof(CTRunDelegateCallbacks));// memset开辟内存空间</span><br><span class="line">callBacks.version = kCTRunDelegateVersion1;// 设置回调版本，默认这个</span><br><span class="line">callBacks.getAscent = ascentCallBacks; // 设置图片顶部距离基线的距离</span><br><span class="line">callBacks.getDescent = descentCallBacks; // 设置图片底部距离基线的距离</span><br><span class="line">callBacks.getWidth = widthCallBacks;// 设置图片宽度</span><br></pre></td></tr></table></figure></div>
+
+<p>什么是顶部、底部基线呢？看下面的图</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/143544314-713d2a64-63f7-4e68-8bee-630d62cd4d9e.png"
+                     
+                ></p>
+<p>这是一个 <code>CRun</code> 的尺寸图，<code>CTRun</code> 会以 <code>origin</code> 点作为圆点进行绘制，基线为过圆点的x轴，<code>ascent</code> 即为 <code>CTRun</code> 顶线距基线的距离，<code>descent</code> 即为底线距基线的距离</p>
+<ul>
+<li>对应的结构体回调方法</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">static CGFloat ascentCallBacks(void * ref)</span><br><span class="line">&#123;</span><br><span class="line">    return [(NSNumber *)[(__bridge NSDictionary *)ref valueForKey:@&quot;height&quot;] floatValue];</span><br><span class="line">&#125;</span><br><span class="line">static CGFloat descentCallBacks(void * ref)</span><br><span class="line">&#123;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line">static CGFloat widthCallBacks(void * ref)</span><br><span class="line">&#123;</span><br><span class="line">    return [(NSNumber *)[(__bridge NSDictionary *)ref valueForKey:@&quot;width&quot;] floatValue];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>为什么要设置结构体呢？因为coreText中大量的调用c方法，事实上你会发现大部分跟底层系统有关的方法都需要调c方法，所以设值代理要按照人家的方法来。</p>
+<ul>
+<li>创建代理</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NSDictionary * dicPic = @&#123;@&quot;height&quot;:@50,@&quot;width&quot;:@100&#125;;</span><br><span class="line">CTRunDelegateRef delegate = CTRunDelegateCreate(&amp;callBacks,(__bridge void *)dicPic);</span><br></pre></td></tr></table></figure></div>
+
+<p>上面设值了回调结构体，还没告诉代理 <code>图片尺寸</code>，此处 <code>设值代理时绑定了一个返回图片尺寸的字典</code> ，事实上你可以 <code>绑定任意对象</code>，绑定的对象即是毁掉方法中的参数 <code>ref</code></p>
+<p><strong>3、插入图片</strong></p>
+<ul>
+<li>首先创建一个富文本类型的图片占位符，绑定我们的代理</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 图片占位符</span><br><span class="line">unichar placeHolder = 0xFFFC;</span><br><span class="line">NSString * placeHolderStr = [NSString stringWithCharacters:&amp;placeHolder length:1];</span><br><span class="line">// 占位富文本</span><br><span class="line">NSMutableAttributedString * placeHolderAttriStr = [[NSMutableAttributedString alloc] initWithString:placeHolderStr];</span><br><span class="line">// 给占位字符串设置代理</span><br><span class="line">CFAttributedStringSetAttribute((CFMutableAttributedStringRef)placeHolderAttriStr, CFRangeMake(0, 1), kCTRunDelegateAttributeName, delegate);</span><br><span class="line">    CFRelease(delegate);</span><br><span class="line">// 插入占位字符</span><br><span class="line">[attributeStr insertAttributedString:placeHolderAttriStr atIndex:15];</span><br></pre></td></tr></table></figure></div>
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC学习37：CoreText(一)CoreText实现图文混排</li>
+        <li>Post author：张建</li>
+        <li>Create time：2021-11-26 09:00:29</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2021/11/26/OC学习/OC学习37：CoreText(一)CoreText实现图文混排/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/iOS/">#iOS</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2022/01/04/OC%E8%BF%9B%E9%98%B6/OC%E9%AB%98%E7%BA%A7%E5%BC%BA%E5%8C%9601%EF%BC%9A%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC高级强化01：多环境配置</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2021/07/22/OC%E8%BF%9B%E9%98%B6/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8641%EF%BC%9A%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96%EF%BC%88%E4%B8%80%EF%BC%89%E9%87%8E%E6%8C%87%E9%92%88%E6%8E%A2%E6%B5%8B/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理41：内存优化（一）野指针探测</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC学习37：CoreText(一)CoreText实现图文混排</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%8C%E6%96%87%E6%9C%AC"><span class="nav-text">富文本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CoreText%E7%BB%98%E5%88%B6%E5%AF%8C%E6%96%87%E6%9C%AC"><span class="nav-text">CoreText绘制富文本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D"><span class="nav-text">背景介绍</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

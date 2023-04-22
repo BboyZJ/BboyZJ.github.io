@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2022-11-07 09:13:07</span>
-            <span class="mobile">2022-11-07 09:13</span>
+            <span class="pc">2023-04-21 18:41:23</span>
+            <span class="mobile">2023-04-21 18:41</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -290,7 +290,7 @@
             <ul>
                 
                     <li>
-                        <a href="/BboyZJ.github.io/categories/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
                     </li>
                 
             </ul>
@@ -302,7 +302,7 @@
             <ul>
                 
                     <li>
-                        <a href="/BboyZJ.github.io/tags/iOS-OC/">iOS-OC</a>&nbsp;
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
                     </li>
                 
             </ul>
@@ -331,11 +331,11 @@
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void(^block)(void) = ^&#123;</span><br><span class="line">    NSLog(@&quot;ZJ&quot;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
 
-<p>此时的block无参数，也无返回值，属于<code>全局block</code>，如下图所示：</p>
+<p>此时的block无参数，也无返回值，属于 <code>全局block</code> ，如下图所示：</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/127948369-17bd73e0-625c-4012-95ad-59a190514565.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211742826.png"
                      
                 ></p>
 <ul>
@@ -351,7 +351,9 @@
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 栈block</span><br><span class="line">- (void)stackBlock&#123;</span><br><span class="line">    __block int a = 10;</span><br><span class="line">    void(^block)(void) = ^&#123;</span><br><span class="line">        a = 20;</span><br><span class="line">        NSLog(@&quot;ZJ - %d&quot;,a);</span><br><span class="line">    &#125;;</span><br><span class="line">    NSLog(@&quot;%@&quot;,^&#123;</span><br><span class="line">        a = 20;</span><br><span class="line">        NSLog(@&quot;ZJ - %d&quot;,a);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
-<p><strong>【小知识点】</strong>：当block内部需要修改或访问外部变量a时，外部变量需要额外用 <code>__block</code> 修饰，否则修改不了</p>
+<blockquote>
+<p>【小知识点】：当block内部需要修改或访问外部变量a时，外部变量需要额外用 <code>__block</code> 修饰，否则修改不了</p>
+</blockquote>
 <p>我们来看一下结果:</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2021-08-02 11:15:47.243001+0800 001---Block深入浅出[1131:698266] &lt;__NSMallocBlock__: 0x28037a700&gt;</span><br></pre></td></tr></table></figure></div>
 
@@ -360,14 +362,14 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/127952600-c96f2af4-58ed-4653-872c-a156ce508960.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211801877.png"
                      
                 ></p>
 <p>再来打印一下结果：</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/127952732-80d98b33-8d37-4504-b2f7-9813bef0fd57.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211802326.png"
                      
                 ></p>
 <p><strong>【总结】</strong></p>
@@ -382,14 +384,18 @@
 </li>
 </ul>
 <h2 id="Block变量捕获"><a href="#Block变量捕获" class="headerlink" title="Block变量捕获"></a>Block变量捕获</h2><p>为了保证Block内部能够正常访问外部变量，block有个自动捕获外部变量的机制</p>
-<p><strong>1、<code>auto</code> 类型局部变量：局部变量截获 <code>是值截获</code>。</strong></p>
+<ol>
+<li><code>auto</code> 类型局部变量：局部变量截获 <code>是值截获</code>。</li>
+</ol>
 <p><strong>例子：</strong></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">NSInteger num = 3;</span><br><span class="line">NSInteger(^block)(NSInteger) = ^NSInteger(NSInteger n)&#123;</span><br><span class="line">    // num = 4; // 编译器报错</span><br><span class="line">    return n*num;</span><br><span class="line">&#125;;</span><br><span class="line">num = 1;</span><br><span class="line">NSLog(@&quot;%zd&quot;,block(2));</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>查看打印结果：</strong></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这里的输出是6而不是2，原因就是对局部变量num的截获是值截获。</span><br><span class="line">同样，在block里如果修改变量num，也是无效的，甚至编译器会报错。</span><br></pre></td></tr></table></figure></div>
 
-<p><strong>2、 <code>static</code> 类型局部变量：局部静态变量截获是 <code>指针截获</code></strong></p>
+<ol start="2">
+<li><code>static</code> 类型局部变量：局部静态变量截获是 <code>指针截获</code></li>
+</ol>
 <p><strong>例子：</strong></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 静态变量-指针捕获</span><br><span class="line">static int a = 10;</span><br><span class="line">NSInteger(^Sblock)(NSInteger) = ^NSInteger(NSInteger n)&#123;</span><br><span class="line">    return n*a;</span><br><span class="line">&#125;;</span><br><span class="line">a = 1;</span><br><span class="line">NSLog(@&quot;%zd&quot;,Sblock(2));</span><br></pre></td></tr></table></figure></div>
 
@@ -399,7 +405,9 @@
 <p><strong>结论:</strong></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">静态局部变量截获的是指针，在外部修改为1，对block有影响</span><br></pre></td></tr></table></figure></div>
 
-<p><strong>3、__block修饰的变量: <code>__block</code> 变量截获是 <code>指针截获</code>,并且生成了一个新的结构体对象</strong></p>
+<ol start="3">
+<li>__block修饰的变量: <code>__block</code> 变量截获是 <code>指针截获</code>,并且生成了一个新的结构体对象</li>
+</ol>
 <p><strong>例子：</strong></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// __block修饰变量-指针捕获</span><br><span class="line">__block NSInteger n = 3;</span><br><span class="line">void(^Bblock)(void) = ^&#123;</span><br><span class="line">    NSLog(@&quot;%zd&quot;,n); // __block修饰变量</span><br><span class="line">&#125;;</span><br><span class="line">n = 4;</span><br><span class="line">Bblock();</span><br></pre></td></tr></table></figure></div>
 
@@ -410,7 +418,9 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__block修饰的变量也是以指针形式截获的</span><br></pre></td></tr></table></figure></div>
 
 <p>解释：<code>__block</code> 是将外部变量包装成了一个对象并将 <code>n</code> 存在这个对象中，实际上block外面的 <code>n</code> 的地址也是指向这个对象中存储的 <code>n</code> 的，而block底层是有一个指针指向这个对象的，所以当外部更改n时，block里面通过指针找到这个对象进而找到n，然后获取到n的值，所以n发生了变化。</p>
-<p><strong>4、<code>全局变量、静态全局变量：不截获,直接取值</code></strong></p>
+<ol start="4">
+<li><code>全局变量、静态全局变量：不截获,直接取值</code></li>
+</ol>
 <p><strong>例子:</strong></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">NSInteger num1 = 3; // 全局变量</span><br><span class="line">static NSInteger num2 = 30; // 静态全局变量</span><br><span class="line">- (void)blockTest&#123;</span><br><span class="line">    void(^block)(void) = ^&#123;</span><br><span class="line">        NSLog(@&quot;%zd&quot;,num1); // 全局变量</span><br><span class="line">        NSLog(@&quot;%zd&quot;,num2); // 全局静态变量</span><br><span class="line">    &#125;;</span><br><span class="line">    num1 = 4;</span><br><span class="line">    num2 = 40;</span><br><span class="line">    </span><br><span class="line">    block();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
@@ -418,18 +428,20 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2020-08-02 01:01:44.760418+0800 OC-Block初探[15345:878899] 4</span><br><span class="line">2020-08-02 01:01:44.760514+0800 OC-Block初探[15345:878899] 40</span><br></pre></td></tr></table></figure></div>
 
 <p><strong>结论：</strong></p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">全局变量、静态全局变量是不截获,直接取值</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">全局变量、静态全局变量是不截获，直接取值</span><br></pre></td></tr></table></figure></div>
 
-<p><strong>5、<code>对象</code>：对象类型的也是一样的，值截取</strong></p>
+<ol start="5">
+<li><code>对象</code>：对象类型的也是一样的，<code>值截取</code></li>
+</ol>
 <p><strong>例子：</strong></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (void)blockTest1&#123;</span><br><span class="line">    // 局部对象</span><br><span class="line">    NSMutableArray * arr = [NSMutableArray arrayWithObjects:@1,@2, nil];</span><br><span class="line">    void(^block)(void) = ^&#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,arr);</span><br><span class="line">        [arr addObject:@(4)];</span><br><span class="line">        NSLog(@&quot;%@&quot;,arr);</span><br><span class="line">    &#125;;</span><br><span class="line">    [arr addObject:@3];</span><br><span class="line">    arr = nil;</span><br><span class="line">    block();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <p><strong>查看打印结果:</strong></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">2020-08-11 10:41:59.416461+0800 OC-Block变量截获的原理[31602:1829372] (</span><br><span class="line">    1,</span><br><span class="line">    2,</span><br><span class="line">    3</span><br><span class="line">)</span><br><span class="line">2020-08-11 10:41:59.416882+0800 OC-Block变量截获的原理[31602:1829372] (</span><br><span class="line">    1,</span><br><span class="line">    2,</span><br><span class="line">    3,</span><br><span class="line">    4</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
 
-<p><strong>结论:</strong></p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">局部对象变量也是一样，截获的是值，而不是指针，在外部将其置为nil，对block没有影响，而该对象调用方法会影响</span><br></pre></td></tr></table></figure></div>
-
+<blockquote>
+<p>结论:<br>局部对象变量也是一样，截获的是值，而不是指针，在外部将其置为nil，对block没有影响，而该对象调用方法会影响</p>
+</blockquote>
 <h1 id="Block循环引用"><a href="#Block循环引用" class="headerlink" title="Block循环引用"></a>Block循环引用</h1><ul>
 <li><p><code>正常释放</code>：是指A持有B的引用，当A调用dealloc方法，给B发送release信号，B收到release信号，如果此时B的retainCount（即引用计数）为0时，则调用B的dealloc方法</p>
 </li>
@@ -440,28 +452,30 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/127963640-38d55552-982b-4d57-82bc-e8e3dd1d8a1c.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211810536.png"
                      
                 ></p>
 <h1 id="Block循环引用解决"><a href="#Block循环引用解决" class="headerlink" title="Block循环引用解决"></a>Block循环引用解决</h1><h2 id="请问下面两段代码是否有循环引用？"><a href="#请问下面两段代码是否有循环引用？" class="headerlink" title="请问下面两段代码是否有循环引用？"></a>请问下面两段代码是否有循环引用？</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 代码一</span><br><span class="line">self.name = @&quot;ZJ&quot;;</span><br><span class="line">self.block = ^&#123;</span><br><span class="line">    NSLog(@&quot;%@&quot;,self.name);</span><br><span class="line">&#125;;</span><br><span class="line">    </span><br><span class="line">// 代码二</span><br><span class="line">[UIView animateWithDuration:1 animations:^&#123;</span><br><span class="line">    NSLog(@&quot;%@&quot;,self.name);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure></div>
 
 <ul>
-<li><p>【代码一】：发生了 <code>循环引用</code>，因为在 <code>block</code> 内部使用了 <code>外部变量name</code>，导致 <code>block持有了self</code>，而 <code>self</code> 原本是持有 <code>block</code> 的，所以导致 <code>self和block的相互持有</code>，即 <code>self -&gt; name -&gt; block -&gt; self</code>。</p>
+<li><p>【代码一】：发生了 <code>循环引用</code>，因为在 <code>block</code> 内部使用了 <code>外部变量name</code>，导致 <code>block持有了self</code>，而 <code>self</code> 原本是持有 <code>block</code> 的，所以导致 <code>self和block的相互持有</code>，即 <code>self -&gt; block -&gt; self -&gt; name</code>。</p>
 </li>
 <li><p>【代码二】：没发生 <code>循环引用</code> ，虽然使用了 <code>外部变量name</code>，但是 <code>self</code>并没有持有<code>animation</code> 的 <code>block</code>,仅仅只有 <code>block</code> 持有 <code>self</code> ，不构成互相持有，即 <code>block -&gt; self -&gt; name</code>。</p>
 </li>
 </ul>
 <h2 id="解决循环引用常见的几种方式"><a href="#解决循环引用常见的几种方式" class="headerlink" title="解决循环引用常见的几种方式"></a>解决循环引用常见的几种方式</h2><ul>
-<li><p><strong>【方式一】：</strong> <code>weak-strong-dance</code> 强弱共舞</p>
+<li><p>【方式一】： <code>weak-strong-dance</code> 强弱共舞</p>
 </li>
-<li><p><strong>【方式二】：</strong> <code>__block</code> 修饰对象（需要注意的是在block内部需要 <code>置空</code> 对象，而且 <code>block必须调用</code>）</p>
+<li><p>【方式二】： <code>__block</code> 修饰对象（需要注意的是在block内部需要 <code>置空</code> 对象，而且 <code>block必须调用</code>）</p>
 </li>
-<li><p><strong>【方式三】：</strong> 传递 <code>对象self</code> 作为block的参数，提供给block内部使用</p>
+<li><p>【方式三】： 传递 <code>对象self</code> 作为block的参数，提供给block内部使用</p>
 </li>
-<li><p><strong>【方式四】：</strong> 使用 <code>NSProxy</code></p>
+<li><p>【方式四】： 使用 <code>NSProxy</code></p>
 </li>
 </ul>
-<p><strong>1、【方式一】：weak-strong-dance</strong></p>
+<ol>
+<li>【方式一】：weak-strong-dance</li>
+</ol>
 <ul>
 <li>如果block内部并未嵌套block，直接使用 <code>__weak</code> 修饰 <code>self</code> 即可：</li>
 </ul>
@@ -475,30 +489,36 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/127974858-7dc045e9-9d44-45ca-9263-0988b8cb7e1f.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211815993.png"
                      
                 ></p>
 <ul>
 <li>如果 <code>block</code> 内部嵌套 <code>block</code>，需要同时使用 <code>__weak</code> 和 <code>__strong</code></li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">__weak typeof(self) weakSelf = self;</span><br><span class="line">self.block = ^&#123;</span><br><span class="line">    __strong typeof(weakSelf) strongSelf = weakSelf;</span><br><span class="line">    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,strongSelf.name);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br><span class="line">self.block();</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">__weak typeof(self) weakSelf = self;</span><br><span class="line">self.block = ^&#123;</span><br><span class="line">    __strong typeof(weakSelf) strongSelf = weakSelf;</span><br><span class="line">    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,strongSelf.name);</span><br><span class="line">        </span><br><span class="line">        // 内部执行完 strongSelf 就立即释放</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br><span class="line">self.block();</span><br></pre></td></tr></table></figure></div>
 
 <p>其中 <code>strongSelf</code> 是一个 <code>临时变量</code> ，在block的作用域内，即内部 <code>block执行完</code> 就释放 <code>strongSelf</code></p>
 <p>这种方式属于 <code>打破self对block的强引用</code>，依赖于 <code>中介者模式</code>，属于自动置为 <code>nil</code>，即 <code>自动释放</code></p>
-<p><strong>2、【方式二】：__block修饰变量</strong></p>
+<ol start="2">
+<li>【方式二】：__block修饰变量</li>
+</ol>
 <p>这种方式同样依赖于 <code>中介者模式</code>，属于 <code>手动释放</code>，是通过 <code>__block</code> 修饰对象，主要是因为 <code>__block</code> 修饰的对象时可以改变的</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">__block ViewController * vc = self;</span><br><span class="line">self.block = ^&#123;</span><br><span class="line">    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,vc.name);</span><br><span class="line">        vc = nil;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br><span class="line">self.block();</span><br></pre></td></tr></table></figure></div>
 
 <p>需要注意的是这里的 <code>block必须调用</code>，如果不调用block，vc就不会被置空，那么依旧是循环引用，<code>self</code> 和 <code>block</code> 都不会被释放</p>
-<p><strong>3、【方式三】：对象self作为参数</strong></p>
+<ol start="3">
+<li>【方式三】：对象self作为参数</li>
+</ol>
 <p>主要是将 <code>对象self作为参数</code> ，提供给block内部使用，不会有引用计数问题：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">self.block = ^(BlockViewController * vc) &#123;</span><br><span class="line">    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        NSLog(@&quot;%@&quot;,vc.name);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br><span class="line">self.block(self);</span><br></pre></td></tr></table></figure></div>
 
-<p><strong>4、【方式四】：NSProxy虚拟类</strong></p>
+<ol start="4">
+<li>【方式四】：NSProxy虚拟类</li>
+</ol>
 <ul>
 <li><p><code>oc</code> 是只能 <code>单继承</code> 的语言，但是它是 <code>基于运行时的机制</code>，所以通过 <code>NSProxy</code> 来实现 <code>伪多继承</code> ，填补了多继承的空白</p>
 </li>
-<li><p><code>NSProxy</code> 和 <code>NSObject</code> 是同级的一个类，也可以说是一个<code>虚拟类</code>，只是实现了<code>NSObject</code> 的协议</p>
+<li><p><code>NSProxy</code> 和 <code>NSObject</code> 是同级的一个类，也可以说是一个<code>虚拟类</code>，只是实现了 <code>NSObject</code> 的协议</p>
 </li>
 <li><p><code>NSProxy</code> 其实是一个 <code>消息重定向封装的一个抽象类</code>，类似于一个 <code>代理人，中间件</code>，可以通过继承它，并重写两个方法来实现消息转发到另一个实例</p>
 </li>
@@ -581,7 +601,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/128323860-4a3e3ea3-1e0a-417b-add6-3031b15a2920.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211828402.png"
                      
                 ></p>
 <p><strong>1、block为什么需要调用？</strong></p>
@@ -646,7 +666,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/128460979-d5e44fb3-836e-4a67-adfd-4325e6de4fa6.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211834759.png"
                      
                 ></p>
 <ul>
@@ -655,7 +675,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/128461677-621a5b62-43d6-4d20-9bb7-54843152f766.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211833586.png"
                      
                 ></p>
 <ul>
@@ -664,7 +684,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/128461750-54867562-1cba-4a3b-a01a-8fe498ebb01b.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211835248.png"
                      
                 ></p>
 <p>可以到苹果开源网站下载最新的 <a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/source/libclosure/" >libcloseure-074 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 源码，通过查看 <code>_Block_copy</code> 的源码实现，发现block底层的真正类型是<code>_Block_layout</code></p>
@@ -713,7 +733,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/128474915-09c6eacc-62da-4479-a39c-865dd09b1f99.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211836252.png"
                      
                 ></p>
 <p><strong>2、增加外部变量a的block：</strong></p>
@@ -723,7 +743,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/128475461-5b02492b-5d28-46d8-a161-b6118cd0140e.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211836581.png"
                      
                 ></p>
 <ul>
@@ -732,7 +752,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/128476618-ceecf044-162b-4084-9164-8fd07d474982.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211836302.png"
                      
                 ></p>
 <p><strong>调用情况</strong></p>
@@ -742,7 +762,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16508769047375.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211837105.jpg"
                      
                 ></p>
 <ul>
@@ -756,7 +776,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16508769378666.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211838141.jpg"
                      
                 ></p>
 <ul>
@@ -765,7 +785,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16508769975300.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211839022.jpg"
                      
                 ></p>
 <p>前面提到的 <code>Block_layout</code> 的结构体源码,从源码中可以看出，有个属性 <code>invoke</code>，即block的执行者，是从 <code>isa</code> 的首地址平移 <code>16</code> 字节取到 <code>invoke</code>，然后进行调用执行的</p>
@@ -781,7 +801,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16508771126805.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211839810.jpg"
                      
                 ></p>
 <ul>
@@ -790,7 +810,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16508771384080.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211839010.jpg"
                      
                 ></p>
 <ul>
@@ -804,7 +824,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16508772073802.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211839179.jpg"
                      
                 ></p>
 <ul>
@@ -818,7 +838,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16508772669653.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211840669.jpg"
                      
                 ></p>
 <ul>
@@ -827,7 +847,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16508772949416.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211840896.jpg"
                      
                 ></p>
 <ul>
@@ -836,7 +856,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16508773252829.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211840552.jpg"
                      
                 ></p>
 <p><strong>其中签名的部分说明如下:</strong></p>
@@ -952,7 +972,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16508774872343.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304211841996.png"
                      
                 ></p>
 
@@ -981,7 +1001,7 @@
                 <ul class="post-tags-box">
                     
                         <li class="tag-item">
-                            <a href="/BboyZJ.github.io/tags/iOS-OC/">#iOS-OC</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">#OC-底层原理探索篇</a>&nbsp;
                         </li>
                     
                 </ul>

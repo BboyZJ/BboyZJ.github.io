@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-17 21:09:14</span>
-            <span class="mobile">2023-03-17 21:09</span>
+            <span class="pc">2023-04-21 16:32:54</span>
+            <span class="mobile">2023-04-21 16:32</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -334,9 +334,9 @@
 <li>UIButton -&gt; UIControl -&gt; UIView -&gt; UIResponder -&gt; NSObject</li>
 </ul>
 <h1 id="事件链"><a href="#事件链" class="headerlink" title="事件链"></a>事件链</h1><ul>
-<li><p><code>传递链</code>：由系统向离用户最近的view传递。<br>顺序：Appdelegate -&gt; UIApplication -&gt; UIWindow -&gt; RootViewController -&gt; subViews</p>
+<li><p><code>传递链</code>：由系统向离用户最近的view传递。<br>顺序：Appdelegate -&gt; UIApplication -&gt; UIWindow -&gt; UIViewController -&gt; subViews</p>
 </li>
-<li><p><code>响应链</code>：由离用户最近的view向系统传递。<br>顺序： superViews –&gt; RootViewController –&gt; UIWindow –&gt; UIApplication –&gt; AppDelegate</p>
+<li><p><code>响应链</code>：由离用户最近的view向系统传递。<br>顺序： suberViews –&gt; UIViewController –&gt; UIWindow –&gt; UIApplication –&gt; AppDelegate</p>
 </li>
 </ul>
 <h1 id="传递链"><a href="#传递链" class="headerlink" title="传递链"></a>传递链</h1><ul>
@@ -346,20 +346,15 @@
 
 <ul>
 <li><p>其中 <code>UIView</code> 不接受事件处理的情况有</p>
-</li>
-<li><p>hidden &#x3D; YES 视图被隐藏</p>
-</li>
-<li><p>userInteractionEnabled &#x3D; NO 不接受响应事件</p>
-</li>
-<li><p>alpha &lt;&#x3D; 0.01,透明视图不接收响应事件</p>
-</li>
-<li><p>子视图超出父视图范围</p>
-</li>
-<li><p>需响应视图被其他视图盖住</p>
-</li>
-<li><p>是否重写了其父视图以及自身的hitTest方法</p>
-</li>
-<li><p>是否重写了其父视图以及自身的pointInside方法</p>
+<ul>
+<li>hidden &#x3D; YES 视图被隐藏</li>
+<li>userInteractionEnabled &#x3D; NO 不接受响应事件</li>
+<li>alpha &lt;&#x3D; 0.01,透明视图不接收响应事件</li>
+<li>子视图超出父视图范围</li>
+<li>需响应视图被其他视图盖住</li>
+<li>是否重写了其父视图以及自身的hitTest方法</li>
+<li>是否重写了其父视图以及自身的pointInside方法</li>
+</ul>
 </li>
 <li><p>流程描述</p>
 <ul>
@@ -373,7 +368,7 @@
 </ul>
 </li>
 </ul>
-<h1 id="响应链"><a href="#响应链" class="headerlink" title="响应链"></a>响应链</h1><p>响应者链的事件传递过程</p>
+<h1 id="响应链"><a href="#响应链" class="headerlink" title="响应链"></a>响应链</h1><p>响应者链的事件传递过程：</p>
 <ul>
 <li>如果 <code>view</code> 的控制器存在，就传递给控制器处理；如果控制器不存在，则传递给它的 <code>父视图</code></li>
 <li>在视图层次结构的最顶层，如果也不能处理收到的事件，则将事件传递给 <code>UIWindow</code> 对象进行处理</li>
@@ -383,7 +378,7 @@
 <h1 id="面试题"><a href="#面试题" class="headerlink" title="面试题"></a>面试题</h1><ul>
 <li>实现一个按钮的点击范围扩大效果</li>
 </ul>
-<p>思路：自定义一个按钮，重写 <code>poinstInSide</code> 方法，增大内边距，返回一个新的bounds</p>
+<p>思路：自定义一个按钮继承自UIButton，重写 <code>poinstInSide</code> 方法，增大内边距，返回一个新的bounds</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ZJBtn.h&quot;</span><br><span class="line">@implementation ZJBtn</span><br><span class="line">- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event&#123;</span><br><span class="line">    // 当前btn大小</span><br><span class="line">    CGRect btnBounds = self.bounds;</span><br><span class="line">    // 扩大按钮的点击范围，增大内边距</span><br><span class="line">    btnBounds = CGRectInset(btnBounds, -50, -50);</span><br><span class="line">    // 若点击的点在新的bounds里，返回YES</span><br><span class="line">    return CGRectContainsPoint(btnBounds, point);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <ul>

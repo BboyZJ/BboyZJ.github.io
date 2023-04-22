@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-05 20:10:32</span>
-            <span class="mobile">2023-04-05 20:10</span>
+            <span class="pc">2023-04-21 17:27:19</span>
+            <span class="mobile">2023-04-21 17:27</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -326,9 +326,12 @@
 
             <div class="article-content markdown-body">
                 <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><ul>
-<li>随着公司业务的不断发展，应用的代码体积将会越来越大，业务代码耦合也越来越多，代码量也是急剧增加</li>
-<li>如果仅仅完成代码拆分还不足以解决业务之间的代码耦合，而组件化是一种能够解决代码耦合、业务工程能够独立运行的技术</li>
-<li>这篇文章主要介绍远程私有库的创建和管理以及本地索引库的使用</li>
+<li><p>随着公司业务的不断发展，应用的代码体积将会越来越大，业务代码耦合也越来越多，代码量也是急剧增加</p>
+</li>
+<li><p>如果仅仅完成代码拆分还不足以解决业务之间的代码耦合，而组件化是一种能够解决代码耦合、业务工程能够独立运行的技术</p>
+</li>
+<li><p>这篇文章主要介绍 <code>远程公有库</code> 的创建和管理以及本地索引库的使用</p>
+</li>
 </ul>
 <p>本文以创建 <code>公有库</code> 为例</p>
 <h1 id="查看本地索引库"><a href="#查看本地索引库" class="headerlink" title="查看本地索引库"></a>查看本地索引库</h1><ul>
@@ -341,11 +344,11 @@
 </li>
 <li><p>私有库：公司内部拥有特殊权限才能使用</p>
 </li>
-<li><p>framework：公私都有，动态库静态库。只能看到.h文件。</p>
+<li><p>framework：公私都有，动态库静态库。只能看到 <code>.h</code> 文件。</p>
 </li>
 </ul>
 <h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><ul>
-<li><p><code>GitHub</code> 账号一个：上传组件工程用</p>
+<li><p>注册 <code>GitHub</code> 账号：上传组件工程用</p>
 </li>
 <li><p>安装 <code>CocoaPods</code>：创建并验证 <code>pod</code> 用</p>
 </li>
@@ -383,7 +386,7 @@
 
 <p>邮箱地址：一般会使用 GitHub邮箱<br>用户名：随便</p>
 <ul>
-<li>注册之后，在邮箱会受到确认邮件</li>
+<li>注册之后，在邮箱会收到确认邮件</li>
 </ul>
 <p><img  
                      lazyload
@@ -432,7 +435,7 @@
                      
                 ></p>
 <blockquote>
-<p>【第1部分】：主要是用来编辑pod相关配置元数据区<br>【第2部分】：主要是用来验证pod效果区<br>【第3部分】：主要是用来 提供给别人使用暴露出来的pod，ReplaceMe空的可以删除，是提示我们可以添加自己的类</p>
+<p>【第1部分】：主要是用来编辑pod相关配置元数据区<br>【第2部分】：主要是用来验证pod效果区<br>【第3部分】：主要是用来 提供给别人使用暴露出来的pod，ReplaceMe空的可以删除，<br>是提示我们可以添加自己的类</p>
 </blockquote>
 <ul>
 <li>配置 <code>podspec</code> 本地索引文件</li>
@@ -516,7 +519,9 @@
                      
                 ></p>
 <p>证明是可用的</p>
+<blockquote>
 <p>【注】：<code>CocoaPods</code> 工具的另外一个优点就是，多个组件依赖同一个组件时，它会自动帮你检测安装，而 <code>不会重复导入</code>。</p>
+</blockquote>
 <h1 id="项目上传与发布"><a href="#项目上传与发布" class="headerlink" title="项目上传与发布"></a>项目上传与发布</h1><ul>
 <li>cd到你的项目路径下，将项目上传到GitHub中（即刚刚创建的ZJWeakProxy公有库中），依次使用下列命令行，不要遗漏</li>
 </ul>
@@ -576,7 +581,9 @@
 </li>
 </ul>
 <p><code>ghp_VcqgAmF...ZPJ2IGxu0</code></p>
+<blockquote>
 <p>【注】：记得把这个 <code>token</code> 保存下来，因为下次再刷新这个页面的时候，你会看不到了</p>
+</blockquote>
 <ul>
 <li>在命令行输入完 <code>token</code> 密码</li>
 </ul>
@@ -625,7 +632,7 @@
                      data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303211640475.png"
                      
                 ></p>
-<h1 id="提交到远程仓库"><a href="#提交到远程仓库" class="headerlink" title="提交到远程仓库"></a>提交到远程仓库</h1><ul>
+<h1 id="提交到-cocoapods"><a href="#提交到-cocoapods" class="headerlink" title="提交到 cocoapods"></a>提交到 cocoapods</h1><ul>
 <li>首先要通过 <code>trunk</code> 注册生成一条会话：</li>
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// pod trunk register 邮箱 用户名 描述</span><br><span class="line">mac@bogon ZJWeakProxy % pod trunk register 13718004742@163.com BboyZJ --description=ZJWeakProxy组件 </span><br></pre></td></tr></table></figure></div>
@@ -817,7 +824,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC组件化06：【方案二】cocoapods组件化</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%AC%E5%9C%B0%E7%B4%A2%E5%BC%95%E5%BA%93"><span class="nav-text">查看本地索引库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E5%8C%96%E5%88%86%E7%B1%BB"><span class="nav-text">组件化分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%85%AC%E6%9C%89%E5%BA%93"><span class="nav-text">创建公有库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B3%A8%E5%86%8C-cocoapods-%E8%B4%A6%E6%88%B7"><span class="nav-text">注册 cocoapods 账户</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8%E6%9C%AC%E5%9C%B0%E5%88%9B%E5%BB%BApod%E5%BA%93"><span class="nav-text">在本地创建pod库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E7%9B%AE%E5%BD%95%E4%BB%8B%E7%BB%8D"><span class="nav-text">工程目录介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E7%B1%BB"><span class="nav-text">添加自己的类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E4%B8%8E%E5%8F%91%E5%B8%83"><span class="nav-text">项目上传与发布</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%93-tag"><span class="nav-text">打 tag</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81podspec%E6%96%87%E4%BB%B6"><span class="nav-text">验证podspec文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E5%88%B0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-text">提交到远程仓库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%86%E6%88%90%E5%88%B0%E5%AE%BF%E4%B8%BB%E5%B7%A5%E7%A8%8B"><span class="nav-text">集成到宿主工程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0%E4%B8%8E%E7%BB%B4%E6%8A%A4"><span class="nav-text">版本更新与维护</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%AC%E5%9C%B0%E7%B4%A2%E5%BC%95%E5%BA%93"><span class="nav-text">查看本地索引库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E5%8C%96%E5%88%86%E7%B1%BB"><span class="nav-text">组件化分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%85%AC%E6%9C%89%E5%BA%93"><span class="nav-text">创建公有库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B3%A8%E5%86%8C-cocoapods-%E8%B4%A6%E6%88%B7"><span class="nav-text">注册 cocoapods 账户</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8%E6%9C%AC%E5%9C%B0%E5%88%9B%E5%BB%BApod%E5%BA%93"><span class="nav-text">在本地创建pod库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E7%9B%AE%E5%BD%95%E4%BB%8B%E7%BB%8D"><span class="nav-text">工程目录介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%B7%B1%E7%9A%84%E7%B1%BB"><span class="nav-text">添加自己的类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%8A%E4%BC%A0%E4%B8%8E%E5%8F%91%E5%B8%83"><span class="nav-text">项目上传与发布</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%93-tag"><span class="nav-text">打 tag</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81podspec%E6%96%87%E4%BB%B6"><span class="nav-text">验证podspec文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E5%88%B0-cocoapods"><span class="nav-text">提交到 cocoapods</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%86%E6%88%90%E5%88%B0%E5%AE%BF%E4%B8%BB%E5%B7%A5%E7%A8%8B"><span class="nav-text">集成到宿主工程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0%E4%B8%8E%E7%BB%B4%E6%8A%A4"><span class="nav-text">版本更新与维护</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol>
 
     </div>
 </div>
