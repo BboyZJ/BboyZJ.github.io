@@ -14,13 +14,13 @@
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="OCRunloop02：runtime初探">
+    <meta property="og:title" content="OC学习39.1：runtime初探">
     <meta property="og:description" content="我是小J，关注我">
     <meta property="og:url" content="https://www.bboyzj.cn2020/08/11/OC学习/OC学习39.1：runtime初探/">
     <meta property="og:image" content="/images/redefine-logo.svg">
     <meta property="og:site_name" content="BboyZJ">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="OCRunloop02：runtime初探">
+    <meta name="twitter:title" content="OC学习39.1：runtime初探">
     <meta name="twitter:description" content="我是小J，关注我">
     <meta name="twitter:image" content="/images/redefine-logo.svg">
     <!--- Icon Part-->
@@ -31,7 +31,7 @@
     
     <title>
         
-            OCRunloop02：runtime初探 -
+            OC学习39.1：runtime初探 -
         
         BboyZJ
     </title>
@@ -249,7 +249,7 @@
             
             
                 <div class="article-title">
-                    <h1 class="article-title-regular">OCRunloop02：runtime初探</h1>
+                    <h1 class="article-title-regular">OC学习39.1：runtime初探</h1>
                 </div>
             
                 
@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-21 17:38:14</span>
-            <span class="mobile">2023-04-21 17:38</span>
+            <span class="pc">2023-04-22 14:45:10</span>
+            <span class="mobile">2023-04-22 14:45</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -345,7 +345,7 @@
 <li>objc_msgSend(recevier，selector，org1，org2，…)（带参数）</li>
 </ul>
 <ol start="2">
-<li>运行时阶段：消息接收者 recever 寻找对应的 selector：</li>
+<li>运行时阶段：消息接收者 <code>recever</code> 寻找对应的 <code>selector</code>：</li>
 </ol>
 <ul>
 <li>recever能找到对应的selector，直接执行接收receiver对象的selector方法。</li>
@@ -480,22 +480,30 @@
 <p>3）看下方法的定义：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 获取类方法函数的参数和返回值类型，返回签名</span><br><span class="line">+ (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector;</span><br><span class="line"></span><br><span class="line">// 类方法消息重定向</span><br><span class="line">+ (void)forwardInvocation:(NSInvocation *)anInvocation；</span><br><span class="line"></span><br><span class="line">// 获取对象方法函数的参数和返回值类型，返回签名</span><br><span class="line">- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector;</span><br><span class="line"></span><br><span class="line">// 对象方法消息重定向</span><br><span class="line">- (void)forwardInvocation:(NSInvocation *)anInvocation；</span><br></pre></td></tr></table></figure></div>
 
-<p>4)下面使用一个示例来说明慢速消息转发:<br>person</p>
+<ol start="4">
+<li>下面使用一个示例来说明慢速消息转发:</li>
+</ol>
+<p>person</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;Person.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation Person</span><br><span class="line">- (void)run&#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line">+ (void)walk&#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 <p>ViewController</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ViewController.h&quot;</span><br><span class="line">#import &lt;objc/runtime.h&gt;</span><br><span class="line">#import &quot;Person.h&quot;</span><br><span class="line"></span><br><span class="line">@interface ViewController ()</span><br><span class="line">@property (nonatomic, strong)Person * person;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line"></span><br><span class="line">    //实例方法</span><br><span class="line">    [self performSelector:@selector(run)];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//动态方法解析</span><br><span class="line">+ (BOOL)resolveInstanceMethod:(SEL)sel &#123;</span><br><span class="line">    return YES;// 返回YES，进入下一步转发</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//快速消息转发</span><br><span class="line">- (id)forwardingTargetForSelector:(SEL)aSelector &#123;</span><br><span class="line">    return nil;// 返回nil，进入下一步转发</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 获取函数的参数和返回值类型，返回签名</span><br><span class="line">- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector &#123;</span><br><span class="line">    if ([NSStringFromSelector(aSelector) isEqualToString:@&quot;run&quot;]) &#123;</span><br><span class="line">        return [NSMethodSignature signatureWithObjCTypes:&quot;v@:&quot;];// 签名，进入forwardInvocation</span><br><span class="line">    &#125;</span><br><span class="line">    return [super methodSignatureForSelector:aSelector];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 消息重定向</span><br><span class="line">- (void)forwardInvocation:(NSInvocation *)anInvocation &#123;</span><br><span class="line">    SEL sel = anInvocation.selector;// 从anInvocation中获取消息</span><br><span class="line">    Person *p = [Person new];</span><br><span class="line">    if([p respondsToSelector:sel]) &#123;</span><br><span class="line">        [anInvocation invokeWithTarget:p];// 将消息转发给其他对象处理</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">        [self doesNotRecognizeSelector:sel];// 报错，代码崩溃</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (Person *)person&#123;</span><br><span class="line">    if (!_person) &#123;</span><br><span class="line">        _person = [Person new];</span><br><span class="line">    &#125;</span><br><span class="line">    return _person;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ViewController.h&quot;</span><br><span class="line">#import &lt;objc/runtime.h&gt;</span><br><span class="line">#import &quot;Person.h&quot;</span><br><span class="line"></span><br><span class="line">@interface ViewController ()</span><br><span class="line">@property (nonatomic, strong)Person * person;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line"></span><br><span class="line">    //实例方法</span><br><span class="line">    [self performSelector:@selector(run)];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 动态方法解析</span><br><span class="line">+ (BOOL)resolveInstanceMethod:(SEL)sel &#123;</span><br><span class="line">    return YES; // 返回YES，进入下一步转发</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 快速消息转发</span><br><span class="line">- (id)forwardingTargetForSelector:(SEL)aSelector &#123;</span><br><span class="line">    return nil; // 返回nil，进入下一步转发</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 获取函数的参数和返回值类型，返回签名</span><br><span class="line">- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector &#123;</span><br><span class="line">    if ([NSStringFromSelector(aSelector) isEqualToString:@&quot;run&quot;]) &#123;</span><br><span class="line">        return [NSMethodSignature signatureWithObjCTypes:&quot;v@:&quot;]; // 签名，进入forwardInvocation</span><br><span class="line">    &#125;</span><br><span class="line">    return [super methodSignatureForSelector:aSelector];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 消息重定向</span><br><span class="line">- (void)forwardInvocation:(NSInvocation *)anInvocation &#123;</span><br><span class="line">    SEL sel = anInvocation.selector;// 从anInvocation中获取消息</span><br><span class="line">    Person *p = [Person new];</span><br><span class="line">    if([p respondsToSelector:sel]) &#123;</span><br><span class="line">        [anInvocation invokeWithTarget:p];// 将消息转发给其他对象处理</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">        [self doesNotRecognizeSelector:sel];// 报错，代码崩溃</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (Person *)person&#123;</span><br><span class="line">    if (!_person) &#123;</span><br><span class="line">        _person = [Person new];</span><br><span class="line">    &#125;</span><br><span class="line">    return _person;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
 <p>代码没有崩溃，并打印如下结果：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2020-08-18 15:01:42.400956+0800 iOS-OC之Runtime初探[7714:323673] -[Person run]</span><br></pre></td></tr></table></figure></div>
 
 <p>这一步中，通过签名，Runtime生成了一个对象anInvocation，发送给了forwardInvocation，我们在forwardInvocation方法里面让Person对象去执行了walk函数。</p>
 <p>以上就是Runtime的三次转发流程。</p>
 <h1 id="消息发送流程总结"><a href="#消息发送流程总结" class="headerlink" title="消息发送流程总结"></a>消息发送流程总结</h1><p>调用[receiver selector]后，进行的流程：</p>
-<p>1.编译阶段：[receiver selector]方法被编译器转化：</p>
+<ol>
+<li>编译阶段：[receiver selector]方法被编译器转化：</li>
+</ol>
 <ul>
 <li>objc_msgSend(receiver，selector)（不带参数）。</li>
 <li>objc_msgSend(recevier，selector，org1，org2，…)（带参数）。</li>
 </ul>
-<p>2.运行时阶段：recevier寻找对应的selector：</p>
+<ol start="2">
+<li>运行时阶段：recevier寻找对应的selector：</li>
+</ol>
 <ul>
 <li>通过recevier的isa指针找到recevier的class（类）。</li>
 <li>在Class（类）的cache（方法缓存）中寻找对应的selector。</li>
@@ -504,17 +512,19 @@
 <li>一旦找到selector，直接执行相关联的IMP（方法实现）。</li>
 <li>若找不到对应的selector，Runtime系统进入消息转发阶段。</li>
 </ul>
-<p>3.消息转发阶段：</p>
+<ol start="3">
+<li>消息转发阶段：</li>
+</ol>
 <ul>
-<li><p>动态解析：通过重写+resolveInstanceMethod: 或者+resolveClassMethod:方法，利用 class_addMethod方法添加其他函数实现。</p>
+<li><p>动态解析：通过重写 +resolveInstanceMethod: 或者 +resolveClassMethod: 方法，利用 <code>class_addMethod</code> 方法添加其他函数实现。</p>
 </li>
-<li><p>快速转发阶段：如果上一步没有添加其他函数实现，可在当前对象中利用 forwardingTargetForSelector:方法将消息的接受者转发给其他对象。</p>
+<li><p>快速转发阶段：如果上一步没有添加其他函数实现，可在当前对象中利用 <code>forwardingTargetForSelector:</code> 方法将消息的接受者转发给其他对象。</p>
 </li>
-<li><p>慢速转发阶段：如果上一步返回值为nil，则利用 methodSignatureForSelector:方法获取函数的参数和返回值类型。</p>
+<li><p>慢速转发阶段：如果上一步返回值为nil，则利用 <code>methodSignatureForSelector:</code> 方法获取函数的参数和返回值类型。</p>
 </li>
-<li><p>如果methodSignatureForSelector:返回nil。则 Runtime系统会发出doesNotRecognizeSelector:消息，程序也就崩溃了。</p>
+<li><p>如果 <code>methodSignatureForSelector:</code> 返回 <code>nil</code>。则 <code>Runtime</code> 系统会发出 <code>doesNotRecognizeSelector:</code> 消息，程序也就崩溃了。</p>
 </li>
-<li><p>如果methodSignatureForSelector:返回了一个函数签名，Runtime就会创建一个NSInvocation对象并发送-forwardInvocation:消息给目标对象。</p>
+<li><p>如果 <code>methodSignatureForSelector:</code> 返回了一个 <code>函数签名</code>，Runtime就会创建一个<code>NSInvocation</code> 对象并发送 <code>-forwardInvocation:</code> 消息给目标对象。</p>
 </li>
 </ul>
 
@@ -524,7 +534,7 @@
                 <div class="post-copyright-info">
                     <div class="article-copyright-info-container">
     <ul>
-        <li>Post title：OCRunloop02：runtime初探</li>
+        <li>Post title：OC学习39.1：runtime初探</li>
         <li>Post author：张建</li>
         <li>Create time：2020-08-11 23:25:14</li>
         <li>
@@ -597,7 +607,7 @@
                 <div class="post-toc-wrap">
     <div class="post-toc">
         <div class="toc-title">On this page</div>
-        <div class="page-title">OCRunloop02：runtime初探</div>
+        <div class="page-title">OC学习39.1：runtime初探</div>
         <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Runtime%E7%AE%80%E4%BB%8B"><span class="nav-text">Runtime简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFRuntime%EF%BC%9F"><span class="nav-text">什么是Runtime？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E6%A6%82%E5%BF%B5%EF%BC%9F"><span class="nav-text">运行时概念？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E6%80%81%E6%A6%82%E5%BF%B5"><span class="nav-text">多态概念?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-text">消息机制的基本原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runtime%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">Runtime中的数据结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Rutime%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81"><span class="nav-text">深入理解Rutime消息发送</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81%E6%B5%81%E7%A8%8B%E6%80%BB%E7%BB%93"><span class="nav-text">消息发送流程总结</span></a></li></ol>
 
     </div>

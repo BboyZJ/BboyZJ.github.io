@@ -14,13 +14,13 @@
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="OCRuntime03：对象的本质">
+    <meta property="og:title" content="OC学习39.2：对象的本质">
     <meta property="og:description" content="我是小J，关注我">
     <meta property="og:url" content="https://www.bboyzj.cn2020/07/13/OC学习/OC学习39.2：对象的本质/">
     <meta property="og:image" content="/images/redefine-logo.svg">
     <meta property="og:site_name" content="BboyZJ">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="OCRuntime03：对象的本质">
+    <meta name="twitter:title" content="OC学习39.2：对象的本质">
     <meta name="twitter:description" content="我是小J，关注我">
     <meta name="twitter:image" content="/images/redefine-logo.svg">
     <!--- Icon Part-->
@@ -31,7 +31,7 @@
     
     <title>
         
-            OCRuntime03：对象的本质 -
+            OC学习39.2：对象的本质 -
         
         BboyZJ
     </title>
@@ -249,7 +249,7 @@
             
             
                 <div class="article-title">
-                    <h1 class="article-title-regular">OCRuntime03：对象的本质</h1>
+                    <h1 class="article-title-regular">OC学习39.2：对象的本质</h1>
                 </div>
             
                 
@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-21 17:38:06</span>
-            <span class="mobile">2023-04-21 17:38</span>
+            <span class="pc">2023-04-22 14:45:28</span>
+            <span class="mobile">2023-04-22 14:45</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -334,60 +334,90 @@
                      data-src="https://user-images.githubusercontent.com/25925248/88036081-a2227200-cb75-11ea-835f-192845ba38b1.png"
                      
                 ></p>
-<p>2.由于OC对象内部可以容纳不同数据类型的数据，因此可以推断OC对象的底层数据结构就是&#x3D;&#x3D;结构体&#x3D;&#x3D;。</p>
+<ol start="2">
+<li>由于OC对象内部可以容纳不同数据类型的数据，因此可以推断OC对象的底层数据结构就是&#x3D;&#x3D;结构体&#x3D;&#x3D;。</li>
+</ol>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef struct objc_object Person; //说明Person的本质就是结构体</span><br></pre></td></tr></table></figure></div>
 
-<h1 id="将OC代码转化成C-x2F-C-代码"><a href="#将OC代码转化成C-x2F-C-代码" class="headerlink" title="将OC代码转化成C&#x2F;C++代码"></a>将OC代码转化成C&#x2F;C++代码</h1><p>那么我们就把OC代码尝试着转化成C&#x2F;C++代码，来看一下到底是不是结构体。<br>1.新建一个MacOS命令行项目<br>1)打开Xcode并新建一个Commend Line Tool命令行项目，如下：<br><img  
+<h1 id="将OC代码转化成C-x2F-C-代码"><a href="#将OC代码转化成C-x2F-C-代码" class="headerlink" title="将OC代码转化成C&#x2F;C++代码"></a>将OC代码转化成C&#x2F;C++代码</h1><p>那么我们就把OC代码尝试着转化成C&#x2F;C++代码，来看一下到底是不是结构体。</p>
+<ol>
+<li>新建一个MacOS命令行项目</li>
+</ol>
+<p>1)打开Xcode并新建一个 <code>Commend Line Tool</code> 命令行项目，如下：</p>
+<p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://user-images.githubusercontent.com/25925248/88041296-c7ff4500-cb7c-11ea-96cc-99b6af3c1962.png"
                      
-                ><br><img  
+                ></p>
+<p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://user-images.githubusercontent.com/25925248/88041399-e9f8c780-cb7c-11ea-9844-582e4c7d6b8a.png"
                      
-                ><br><img  
+                ></p>
+<p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://user-images.githubusercontent.com/25925248/88045562-4c53c700-cb81-11ea-9f38-06f6dfbe77f0.png"
                      
                 ></p>
-<p>2.为了进一步研究OC对象的本质，我们使用苹果Xcode内置的LLVM编译器前端clang中-rewrite-objc 将我们的OC代码转为C&#x2F;C++实现。</p>
+<ol start="2">
+<li>为了进一步研究OC对象的本质，我们使用苹果Xcode内置的LLVM编译器前端clang中-rewrite-objc 将我们的OC代码转为C&#x2F;C++实现。</li>
+</ol>
 <p>1）打开终端，cd到main.m文件夹下，将<code>OC</code>代码转化成<code>C/C++</code>:</p>
-<p><code>xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc  OC源文件 -o 输出的cpp文件</code><br>2）由于不同平台支持的代码肯定是不一样的，目前我们关注点是iOS开发，建议在将OC代码转成C&#x2F;C++代码指定平台：<br><code>xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main.cpp</code></p>
-<p>3)生成main.cpp文件如下:<br><img  
+<p><code>xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc  OC源文件 -o 输出的cpp文件</code></p>
+<p>2）由于不同平台支持的代码肯定是不一样的，目前我们关注点是iOS开发，建议在将OC代码转成C&#x2F;C++代码指定平台：</p>
+<p><code>xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main.cpp</code></p>
+<ol start="3">
+<li>生成main.cpp文件如下:</li>
+</ol>
+<p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://user-images.githubusercontent.com/25925248/88045740-963cad00-cb81-11ea-93a6-07a2a436cd78.png"
                      
                 ></p>
-<p>4）通过生成的C&#x2F;C++代码，我们编写的OC对象NSObject的底层实现为:<br><img  
+<p>4）通过生成的C&#x2F;C++代码，我们编写的OC对象NSObject的底层实现为:</p>
+<p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://user-images.githubusercontent.com/25925248/88046417-9ab59580-cb82-11ea-92a1-4afd7f7782b6.png"
                      
                 ></p>
 <p>说明:NSObject在内存中布局就是一个指向struct objc_class类型结构体的指针isa,由于内部只有一个成员，那么isa的地址就是NSObject结构体在内存中的地址。</p>
-<h1 id="问题：一个NSObject对象占用多少内存？"><a href="#问题：一个NSObject对象占用多少内存？" class="headerlink" title="问题：一个NSObject对象占用多少内存？"></a>问题：一个NSObject对象占用多少内存？</h1><p>根据上面NSObject内存本质的分析，我们应该会认为NSObject对象在内存中占用了8个字节（在64位的环境下占8个字节，在32环境上占4个字节，因为我们所使用的是64位架构的），那么实际上并不是，而是16个字节，为什么呢？让我们来进一步分析：<br>1.在runtime中有个class_getInstanceSize方法获取实例的大小，首先导入头文件#import &lt;objc&#x2F;runtime.h&gt;<br>2.还有一个获取内存大小的malloc_size方法，导入头文件#import &lt;malloc&#x2F;malloc.h&gt;<br>3.那么我们来打印一下看看：</p>
+<h1 id="问题：一个NSObject对象占用多少内存？"><a href="#问题：一个NSObject对象占用多少内存？" class="headerlink" title="问题：一个NSObject对象占用多少内存？"></a>问题：一个NSObject对象占用多少内存？</h1><p>根据上面NSObject内存本质的分析，我们应该会认为NSObject对象在内存中占用了8个字节（在64位的环境下占8个字节，在32环境上占4个字节，因为我们所使用的是64位架构的），那么实际上并不是，而是16个字节，为什么呢？让我们来进一步分析：</p>
+<ol>
+<li><p>在runtime中有个class_getInstanceSize方法获取实例的大小，首先导入头文件#import &lt;objc&#x2F;runtime.h&gt;</p>
+</li>
+<li><p>还有一个获取内存大小的malloc_size方法，导入头文件#import &lt;malloc&#x2F;malloc.h&gt;</p>
+</li>
+<li><p>那么我们来打印一下看看：</p>
+</li>
+</ol>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line">#import &lt;objc/runtime.h&gt;</span><br><span class="line">#import &lt;malloc/malloc.h&gt;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        NSObject * obj = [[NSObject alloc] init];</span><br><span class="line">        //获取实例的大小</span><br><span class="line">        NSLog(@&quot;class_getInstanceSize:%ld&quot;,class_getInstanceSize([NSObject class]));</span><br><span class="line">        //获取内存大小</span><br><span class="line">        NSLog(@&quot;:%ld&quot;,malloc_size((__bridge const void *)obj));</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 <p>输出结果为：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2020-07-21 19:07:40.772581+0800 NSObject对象的本质[21818:1404119] class_getInstanceSize:8</span><br><span class="line">2020-07-21 19:07:40.773072+0800 NSObject对象的本质[21818:1404119] :16</span><br></pre></td></tr></table></figure></div>
 
 <p>根据上面的两个方法获取的内存大小不一样,class_getInstanceSize获取的大小为8个字节，malloc_size获取的大小是16个字节。为什么会出现两种不同的情况呢，不要着急，我们来进一步分析,我们可以去runtime的源码里面，看一下class_getInstanceSize具体是怎么实现的。往下看。</p>
-<p>4.<a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/" >OC所有开放的源码地址 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>我们找到runtime源码位置然后下载下来:<br><img  
+<ol start="4">
+<li><a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/" >OC所有开放的源码地址 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>我们找到runtime源码位置然后下载下来:</li>
+</ol>
+<p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://user-images.githubusercontent.com/25925248/88049384-a192d700-cb87-11ea-8783-c4669865780e.png"
                      
                 ></p>
-<p>点进去然后下载数字最大的。下载完成，打开项目，然后找到class_getInstanceSize的实现:<br><img  
+<p>点进去然后下载数字最大的。下载完成，打开项目，然后找到class_getInstanceSize的实现:</p>
+<p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://user-images.githubusercontent.com/25925248/88049530-e3bc1880-cb87-11ea-9c49-23839a6de68b.png"
                      
                 ></p>
-<p>全局搜索class_getInstanceSize方法，在objc_class.mm这个c++文件夹下：<br><img  
+<p>全局搜索class_getInstanceSize方法，在objc_class.mm这个c++文件夹下：</p>
+<p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://user-images.githubusercontent.com/25925248/88050235-069afc80-cb89-11ea-9ca1-9e76da95a1c9.png"
@@ -395,36 +425,53 @@
                 ></p>
 <p>我们点下去看下实现：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// Class&#x27;s ivar size rounded up to a pointer-size boundary.</span><br><span class="line">    uint32_t alignedInstanceSize() const &#123;</span><br><span class="line">        return word_align(unalignedInstanceSize());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></div>
+
 <p>可以从注释上看出来返回的是Class’s ivar size,类的成员变量的大小，而alignedInstanceSize()表示内存对齐，因为NSObject对象只有一个isa成员变量，因此返回的是8个字节。</p>
-<p><strong>5.我们还可以从源码的另外一个角度来分析一下为什么malloc_size开辟16个字节的内存空间</strong><br>1）事实上，查看源码看一下alloc的时候分配了多大的内存大小，我们还是搜索刚才的源码allocWithZone:<br><img  
+<ol start="5">
+<li>我们还可以从源码的另外一个角度来分析一下为什么malloc_size开辟16个字节的内存空间</li>
+</ol>
+<p>1）事实上，查看源码看一下alloc的时候分配了多大的内存大小，我们还是搜索刚才的源码allocWithZone:</p>
+<p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://user-images.githubusercontent.com/25925248/88051968-1b2cc400-cb8c-11ea-913c-e4db433ac9d0.png"
                      
                 ></p>
-<p>2）这个方法中返回的是_objc_rootAllocWithZone(self, (malloc_zone_t *)zone),然后搜索找到这个方法源码：<br><img  
+<p>2）这个方法中返回的是_objc_rootAllocWithZone(self, (malloc_zone_t *)zone),然后搜索找到这个方法源码：</p>
+<p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://user-images.githubusercontent.com/25925248/88051995-267fef80-cb8c-11ea-844b-b49733c6949b.png"
                      
                 ></p>
-<p>3）这个方法返回_class_createInstanceFromZone(Class cls,size_t,)<br><img  
+<p>3）这个方法返回_class_createInstanceFromZone(Class cls,size_t,)</p>
+<p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://user-images.githubusercontent.com/25925248/88093425-93af7700-cbc4-11ea-9fe9-5b1c449fb664.png"
                      
                 ><br>终于找到了，从上述代码注释中可以看到，CF要求所有对象至少得返回16个字节的内存大小。</p>
 <p>4）而系统开辟的内存空间通过malloc_zone_calloc或calloc方式开辟至少16bytes字节或16字节的倍数的内存空间。</p>
-<p><strong>6.总结</strong><br>从上面的所有分析来看，我们很容易能回答出文中最开始提出的问题一个NSObject占用多少内存？<br>答：<br>1、系统分配了16个字节给NSObject对象（可以通过malloc_size函数得到）<br>2、但NSObject对象内部只使用了8个字节空间（在64bit环境下，可以通过class_getInstanceSize函数获得）</p>
-<h1 id="如果一个Person对象继承NSObject类，那么Person类的对象占多少内存？"><a href="#如果一个Person对象继承NSObject类，那么Person类的对象占多少内存？" class="headerlink" title="如果一个Person对象继承NSObject类，那么Person类的对象占多少内存？"></a>如果一个Person对象继承NSObject类，那么Person类的对象占多少内存？</h1><p>1.分析： 新建Person类，添加成员变量。通过clang反编译main.m，打开main.cpp文件找到Person类的底层实现。</p>
+<ol start="6">
+<li>总结</li>
+</ol>
+<p>从上面的所有分析来看，我们很容易能回答出文中最开始提出的问题一个NSObject占用多少内存？<br>答：</p>
+<p>1、系统分配了16个字节给NSObject对象（可以通过malloc_size函数得到）<br>2、但NSObject对象内部只使用了8个字节空间（在64bit环境下，可以通过class_getInstanceSize函数获得）</p>
+<h1 id="如果一个Person对象继承NSObject类，那么Person类的对象占多少内存？"><a href="#如果一个Person对象继承NSObject类，那么Person类的对象占多少内存？" class="headerlink" title="如果一个Person对象继承NSObject类，那么Person类的对象占多少内存？"></a>如果一个Person对象继承NSObject类，那么Person类的对象占多少内存？</h1><ol>
+<li>分析： 新建Person类，添加成员变量。通过clang反编译main.m，打开main.cpp文件找到Person类的底层实现。</li>
+</ol>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac@192 Person对象的本质 % cd /Users/mac/Desktop/iOS学习/iOS中进阶高/OC对象的本 质/Person对象的本质/Person对象的本质</span><br><span class="line">mac@192 Person对象的本质 % xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main.cpp  </span><br></pre></td></tr></table></figure></div>
+
 <p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://user-images.githubusercontent.com/25925248/88088214-a58d1c00-cbbc-11ea-9782-abda1513517c.png"
                      
                 ></p>
-<p>2.由上图可知，Person对象其实是一个指向objc_object结构体的指针，objc_object里面也有一个isa指针,如下图：<br><img  
+<ol start="2">
+<li>由上图可知，Person对象其实是一个指向objc_object结构体的指针，objc_object里面也有一个isa指针,如下图：</li>
+</ol>
+<p><img  
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://user-images.githubusercontent.com/25925248/88089632-edad3e00-cbbe-11ea-9d14-39eb7ca815b5.png"
@@ -476,7 +523,7 @@
                 <div class="post-copyright-info">
                     <div class="article-copyright-info-container">
     <ul>
-        <li>Post title：OCRuntime03：对象的本质</li>
+        <li>Post title：OC学习39.2：对象的本质</li>
         <li>Post author：张建</li>
         <li>Create time：2020-07-13 17:15:17</li>
         <li>
@@ -515,7 +562,7 @@
                                     <i class="fa-solid fa-chevron-left"></i>
                                 </span>
                                 <span class="title flex-center">
-                                    <span class="post-nav-title-item">OCRuntime03：方法的本质</span>
+                                    <span class="post-nav-title-item">OC学习39.3：方法的本质</span>
                                     <span class="post-nav-item">Prev posts</span>
                                 </span>
                             </a>
@@ -549,7 +596,7 @@
                 <div class="post-toc-wrap">
     <div class="post-toc">
         <div class="toc-title">On this page</div>
-        <div class="page-title">OCRuntime03：对象的本质</div>
+        <div class="page-title">OC学习39.2：对象的本质</div>
         <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OC%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="nav-text">OC对象的本质</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%86OC%E4%BB%A3%E7%A0%81%E8%BD%AC%E5%8C%96%E6%88%90C-x2F-C-%E4%BB%A3%E7%A0%81"><span class="nav-text">将OC代码转化成C&#x2F;C++代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A%E4%B8%80%E4%B8%AANSObject%E5%AF%B9%E8%B1%A1%E5%8D%A0%E7%94%A8%E5%A4%9A%E5%B0%91%E5%86%85%E5%AD%98%EF%BC%9F"><span class="nav-text">问题：一个NSObject对象占用多少内存？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E4%B8%80%E4%B8%AAPerson%E5%AF%B9%E8%B1%A1%E7%BB%A7%E6%89%BFNSObject%E7%B1%BB%EF%BC%8C%E9%82%A3%E4%B9%88Person%E7%B1%BB%E7%9A%84%E5%AF%B9%E8%B1%A1%E5%8D%A0%E5%A4%9A%E5%B0%91%E5%86%85%E5%AD%98%EF%BC%9F"><span class="nav-text">如果一个Person对象继承NSObject类，那么Person类的对象占多少内存？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%82%A3%E4%B9%88alloc%E5%92%8Cinit%E9%83%BD%E5%81%9A%E4%BA%86%E4%BA%9B%E4%BB%80%E4%B9%88%E5%91%A2%EF%BC%9F"><span class="nav-text">那么alloc和init都做了些什么呢？</span></a></li></ol>
 
     </div>
