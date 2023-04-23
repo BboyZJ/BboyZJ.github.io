@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2020/10/10/oc底层原理/oc底层原理15-1：dyld加载流程/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC底层原理15：dyld源码分析">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2020/10/10/OC底层原理/OC底层原理15-1：dyld加载流程/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC底层原理15：dyld源码分析">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC底层原理15：dyld源码分析 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC底层原理15：dyld源码分析</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2020-10-10 21:02:58</span>
+        <span class="mobile">2020-10-10 21:02</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-04-22 11:07:15</span>
+            <span class="mobile">2023-04-22 11:07</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文的目的主要是分析 <code>dyld</code> 的加载流程，了解在 <code>main</code> 函数之前，底层还做了什么</p>
+<h1 id="印子"><a href="#印子" class="headerlink" title="印子"></a>印子</h1><ul>
+<li>创建一个project，在ViewController中重写了 <code>load方法</code>，在main中加了一个 <code>C++方法</code>，即 <code>kcFUnc</code>，请问它们的打印先后顺序是什么？</li>
+</ul>
+<p>VC中代码：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301435851.jpg"
+                     
+                ></p>
+<p>main.m 中实现：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301435165.jpg"
+                     
+                ></p>
+<ul>
+<li>运行程序，查看 <code>load、kcFunc、main的打印顺序</code>，下面是打印结果，通过结果可以看出其顺序是 <code>load --&gt; C++方法 --&gt; main</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301436571.jpg"
+                     
+                ></p>
+<p>那么问题来了？为什么是这么一个顺序？按照常规的思维理解，main不是入口函数吗？为什么不是main最先执行？</p>
+<p>下面根据这个问题，我们来探索在走到main之前，到底还做了什么。</p>
+<h1 id="编译过程及库"><a href="#编译过程及库" class="headerlink" title="编译过程及库"></a>编译过程及库</h1><p>在分析app启动之前，我们需要先了解iOS app代码的 <code>编译过程</code> 以及 <code>动态库和静态库</code>。</p>
+<h1 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h1><p>其中 <code>编译过程</code> 如下图所示，主要分为以下几步：</p>
+<ul>
+<li><code>源文件</code>：载入 <code>.h、.m、.cpp</code> 等文件</li>
+<li><code>预处理</code>：替换宏，删除注释，展开头文件，产生 <code>.i</code> 文件</li>
+<li><code>编译</code>：将 <code>.i</code> 文件转换为汇编语言，产生 <code>.s</code> 文件</li>
+<li><code>汇编</code>：将汇编文件转换为机器码文件，产生 <code>.o</code> 文件</li>
+<li><code>链接</code>：对 <code>.o</code> 文件中引用其他库的地方进行引用，生成最后的 <code>可执行文件 MachO</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301437075.png"
+                     
+                ></p>
+<h1 id="静态库-和-动态库"><a href="#静态库-和-动态库" class="headerlink" title="静态库 和 动态库"></a>静态库 和 动态库</h1><ul>
+<li><p><code>静态库</code>：在链接阶段，会将可汇编生成的目标程序与引用的库一起链接打包到可执行文件当中。此时的静态库就不会在改变了，因为它是 <code>编译时被直接拷贝一份，复制到目标程序里的</code></p>
+<ul>
+<li><p><code>好处</code>：编译完成后，库文件实际上就没有作用了，目标程序没有外部依赖，直接就可以运行</p>
+</li>
+<li><p><code>缺点</code>：由于静态库会有两份，所以会导致 <code>目标程序的体积增大</code>，对内存、性能、速度消耗很大</p>
+</li>
+</ul>
+</li>
+<li><p><code>动态库</code>：程序编译时并不会链接到目标程序中，目标程序只会存储指向动态库的引用，在 <code>程序运行时才被载入</code></p>
+<ul>
+<li><p><code>优势</code>：</p>
+<ul>
+<li><p><code>减少打包之后app的大小</code>：因为不需要拷贝至目标程序中，所以不会影响目标程序的体积，与静态库相比，减少了app的体积大小</p>
+</li>
+<li><p>共享内存，节约资源：同一份库可以被多个程序使用</p>
+</li>
+<li><p>通过 <code>更新动态库，达到更新程序</code> 的目的：由于运行时才载入的特性，可以随时对库进行替换，而不需要重新编译代码</p>
+</li>
+</ul>
+</li>
+<li><p><code>缺点</code>：动态载入会带来一部分性能损失，使用动态库也会使得程序依赖于外部环境，如果环境缺少了动态库，或者库的版本不正确，就会导致程序无法运行</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>静态库和动态库的图示如图所示:</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301438870.png"
+                     
+                ></p>
+<h1 id="dyld加载流程分析"><a href="#dyld加载流程分析" class="headerlink" title="dyld加载流程分析"></a>dyld加载流程分析</h1><p>根据 <code>dyld</code> 源码，以及 <code>libobjc、libSystem、libdispatch</code> 源码协同分析</p>
+<ul>
+<li>什么是dyld？</li>
+</ul>
+<p><code>dyld</code>（the dynamic link editor）是苹果的 <code>动态链接器</code>，是苹果操作系统的重要组成部分，在app被编译打包成可执行文件格式的 <code>Mach-O</code> 文件后，交由 <code>dyld负责连接，加载程序</code></p>
+<p>所以 <code>App</code> 的启动流程图如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301438795.png"
+                     
+                ></p>
+<h1 id="app启动的起始点"><a href="#app启动的起始点" class="headerlink" title="app启动的起始点"></a>app启动的起始点</h1><ul>
+<li>在前文的demo中，在load方法处加一个断点，通过bt堆栈信息查看app启动是从哪里开始的</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301438817.jpg"
+                     
+                ></p>
+<p>【app启动起点】：通过程序运行发现，是从 <code>dyld</code> 中的 <code>_dyld_start</code> 开始的，所以需要去 <a class="link"   target="_blank" rel="noopener" href="https://github.com/apple-oss-distributions/dyld/tags" >OpenSource <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 下载一份dyld的源码来进行分析</p>
+<ul>
+<li>也可以通过xcode左侧的堆栈信息来找到入口</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301439781.jpg"
+                     
+                ></p>
+<h1 id="dyld-main函数源码分析"><a href="#dyld-main函数源码分析" class="headerlink" title="dyld::_main函数源码分析"></a>dyld::_main函数源码分析</h1><ul>
+<li>在 <code>dyld-750.6</code> 源码中查找 <code>_dyld_start</code>,查找 <code>arm64架构</code> 发现，是由汇编实现，通过汇编注释发现会调用 <code>dyldbootstrap::start(app_mh, argc, argv, dyld_mh, &amp;startGlue)</code> 方法，是一个 <code>C++ </code>方法（以arm64架构为例）</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301439232.jpg"
+                     
+                ></p>
+<ul>
+<li>源码中搜索 <code>dyldbootstrap</code> 找到命名作用空间，再在这个文件中查找 <code>start</code> 方法，其核心是返回值的调用了 <code>dyld的main</code> 函数，其中 <code>macho_header</code> 是 <code>Mach-O</code> 的头部，而 <code>dyld</code> 加载的文件就是 <code>Mach-O</code> 类型的，即 <code>Mach-O</code> 类型是 <code>可执行文件类型</code>，由四部分组成：<code>Mach-O头部、Load Command、section、Other Data</code>，可以通过 <code>MachOView</code> 查看可执行文件信息</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301439822.jpg"
+                     
+                ></p>
+<ul>
+<li><p>进入 <code>dyld::_main</code> 的源码实现，特别长，大约600多行，如果对dyld加载流程不太了解的童鞋，可以根据 <code>_main</code> 函数的返回值进行反推，这里就多作说明。在 <code>_main</code> 函数中主要做了一下几件事情：</p>
+<ul>
+<li>【第一步：<code>环境变量配置</code>】：根据环境变量设置相应的值以及获取当前运行架构</li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301439753.jpg"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301440886.jpg"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301440541.jpg"
+                     
+                ></p>
+<ul>
+<li>【第二步：<code>共享缓存</code>】：检查是否开启了共享缓存，以及共享缓存是否映射到共享区域，例如 <code>UIKit、CoreFoundation</code> 等</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301440070.png"
+                     
+                ></p>
+<ul>
+<li>【第三步：<code>主程序的初始化</code>】：调用 <code>instantiateFromLoadedImage</code> 函数实例化了一个<code>ImageLoader</code> 对象</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301441821.png"
+                     
+                ></p>
+<ul>
+<li>【第四步：<code>插入动态库</code>】：遍历DYLD_INSERT_LIBRARIES环境变量，调用loadInsertedDylib加载</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301441523.png"
+                     
+                ></p>
+<ul>
+<li>【第五步：<code>link 主程序</code>】</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301441351.png"
+                     
+                ></p>
+<ul>
+<li>【第六步：<code>link 动态库</code>】</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16801584980010.jpg"
+                     
+                ></p>
+<ul>
+<li>【第七步：<code>弱符号绑定</code>】</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301441495.png"
+                     
+                ></p>
+<ul>
+<li>【第八步：<code>执行初始化方法</code>】</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301441927.png"
+                     
+                ></p>
+<ul>
+<li>【第九步：<code>寻找主程序入口即main函数</code>】：从Load Command读取LC_MAIN入口，如果没有，就读取LC_UNIXTHREAD，这样就来到了日常开发中熟悉的main函数了</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301441888.png"
+                     
+                ></p>
+<h1 id="下面主要分析下【第三步】和【第八步】"><a href="#下面主要分析下【第三步】和【第八步】" class="headerlink" title="下面主要分析下【第三步】和【第八步】"></a>下面主要分析下【第三步】和【第八步】</h1><ul>
+<li><code>sMainExecutable</code> 表示主程序变量，查看其赋值，是通过 <code>instantiateFromLoadedImage</code> 方法初始化</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301442558.png"
+                     
+                ></p>
+<ul>
+<li>进入 <code>instantiateFromLoadedImage</code> 源码，其中创建 一个<code>ImageLoader</code> 实例对象，通过<code>instantiateMainExecutable</code> 方法创建</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301442951.png"
+                     
+                ></p>
+<ul>
+<li>进入 <code>instantiateMainExecutable</code> 源码，其作用是为主可执行文件创建映像，返回一个<code>ImageLoader</code> 类型的image对象，即主程序。其中 <code>sniffLoadCommands</code> 函数时获取 <code>Mach-O</code> 类型文件的 <code>Load Command</code> 的相关信息，并对其进行各种校验</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16801585493876.jpg"
+                     
+                ></p>
+<h1 id="【第八步：执行初始化方法】"><a href="#【第八步：执行初始化方法】" class="headerlink" title="【第八步：执行初始化方法】"></a>【第八步：执行初始化方法】</h1><ul>
+<li>进入 <code>initializeMainExecutable</code> 源码,主要是循环遍历，都会执行runInitializers方法</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301442788.png"
+                     
+                ></p>
+<ul>
+<li>全局搜索 <code>runInitializers</code> (cons,找到如下源码，其核心代码是processInitializers函数的调用</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301442148.png"
+                     
+                ></p>
+<ul>
+<li>进入 <code>processInitializers</code> 函数的源码实现，其中对镜像列表调用<code>recursiveInitialization</code> 函数进行递归实例化</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301442869.png"
+                     
+                ></p>
+<ul>
+<li>全局搜索recursiveInitialization(cons函数,其源码实现如下</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301443817.png"
+                     
+                ></p>
+<p>在这里，需要分成两部分探索，一部分是notifySingle函数，一部分是doInitialization函数，首先探索notifySingle函数</p>
+<h1 id="notifySingle-函数"><a href="#notifySingle-函数" class="headerlink" title="notifySingle 函数"></a>notifySingle 函数</h1><ul>
+<li>全局搜索 <code>notifySingle</code>(函数,其重点是(*sNotifyObjCInit)(image-&gt;getRealPath(), image-&gt;machHeader());这句</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301443485.png"
+                     
+                ></p>
+<ul>
+<li>全局搜索 <code>sNotifyObjCInit</code>，发现没有找到实现，有赋值操作</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301443687.png"
+                     
+                ></p>
+<ul>
+<li>搜索 <code>registerObjCNotifiers</code> 在哪里调用了，发现在 <code>_dyld_objc_notify_register</code> 进行了调用</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301443029.png"
+                     
+                ></p>
+<p>注意：<code>_dyld_objc_notify_register</code> 的函数需要在 <code>libobjc</code> 源码中搜索</p>
+<ul>
+<li>在 <code>objc4-781</code> 源码中搜索 <code>_dyld_objc_notify_register</code>，发现在 <code>_objc_init</code> 源码中调用了该方法，并传入了参数，所以 <code>sNotifyObjCInit</code> 的赋值的就是 <code>objc</code> 中的<code>load_images</code>，而 <code>load_images</code> 会调用所有的 <code>+load</code> 方法。所以综上所述，<code>notifySingle</code> 是一个回调函数</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301443430.png"
+                     
+                ></p>
+<h1 id="load函数加载"><a href="#load函数加载" class="headerlink" title="load函数加载"></a>load函数加载</h1><p>下面我们进入 <code>load_images</code> 的源码看看其实现，以此来证明 <code>load_images</code> 中调用了所有的load函数</p>
+<ul>
+<li>通过objc源码中_objc_init源码实现，进入load_images的源码实现</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301444088.png"
+                     
+                ></p>
+<ul>
+<li>进入 <code>call_load_methods</code> 源码实现，可以发现其核心是通过 <code>do-while </code>循环调用 <code>+load</code> 方法</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301444183.png"
+                     
+                ></p>
+<ul>
+<li>进入 <code>call_class_loads</code> 源码实现，了解到这里调用的 <code>load</code> 方法证实我们前文提及的类的load方法</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301444897.png"
+                     
+                ></p>
+<p>所以，<code>load_images</code> 调用了所有的 <code>load</code> 函数，以上的源码分析过程正好对应堆栈的打印信息</p>
+<h1 id="【总结】"><a href="#【总结】" class="headerlink" title="【总结】"></a>【总结】</h1><p>load的源码链为：_dyld_start -&gt; dyldbootstrap::start -&gt; dyld::_main -&gt; dyld::initializeMainExecutable -&gt; ImageLoader::runInitializers -&gt; ImageLoader::processInitializers -&gt; ImageLoader::recursiveInitialization -&gt; dyld::notifySingle(是一个回调处理) -&gt; sNotifyObjCInit –&gt; load_images(libobjc.A.dylib)</p>
+<p>那么问题又来了，<code>_objc_init</code> 是什么时候调用的呢？请接着往下看</p>
+<h1 id="doInitialization-函数"><a href="#doInitialization-函数" class="headerlink" title="doInitialization 函数"></a>doInitialization 函数</h1><ul>
+<li>走到 <code>objc</code> 的 <code>_objc_init</code> 函数，发现走不通了，我们回退到 <code>recursiveInitialization</code> 递归函数的源码实现，发现我们忽略了一个函数 <code>doInitialization</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301444151.png"
+                     
+                ></p>
+<ul>
+<li>进入doInitialization函数的源码实现</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301444925.png"
+                     
+                ></p>
+<p>这里也需要分成两部分，一部分是 <code>doImageInit</code> 函数，一部分是 <code>doModInitFunctions</code> 函数</p>
+<ul>
+<li>进入 <code>doImageInit</code> 源码实现，其核心主要是for循环加载方法的调用，这里需要注意的一点是，libSystem的初始化必须先运行</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301444588.png"
+                     
+                ></p>
+<ul>
+<li>进入 <code>doModInitFunctions</code> 源码实现，这个方法中加载了所有 <code>Cxx</code> 文件</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301444594.png"
+                     
+                ></p>
+<p>走到这里，还是没有找到_objc_init的调用？怎么办呢？放弃吗？当然不行，我们还可以通过_objc_init加一个符号断点来查看调用_objc_init前的堆栈信息，</p>
+<ul>
+<li><code>_objc_init</code> 加一个符号断点，运行程序，查看_objc_init断住后的堆栈信息</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301445232.png"
+                     
+                ></p>
+<ul>
+<li>在libsystem中查找libSystem_initializer，查看其中的实现</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301445486.png"
+                     
+                ></p>
+<ul>
+<li>根据前面的堆栈信息，我们发现走的是 <code>libSystem_initializer</code> 中会调用<code>libdispatch_init</code> 函数，而这个函数的源码是在 <code>libdispatch</code> 开源库中的，在libdispatch中搜索libdispatch_init</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301445465.jpg"
+                     
+                ></p>
+<ul>
+<li>进入 <code>_os_object_init</code> 源码实现，其源码实现调用了 <code>_objc_init</code> 函数</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301446250.jpg"
+                     
+                ></p>
+<p>结合上面的分析，从初始化_objc_init注册的_dyld_objc_notify_register的参数2，即load_images，到sNotifySingle –&gt; sNotifyObjCInie&#x3D;参数2 到sNotifyObjcInit()调用，形成了一个闭环</p>
+<p>所以可以简单的理解为sNotifySingle这里是添加通知即addObserver，_objc_init中调用_dyld_objc_notify_register相当于发送通知，即push，而sNotifyObjcInit相当于通知的处理函数，即selector</p>
+<p>【总结】：_objc_init的源码链：_dyld_start –&gt; dyldbootstrap::start –&gt; dyld::_main –&gt; dyld::initializeMainExecutable –&gt; ImageLoader::runInitializers –&gt; ImageLoader::processInitializers –&gt; ImageLoader::recursiveInitialization –&gt; doInitialization –&gt;libSystem_initializer（libSystem.B.dylib） –&gt; _os_object_init（libdispatch.dylib） –&gt; _objc_init(libobjc.A.dylib)</p>
+<h1 id="第九步：寻找主入口函数"><a href="#第九步：寻找主入口函数" class="headerlink" title="第九步：寻找主入口函数"></a>第九步：寻找主入口函数</h1><ul>
+<li>汇编调试，可以看到显示来到 <code>+[ViewController load]</code> 方法</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301446912.jpg"
+                     
+                ></p>
+<ul>
+<li>继续执行，来到 <code>kcFunc</code> 的 <code>C++</code> 函数</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301447381.jpg"
+                     
+                ></p>
+<ul>
+<li>点击stepover,继续往下，跑完了整个流程，会回到 _dyld_start,然后调用main()函数,通过汇编完成main的参数赋值等操作</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301447180.jpg"
+                     
+                ></p>
+<ul>
+<li>dyld汇编源码实现</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301447408.jpg"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301447202.jpg"
+                     
+                ></p>
+<p>所以，综上所述，最终 <code>dyld</code> 加载流程，如下图所示，图中也诠释了前文中的问题：为什么是load–&gt;Cxx–&gt;main的调用顺序</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303301448224.png"
+                     
+                ></p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC底层原理15：dyld源码分析</li>
+        <li>Post author：张建</li>
+        <li>Create time：2020-10-10 21:02:58</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2020/10/10/OC底层原理/OC底层原理15-1：dyld加载流程/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">#OC-底层原理探索篇</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2020/10/20/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8616%EF%BC%9Adyld%E4%B8%8Eobjc%E7%9A%84%E5%85%B3%E8%81%94/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理16：dyld与objc的关联</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2020/10/06/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8614-3%EF%BC%9Aobjc_msgSend%E4%B9%8B%E5%8A%A8%E6%80%81%E6%96%B9%E6%B3%95%E5%86%B3%E8%AE%AE&amp;%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理14-3：objc_msgSend之动态方法决议 &amp; 消息转发</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC底层原理15：dyld源码分析</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%B0%E5%AD%90"><span class="nav-text">印子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%E5%8F%8A%E5%BA%93"><span class="nav-text">编译过程及库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B"><span class="nav-text">编译过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%BA%93-%E5%92%8C-%E5%8A%A8%E6%80%81%E5%BA%93"><span class="nav-text">静态库 和 动态库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dyld%E5%8A%A0%E8%BD%BD%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="nav-text">dyld加载流程分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#app%E5%90%AF%E5%8A%A8%E7%9A%84%E8%B5%B7%E5%A7%8B%E7%82%B9"><span class="nav-text">app启动的起始点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dyld-main%E5%87%BD%E6%95%B0%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-text">dyld::_main函数源码分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E9%9D%A2%E4%B8%BB%E8%A6%81%E5%88%86%E6%9E%90%E4%B8%8B%E3%80%90%E7%AC%AC%E4%B8%89%E6%AD%A5%E3%80%91%E5%92%8C%E3%80%90%E7%AC%AC%E5%85%AB%E6%AD%A5%E3%80%91"><span class="nav-text">下面主要分析下【第三步】和【第八步】</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%80%90%E7%AC%AC%E5%85%AB%E6%AD%A5%EF%BC%9A%E6%89%A7%E8%A1%8C%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E3%80%91"><span class="nav-text">【第八步：执行初始化方法】</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#notifySingle-%E5%87%BD%E6%95%B0"><span class="nav-text">notifySingle 函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#load%E5%87%BD%E6%95%B0%E5%8A%A0%E8%BD%BD"><span class="nav-text">load函数加载</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E3%80%90%E6%80%BB%E7%BB%93%E3%80%91"><span class="nav-text">【总结】</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#doInitialization-%E5%87%BD%E6%95%B0"><span class="nav-text">doInitialization 函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B9%9D%E6%AD%A5%EF%BC%9A%E5%AF%BB%E6%89%BE%E4%B8%BB%E5%85%A5%E5%8F%A3%E5%87%BD%E6%95%B0"><span class="nav-text">第九步：寻找主入口函数</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

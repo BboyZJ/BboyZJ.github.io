@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2022/01/04/oc底层原理/oc高级强化01：多环境配置/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC高级强化01：多环境配置">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2022/01/04/OC底层原理/OC高级强化01：多环境配置/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC高级强化01：多环境配置">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC高级强化01：多环境配置 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC高级强化01：多环境配置</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2022-01-04 16:24:40</span>
+        <span class="mobile">2022-01-04 16:24</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-04-22 11:09:36</span>
+            <span class="mobile">2023-04-22 11:09</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="多环境配置"><a href="#多环境配置" class="headerlink" title="多环境配置"></a>多环境配置</h1><ul>
+<li>Project : 包含了项目所有的代码、资源文件和所有信息。</li>
+<li>Target : 对指定代码和资源文件的具体构建方式。</li>
+<li>Scheme : 对指定的Target的环境配置</li>
+</ul>
+<p>在实际开发中，我们必须要进行网络请求（<code>内网和外网</code>），而网络请求则就要针对不同的环境（<code>开发</code>、<code>测试</code>、<code>生产</code>）有不同的的<code>主机名称（URL_HOST）</code>，那么我们如何获取某个环境下的<code>URL_HOST</code>，那么在这个过程中，我们需要进行配置，而配置的方式有三种：</p>
+<ul>
+<li>Target 配置</li>
+<li>Scheme 配置</li>
+<li>xcconfig 配置</li>
+</ul>
+<h2 id="Target-配置"><a href="#Target-配置" class="headerlink" title="Target 配置"></a>Target 配置</h2><p>1、新建Dev的Target</p>
+<ul>
+<li><p>选中 <code>Target</code> 下 <code>LoginApp</code> -&gt; 右键选中 <code>Duplicate</code> 复制 -&gt; 生成新的 <code>LoginApp copy</code> -&gt; 将其改名为 <code>LoginApp-Dev</code> </p>
+</li>
+<li><p>修改 <code>Bundle Identifier</code> 名为 <code>com.srsf.LoginApp-Dev</code></p>
+</li>
+<li><p>修改新生成的 <code>LoginApp copy-info</code> 名为 <code>LoginApp-Dev-info</code>，plist名称改变同时需要在 <code>Build Settings</code> -&gt; <code>Packaging</code> -&gt; <code>info.list File</code> 下 -&gt; 将 <code>LoginApp copy-info</code> 改成  <code>LoginApp-Dev-info</code>。</p>
+</li>
+</ul>
+<p>如下图：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303210829441.png"
+                     
+                ></p>
+<p>注：到目前为止，你运行 <code>LoginApp</code> 和 <code>LoginApp-Dev</code> 会生成两个 <code>App</code>。</p>
+<p>2、添加自定义宏 <code>macros</code></p>
+<ul>
+<li>选中 <code>LoginApp-Dev</code> -&gt; <code>Builds Settings</code> -&gt; <code>all</code> -&gt; 搜索 <code>macros</code> -&gt; <code>Apple Clang - Preprocessing</code> -&gt; 选中 <code>Debug</code> 右键空白双击 -&gt; 弹出添加 DEV&#x3D;1；同理，Release 设置 DEV&#x3D;0</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148154855-3f871465-7416-4840-92f9-5e0d600feece.png"
+                      alt="自定义宏DEV"
+                ></p>
+<ul>
+<li>此时，自定义的宏已经生效了，此时可以在任意地方调用下面的方式进行判断使用</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#if DEV</span><br><span class="line">    #define URL_HOST @&quot;http://192.168.0.1&quot;</span><br><span class="line">#else</span><br><span class="line">    #define URL_HOST @&quot;http://192.168.0.2&quot;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure></div>
+
+<p>当你切换不同的<code>Scheme</code>时，打印不同的<code>URL_HOST</code></p>
+<p>3、总结</p>
+<p><code>Target</code> 配置这种方式，每创建一个 <code>target</code> 都会产生新的 <code>info.plist</code>，每一个都需要去配置 <code>macros</code>，配置比较乱，<code>不推荐</code>使用。</p>
+<h2 id="Scheme-配置"><a href="#Scheme-配置" class="headerlink" title="Scheme 配置"></a>Scheme 配置</h2><p>1、首先我们要了解到 <code>Scheme</code> 默认是有两种环境变量 <code>Debug</code> 和 <code>Release</code>，可以在 <code>Edit Scheme</code> -&gt; <code>Run</code> -&gt; <code>info</code> -&gt; <code>Build Configuration</code> 下查看。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148157263-f4050f0a-5394-4301-b45b-8f2b1a513549.png"
+                     
+                ></p>
+<p>2、其次，与之对应的环境配置在 <code>Project</code> -&gt; <code>LoginApp</code> -&gt; <code>Configurations</code> 下也可以看到</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148157442-489a540a-7e7b-4a46-99f1-afe78599c0dd.png"
+                     
+                ></p>
+<p>3、在 <code>Project</code> -&gt; <code>Configurations</code> 下，我们可以创建一个自己的配置环境 <code>Beta</code>,现在我们有 了 <code>三</code> 种配置方式，对应的在 <code>Edit Scheme</code> -&gt; <code>Run</code> -&gt; <code>info</code> -&gt; <code>Build Configuration</code> 下也有三种，同时在 <code>Target</code> -&gt; <code>Build Settings</code> -&gt; <code>Build Active Architecture Only</code> 下也有对应的三种配置方式，说明这是一个 <code>全局</code> 的配置，如下图：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148163968-d92e293e-9d3f-4f88-8060-5b6dc784ee0c.png"
+                      alt="1"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148164034-cab45e0e-bfe1-40e2-92f7-ec088ceaeedc.png"
+                      alt="2"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148164072-7bb0e3a3-ac39-4ff3-a29c-37f4cc1bb2b0.png"
+                      alt="3"
+                ></p>
+<p>3、新建 Scheme</p>
+<ul>
+<li>点击 <code>LoginApp</code> -&gt; manager Schemes -&gt; 点击 + 号 -&gt; 添加 Debug 和 Beta 两种，加上 LoginApp 本身Release就是三种，对应上面 三种 配置</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148164763-187ae8cd-4478-46ff-b4d6-847ed0d21440.png"
+                     
+                >)</p>
+<ul>
+<li>点击 <code>Edit Scheme</code> 切换 <code>Scheme</code>，并指定 <code>Configurations</code>，如下图</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148170785-850c4843-0f28-4f43-a57f-09f0368884fe.jpg"
+                     
+                ></p>
+<p>4、自定义主机名URL_HOST</p>
+<ul>
+<li><code>Target</code> -&gt; <code>Build Settings</code> -&gt; 点击 + 号 -&gt; <code>Add User-Defined Settings</code> -&gt; <code>URL_HOST</code>，此时我们发现其对应的配置也是三个，分别设值如下：</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148171973-25130a7c-53af-4c95-a0bc-3dbab6b15faf.png"
+                     
+                ></p>
+<p>5、将 <code>URL_HOST</code> 添加到 <code>info.plist</code> 文件中，<code>Build Settings</code> 中的 配置可以通过 <code>info.plist</code> 暴露出来，可以直接读出来</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148171617-8564db08-7c08-41a3-bfab-4511c2a2de8d.png"
+                     
+                ></p>
+<p>6、在项目中使用</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSString * path = [NSBundle.mainBundle pathForResource:@&quot;Info&quot; ofType:@&quot;plist&quot;];</span><br><span class="line">NSDictionary * infoDic = [[NSDictionary alloc] initWithContentsOfFile:path];</span><br><span class="line">NSLog(@&quot;%@&quot;,infoDic[@&quot;HOST_URL&quot;]);</span><br></pre></td></tr></table></figure></div>
+
+<p>切换 <code>Scheme</code> ，打印如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Debug：http://137.0.0.2</span><br><span class="line">Beta：http://137.0.0.1</span><br><span class="line">LoginApp：http://www.zjboy.com</span><br></pre></td></tr></table></figure></div>
+
+<p>7、同理配置图标的也一样</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148173031-4941acc4-ae67-4972-b4cf-cfdafe8a8c2f.png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16413657363279.jpg"
+                     
+                ></p>
+<h2 id="xcconfig-配置"><a href="#xcconfig-配置" class="headerlink" title="xcconfig 配置"></a>xcconfig 配置</h2><p>1、在实际项目中，我们可能会有多个主机名称HOST_URL，因此，我们还是需要去配置多个Configurations，下面还是以三个为准</p>
+<ul>
+<li>在 <code>Project</code> -&gt; <code>LoginApp</code> -&gt; <code>Configurations</code> 下，我们可以创建一个自己的配置环境 <code>Beta</code>,现在我们有 了 <code>三</code> 种配置方式，对应的在 <code>Edit Scheme</code> -&gt; <code>Run</code> -&gt; <code>info</code> -&gt; <code>Build Configuration</code> 下也有三种，同时在 <code>Target</code> -&gt; <code>Build Settings</code> -&gt; <code>Build Active Architecture Only</code> 下也有对应的三种配置方式，说明这是一个 <code>全局</code> 的配置，如下图：</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148163968-d92e293e-9d3f-4f88-8060-5b6dc784ee0c.png"
+                      alt="1"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148164034-cab45e0e-bfe1-40e2-92f7-ec088ceaeedc.png"
+                      alt="2"
+                ></p>
+<p>2、在主项目下，创建 <code>Congifg</code> 文件，并在下面创建三个对应环境的 <code>.xxconfig</code> 文件</p>
+<ul>
+<li>在Config文件夹下 -&gt; command + N -&gt; 搜索config</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148355879-6b0d7d6f-3a30-49cf-af9d-9dfeae7c34de.jpg"
+                     
+                ></p>
+<ul>
+<li>输入对应的名称 -&gt; 点击create</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148355970-ade68d43-9816-4697-92d6-b451aa09e20d.jpg"
+                     
+                ></p>
+<ul>
+<li>创建成功之后，如下图</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148356017-6f74c235-2b17-4e3b-8acf-e190f8c98a91.jpg"
+                     
+                ></p>
+<p>2、选择对应Target的进行配置</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148356086-b84672de-cce9-472e-a564-027283494400.jpg"
+                     
+                ></p>
+<p>3、在 xxconfig 文件中写入 HOST_URL</p>
+<ul>
+<li>Debug 下</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A = /</span><br><span class="line">HOST_URL = http:$&#123;A&#125;/127.0.0.1</span><br></pre></td></tr></table></figure></div>
+<ul>
+<li>Beta</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A = /</span><br><span class="line">HOST_URL = http:$&#123;A&#125;/127.0.0.2</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>Release ：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A = /</span><br><span class="line">HOST_URL = http:$&#123;A&#125;/www.bboyzj.cn</span><br></pre></td></tr></table></figure></div>
+
+<p>4、同样，我们需要在 <code>info.plist</code> 文件中暴露，在项目中取出</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148171617-8564db08-7c08-41a3-bfab-4511c2a2de8d.png"
+                     
+                ></p>
+<p>5、项目中代码取出</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSString * path = [NSBundle.mainBundle pathForResource:@&quot;Info&quot; ofType:@&quot;plist&quot;];</span><br><span class="line">    NSDictionary * infoDic = [[NSDictionary alloc] initWithContentsOfFile:path];</span><br><span class="line">    NSLog(@&quot;%@&quot;,infoDic[@&quot;HOST_URL&quot;]);</span><br></pre></td></tr></table></figure></div>
+
+<p>切换不同的 scheme 的打印结果</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Debug：http://127.0.0.1</span><br><span class="line"></span><br><span class="line">Beta： http://127.0.0.2</span><br><span class="line"></span><br><span class="line">Release：https://www.bboyzj.cn</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="除了上面三种配置实现，其实还有一种实现，就是pch实现"><a href="#除了上面三种配置实现，其实还有一种实现，就是pch实现" class="headerlink" title="除了上面三种配置实现，其实还有一种实现，就是pch实现"></a>除了上面三种配置实现，其实还有一种实现，就是pch实现</h1><ul>
+<li>到 Target -&gt; Build Settings -&gt; 设值不同的DEBUG值</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148196781-2ff38e17-209d-443f-b39e-b9ca84e30de4.jpg"
+                     
+                ></p>
+<ul>
+<li>具体是现代吗</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#if (DEBUG == 1)</span><br><span class="line">    #define kBaseUrl @&quot;http://127.0.0.1&quot;</span><br><span class="line">#elif (DEBUG == 2)</span><br><span class="line">    #define kBaseUrl @&quot;http://127.0.0.2&quot;</span><br><span class="line">#else</span><br><span class="line">    #define kBaseUrl @&quot;https://www.bboyzj.cn&quot;</span><br><span class="line">#endif</span><br><span class="line">    NSLog(@&quot;url:%@&quot;,kBaseUrl);</span><br></pre></td></tr></table></figure></div>
+
+
+<h2 id="xxconfig-其他功能"><a href="#xxconfig-其他功能" class="headerlink" title="xxconfig 其他功能"></a>xxconfig 其他功能</h2><ul>
+<li>xxconfig 全名是 xcodeConfig，它不仅仅是一个文件，它的本质是控制 <code>Build Settings</code> 里面的选项(比如配置动态库、静态库等)</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// ld 配置到链接器上</span><br><span class="line">// OTHER_LDFLAGS 即 Other Linker Flags 的缩写</span><br><span class="line">OTHER_LDFLAGS = -framework &quot;AFNetworking&quot;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>在Debug配置下运行，报错 <code>ld: framework not found AFNetworking</code> ，然后我们找到 <code>Other Linker Flags</code>，可以看到如下</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148196904-7440e9d8-760f-4561-a009-e6fd2bee9c98.jpg"
+                     
+                ></p>
+<ul>
+<li><p>他的原理与 <code>cocoapods</code> 的原理相同</p>
+</li>
+<li><p>想查找 <code>Build Settings</code> 中选项的缩写，这里有一个网站可以去查看 <a class="link"   target="_blank" rel="noopener" href="https://xcodebuildsettings.com/" >Build Settings 缩写网站 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</li>
+</ul>
+<p>比如搜索一个 <code>header search path</code>，找到其缩写 <code>HEADER_SEARCH_PATHS</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HEADER_SEARCH_PATHS = \user\zjbboy</span><br></pre></td></tr></table></figure></div>
+
+<p>你会在 <code>build settings</code> 找到</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/148196977-df00dadc-eacb-45f8-b8c4-6bef7a716402.jpg"
+                     
+                ></p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC高级强化01：多环境配置</li>
+        <li>Post author：张建</li>
+        <li>Create time：2022-01-04 16:24:40</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2022/01/04/OC底层原理/OC高级强化01：多环境配置/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">#OC-底层原理探索篇</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2022/01/05/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E9%AB%98%E7%BA%A7%E5%BC%BA%E5%8C%9602%EF%BC%9AMach-O%E4%B8%8E%E9%93%BE%E6%8E%A5%E5%99%A8/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC高级强化02：Mach-O与链接器</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2021/11/26/OC/OC%E5%AD%A6%E4%B9%A037%EF%BC%9ACoreText(%E4%B8%80)CoreText%E5%AE%9E%E7%8E%B0%E5%9B%BE%E6%96%87%E6%B7%B7%E6%8E%92/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习37：CoreText(一)CoreText实现图文混排</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC高级强化01：多环境配置</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-text">多环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Target-%E9%85%8D%E7%BD%AE"><span class="nav-text">Target 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scheme-%E9%85%8D%E7%BD%AE"><span class="nav-text">Scheme 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xcconfig-%E9%85%8D%E7%BD%AE"><span class="nav-text">xcconfig 配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%A4%E4%BA%86%E4%B8%8A%E9%9D%A2%E4%B8%89%E7%A7%8D%E9%85%8D%E7%BD%AE%E5%AE%9E%E7%8E%B0%EF%BC%8C%E5%85%B6%E5%AE%9E%E8%BF%98%E6%9C%89%E4%B8%80%E7%A7%8D%E5%AE%9E%E7%8E%B0%EF%BC%8C%E5%B0%B1%E6%98%AFpch%E5%AE%9E%E7%8E%B0"><span class="nav-text">除了上面三种配置实现，其实还有一种实现，就是pch实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#xxconfig-%E5%85%B6%E4%BB%96%E5%8A%9F%E8%83%BD"><span class="nav-text">xxconfig 其他功能</span></a></li></ol></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2020/08/01/oc/oc学习14：cocoapods探索/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC学习14：cocoapods探索">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2020/08/01/OC/OC学习14：cocoapods探索/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC学习14：cocoapods探索">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC学习14：cocoapods探索 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC学习14：cocoapods探索</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2020-08-01 16:33:41</span>
+        <span class="mobile">2020-08-01 16:33</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-04-23 14:57:54</span>
+            <span class="mobile">2023-04-23 14:57</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="CocoaPods-简介"><a href="#CocoaPods-简介" class="headerlink" title="CocoaPods 简介"></a>CocoaPods 简介</h1><ul>
+<li><p>每种语言发展到一个阶段，就会出现响应的 <code>依赖管理工具</code>,例如 <code>Java</code> 的 <code>Maven</code>，<code>nodejs</code> 的 <code>nmp</code>，随着iOS开发者的增多，业界出现了为iOS程序提供 <code>依赖管理工具</code>，它的名字叫做：<a class="link"   target="_blank" rel="noopener" href="https://cocoapods.org/" >Cocoapods <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>。</p>
+</li>
+<li><p><code>Cocoapods</code> 项目 <a class="link"   target="_blank" rel="noopener" href="https://github.com/CocoaPods/CocoaPods" >源码 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 存放在 <code>Github</code> 上进行管理，我们在开发iOS项目时，不可避免的要使用 <code>第三方开源库</code>，<code>Cocoapods</code> 的出现使我们 <code>节省了设置和更新第三方开源库的时间</code>。</p>
+</li>
+<li><p>从Github上我们可以看到它是用 <code>Ruby</code> 写的，主要依赖于 <code>Ruby</code> 环境，<code>Ruby</code> 是一种真正的 <code>面向对象编程语言</code>，它是由 <code>日本的松本行弘（まつもとゆきひろ/Yukihiro Matsumoto）</code> 创建于1993年，与Perl、Python等类似，是一种 <code>脚本语言</code>。</p>
+</li>
+</ul>
+<h1 id="Ruby查看"><a href="#Ruby查看" class="headerlink" title="Ruby查看"></a>Ruby查看</h1><ul>
+<li><p>在安装 <code>Cocoapods</code> 管理依赖工具前，我们需要保证 <code>Ruby</code> 环境是 <code>最新</code> 的，否则会出现一些 <code>安装问题</code></p>
+</li>
+<li><p>默认情况下，<code>MacOS</code> 系统已经安装好 <code>Ruby</code>，默认安装在 <code>/System/Library/Frameworks/Ruby.framework/Versions/Current</code> 目录下，但不是最新的环境</p>
+</li>
+<li><p>在 <code>终端</code> 可以直接通过以下命令，确认系统的 <code>Ruby</code> 的版本信息:</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac@MacdeMBP ~ % ruby -v</span><br><span class="line">ruby 2.6.3p62 (2019-04-16 revision 67580) [universal.x86_64-darwin19]</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>但是，由于默认的 <code>Ruby</code> 安装在 <code>/System</code> 目录下，过深的与 <code>linux</code> 约定不同的目录结构对日常的开发、维护都带来许多不便。</p>
+</li>
+<li><p>所以，在 <code>MacOS</code> 上推荐使用 <code>homebrew</code> 来安装、管理 <code>Ruby</code> 的版本。</p>
+</li>
+</ul>
+<h1 id="homebrew-安装-Ruby"><a href="#homebrew-安装-Ruby" class="headerlink" title="homebrew 安装 Ruby"></a>homebrew 安装 Ruby</h1><ol>
+<li>安装 <code>homebrew</code></li>
+</ol>
+<ul>
+<li>在终端下，执行下面的命令，即可完成homebrew的安装（注:安装过程中提示输入当前用户的密码）：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ruby -e &quot;$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)&quot;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>该命令将会从 <code>homebrew</code> 的 <code>GitHub</code> 仓库抓取最新版本并 <code>自动完成安装</code>。安装成功后，即可使用 <code>brew</code> 命令来安装 <code>Ruby</code> 的最新版本，以及其他工具。</p>
+</li>
+<li><p><code>homebrew</code> 的默认安装目录为 <code>/usr/local</code>，所有通过 <code>brew</code> 安装的程序都会默认安装到 <code>/usr/local/Cellars/程序名/版本号/</code> 目录下。</p>
+</li>
+</ul>
+<ol start="2">
+<li>通过 <code>brew</code> 安装 <code>Ruby</code> 最新版本</li>
+</ol>
+<p>在终端下执行以下命令，即可自动完成最新版本 <code>Ruby</code> 的安装：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew update</span><br><span class="line">brew install ruby</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>说明:<br>1、<code>brew update</code> 将会从 <code>GitHub</code> 上更新 <code>brew</code> 所支持的所有软件的版本信息，保证你能够安装到最新的版本<br>2、<code>brew install ruby</code> 将会从 <code>Ruby</code> 的 <code>GitHub</code> 仓库抓取最新版本的代码，并编译安装</p>
+</blockquote>
+<ol start="3">
+<li>安装成功后，重新执行 <code>ruby -v</code> 确认已成功安装了最新版本的 Ruby：</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ruby -v</span><br><span class="line">ruby 2.6.3p62 (2019-04-16 revision 67580) [universal.x86_64-darwin19]</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="替换镜像源"><a href="#替换镜像源" class="headerlink" title="替换镜像源"></a>替换镜像源</h1><p>默认的镜像资源服务器被天朝给墙了。所以需要先更换源地址，然后再安装。</p>
+<ol>
+<li>移除原先的 <code>Ruby</code> 源：</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gem sources --remove https://rubygems.org/</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>指定为 <code>Ruby China</code> 的镜像源：</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gem sources --add https://gems.ruby-china.com/</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>验证新源是否替换成功</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ gem sources -l</span><br><span class="line">*** CURRENT SOURCES ***</span><br><span class="line"></span><br><span class="line">https://gems.ruby-china.com/</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Cocoapods-安装"><a href="#Cocoapods-安装" class="headerlink" title="Cocoapods 安装"></a>Cocoapods 安装</h1><p>使用 <code>ruby</code> 的 <code>gem</code> 命令下载并安装 <code>CocoaPods</code>。</p>
+<ol>
+<li><p><code>macOS Catalina</code> 系统版本之前用：<code>$sudo gem install cocoapods</code>；<br><code>macOS Catalina</code> 系统版本之前版本后需要改为 : <code>$ sudo gem install -n /usr/local/bin cocoapods </code></p>
+</li>
+<li><p>安装<code>$ pod setup</code></p>
+</li>
+</ol>
+<ul>
+<li><p>所有项目的 <code>Podspec</code> 文件都托管在 <a class="link"   target="_blank" rel="noopener" href="https://github.com/CocoaPods/Specs" >https://github.com/CocoaPods/Specs <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 中。第一次执行 <code>pod setup</code> 时，<code>CocoaPods</code> 会将这些 <code>Podspec</code> 索引文件更新到本地的 <code>~/.cocoapods/目录下</code>，该索引文件较大且更新非常缓慢。</p>
+</li>
+<li><p>可以替换镜像，有两种方式：<code>gitcafe</code> 或者 <code>occhina</code> 镜像：</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pod repo remove master</span><br><span class="line">pod repo add master https://gitcafe.com/akuandev/Specs.git</span><br><span class="line">pod repo update</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>也可以将以上代码中的 <code>https://gitcafe.com/akuandev/Specs.git</code> 替换成 h<code>ttp://git.oschina.net/akuandev/Specs.git</code> 即可使用 <code>occhina</code> 上的镜像。</li>
+</ul>
+<h1 id="搜索相关框架"><a href="#搜索相关框架" class="headerlink" title="搜索相关框架"></a>搜索相关框架</h1><p>打开终端，输入以下命令：<code>pod search 框架名</code>，如搜索网络框架 <code>AFNetworking</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pod search AFNetworking</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="移除-trunk-源"><a href="#移除-trunk-源" class="headerlink" title="移除 trunk 源"></a>移除 trunk 源</h1><p>如果执行 <code>pod</code> 相关命令时，显示 <code>CDN</code> 无法连接、连接超时之类的情况，可以移除 <code>trunk</code> 源，然后在 <code>Podfile</code> 文件中第一行指明依赖库的来源地址，不使用默认 <code>CDN</code>。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pod repo remove trunk</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="项目中的使用"><a href="#项目中的使用" class="headerlink" title="项目中的使用"></a>项目中的使用</h1><ol>
+<li>创建 <code>Podfile</code> 文件</li>
+</ol>
+<p>新建 <code>Xcode</code> 项目，在终端里 <code>cd</code> 到项目的主文件夹(就是包含 项目 <code>.xcodeproj</code> 的文件)。执行命令：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 创建 Podfile 文件</span><br><span class="line">$ pod init</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>编辑 <code>Podfile</code> 文件有两种方式：</li>
+</ol>
+<ul>
+<li><p>【方法一】：终端编辑 <code>vim Podfile</code><br>执行 <code>vim Podfile</code> 命令后，会打开上一步骤创建的 <code>Podfile</code> 文件，你需要通过 <code>vim</code> 编辑此文件，默认进入命令模式。</p>
+<ul>
+<li>键盘命令 <code>i</code> :input，输入模式</li>
+<li>键盘命令 <code>ESC</code> : 从输入模式退出到命令模式</li>
+<li>键盘命令 <code>shift + :</code> : 在命令模式下，输入该键盘组合命令，就会进入末行模式</li>
+<li>键盘命令 <code>wq</code> : 在末行模式下，输入 wq ，即 <code>write and quit</code>，保存并退出！</li>
+</ul>
+</li>
+<li><p>【方法二】：直接打开项目文件 <code>Podfile</code></p>
+</li>
+</ul>
+<ol start="3">
+<li>保存文件后，安装第三方库</li>
+</ol>
+<ul>
+<li>更新依赖库，执行 <code>pod update</code>（记得cd 到项目主文件下）。</li>
+<li>安装依赖库，执行 <code>pod install</code>。</li>
+</ul>
+<ol start="4">
+<li>安装完成，此时项目文件中会多出 <code>.xcworkspace </code>文件，以后就通过它来打开项目。</li>
+</ol>
+<h1 id="Podfile-文件示例"><a href="#Podfile-文件示例" class="headerlink" title="Podfile 文件示例"></a>Podfile 文件示例</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"># 指明依赖库的来源地址，不使用默认 CDN</span><br><span class="line">source  &#x27;[https://github.com/CocoaPods/Specs.git](https://github.com/CocoaPods/Specs.git)&#x27;</span><br><span class="line"></span><br><span class="line"># Uncomment this line to define a global platform for your project</span><br><span class="line">platform :ios, &#x27;9.0&#x27;</span><br><span class="line"></span><br><span class="line"># 屏蔽所有第三方框架警告</span><br><span class="line">inhibit_all_warnings!    </span><br><span class="line"></span><br><span class="line">target &#x27;ProjectName&#x27; do</span><br><span class="line"></span><br><span class="line">  # Uncomment this line if you&#x27;re using Swift or would like to use dynamic frameworks</span><br><span class="line">  # use_frameworks!</span><br><span class="line"></span><br><span class="line">  # Pods for ProjectName</span><br><span class="line"></span><br><span class="line">  # 网络库</span><br><span class="line">  pod &#x27;AFNetworking&#x27;</span><br><span class="line">  pod &#x27;SDWebImage&#x27;</span><br><span class="line">  pod &#x27;Reachability&#x27;</span><br><span class="line"></span><br><span class="line">  # 服务类</span><br><span class="line">  pod &#x27;Bugly&#x27;</span><br><span class="line"></span><br><span class="line">  # UI</span><br><span class="line">  pod &#x27;Masonry&#x27;</span><br><span class="line">  pod &#x27;MBProgressHUD&#x27;</span><br><span class="line">  pod &#x27;MJRefresh&#x27;</span><br><span class="line">  pod &#x27;EAIntroView&#x27;</span><br><span class="line">  pod &#x27;SDCycleScrollView&#x27;</span><br><span class="line">  pod &#x27;DZNEmptyDataSet&#x27;</span><br><span class="line">  pod &#x27;XLForm&#x27;</span><br><span class="line">  pod &#x27;SHSPhoneComponent&#x27;</span><br><span class="line">  pod &#x27;BEMCheckBox&#x27;</span><br><span class="line">  pod &#x27;SCLAlertView-Objective-C&#x27;</span><br><span class="line"></span><br><span class="line">  # 工具组件类</span><br><span class="line">  pod &#x27;ChameleonFramework&#x27;</span><br><span class="line">  pod &#x27;FDFullscreenPopGesture&#x27;</span><br><span class="line">  pod &#x27;IQKeyboardManager&#x27;</span><br><span class="line">  pod &#x27;YYKit&#x27;</span><br><span class="line">  pod &#x27;UIAlertController+Blocks&#x27;</span><br><span class="line">  pod &#x27;LBXScan/LBXNative&#x27;</span><br><span class="line">  pod &#x27;LBXScan/UI&#x27;</span><br><span class="line">  pod &#x27;UITableView+FDTemplateLayoutCell&#x27;</span><br><span class="line"></span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">target &#x27;ProjectNameTests&#x27; do</span><br><span class="line">  inherit! :search_paths</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">&quot;Podfile&quot; 52L, 999C</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="三方库常用命令"><a href="#三方库常用命令" class="headerlink" title="三方库常用命令"></a>三方库常用命令</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">###### 安装 Cocoapods ######</span><br><span class="line"></span><br><span class="line"># 更新 gem 版本</span><br><span class="line">$ sudo gem update --system</span><br><span class="line"></span><br><span class="line"># 查看已安装的 Ruby 版本</span><br><span class="line">$ gem -v</span><br><span class="line"></span><br><span class="line"># 替换 Ruby 源</span><br><span class="line">$ gem sources --remove [https://rubygems.org/](https://rubygems.org/)</span><br><span class="line">$ gem sources -add [https://gems.ruby-china.com/](https://gems.ruby-china.com/)</span><br><span class="line"></span><br><span class="line"># 查看验证镜像源</span><br><span class="line">$ gem sources -l</span><br><span class="line"></span><br><span class="line"># 卸载 Cocoapods</span><br><span class="line">$ sudo gem uninstall cocoapods</span><br><span class="line"></span><br><span class="line"># 重新安装 Cocoapods 到指定目录</span><br><span class="line">$ sudo gem install cocoapods -n /usr/local/bin</span><br><span class="line"></span><br><span class="line"># 查看当前 Cocoapods 版本</span><br><span class="line">$ pod --version</span><br><span class="line"></span><br><span class="line"># 更新本地的 Cocoapods 列表</span><br><span class="line">$ pod repo update</span><br><span class="line"></span><br><span class="line"># 移除 trunk 源</span><br><span class="line">$ pod repo remove trunk</span><br><span class="line"></span><br><span class="line">###### 项目中使用 ######</span><br><span class="line"></span><br><span class="line"># 搜索框架</span><br><span class="line">$ pod search 框架名</span><br><span class="line"></span><br><span class="line"># 终端导航到项目目录下</span><br><span class="line">$ cd [Project]</span><br><span class="line"></span><br><span class="line"># 创建 Podfile 文件</span><br><span class="line">$ pod init</span><br><span class="line"></span><br><span class="line"># 编辑 Podfile 文件</span><br><span class="line">$ vim Podfile</span><br><span class="line"></span><br><span class="line"># 安装</span><br><span class="line">$ pod install</span><br><span class="line"></span><br><span class="line"># 更新所有依赖的开源库</span><br><span class="line">$ pod update</span><br><span class="line">$ pod install --no-repo-update</span><br><span class="line">$ pod update --no-repo-update</span><br><span class="line"></span><br><span class="line"># 查看依赖库版本信息</span><br><span class="line">$ pod install --verbose --no-repo-update</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Cocoapods常用命令？"><a href="#Cocoapods常用命令？" class="headerlink" title="Cocoapods常用命令？"></a>Cocoapods常用命令？</h1><ul>
+<li>下载并安装所有依赖项</li>
+</ul>
+<p>pod install</p>
+<ul>
+<li>更新依赖项</li>
+</ul>
+<p>pod update</p>
+<ul>
+<li>查找可更新的库</li>
+</ul>
+<p>pod outdated</p>
+<ul>
+<li>删除项目中的cocoapods</li>
+</ul>
+<p>pod deintegrate</p>
+<ul>
+<li>搜索</li>
+</ul>
+<p>pod search</p>
+<h1 id="podfile-lock是什么"><a href="#podfile-lock是什么" class="headerlink" title="podfile.lock是什么?"></a>podfile.lock是什么?</h1><p><code>podfile.lock</code> 文件是第一次运行 <code>pod install</code> 后生成的，并跟踪安装每个 <code>pod</code> 版本。</p>
+<h1 id="pod-install做了什么？"><a href="#pod-install做了什么？" class="headerlink" title="pod install做了什么？"></a>pod install做了什么？</h1><ul>
+<li>创建或更新 <code>workspace</code></li>
+<li>将 <code>project</code> 添加到 <code>workspace</code></li>
+<li>将 <code>Cocoapods静态库</code> 添加到 <code>workspace</code></li>
+<li>将 <code>Cocoapods 的 xcconfig</code> 文件添加到应用程序项目中</li>
+<li>将应用的 <code>target xcconfig</code> 更改为基于 <code>Cocoapods</code> 的配置</li>
+</ul>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC学习14：cocoapods探索</li>
+        <li>Post author：张建</li>
+        <li>Create time：2020-08-01 16:33:41</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2020/08/01/OC/OC学习14：cocoapods探索/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">#OC-学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2020/08/02/OC%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B6/OC%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B601%EF%BC%9AYYWebImage%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC：YYWebImage基本用法</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2020/07/29/OC/OC%E5%AD%A6%E4%B9%A038.1%EF%BC%9ARunloop%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习38.1：Runloop底层原理</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC学习14：cocoapods探索</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CocoaPods-%E7%AE%80%E4%BB%8B"><span class="nav-text">CocoaPods 简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ruby%E6%9F%A5%E7%9C%8B"><span class="nav-text">Ruby查看</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#homebrew-%E5%AE%89%E8%A3%85-Ruby"><span class="nav-text">homebrew 安装 Ruby</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2%E9%95%9C%E5%83%8F%E6%BA%90"><span class="nav-text">替换镜像源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Cocoapods-%E5%AE%89%E8%A3%85"><span class="nav-text">Cocoapods 安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2%E7%9B%B8%E5%85%B3%E6%A1%86%E6%9E%B6"><span class="nav-text">搜索相关框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A7%BB%E9%99%A4-trunk-%E6%BA%90"><span class="nav-text">移除 trunk 源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-text">项目中的使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Podfile-%E6%96%87%E4%BB%B6%E7%A4%BA%E4%BE%8B"><span class="nav-text">Podfile 文件示例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E6%96%B9%E5%BA%93%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">三方库常用命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Cocoapods%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%EF%BC%9F"><span class="nav-text">Cocoapods常用命令？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#podfile-lock%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">podfile.lock是什么?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pod-install%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">pod install做了什么？</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

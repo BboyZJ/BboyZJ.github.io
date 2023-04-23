@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/02/16/oc/oc学习38.2：runloop线程保活/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC学习38.2：Runloop线程保活">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/02/16/OC/OC学习38.2：Runloop线程保活/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC学习38.2：Runloop线程保活">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC学习38.2：Runloop线程保活 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC学习38.2：Runloop线程保活</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-02-16 17:17:17</span>
+        <span class="mobile">2023-02-16 17:17</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-04-22 14:48:11</span>
+            <span class="mobile">2023-04-22 14:48</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="创建线程类"><a href="#创建线程类" class="headerlink" title="创建线程类"></a>创建线程类</h1><p>.h 文件下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">NS_ASSUME_NONNULL_BEGIN</span><br><span class="line"></span><br><span class="line">@interface ZJThread : NSThread</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">NS_ASSUME_NONNULL_END</span><br><span class="line"></span><br><span class="line">//</span><br><span class="line">//  ZJThread.m</span><br><span class="line">//  Runloop-线程保活</span><br><span class="line">//</span><br><span class="line">//  Created by Mac on 2023/2/16.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &quot;ZJThread.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation ZJThread</span><br><span class="line">- (void)dealloc&#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>.m 文件下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;NextViewController.h&quot;</span><br><span class="line"></span><br><span class="line">@interface NextViewController ()</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation NextViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    self.view.backgroundColor = [UIColor whiteColor];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event&#123;</span><br><span class="line">    // NSThread 频繁创建线程</span><br><span class="line">    ZJThread * thread = [[ZJThread alloc]initWithTarget:self selector:@selector(test) object:nil];</span><br><span class="line">    [thread start];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 子线程需要执行的任务</span><br><span class="line">- (void)test&#123;</span><br><span class="line">    NSLog(@&quot;%s %@&quot;, __func__, [NSThread currentThread]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)dealloc&#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p><code>Run</code> 起来之后</p>
+<p>我们发现每次点击，都会去执行任务: <code>ZJThread 频繁创建线程</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2023-02-16 19:06:19.752652+0800 Runloop-频繁创建线程[16937:1026536] -[NextViewController test] &lt;ZJThread: 0x28150ce80&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">2023-02-16 19:06:19.753833+0800 Runloop-频繁创建线程[16937:1026536] -[ZJThread dealloc]</span><br><span class="line">2023-02-16 19:06:20.309051+0800 Runloop-频繁创建线程[16937:1026537] -[NextViewController test] &lt;ZJThread: 0x28152ca00&gt;&#123;number = 7, name = (null)&#125;</span><br><span class="line">2023-02-16 19:06:20.309697+0800 Runloop-频繁创建线程[16937:1026537] -[ZJThread dealloc]</span><br></pre></td></tr></table></figure></div>
+
+<p>可以看到任务一完成，线程就释放，并且这样 <code>频繁的创建线程，很消耗资源</code></p>
+<h1 id="我们可以用-Runloop-来延长线程的生命周期，不让线程挂掉"><a href="#我们可以用-Runloop-来延长线程的生命周期，不让线程挂掉" class="headerlink" title="我们可以用 Runloop 来延长线程的生命周期，不让线程挂掉"></a>我们可以用 Runloop 来延长线程的生命周期，不让线程挂掉</h1><p>运行一下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 子线程需要执行的任务</span><br><span class="line">- (void)test&#123;</span><br><span class="line">    NSLog(@&quot;%s %@&quot;, __func__, [NSThread currentThread]);</span><br><span class="line">    </span><br><span class="line">    [[NSRunLoop currentRunLoop] run];</span><br><span class="line">        </span><br><span class="line">    NSLog(@&quot;%s ----end----&quot;, __func__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>结果：发现线程执行完成任务还是会结束线程  <code>[ZJThread dealloc]</code>，这是因为 <code>run</code> 方法底层调用的是 <code>- (BOOL)runMode:(NSRunLoopMode)mode beforeDate:(NSDate *)limitDate;</code> 方法，这个方法会把 <code>runloop</code> 加入到 <code>NSDefaultRunLoopMode</code> 模式下，而 <code>Model</code> 下没有任何 <code>Source0，Source1，Timer，Observer</code>，<code>Runloop</code> 会立马退出，所以我们需要往 <code>Runloop</code> 中添加任务</p>
+<h1 id="往-runloop-中添加任务，任何任务都行"><a href="#往-runloop-中添加任务，任何任务都行" class="headerlink" title="往 runloop 中添加任务，任何任务都行"></a>往 runloop 中添加任务，任何任务都行</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 子线程需要执行的任务</span><br><span class="line">- (void)test&#123;</span><br><span class="line">    NSLog(@&quot;%s %@&quot;, __func__, [NSThread currentThread]);</span><br><span class="line">    NSLog(@&quot;🏌🏌🏌🏌🏌🏌🏌🏀🏀🏀🏅🏅🏅&quot;);</span><br><span class="line">    // 往RunLoop里面添加 Source\Timer\Observer</span><br><span class="line">    [[NSRunLoop currentRunLoop] addPort:[[NSPort alloc] init] forMode:NSDefaultRunLoopMode];</span><br><span class="line">    [[NSRunLoop currentRunLoop] run];</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;%s ----end----&quot;, __func__);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>Run：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2023-02-16 19:15:08.021488+0800 Runloop-频繁创建线程[16991:1030153] -[NextViewController test] &lt;ZJThread: 0x281b95a40&gt;&#123;number = 22, name = (null)&#125;</span><br><span class="line">2023-02-16 19:15:08.021835+0800 Runloop-频繁创建线程[16991:1030153] 🏌🏌🏌🏌🏌🏌🏌🏀🏀🏀🏅🏅🏅</span><br></pre></td></tr></table></figure></div>
+
+<p>在运行线程就不会执行完任务就挂掉，而是执行完任务就休眠</p>
+<p>每点击一次屏幕，都是创建了 <code>ZJThread * thread = [[ZJThread alloc]initWithTarget:self selector:@selector(test) object:nil];</code> 经过 <code>[[NSRunLoop currentRunLoop] addPort:[[NSPort alloc] init] forMode:NSDefaultRunLoopMode];</code> 和 <code>[[NSRunLoop currentRunLoop] run];</code> 线程进入休眠，导致我们没办法唤醒线程和执行线程任务，继续修改</p>
+<h1 id="把-thread-改成局部变量"><a href="#把-thread-改成局部变量" class="headerlink" title="把 thread 改成局部变量"></a>把 thread 改成局部变量</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.thread = [[ZJThread alloc] initWithTarget:self selector:@selector(run) object:nil];</span><br></pre></td></tr></table></figure></div>
+
+<p>上面的写法：<code>self</code> 会引用 <code>thread</code>，<code>thread</code> 会引用 <code>self</code>，造成循环引用</p>
+<h1 id="用block实现"><a href="#用block实现" class="headerlink" title="用block实现"></a>用block实现</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">        // 如果使用如下方式创建thread，self会引用thread，thread会引用self，会造成循环引用。</span><br><span class="line">        // [[ZJThread alloc] initWithTarget:self selector:@selector(run) object:nil];</span><br><span class="line">    </span><br><span class="line">        self.thread = [[ZJThread alloc] initWithBlock:^&#123;</span><br><span class="line">        NSLog(@&quot;%@----begin----&quot;, [NSThread currentThread]);</span><br><span class="line">        </span><br><span class="line">        // 往RunLoop里面添加 Source\Timer\Observer</span><br><span class="line">        [[NSRunLoop currentRunLoop] addPort:[[NSPort alloc] init] forMode:NSDefaultRunLoopMode];</span><br><span class="line">        </span><br><span class="line">        // 线程会一直阻塞这这一行，永远不会销毁</span><br><span class="line">        [[NSRunLoop currentRunLoop] run]; </span><br><span class="line"></span><br><span class="line">        // 当把NSRunLoop停掉之后，代码就会从下一行往下走，这时候任务执行完成，线程该死的时候就会死了。</span><br><span class="line">        NSLog(@&quot;%@----end----&quot;, [NSThread currentThread]);</span><br><span class="line">    &#125;];</span><br><span class="line">    [self.thread start];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><code>run</code> 方法：<code>Runloop</code> 无法停止，它专门用于开启一个永不销毁的线程</p>
+<h1 id="替换-run"><a href="#替换-run" class="headerlink" title="替换 run"></a>替换 run</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Runloop-的启动和退出"><a href="#Runloop-的启动和退出" class="headerlink" title="Runloop 的启动和退出"></a>Runloop 的启动和退出</h1><p>启动：</p>
+<ul>
+<li>run：无条件</li>
+<li>runUntilDate：设定时间限制</li>
+<li>runMode:beforeDate：在特定模式下</li>
+</ul>
+<p>停止：</p>
+<ul>
+<li>CFRunLoopStop(CFRunLoopGetCurrent())</li>
+</ul>
+<h1 id="实现线程保活"><a href="#实现线程保活" class="headerlink" title="实现线程保活"></a>实现线程保活</h1><p>ZJThread.h 中：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ZJThread.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation ZJThread</span><br><span class="line">- (void)dealloc&#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<p>NextVC 中：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;NextViewController.h&quot;</span><br><span class="line">#import &quot;ZJThread.h&quot;</span><br><span class="line"></span><br><span class="line">@interface NextViewController ()</span><br><span class="line">@property (nonatomic,strong)ZJThread * thread;</span><br><span class="line">@property (nonatomic,assign)BOOL isStop;</span><br><span class="line">@property (nonatomic,strong)UIButton * stopBtn;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation NextViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    self.view.backgroundColor = [UIColor whiteColor];</span><br><span class="line">    // 停止按钮</span><br><span class="line">    [self.view addSubview:self.stopBtn];</span><br><span class="line">    /*</span><br><span class="line">     创建线程有两种方式:</span><br><span class="line">     target：会造成循环引用</span><br><span class="line">     block：不会造成循环引用</span><br><span class="line">     */</span><br><span class="line">    [self blockCreatThread];</span><br><span class="line">&#125;</span><br><span class="line">- (void)blockCreatThread&#123;</span><br><span class="line">    __weak typeof(self) weakSelf = self;</span><br><span class="line">    </span><br><span class="line">    self.isStop = NO; // 未停止</span><br><span class="line">    self.thread = [[ZJThread alloc] initWithBlock:^&#123;</span><br><span class="line">        NSLog(@&quot;%@---begin---&quot;,[NSThread currentThread]);</span><br><span class="line">        </span><br><span class="line">        // 往runloop中添加Source\Timer\Observer</span><br><span class="line">        [[NSRunLoop currentRunLoop] addPort:[[NSPort alloc] init] forMode:NSDefaultRunLoopMode];</span><br><span class="line">        while (weakSelf &amp;&amp; !weakSelf.isStop) &#123;</span><br><span class="line">            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        NSLog(@&quot;%@---end---&quot;, [NSThread currentThread]);</span><br><span class="line">        </span><br><span class="line">        /*</span><br><span class="line">         run方法无法停止，它专门用于开启一个永不销毁的线程</span><br><span class="line">         [[NSRunLoop currentRunLoop] run];</span><br><span class="line">         */</span><br><span class="line">    &#125;];</span><br><span class="line">    [self.thread start];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 点击</span><br><span class="line">- (void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event&#123;</span><br><span class="line">    [self performSelector:@selector(test) onThread:self.thread withObject:nil waitUntilDone:NO];</span><br><span class="line">&#125;</span><br><span class="line">// 子线程要执行的任务</span><br><span class="line">- (void)test&#123;</span><br><span class="line">    NSLog(@&quot;%s %@&quot;, __func__, [NSThread currentThread]);</span><br><span class="line">    NSLog(@&quot;🏌🏌🏌🏌🏌🏌🏌🏀🏀🏀🏅🏅🏅&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 停止</span><br><span class="line">- (void)stop&#123;</span><br><span class="line">    if (!self.thread) return;</span><br><span class="line">    </span><br><span class="line">    // 停止子线程</span><br><span class="line">    [self performSelector:@selector(stopThread) onThread:self.thread withObject:nil waitUntilDone:YES];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">- (void)stopThread&#123;</span><br><span class="line">    // 标记停止</span><br><span class="line">    self.isStop = YES;</span><br><span class="line">    </span><br><span class="line">    // 停止</span><br><span class="line">    CFRunLoopStop(CFRunLoopGetCurrent());</span><br><span class="line">    self.thread = nil;</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;%@---end---&quot;, [NSThread currentThread]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)dealloc&#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">    // 停止子线程</span><br><span class="line">    [self stop];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//</span><br><span class="line">- (UIButton *)stopBtn&#123;</span><br><span class="line">    if (!_stopBtn) &#123;</span><br><span class="line">        _stopBtn = [[UIButton alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];</span><br><span class="line">        _stopBtn.backgroundColor = [UIColor greenColor];</span><br><span class="line">        [_stopBtn setTitle:@&quot;stop&quot; forState:UIControlStateNormal];</span><br><span class="line">        [_stopBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];</span><br><span class="line">        [_stopBtn addTarget:self action:@selector(stop) forControlEvents:UIControlEventTouchUpInside];</span><br><span class="line">    &#125;</span><br><span class="line">    return _stopBtn;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC学习38.2：Runloop线程保活</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-02-16 17:17:17</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/02/16/OC/OC学习38.2：Runloop线程保活/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">#OC-学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/02/18/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A015%EF%BC%9A%E9%80%92%E5%BD%92/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">C语言学习15：递归</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/02/16/%E9%9D%A2%E8%AF%95%E9%A2%98/Flutter%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9A%E6%80%BB%E7%BB%93/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Flutter面试题：Flutter</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC学习38.2：Runloop线程保活</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B%E7%B1%BB"><span class="nav-text">创建线程类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%88%91%E4%BB%AC%E5%8F%AF%E4%BB%A5%E7%94%A8-Runloop-%E6%9D%A5%E5%BB%B6%E9%95%BF%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%8C%E4%B8%8D%E8%AE%A9%E7%BA%BF%E7%A8%8B%E6%8C%82%E6%8E%89"><span class="nav-text">我们可以用 Runloop 来延长线程的生命周期，不让线程挂掉</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%80-runloop-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E4%BB%BB%E5%8A%A1%EF%BC%8C%E4%BB%BB%E4%BD%95%E4%BB%BB%E5%8A%A1%E9%83%BD%E8%A1%8C"><span class="nav-text">往 runloop 中添加任务，任何任务都行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%8A-thread-%E6%94%B9%E6%88%90%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F"><span class="nav-text">把 thread 改成局部变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%A8block%E5%AE%9E%E7%8E%B0"><span class="nav-text">用block实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%BF%E6%8D%A2-run"><span class="nav-text">替换 run</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop-%E7%9A%84%E5%90%AF%E5%8A%A8%E5%92%8C%E9%80%80%E5%87%BA"><span class="nav-text">Runloop 的启动和退出</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%BA%BF%E7%A8%8B%E4%BF%9D%E6%B4%BB"><span class="nav-text">实现线程保活</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

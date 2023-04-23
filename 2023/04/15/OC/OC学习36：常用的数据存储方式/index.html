@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/04/15/oc/oc学习36：常用的数据存储方式/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC学习36：常用的数据存储方式">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/04/15/OC/OC学习36：常用的数据存储方式/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC学习36：常用的数据存储方式">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC学习36：常用的数据存储方式 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC学习36：常用的数据存储方式</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-04-15 19:15:41</span>
+        <span class="mobile">2023-04-15 19:15</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-04-17 20:39:55</span>
+            <span class="mobile">2023-04-17 20:39</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在 <code>iOS</code> 开发过程中，经常需要 <code>保存一些信息到本地</code> ，那么就需要数据存储。</p>
+<h1 id="沙盒（sandbox）"><a href="#沙盒（sandbox）" class="headerlink" title="沙盒（sandbox）"></a>沙盒（sandbox）</h1><p>每个应用程序都有自己的沙盒，且只能访问自己的沙盒</p>
+<ol>
+<li>如何访问沙盒文件呢？</li>
+</ol>
+<p>通过Xcode查看</p>
+<ul>
+<li><p>Window -&gt; Devices And Simulators (快捷键 command + shift + 2)</p>
+</li>
+<li><p>选中自己的设备，也就是iPhone手机，然后 <code>Installed Apps</code> 中选中需要查看的应用</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304160056372.png"
+                     
+                ></p>
+<ul>
+<li>滑动鼠标到 <code>Installed Apps</code> 的底部，左键点击设置按钮，选择 <code>Download Container</code>，然后就可以将 <code>沙盒文件</code> 下载到本机上，查看所下载文件的内容即可</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304160057426.png"
+                     
+                ></p>
+<blockquote>
+<p>由上图可知 <code>沙盒文件</code> 下结构为：<br>应用程序包<br>1、Documents   持久化的数据<br>2、tmp         临时目录<br>3、Library<br>  3.1、cache 缓存<br>  3.2、Preference 偏好设置</p>
+</blockquote>
+<ol start="2">
+<li>沙盒文件下每个文件的具体作用？</li>
+</ol>
+<ul>
+<li><p>Documents（保存程序生成的数据）</p>
+<ul>
+<li>保存由应用程序生成的文件或数据。</li>
+<li>iTunes备份和恢复的时候会包括此目录。</li>
+<li>如果保存的网络下载的文件，上架审核的时候，会被拒</li>
+</ul>
+</li>
+<li><p>tmp（暂放数据，随时收回）</p>
+<ul>
+<li><code>保存临时文件，系统会自动回收</code>，如：磁盘空间紧张或重启手机</li>
+<li>iTunes不会备份和恢复此目录，此目录下文件可能会在 <code>应用退出后删除</code></li>
+<li>程序员不需要管tmp文件下的释放</li>
+</ul>
+</li>
+<li><p>Library&#x2F;Caches (保存网络下载的数据)</p>
+<ul>
+<li>缓存，保存从网络下载的文件，后续仍然需要继续使用，如：网络下载的离线数据，图片，视频等</li>
+<li>缓存目录中的文件不会自动删除，可以做离线访问</li>
+<li>程序必须提供一个完善的清除缓存目录的 <code>解决方案</code></li>
+<li>iTunes不会备份此目录，此目录下文件在 <code>应用退出不会删除</code></li>
+</ul>
+</li>
+<li><p>Library&#x2F;Preferences（偏好设置）</p>
+<ul>
+<li>系统偏好，用户偏好</li>
+<li>操作是通过 <code>NSUserDefaults</code> 实现的</li>
+</ul>
+</li>
+</ul>
+<h1 id="沙盒路径的获取方法"><a href="#沙盒路径的获取方法" class="headerlink" title="沙盒路径的获取方法"></a>沙盒路径的获取方法</h1><ol>
+<li>沙盒的路径</li>
+</ol>
+<p>用 <code>NSHomeDirectory()</code> 获取</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 获取沙盒下的根目录</span><br><span class="line">NSString * sandboxPath = NSHomeDirectory();</span><br><span class="line">NSLog(@&quot;%@&quot;,sandboxPath);</span><br><span class="line"></span><br><span class="line">======</span><br><span class="line">/var/mobile/Containers/Data/Application/F8CF4000-F78B-4511-996D-819B96F64389</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>Documents 路径</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 获取 Documents 路径</span><br><span class="line">/*</span><br><span class="line"> NSSearchPathForDirectoriesInDomains 返回绝对路径</span><br><span class="line"> NSDocumentDirectory 表示获取沙盒的Documents目录</span><br><span class="line"> NSUserDomainMask 表示是用户主目录</span><br><span class="line"> YES/NO 表示是否获取全路径</span><br><span class="line"> */</span><br><span class="line">NSArray * paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);</span><br><span class="line">NSString * documentsPath = [paths lastObject];</span><br><span class="line">NSLog(@&quot;%@&quot;,documentsPath);</span><br><span class="line">    </span><br><span class="line">=======</span><br><span class="line">/var/mobile/Containers/Data/Application/52A513F9-96E3-4DB0-9A40-BE3403E0BD34/Documents</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>Caches 路径</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 获取Caches路径</span><br><span class="line">NSArray * paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);</span><br><span class="line">NSString * cachesPath = [paths lastObject];</span><br><span class="line">NSLog(@&quot;%@&quot;,cachesPath);</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">/var/mobile/Containers/Data/Application/A0FF5812-EC9C-404F-BF63-4F60FFB1DE01/Library/Caches</span><br></pre></td></tr></table></figure></div>
+
+
+<ol start="4">
+<li>tmp 路径</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 获取tmp路径</span><br><span class="line">NSString * tmpDir = NSTemporaryDirectory();</span><br><span class="line">NSLog(@&quot;%@&quot;,tmpDir);</span><br><span class="line"></span><br><span class="line">=========</span><br><span class="line">/private/var/mobile/Containers/Data/Application/206388C3-5180-4631-8120-3CB10EBDA0D8/tmp/</span><br></pre></td></tr></table></figure></div>
+
+
+<h1 id="常用的存储方式"><a href="#常用的存储方式" class="headerlink" title="常用的存储方式"></a>常用的存储方式</h1><ul>
+<li>NSUserDefaults </li>
+<li>Plist</li>
+<li>手动存放沙盒</li>
+<li>NSKeyedArchiver归档 &#x2F; NSKeyedUnarchiver解档</li>
+<li>SQLite3</li>
+<li>FMDB</li>
+<li>CoreData</li>
+</ul>
+<h1 id="NSUserDefaults"><a href="#NSUserDefaults" class="headerlink" title="NSUserDefaults"></a>NSUserDefaults</h1><p><code>NSUserDefaults</code> 可以存储 <code>OC基本类型（如：字符串、数组、字典等）</code>。但 <code>不能存储自定义对象</code>，如果是 <code>自定义对象，需要进行归档操作</code>。缓存数据到沙盒下 <code>Library-&gt;Preference</code>。<code>iTunes</code> 同步设备时会 <code>备份</code> </p>
+<ul>
+<li>存入数据</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[NSUserDefaults standardUserDefaults] setObject:value forKey:key];</span><br><span class="line">[[NSUserDefaults standardUserDefaults] synchronize];</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>取出数据</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[NSUserDefaults standardUserDefaults] objectForKey:key];</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>移除数据</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[NSUserDefaults standardUserDefaults] removeObjectForKey:key];</span><br><span class="line">[[NSUserDefaults standardUserDefaults] synchronize];</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Plist"><a href="#Plist" class="headerlink" title="Plist"></a>Plist</h1><ul>
+<li><p><code>Plist</code> 即 <code>XML属性列表</code> ，是将某些特定的类，通过XML文件的方式保存在 <code>Documents</code> 目录中</p>
+</li>
+<li><p>优点：这种方式 好处是 <code>可视化</code>，可以 <code>很直观</code> 的看到文件的内容，同时 <code>Xcode</code> 提供了直接操作文件的功能。便于我们 <code>增删改查</code>。</p>
+</li>
+<li><p>缺点：<code>plist</code> 文件一般作为固态的数据形式保存，<code>对于经常改动的数据不好操作</code></p>
+</li>
+</ul>
+<ol>
+<li>在项目中直接创建 <code>Plist</code> 文件。</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304160057838.png"
+                     
+                ></p>
+<blockquote>
+<p>注意：<br>命名的时候不能用Info.plist、INfo.plist、xxxInfo.plist等形式，否则会与系统中存在的Info.plist文件发生冲突。</p>
+</blockquote>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304160057390.png"
+                     
+                ></p>
+<blockquote>
+<p>点击Root这一行，然后通过点击右键-&gt;Add Row或者点击Root后面的加号来增加一行。<br>这一行中包含三个属性，key、type、value。其中key是字段属性，type是字段类型，value是字段对应的值。<br>Type包含7中类型，对写入的数据结构应属于7仲：<br>(NSString，NSData，NSDate，NSNumber，NSArray，NSDictionary)</p>
+</blockquote>
+<ul>
+<li>获取文件中的数据</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 从plist中直接读取代码</span><br><span class="line">NSString * filePath = [[NSBundle mainBundle] pathForResource:@&quot;InfoPlist&quot; ofType:@&quot;plist&quot;];</span><br><span class="line">NSDictionary * dic = [NSDictionary dictionaryWithContentsOfFile:filePath];</span><br><span class="line">NSLog(@&quot;%@&quot;,dic);</span><br><span class="line">    </span><br><span class="line">=====</span><br><span class="line">2023-04-15 21:31:14.103498+0800 数据存储-plist[48688:9718159] &#123;</span><br><span class="line">    Name = &quot;\U5f20\U5efa&quot;;</span><br><span class="line">    Other =     (</span><br><span class="line">        0,</span><br><span class="line">        1</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<ol start="2">
+<li>代码创建 <code>plist</code> 文件，并 <code>读写</code> 数据，避免了在项目中创建 <code>plist</code> 文件导致不便更改的问题</li>
+</ol>
+<ul>
+<li>ZJDataHelper.h</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJDataHelper : NSObject</span><br><span class="line">// 保存用户信息</span><br><span class="line">+ (BOOL)saveUserInfoInDocument:(NSDictionary *)dic;</span><br><span class="line">// 读取用户信息</span><br><span class="line">+ (NSMutableDictionary *)getUserInfoInDocument;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>ZJDataHelper.m 文件</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ZJDataHelper.h&quot;</span><br><span class="line"></span><br><span class="line">#define DOCMENT_USER_PATH [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) firstObject] stringByAppendingPathComponent:@&quot;UserData.plist&quot;]</span><br><span class="line"></span><br><span class="line">@implementation ZJDataHelper</span><br><span class="line">// 保存用户信息</span><br><span class="line">+ (BOOL)saveUserInfoInDocument:(NSDictionary *)dic&#123;</span><br><span class="line">    BOOL isSuccess;</span><br><span class="line">    NSString *document_path= DOCMENT_USER_PATH ;</span><br><span class="line">    NSURL *fileUrl = [NSURL fileURLWithPath:document_path];</span><br><span class="line">    isSuccess = [dic writeToURL:fileUrl atomically:YES];</span><br><span class="line">    return isSuccess;</span><br><span class="line">&#125;</span><br><span class="line">// 读取用户信息</span><br><span class="line">+ (NSMutableDictionary *)getUserInfoInDocument&#123;</span><br><span class="line">    NSString *path= DOCMENT_USER_PATH;</span><br><span class="line">    NSMutableDictionary *dic = [[NSMutableDictionary alloc] initWithContentsOfFile:path];</span><br><span class="line">    return dic;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>-(BOOL)writeToURL:(NSURL *)url atomically:(BOOL)atomically;<br>writeToURL 的好处是，既可以写入本地url也可以写入远程url，苹果推荐使用此方法写入plist文件</p>
+</blockquote>
+<h1 id="手动存放沙盒"><a href="#手动存放沙盒" class="headerlink" title="手动存放沙盒"></a>手动存放沙盒</h1><p>沙盒和上面两种类似，只能存放 OC 基本数据，自定义对象不能直接存入。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 假设我们需往cache 存入数据，并命名为test的txt格式文件中</span><br><span class="line">NSString *filePath = [cachesPath stringByAppendingPathComponent:@&quot;test.txt&quot;];</span><br><span class="line">NSArray *dic = [[NSArray alloc] initWithObjects:@&quot;name&quot;,@&quot;zj&quot; ,nil];</span><br><span class="line">if([dic writeToFile:filePath atomically:YES])&#123;</span><br><span class="line">    NSLog(@&quot;存入成功&quot;);</span><br><span class="line">&#125;</span><br><span class="line">// 取出数据 打印</span><br><span class="line">NSLog(@&quot;%@&quot;,[NSArray arrayWithContentsOfFile:filePath]);</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="NSKeyedArchiver归档-x2F-NSKeyedUnarchiver解档"><a href="#NSKeyedArchiver归档-x2F-NSKeyedUnarchiver解档" class="headerlink" title="NSKeyedArchiver归档 &#x2F; NSKeyedUnarchiver解档"></a>NSKeyedArchiver归档 &#x2F; NSKeyedUnarchiver解档</h1><p>之前说，不管是 <code>NSUserDefaults</code> 或者是 <code>plist</code> 都不能对 <code>自定义的对象</code> 进行存储， OC提供了 <code>解归档</code> 恰好解决这个问题。 解归档针对的是一个对象，假设我们现在有一个 <code>Person 和 Student</code> 的类，需要进行归档和解档。</p>
+<ul>
+<li>对象的 <code>Person.h</code> 文件</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line">#import &quot;Student.h&quot;</span><br><span class="line"></span><br><span class="line">@interface Person : NSObject&lt;NSCoding&gt;</span><br><span class="line"></span><br><span class="line">//设置属性</span><br><span class="line">@property (nonatomic,strong)UIImage * avatar;</span><br><span class="line">@property (nonatomic,copy)NSString * name;</span><br><span class="line">@property (nonatomic,assign)NSInteger age;</span><br><span class="line">// 嵌套模型</span><br><span class="line">@property (nonatomic,strong)Student * student;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>对象的 <code>Person.m</code> 文件</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;Person.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation Person</span><br><span class="line"></span><br><span class="line">//实现NSCoding协议方法</span><br><span class="line">//解档</span><br><span class="line">- (id)initWithCoder:(NSCoder *)aDecoder&#123;</span><br><span class="line">    </span><br><span class="line">    if (self = [super init]) &#123;</span><br><span class="line">        </span><br><span class="line">        self.avatar = [aDecoder decodeObjectForKey:@&quot;avatar&quot;];</span><br><span class="line">        self.name = [aDecoder decodeObjectForKey:@&quot;name&quot;];</span><br><span class="line">        self.age = [aDecoder decodeIntegerForKey:@&quot;age&quot;];</span><br><span class="line">        // 嵌套模型</span><br><span class="line">        self.student = [aDecoder decodeObjectForKey:@&quot;student&quot;];</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line">//归档</span><br><span class="line">- (void)encodeWithCoder:(NSCoder *)aCoder&#123;</span><br><span class="line">    </span><br><span class="line">    [aCoder encodeObject:self.avatar forKey:@&quot;avatar&quot;];</span><br><span class="line">    [aCoder encodeObject:self.name forKey:@&quot;name&quot;];</span><br><span class="line">    [aCoder encodeInteger:self.age forKey:@&quot;age&quot;];</span><br><span class="line">    // 嵌套模型</span><br><span class="line">    [aCoder encodeObject:self.student forKey:@&quot;student&quot;];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>对象的 <code>Student.h</code> 文件</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@interface Student : NSObject&lt;NSCopying&gt;</span><br><span class="line">@property (nonatomic,copy)NSString * name;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>对象的 <code>Student.m</code> 文件</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@implementation Student</span><br><span class="line"></span><br><span class="line">//实现NSCoding协议方法</span><br><span class="line">//解档</span><br><span class="line">- (id)initWithCoder:(NSCoder *)aDecoder&#123;</span><br><span class="line">    if (self = [super init]) &#123;</span><br><span class="line">        self.name = [aDecoder decodeObjectForKey:@&quot;name&quot;];</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line">//归档</span><br><span class="line">- (void)encodeWithCoder:(NSCoder *)aCoder&#123;</span><br><span class="line">    [aCoder encodeObject:self.name forKey:@&quot;name&quot;];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>接下来只要使用 <code>解／归</code> 档辅助类就可以TestModel类进行解归档</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// 把对象归档是调用NSKeyedArchiver的工厂方法archiverRootObject:toFile方法</span><br><span class="line">NSString * file  = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;</span><br><span class="line">NSString * path = [file stringByAppendingPathComponent:@&quot;person.data&quot;];</span><br><span class="line">    </span><br><span class="line">Person * person = [[Person alloc] init];</span><br><span class="line">person.avatar = [UIImage imageNamed:@&quot;123&quot;];</span><br><span class="line">person.name = @&quot;张建&quot;;</span><br><span class="line">person.age = 26;</span><br><span class="line">    </span><br><span class="line">// 嵌套模型</span><br><span class="line">Student * student = [[Student alloc] init];</span><br><span class="line">student.name = @&quot;小J&quot;;</span><br><span class="line">person.student = student;</span><br><span class="line">    </span><br><span class="line">[NSKeyedArchiver archiveRootObject:person toFile:path];</span><br><span class="line">    </span><br><span class="line">// 从文件中解档对象就是调用NSKeyedUnarchiver的一个工厂方法unarchiverObjectWithFile：即可</span><br><span class="line">Person * person2 = [NSKeyedUnarchiver unarchiveObjectWithFile:path];</span><br><span class="line">if (person2) &#123;</span><br><span class="line">    UIImage * avatarImg = person2.avatar;</span><br><span class="line">    NSString * name = person2.name;</span><br><span class="line">    NSInteger age = person2.age;</span><br><span class="line">    Student * student2 = person2.student;</span><br><span class="line">    NSString * s_name = student2.name;</span><br><span class="line">    NSLog(@&quot;avatar:%@ name:%@ age:%ld s_name:%@&quot;,avatarImg,name,age,s_name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC学习36：常用的数据存储方式</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-04-15 19:15:41</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/04/15/OC/OC学习36：常用的数据存储方式/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">#OC-学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/04/16/OC/OC%E5%AD%A6%E4%B9%A036.1%EF%BC%9ASQLite3/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习36.1：SQLite3</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/04/11/OC/OC%E5%AD%A6%E4%B9%A035%EF%BC%9ARuntime%E5%9C%A8OC%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习35：Runtime在OC中的应用场景</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC学习36：常用的数据存储方式</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B2%99%E7%9B%92%EF%BC%88sandbox%EF%BC%89"><span class="nav-text">沙盒（sandbox）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B2%99%E7%9B%92%E8%B7%AF%E5%BE%84%E7%9A%84%E8%8E%B7%E5%8F%96%E6%96%B9%E6%B3%95"><span class="nav-text">沙盒路径的获取方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F"><span class="nav-text">常用的存储方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSUserDefaults"><span class="nav-text">NSUserDefaults</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Plist"><span class="nav-text">Plist</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E5%AD%98%E6%94%BE%E6%B2%99%E7%9B%92"><span class="nav-text">手动存放沙盒</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSKeyedArchiver%E5%BD%92%E6%A1%A3-x2F-NSKeyedUnarchiver%E8%A7%A3%E6%A1%A3"><span class="nav-text">NSKeyedArchiver归档 &#x2F; NSKeyedUnarchiver解档</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

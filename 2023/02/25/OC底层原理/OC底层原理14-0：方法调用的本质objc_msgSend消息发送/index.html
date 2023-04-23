@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/02/25/oc底层原理/oc底层原理14-0：方法调用的本质objc_msgsend消息发送/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC底层原理14-0：方法调用的本质objc_msgSend消息发送">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/02/25/OC底层原理/OC底层原理14-0：方法调用的本质objc_msgSend消息发送/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC底层原理14-0：方法调用的本质objc_msgSend消息发送">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC底层原理14-0：方法调用的本质objc_msgSend消息发送 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC底层原理14-0：方法调用的本质objc_msgSend消息发送</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-02-25 16:41:30</span>
+        <span class="mobile">2023-02-25 16:41</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-04-22 11:06:54</span>
+            <span class="mobile">2023-04-22 11:06</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>我们先得出结论：方法调用的本质是 <code>objc_msgSend消息发送</code></p>
+<p>本文主要目的是理解 <code>objc_msgSend</code> 的 <code>方法查找</code> 流程</p>
+<p>在上一篇文章中 <a href="https://www.bboyzj.cn/2020/09/30/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8613%EF%BC%9Acache-t%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">OC底层原理13：cache-t底层原理分析</a> 中，分析了 <code>cache的写入流程</code>，在写入流程之前，还有一个 <code>cache读取流程</code>，即 <code>objc_msgSend</code> 和 <code>cache_getImp</code> </p>
+<p>在分析之前，首先了解什么是 <code>Runtime</code></p>
+<h1 id="Runtime介绍"><a href="#Runtime介绍" class="headerlink" title="Runtime介绍"></a>Runtime介绍</h1><p>runtime成为运行时，它区别于编译时：</p>
+<ul>
+<li><p><code>运行时</code> 是 <code>代码跑起来，被装载到内存中</code> 的过程，如果此时出错，则程序会崩溃，是一个 <code>动态</code> 阶段</p>
+</li>
+<li><p><code>编译时</code> 是 <code>源代码编译成机器能识别的代码</code> 的过程，主要是对语言进行最基本的检查报错，即 <code>词法分析、语法分析</code> 等，是一个 <code>静态</code> 的阶段</p>
+</li>
+</ul>
+<p><code>runtime</code> 的 <code>使用</code> 有以下三种方式，其中三种实现方式与编译层和底层的关系如下所示：</p>
+<ul>
+<li><p>通过 <code>OC代码</code>，例如 <code>[person sayNB]</code></p>
+</li>
+<li><p>通过 <code>Framework&amp;Service</code>，例如 <code>isKindOfClass</code></p>
+</li>
+<li><p>通过 <code>Runtime API</code>，例如 <code>class_getInstanceSize</code></p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://user-images.githubusercontent.com/25925248/160736327-80d52458-3fd6-4717-90af-279d89403d61.png"
+                     
+                ></p>
+<ul>
+<li><p><code>complier</code> 就是我们了解的 <code>编译器</code>，即 <code>LLVM</code>，例如 <code>OC</code> 的 <code>alloc</code> 对应底层的 <code>objc_alloc</code></p>
+</li>
+<li><p><code>runtime system library</code> 就是 <code>Runtime 底层库</code>。</p>
+</li>
+<li><p>可以通过 <code>command + shift + 0</code> 打开官方文档</p>
+</li>
+</ul>
+<h1 id="探索方法的本质"><a href="#探索方法的本质" class="headerlink" title="探索方法的本质"></a>探索方法的本质</h1><p><strong>方法的本质</strong></p>
+<p>在 <a href="https://www.bboyzj.cn/2020/09/18/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8608%EF%BC%9Aisa%E5%92%8C%E7%B1%BB%E5%85%B3%E8%81%94%E6%8E%A2%E7%B4%A2/">OC底层原理08：isa和类关联探索</a> 文章中，通过 <code>clang</code> 编译的源码，理解了 <code>oc对象的本质</code>，同样的，使用<code>clang</code> 编译 <code>main.m -&gt; main.cpp</code> 文件，通过查看main函数中方法调用的实现，如下所示</p>
+<ul>
+<li>mian.m 内实现如下代码：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 👇main.m中</span><br><span class="line">ZJPerson * person = [ZJPerson alloc];</span><br><span class="line">[person sayNB];</span><br><span class="line">[person sayHello];</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>终端 <code>clang</code> 编译 <code>miam.m -&gt; main.cpp</code> 后的代码</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 👇clang编译后的底层实现</span><br><span class="line">ZJPerson * person = ((ZJPerson *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass(&quot;ZJPerson&quot;), sel_registerName(&quot;alloc&quot;));</span><br><span class="line">((void (*)(id, SEL))(void *)objc_msgSend)((id)person, sel_registerName(&quot;sayNB&quot;));</span><br><span class="line">((void (*)(id, SEL))(void *)objc_msgSend)((id)person, sel_registerName(&quot;sayHello&quot;));</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>总结： 通过上述代码可以看出，<code>方法的本质</code> 就是 <code>objc_msgSend消息发送</code></strong></p>
+<h1 id="验证方法本质"><a href="#验证方法本质" class="headerlink" title="验证方法本质"></a>验证方法本质</h1><p>方法：消息（消息的接受者，消息主体）</p>
+<ul>
+<li>为了验证，通过 <code>objc_msgSend</code> 方法来完成 <code>[person sayNB]</code> 的调用，查看其打印是否一致</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">注：👇 objc_msgSend 消息发送流程是在 &lt;objc/message.h&gt; 系统库中</span><br><span class="line">1、直接调用 `objc_msgSend`，导入头文件 `#import&lt;objc/message.h&gt;`</span><br><span class="line">2、需要将 target --&gt; Build Setting --&gt; 搜索msg --&gt; 将 enable strict checking of objc_msgSend calls 由 YES 改为 NO，将严厉的检查机制关掉，否则 `objc_msgSend` 的参数会报错</span><br><span class="line">3. `sel_registerName = @selector() = NNSelectorFromString()`</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773117718962.jpg"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773118268896.jpg"
+                     
+                ></p>
+<ul>
+<li>再次编译运行 <code>command + R</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ZJPerson * person = [ZJPerson alloc];</span><br><span class="line">[person sayNB];</span><br><span class="line">objc_msgSend(person,sel_registerName(&quot;sayNB&quot;));</span><br></pre></td></tr></table></figure></div>
+
+<p>其打印结果如下，发现是一致的，所以 <code>[person sayNB]</code> 等价于 <code>objc_msgSend(person,sel_registerName(&quot;sayNB&quot;))</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773118832853.jpg"
+                     
+                ></p>
+<h1 id="子类对象方法调用-执行父类的实现"><a href="#子类对象方法调用-执行父类的实现" class="headerlink" title="子类对象方法调用-执行父类的实现"></a>子类对象方法调用-执行父类的实现</h1><ul>
+<li>首先我们定义两个类 <code>子类ZJStudent</code> 和 <code>父类ZJPerson</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 父类 ZJPerson</span><br><span class="line">@interface ZJPerson : NSObject</span><br><span class="line">- (void)sayNB;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJPerson</span><br><span class="line">- (void)sayNB&#123;</span><br><span class="line">    NSLog(@&quot;666&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">// ZJStudent 继承父类 ZJPerson</span><br><span class="line">@interface ZJStudent : ZJPerson</span><br><span class="line">- (void)sayNB;</span><br><span class="line">@end</span><br><span class="line">@implementation ZJStudent</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>在 <code>main.m</code> 中让子类调用 <code>sayNB</code> 方法，查看是否能输出结果</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ZJPerson * person = [ZJPerson alloc];</span><br><span class="line">ZJStudent * student = [ZJStudent alloc];</span><br><span class="line">    </span><br><span class="line">// 消息的接收者还是自己 - 父类 - 请你直接找我的父亲要</span><br><span class="line">[student sayNB];</span><br><span class="line">objc_msgSend(student,sel_registerName(&quot;sayNB&quot;));</span><br></pre></td></tr></table></figure></div>
+
+<p>运行程序，查看结果</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773128271287.jpg"
+                     
+                ></p>
+<p>由打印结果可知,子类方法的调用，可以 <code>执行父类方法的实现</code></p>
+<p><strong>那么子类是如何调用父类的方法实现的呢？我们往下探索</strong></p>
+<h1 id="子类调用父类方法的原理"><a href="#子类调用父类方法的原理" class="headerlink" title="子类调用父类方法的原理"></a>子类调用父类方法的原理</h1><p>我们先说结论：我们还可以尝试让 <code>person</code> 的调用执行父类中的实现，通过 <code>objc_msgSendSuper</code> 实现</p>
+<ul>
+<li>在 <code>main.m</code> 函数中的调用</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ZJPerson * person = [ZJPerson alloc];</span><br><span class="line">ZJStudent * student = [ZJStudent alloc];</span><br><span class="line">    </span><br><span class="line">struct objc_super zjsuper;</span><br><span class="line">zjsuper.receiver = person; // 消息的接收者还是person</span><br><span class="line">zjsuper.super_class = [ZJPerson class]; // 告诉父类是谁</span><br><span class="line">    </span><br><span class="line">// 消息的接收者还是自己 - 父类 - 请你直接找我的父亲要</span><br><span class="line">[student sayNB];</span><br><span class="line">objc_msgSendSuper(&amp;zjsuper, sel_registerName(&quot;sayNB&quot;));      </span><br></pre></td></tr></table></figure></div>
+
+<p><strong>进入objc_msgSendSuper内，查看一下结构</strong></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773136641990.jpg"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773137255456.jpg"
+                     
+                ></p>
+<p>由上图可知 <code>objc_msgSendSuper</code> 方法中有两个参数 <code>（结构体，sel）</code>，其结构体类型是 <code>objc_super</code> 定义的结构体对象，且需要指定 <code>receiver</code> 和 <code>super_class</code> 两个属性</p>
+<ul>
+<li>运行程序，查看打印结果：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2023-02-25 16:31:22.959805+0800 msg_seng继承父类[53476:1503775] 666</span><br><span class="line">2023-02-25 16:31:22.961094+0800 msg_seng继承父类[53476:1503775] 666</span><br><span class="line">Program ended with exit code: 0</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16773139042426.jpg"
+                     
+                ></p>
+<p>由打印结果，我们发现不论是 <code>[person sayHello]</code> 还是 <code>objc_msgSendSuper</code> 都执行的是 <code>父类</code> 中的 <code>sayHello</code> 的实现，所以这里，我们可以可以猜想：<code>方法调用、首先是在类中查找，如果类中没有找到，会到父类中查找。</code></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li><p>由上面的结论我们知道 <code>方法的调用</code> 实际上是 <code>消息发送objc_msgSend</code></p>
+</li>
+<li><p>在 c 中，可以直接调用 <code>函数</code></p>
+</li>
+<li><p>在 OC 中，方法调用是消息发送，消息发送objc_smgSend是通过 <code>sel方法编号</code> 找到 <code>imp函数指针地址</code> ，进而找到 <code>内容</code></p>
+</li>
+</ul>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC底层原理14-0：方法调用的本质objc_msgSend消息发送</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-02-25 16:41:30</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/02/25/OC底层原理/OC底层原理14-0：方法调用的本质objc_msgSend消息发送/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">#OC-底层原理探索篇</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/02/25/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8614-1%EF%BC%9Aobjc-msgSend%E7%BC%93%E5%AD%98%E6%9F%A5%E6%89%BE(%E5%BF%AB%E9%80%9F%E6%9F%A5%E6%89%BE)%E6%B1%87%E7%BC%96%E5%88%86%E6%9E%90/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理14-1：objc-msgSend缓存查找(快速查找)汇编分析</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A025%EF%BC%9ASwift%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%BC%8F%E5%92%8C%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习25：Swift中的模式和模式匹配</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC底层原理14-0：方法调用的本质objc_msgSend消息发送</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runtime%E4%BB%8B%E7%BB%8D"><span class="nav-text">Runtime介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%A2%E7%B4%A2%E6%96%B9%E6%B3%95%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="nav-text">探索方法的本质</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95%E6%9C%AC%E8%B4%A8"><span class="nav-text">验证方法本质</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%90%E7%B1%BB%E5%AF%B9%E8%B1%A1%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8-%E6%89%A7%E8%A1%8C%E7%88%B6%E7%B1%BB%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">子类对象方法调用-执行父类的实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%90%E7%B1%BB%E8%B0%83%E7%94%A8%E7%88%B6%E7%B1%BB%E6%96%B9%E6%B3%95%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-text">子类调用父类方法的原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
