@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-23 18:30:36</span>
-            <span class="mobile">2023-03-23 18:30</span>
+            <span class="pc">2023-04-23 13:27:49</span>
+            <span class="mobile">2023-04-23 13:27</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -410,6 +410,9 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 自定义的类</span><br><span class="line">Person * p = [[Person alloc] init];</span><br><span class="line">[p sayHello];</span><br><span class="line"></span><br><span class="line">============</span><br><span class="line">2023-03-07 08:24:09.821814+0800 Category[3670:122944] -[Person(Category) sayHello]</span><br></pre></td></tr></table></figure></div>
 
 <p>由打印结果可知，调用的是 <code>分类</code> 的方法，由此我们可以推断，<code>本类的方法被分类替代了</code></p>
+<blockquote>
+<p>【总结】<br>普通方法的调用顺序?<br>1、只有父类和自己：<code>调自己</code><br>2、如果有父类和自己和分类：<code>只调用最后编译的分类run</code></p>
+</blockquote>
 <h1 id="扩展-Extension"><a href="#扩展-Extension" class="headerlink" title="扩展 Extension"></a>扩展 Extension</h1><ul>
 <li>是类的一部分，在编译器和头文件里的@interface一级实现文件里的@implement一起形成一个完整的类，它伴随着类的产生而产生，亦随之一起消亡</li>
 </ul>

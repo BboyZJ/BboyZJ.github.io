@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-22 14:48:06</span>
-            <span class="mobile">2023-04-22 14:48</span>
+            <span class="pc">2023-04-22 21:22</span>
+            <span class="mobile">2023-04-22 21:22</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -325,8 +325,8 @@
             
 
             <div class="article-content markdown-body">
-                <h1 id="什么是Runloop"><a href="#什么是Runloop" class="headerlink" title="什么是Runloop?"></a>什么是Runloop?</h1><ol>
-<li><code>runloop</code> 不仅仅是一个 <code>运行循环</code>，还是一个 <code>对象</code>，这个对象管理其需要处理的事件和消息，并提供了一个入口函数，通过这个入口函数，程序进入 <code>do...while</code> 循环，保证程序持续运行，不会退出。</li>
+                <h1 id="Runloop是什么"><a href="#Runloop是什么" class="headerlink" title="Runloop是什么?"></a>Runloop是什么?</h1><ol>
+<li><code>RunLoop</code> 又叫 <code>运行循环</code>，内部就是一个 <code>do-while循环</code>，在这个循环内部不断 <code>处理各种任务，保证程序持续运行</code>。</li>
 </ol>
 <p><img  
                      lazyload
@@ -345,12 +345,12 @@
 <ul>
 <li>Runloop不是线程安全的</li>
 </ul>
-<h1 id="Runloop的作用？"><a href="#Runloop的作用？" class="headerlink" title="Runloop的作用？"></a>Runloop的作用？</h1><ol>
+<h1 id="Runloop的作用？重点"><a href="#Runloop的作用？重点" class="headerlink" title="Runloop的作用？重点"></a>Runloop的作用？<strong>重点</strong></h1><ul>
 <li>保持程序的持续运行。</li>
 <li>处理APP中各种事件（触摸、定时器、performSelector）。</li>
 <li>节省CPU资源，提高程序性能（该做事时做事，该休息时休息）。</li>
-</ol>
-<p>程序中 <code>main</code> 函数的 <code>UIApplicationMain</code> 函数主要作用就是创建了一个主运行循环，主线程几乎所有的事情都是交给runloop去完成，如UI界面的刷新、点击事件的处理、performSelector等等，但并非所有的任务都是由runloop完成。</p>
+</ul>
+<p>程序中 <code>main</code> 函数的 <code>UIApplicationMain</code> 函数主要作用就是创建了一个主运行循环，主线程几乎所有的事情都是交给runloop去完成，如 UI界面的刷新、点击事件的处理、performSelector等等，但并非所有的任务都是由runloop完成。</p>
 <h1 id="Runloop对象"><a href="#Runloop对象" class="headerlink" title="Runloop对象"></a>Runloop对象</h1><p>对象：iOS中有2套API来访问和使用RunLoop</p>
 <ul>
 <li>OC语言：Foundation – NSRunloop </li>
@@ -375,9 +375,9 @@
 <ol start="2">
 <li>CFRunloopRef:</li>
 </ol>
-<p>CFRunloopRef是Runloop的对象</p>
+<p><code>CFRunloopRef</code> 是 <code>Runloop</code> 的对象</p>
 <ol start="3">
-<li>CFRunloopModeRef：</li>
+<li>CFRunloopModeRef：模式</li>
 </ol>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct __CFRunLoopMode *CFRunLoopModeRef;</span><br><span class="line">struct __CFRunLoopMode &#123;</span><br><span class="line">    CFMutableSetRef _sources0;</span><br><span class="line">    CFMutableSetRef _sources1;</span><br><span class="line">    CFMutableArrayRef _observers;</span><br><span class="line">    CFMutableArrayRef _timers;</span><br></pre></td></tr></table></figure></div>
 
@@ -389,7 +389,7 @@
                 ></p>
 <p>由上述源码和图可知:</p>
 <ol>
-<li><p><code>CFRunLoopModeRef</code> 代表 <code>RunLoop</code> 的运行模式，一个RunLoop包含若干个Mode，每个Mode又包含若干个 <code>Source0/Source1/Timer/Observer</code>，RunLoop启动时只能选择其中一个Mode，作为currentMode，如果需要切换Mode，只能退出当前Loop，再重新选择一个Mode进入，不同组的 <code>Source0/Source1/Timer/Observer</code> 能分隔开来，互不影响，如果Mode里没有任何<code>Source0/Source1/Timer/Observer</code>，RunLoop会立马退出。</p>
+<li><p><code>CFRunLoopModeRef</code> 代表 <code>RunLoop</code> 的运行模式，一个RunLoop包含若干个 <code>Mode</code>，每个Mode又包含若干个 <code>Source0/Source1/Timer/Observer</code>，RunLoop启动时只能选择其中一个Mode，作为currentMode，如果需要切换Mode，只能退出当前Loop，再重新选择一个Mode进入，不同组的 <code>Source0/Source1/Timer/Observer</code> 能分隔开来，互不影响，如果Mode里没有任何<code>Source0/Source1/Timer/Observer</code>，RunLoop会立马退出。</p>
 </li>
 <li><p>NSRunloopRef常见的几种Mode:</p>
 </li>
@@ -404,9 +404,11 @@
 <li>GSEventReceiveRunLoopMode</li>
 </ul>
 <ol start="4">
-<li>CFRunloopSourceRef：</li>
+<li>CFRunloopSourceRef：输入源&#x2F;事件源</li>
 </ol>
-<p>触摸事件：source0</p>
+<ul>
+<li>触摸事件：source0</li>
+</ul>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
@@ -432,7 +434,7 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">static void __CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION__() __attribute__((noinline));</span><br><span class="line">static void __CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION__(CFRunLoopTimerCallBack func, CFRunLoopTimerRef timer, void *info) &#123;</span><br><span class="line">    if (func) &#123;</span><br><span class="line">        func(timer, info);</span><br><span class="line">    &#125;</span><br><span class="line">    asm __volatile__(&quot;&quot;); // thwart tail-call optimization</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <ol start="6">
-<li>CFRunloopObserveRef：</li>
+<li>CFRunloopObserveRef：监听者，监听Runloop的状态改变</li>
 </ol>
 <ul>
 <li>用来监听runloop的活动：</li>
@@ -448,15 +450,21 @@
 <li>Mode中各个成员的含义:</li>
 </ol>
 <ul>
-<li><p>source0:<br>1）触摸事件(TouchUp)<br>2）performSelector :OnThread</p>
-</li>
-<li><p>source1<br>1）基于Port的线程间通信<br>2）系统事件的捕捉</p>
-</li>
-<li><p>Timer<br>1）NSTimer<br>2）performSelector :afterDelay &#x2F;&#x2F; 这句代码的本质是往Runloop中添加定时器</p>
-</li>
-<li><p>Observers<br>1）监听runloop的状态<br>2）UI刷新(在runloop休眠之前)<br>3）自动释放池(在runloop休眠之前)</p>
-</li>
+<li>source0:</li>
 </ul>
+<p>1）触摸事件(TouchUp)<br>2）performSelector:OnThread（在指定线程）</p>
+<ul>
+<li>source1</li>
+</ul>
+<p>1）基于 <code>Port</code> 的线程间通信<br>2）系统事件的捕捉</p>
+<ul>
+<li>Timer</li>
+</ul>
+<p>1）NSTimer<br>2）performSelector :afterDelay &#x2F;&#x2F; 这句代码的本质是往Runloop中添加定时器</p>
+<ul>
+<li>Observers</li>
+</ul>
+<p>1）监听runloop的状态<br>2）UI刷新(在runloop休眠之前)<br>3）自动释放池(在runloop休眠之前)</p>
 <ol start="8">
 <li>runloop处理items事件的总结:</li>
 </ol>
@@ -474,7 +482,7 @@
                      data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303260842421.png"
                      
                 ></p>
-<p>查看源码验证，线程和runloop是一一对应的关系:</p>
+<p>查看源码验证，<code>线程和runloop是一一对应的关系</code> :</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CFRunLoopRef CFRunLoopGetMain(void) &#123;</span><br><span class="line">    CHECK_FOR_FORK();</span><br><span class="line">    static CFRunLoopRef __main = NULL; // no retain needed</span><br><span class="line">    if (!__main) __main = _CFRunLoopGet0(pthread_main_thread_np()); // no CAS needed</span><br><span class="line">    return __main;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>继续查找</p>
@@ -485,51 +493,73 @@
 </ol>
 <p>由上面的源码可验证。</p>
 <ol start="3">
-<li>主线程的Runloop系统自动获取（创建），子线程默认没有开启runloop。</li>
-</ol>
-<p><strong>【问题1】：</strong></p>
-<p>看代码：问下面的 <code>子线程 timer</code> 会打印么？</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">NSThread * thread = [[NSThread alloc] initWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;hello:%@&quot;,[NSThread currentThread]);</span><br><span class="line">    [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">        NSLog(@&quot;子线程 timer&quot;);</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;];</span><br><span class="line">    </span><br><span class="line">thread.name = @&quot;zj&quot;;</span><br><span class="line">[thread start];</span><br></pre></td></tr></table></figure></div>
-
-<p>答:不会，因为子线程的runloop默认没有开启，需要开启子线程的runloop</p>
-<p><strong>【问题2】</strong></p>
-<p>问：那要怎么写才能开启？并能控制其打印?</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">@interface ViewController ()</span><br><span class="line">@property (nonatomic,assign)BOOL isStop;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    self.isStop = NO;</span><br><span class="line">    </span><br><span class="line">    NSThread * thread = [[NSThread alloc] initWithBlock:^&#123;</span><br><span class="line">        NSLog(@&quot;hello:%@&quot;,[NSThread currentThread]);</span><br><span class="line">        [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">            NSLog(@&quot;子线程 timer&quot;);</span><br><span class="line">            if (self.isStop) &#123;</span><br><span class="line">                [NSThread exit];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;];</span><br><span class="line">        [[NSRunLoop currentRunLoop] run];</span><br><span class="line">    &#125;];</span><br><span class="line">    </span><br><span class="line">    thread.name = @&quot;zj&quot;;</span><br><span class="line">    [thread start];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event&#123;</span><br><span class="line">    self.isStop = YES;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
-
-<p>答：通过 <code>[[NSRunLoop currentRunLoop] run];</code> 获取子线程的runloop并开启子线程的runloop。通过控制线程退出-&gt;控制runloop退出-&gt;控制timer不打印</p>
-<ol start="3">
+<li><p>主线程的Runloop系统自动获取（创建），子线程默认没有开启runloop。</p>
+</li>
 <li><p>线程刚创建时是没有runloop对象，runloop会在第一次获取时创建。</p>
 </li>
 <li><p>runloop在线程销毁时销毁。</p>
 </li>
 </ol>
-<h1 id="timer和runloop？"><a href="#timer和runloop？" class="headerlink" title="timer和runloop？"></a>timer和runloop？</h1><ol>
-<li>问：视图在滑动的时候为什么NSTimer会不走？</li>
+<h1 id="NSTimer-重点"><a href="#NSTimer-重点" class="headerlink" title="NSTimer 重点"></a>NSTimer <strong>重点</strong></h1><ol>
+<li>什么是 NSTimer？</li>
 </ol>
-<p>答：因为默认在主线程 <code>NSTimer</code> 是加入到 <code>kCFRunLoopDefaultMode</code> 下的，而视图滑动的时候主线程的mode会切换到 <code>UITrackingRunLoopMode</code> 模式下，导致NSTimer不走，因而需要将NSTimer加入到 <code>UITrackingRunLoopMode或者KCFRunloopCommonMode</code> 下。</p>
-<p>代码如下:</p>
+<p><code>NSTimer</code> 是一个定时器，是一个面向对象的定时器。在经过一定的时间间隔后触发，向目标对象发送指定的消息。其工作原理是将一个监听加入到系统的 <code>runloop</code> 中去，当系统 <code>runloop</code> 执行到 <code>timer</code> 条件的循环时，会调用 <code>timer</code> 一次，如果是一个重复的定时器，当timer回调函数结束之后，timer会再一次的将自己加入到runloop中去继续监听下一次timer事件。</p>
+<ol start="2">
+<li>NSTimer和RunLoop的关系</li>
+</ol>
+<p><code>NSTimer</code> 的原理是 <code>将定时器中的事件添加到runloop中</code>，以实现循环的，这是因为定时器默认处于 <code>runloop</code> 中的 <code>kCFRunLoopDefaultMode</code>，主线程默认也处于此mode下，定时器这才具备了这样的能力。所以，没有runloop，NSTimer完全无法工作。</p>
+<p><strong>【问题1】这里提出一个经典的案例：定时器默认无法在页面滚动时执行</strong></p>
+<p>原因是滚动时，主线程runloop处于 <code>UITrackingRunLoopMode</code>，这时候，定时器所处runloop依然处于kCFRunLoopDefaultMode，就导致 <code>定时器线程被阻塞</code>，要解决这一个问题，我们就需要定时器无论是在 <code>kCFRunLoopDefaultMode</code> 还是 <code>UITrackingRunLoopMode</code> 下都可以正常工作，这时候就需要用到 <code>runloop</code> 中的伪模式 <code>kCFRunLoopCommonMode</code>，这并不是一个真正的mode，而是一种多mode的处理方式。具体做法如下：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NSTimer * timer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) &#123;</span><br><span class="line">    NSLog(@&quot;aaaaa&quot;);</span><br><span class="line">&#125;];</span><br><span class="line">[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];</span><br></pre></td></tr></table></figure></div>
 
-<ol start="2">
-<li>问NSTimer是怎么加入到 <code>UITrackingRunLoopMode</code> 或者 <code>KCFRunloopCommonMode</code> 下就不会造成卡顿?</li>
-</ol>
-<p>答：NSTimer通过底层函数CFRunLoopAddTimer加入到items中。然后再runloopRun运行的时候，通过while循环遍历item找到timer的mode是否和当前的mode相等或等于commonMode，如果相等调用block函数返回执行。</p>
-<p>自己去写代码验证一下：</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">- (void)cftimerDemo&#123;</span><br><span class="line">    CFRunLoopTimerContext context = &#123;</span><br><span class="line">        0,</span><br><span class="line">        ((__bridge void *)self),</span><br><span class="line">        NULL,</span><br><span class="line">        NULL,</span><br><span class="line">        NULL</span><br><span class="line">    &#125;;</span><br><span class="line">    CFRunLoopRef rlp = CFRunLoopGetCurrent();</span><br><span class="line">    /*</span><br><span class="line">     参数一：用于分配对象的内存</span><br><span class="line">     参数二：在什么时候触发</span><br><span class="line">     参数三：每隔多少时间触发一次</span><br><span class="line">     参数四：未来参数</span><br><span class="line">     参数五：CFRunloopObserver的优先级，当Runloop同一运行阶段中有多少CFRunloopObserver 正常情况下使用0</span><br><span class="line">     参数六：回调，比如触发事件，我们就会来到这里</span><br><span class="line">     参数七：上下文记录信息</span><br><span class="line">     */</span><br><span class="line">    CFRunLoopTimerRef timerRef = CFRunLoopTimerCreate(kCFAllocatorDefault, 0, 1, 0, 0, zjRunloopTimerCallBack, &amp;context);</span><br><span class="line">    CFRunLoopAddTimer(rlp, timerRef, kCFRunLoopDefaultMode);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void zjRunloopTimerCallBack(CFRunLoopTimerRef timer,void * info) &#123;</span><br><span class="line">    NSLog(@&quot;%@---%@&quot;,timer,info);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p><strong>【问题2】问NSTimer是怎么加入到 <code>KCFRunloopCommonMode</code> 下就不会造成卡顿?</strong></p>
+<p>答：<code>NSTimer</code> 通过底层函数 <code>CFRunLoopAddTimer</code> 加入到 <code>items</code> 中。然后再 <code>runloopRun</code> 运行的时候，通过 <code>while循环遍历item找到timer的mode是否和当前的mode相等或等于commonMode</code>，如果相等调用block函数返回执行。</p>
+<p><strong>【问题3】子线程定时器不走？</strong></p>
+<p>定时器的实现是基于 <code>Runloop</code> 的，平时我们使用定时器或许并没有对Runloop做什么操作，那是因为 <code>主线程的runloop默认开启运行</code> 的，如果我们在子线程中也需要重复执行某一动作，需要手动开启定时器。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">queue = dispatch_queue_create(&quot;myQueue&quot;,DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(time) userInfo:nil repeat:YES];</span><br><span class="line">    // 子线程需要手动开启Runloop</span><br><span class="line">    [[NSRunLoop currentRunLoop] run];</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></div>
 
+<ol start="3">
+<li>定时器释放的方式</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[_timer invalidate]; </span><br><span class="line">_timer = nil;</span><br></pre></td></tr></table></figure></div>
+
+<p>二者缺一不可。</p>
+<p>如果是在VC中创建的 <code>NSTimer</code>，这种情况下，<code>self</code> 和 <code>_timer</code> 相互强引用，<code>VC</code> 的 <code>Dealloc</code> 方法不会执行，所以定时器的销毁方法不能放在 <code>Dealloc</code> 中，需要放在 <code>Dealloc</code> 之前（viewWillDIsappear），原因我们放到最后说明。</p>
+<ol start="4">
+<li>NSTimer的时间准确吗？</li>
+</ol>
+<p><code>不准确</code>，NSTimer不是采用实时机制！</p>
+<p>原因：NSTimer的精确度略低了点，比如NSTimer的触发时间到的时候，<code>runloop如果在阻塞状态</code>，触发时间就会推迟到下一个runloop周期。</p>
+<ol start="5">
+<li>NSTimer 创建方式</li>
+</ol>
+<p><strong>iOS10.0以前</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+ (NSTimer *)timerWithTimeInterval:(NSTimeInterval)ti invocation:(NSInvocation *)invocation repeats:(BOOL)yesOrNo;</span><br><span class="line">+ (NSTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)ti invocation:(NSInvocation *)invocation repeats:(BOOL)yesOrNo;</span><br><span class="line"> </span><br><span class="line">+ (NSTimer *)timerWithTimeInterval:(NSTimeInterval)ti target:(id)aTarget selector:(SEL)aSelector userInfo:(nullable id)userInfo repeats:(BOOL)yesOrNo;</span><br><span class="line">+ (NSTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)ti target:(id)aTarget selector:(SEL)aSelector userInfo:(nullable id)userInfo repeats:(BOOL)yesOrNo;</span><br><span class="line"></span><br><span class="line">- (instancetype)initWithFireDate:(NSDate *)date interval:(NSTimeInterval)ti target:(id)t selector:(SEL)s userInfo:(nullable id)ui repeats:(BOOL)rep NS_DESIGNATED_INITIALIZER;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>iOS10.0以后</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+ (NSTimer *)timerWithTimeInterval:(NSTimeInterval)interval repeats:(BOOL)repeats block:(void (^)(NSTimer *timer))block </span><br><span class="line">API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0));</span><br><span class="line"> </span><br><span class="line">+ (NSTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)interval repeats:(BOOL)repeats block:(void (^)(NSTimer *timer))block </span><br><span class="line">API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0));</span><br><span class="line"> </span><br><span class="line">- (instancetype)initWithFireDate:(NSDate *)date interval:(NSTimeInterval)interval repeats:(BOOL)repeats block:(void (^)(NSTimer *timer))block</span><br><span class="line">API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0));</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>区别是有无 <code>Block</code> 的回调方法，block的作用就是将自身作为参数传递给block，来帮助 避免循环引用</li>
+</ul>
+<ol start="6">
+<li>NSTimer如何避免循环引用</li>
+</ol>
+<ul>
+<li><p>在 <code>Dealloc</code> 之前销毁定时器</p>
+</li>
+<li><p>使用 <code>block</code> 方式</p>
+</li>
+<li><p>使用 <code>NSProxy</code> 增加一个中间层</p>
+</li>
+</ul>
 <h1 id="Runloop运行流程"><a href="#Runloop运行流程" class="headerlink" title="Runloop运行流程"></a>Runloop运行流程</h1><ol>
 <li>NSRunLoop:</li>
 </ol>
 <p>是基于 <code>CFRunLoopRef</code> 的OC封装，提供了面向对象的 <code>API</code>，但不是线程安全的，<code>CFRunLoopRef</code> 是在 <code>CoreFoundation</code> 框架内的，它提供了纯 <code>C</code> 函数的 <code>API</code>，是线程安全的，CoreFoundation是开源的(<a class="link"   target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/CF/" >CoreFoundation 源码地址 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>)</p>
 <ol start="2">
-<li>runloop的运行逻辑</li>
+<li>Runloop 运行流程图</li>
 </ol>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303260851013.png"
-                     
-                ></p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
@@ -617,7 +647,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC学习38.1：Runloop底层原理</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFRunloop"><span class="nav-text">什么是Runloop?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">Runloop的作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E5%AF%B9%E8%B1%A1"><span class="nav-text">Runloop对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E7%9B%B8%E5%85%B3%E7%9A%84%E7%B1%BB"><span class="nav-text">Runloop相关的类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E4%B8%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%9F"><span class="nav-text">Runloop与线程的关系？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#timer%E5%92%8Crunloop%EF%BC%9F"><span class="nav-text">timer和runloop？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-text">Runloop运行流程</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">Runloop是什么?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">Runloop的作用？重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E5%AF%B9%E8%B1%A1"><span class="nav-text">Runloop对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E7%9B%B8%E5%85%B3%E7%9A%84%E7%B1%BB"><span class="nav-text">Runloop相关的类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E4%B8%8E%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%9F"><span class="nav-text">Runloop与线程的关系？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSTimer-%E9%87%8D%E7%82%B9"><span class="nav-text">NSTimer 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runloop%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-text">Runloop运行流程</span></a></li></ol>
 
     </div>
 </div>
