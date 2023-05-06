@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/05/01/xcode/xcode学习04：shell自动化脚本打ipa包/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Xcode学习04：Shell自动化脚本打IPA包">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/05/01/Xcode/Xcode学习04：Shell自动化脚本打IPA包/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Xcode学习04：Shell自动化脚本打IPA包">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            Xcode学习04：Shell自动化脚本打IPA包 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">Xcode学习04：Shell自动化脚本打IPA包</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-05-01 21:46:19</span>
+        <span class="mobile">2023-05-01 21:46</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-05-03 12:08:42</span>
+            <span class="mobile">2023-05-03 12:08</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/Xcode/">Xcode</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/Xcode-%E5%B8%B8%E7%94%A8/">Xcode-常用</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>iOS 项目打包通常都是通过 <code>Xcode -&gt; Product -&gt; Archive</code> 去给项目打包，这是常用的方式，还有一种方式就是 <code>shell脚本自动化打包</code>，可以用一行代码解决打包问题，</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><ol>
+<li>项目下创建 <code>ZJ_Shell.sh</code> 脚本文件，可以将该文件放在一个文件夹 <code>Shell</code> 下，也可以放在项目根目录下，具体看你设计实现方式</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305031157028.png"
+                     
+                ></p>
+<ol start="2">
+<li>在 <code>ZJ_Shell.sh</code> 文件中编写脚本</li>
+</ol>
+<ul>
+<li>使用方法 开始</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line"></span><br><span class="line">#--------使用方法 开始--------</span><br><span class="line"># 1、将该脚本放在工程的根目录下（xcworkspace 或 xcodeproj 文件同级目录）或新建一个Shell文件夹下</span><br><span class="line"># 2、请根据自己项目的情况选择使用 xcworkspace 还是 xcodeproj 形式，目前默认为 xcworkspace 形式</span><br><span class="line"># 3、打开终端、执行脚本（输入 sh，将脚本文件拉倒终端，会生成文件路径，然后enter就可）</span><br><span class="line"># 这个脚本主要介绍放在Shell文件夹下</span><br><span class="line">#--------使用方法 结束--------</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>项目自定义配置</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;************************************&quot;</span><br><span class="line">echo &quot;==========项目自定义配置 开始==========&quot;</span><br><span class="line">## 自定义好下列参数后再执行该脚本</span><br><span class="line"></span><br><span class="line"># 工程Project名称</span><br><span class="line">PROJECT_NAME=&quot;UBR&quot;</span><br><span class="line"># Scheme名</span><br><span class="line">SCHEME_NAME=&quot;UBR&quot;</span><br><span class="line"># 打包编译的方式 Debug/Release，一般用Release</span><br><span class="line">BUILD_CONFIGURATION=&quot;Debug&quot;</span><br><span class="line"># 打包的方式method：development/ad-hoc/app-store/nterprise</span><br><span class="line">METHOD=&quot;ad-hoc&quot;</span><br><span class="line"># compileBitcode选项配置，默认YES，要设置成NO</span><br><span class="line">COMPILEBITCODE=&quot;NO&quot;</span><br><span class="line"># SDK</span><br><span class="line">SDK_NAME=iphoneos</span><br><span class="line"># # 和method对应的mobileprovision文件名，手动管理时必填</span><br><span class="line"># MOBILEPROVISION_NAME=&quot;&quot;</span><br><span class="line"># # 项目的bundleID，手动管理时必填</span><br><span class="line"># BUNDLE_IDENTIFIER=&quot;&quot;</span><br><span class="line"></span><br><span class="line">echo &quot;项目自定义配置 打印：&quot;</span><br><span class="line">echo &quot;PROJECT_NAME=$&#123;PROJECT_NAME&#125;&quot;</span><br><span class="line">echo &quot;SCHEME_NAME=$&#123;SCHEME_NAME&#125;&quot;</span><br><span class="line">echo &quot;BUILD_CONFIGURATION=$&#123;BUILD_CONFIGURATION&#125;&quot;</span><br><span class="line">echo &quot;METHOD=$&#123;METHOD&#125;&quot;</span><br><span class="line">echo &quot;COMPILEBITCODE=$&#123;COMPILEBITCODE&#125;&quot;</span><br><span class="line">echo &quot;SDK_NAME=$&#123;SDK_NAME&#125;&quot;</span><br><span class="line"># echo &quot;MOBILEPROVISION_NAME=$&#123;MOBILEPROVISION_NAME&#125;&quot;</span><br><span class="line"># echo &quot;BUNDLE_IDENTIFIER=$&#123;BUNDLE_IDENTIFIER&#125;&quot;</span><br><span class="line"></span><br><span class="line">echo &quot;==========项目自定义配置  结束==========&quot;</span><br><span class="line"></span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>项目固定参数配置</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;==========项目固定参数配置 开始==========&quot;</span><br><span class="line">##无特殊情况不用修改</span><br><span class="line"></span><br><span class="line"># 获取当前脚本所在的目录 $(cd `dirname $0`; pwd) ，脚本上一层目录 $(cd ..; pwd)</span><br><span class="line">PROJECT_ROOT_PATH=$(cd ..; pwd)</span><br><span class="line"></span><br><span class="line"># ExportOptions.plist 文件的存放路径，该文件描述了导出ipa文件所需要的配置</span><br><span class="line"># 如果不知道如何配置该plist，可直接使用xcode打包ipa结果文件夹的 ExportOptions.plist 文件</span><br><span class="line"># ExportOptions.plist 文件路径</span><br><span class="line">EXPORTOPTIONS_PLIST_PATH=$&#123;PROJECT_ROOT_PATH&#125;/ExportOptionsPlist/AdhocExportOptions.plist</span><br><span class="line"></span><br><span class="line"># xcodeproject路径</span><br><span class="line">PROJECT_PATH=$&#123;PROJECT_ROOT_PATH&#125;/$&#123;PROJECT_NAME&#125;.xcodeproj</span><br><span class="line"></span><br><span class="line"># xcworkspace路径</span><br><span class="line">WORKSPACE_PATH=$&#123;PROJECT_ROOT_PATH&#125;/$&#123;PROJECT_NAME&#125;.xcworkspace</span><br><span class="line"></span><br><span class="line">echo &quot;项目固定参数配置 打印：&quot;</span><br><span class="line">echo &quot;PROJECT_ROOT_PATH=$&#123;PROJECT_ROOT_PATH&#125;&quot;</span><br><span class="line">echo &quot;EXPORTOPTIONSP_LIST_PATH=$&#123;EXPORTOPTIONS_PLIST_PATH&#125;&quot;</span><br><span class="line">echo &quot;PROJECT_PATH=$&#123;PROJECT_PATH&#125;&quot;</span><br><span class="line">echo &quot;WORKSPACE_PATH=$&#123;WORKSPACE_PATH&#125;&quot;</span><br><span class="line"></span><br><span class="line">echo &quot;==========项目固定参数配置 结束==========&quot;</span><br><span class="line"></span><br><span class="line"># echo &#x27;//////////////////////////////////////////&#x27;</span><br><span class="line"># echo &#x27;//////////////////////////////////////////&#x27;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>项目版本号配置</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># echo &quot;==========项目版本号配置  开始==========&quot;</span><br><span class="line"># # 获取当前版本号</span><br><span class="line"># GET_BUILD_VERSION=`xcodebuild -showBuildSettings -target $&#123;PROJECT_NAME&#125; | grep CURRENT_PROJECT_VERSION | tr -d &#x27;CURRENT_PROJECT_VERSION = &#x27;`</span><br><span class="line"># # 当前版本号</span><br><span class="line"># CURRENT_BUILD_VERSION=$&#123;GET_BUILD_VERSION&#125;</span><br><span class="line"></span><br><span class="line"># # 版本号增加 根据需求配置</span><br><span class="line"># # agvtool new-version $(($&#123;OLD_BUILD_VERSION&#125;+1))</span><br><span class="line"></span><br><span class="line"># echo &quot;项目版本号配置 打印：&quot;</span><br><span class="line"># echo &quot;CURRENT_BUILD_VERSION=$&#123;CURRENT_BUILD_VERSION&#125;&quot;</span><br><span class="line"></span><br><span class="line"># echo &quot;==========项目版本号配置  结束==========&quot;</span><br><span class="line"></span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>IPA包路径配置</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;==========IPA包路径配置 开始==========&quot;</span><br><span class="line">## IPA包</span><br><span class="line"># 时间</span><br><span class="line">DATE=`date &#x27;+%Y%m%d_%H%M%S&#x27;`</span><br><span class="line"># IPA名称</span><br><span class="line">EXPORT_IPA_NAME=iOS_$&#123;SCHEME_NAME&#125;_$&#123;DATE&#125;_$&#123;BUILD_CONFIGURATION&#125;</span><br><span class="line"># IPA文件夹路径</span><br><span class="line">EXPORT_IPA_PATH=$&#123;PROJECT_ROOT_PATH&#125;/IPA/$&#123;EXPORT_IPA_NAME&#125;</span><br><span class="line"></span><br><span class="line"># IPA归档文件路径</span><br><span class="line">EXPORT_ARCHIVE_PATH=$&#123;EXPORT_IPA_PATH&#125;/$&#123;SCHEME_NAME&#125;.xcarchive</span><br><span class="line"></span><br><span class="line">echo &quot;IPA包路径配置 打印：&quot;</span><br><span class="line">echo &quot;DATE=$&#123;DATE&#125;&quot;</span><br><span class="line">echo &quot;EXPORT_IPA_NAME=$&#123;EXPORT_IPA_NAME&#125;&quot;</span><br><span class="line">echo &quot;EXPORT_IPA_PATH=$&#123;EXPORT_IPA_PATH&#125;&quot;</span><br><span class="line">echo &quot;EXPORT_ARCHIVE_PATH=$&#123;EXPORT_ARCHIVE_PATH&#125;&quot;</span><br><span class="line"></span><br><span class="line"># $&#123;PROJECT_ROOT_PATH&#125;：获取当前脚本目录，这个配置主要看脚本放在哪里</span><br><span class="line"># 进入项目工程目录</span><br><span class="line">cd ..</span><br><span class="line"># IPA文件目录存在</span><br><span class="line">if [ -d &quot;$&#123;EXPORT_IPA_PATH&#125;&quot; ] ; then</span><br><span class="line">    echo &quot;IPA文件路径已存在&quot;</span><br><span class="line">else # IPA文件目录不存在，则创建</span><br><span class="line">    mkdir -p $&#123;EXPORT_IPA_PATH&#125;</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">echo &quot;==========IPA包路径配置 结束==========&quot;</span><br><span class="line"></span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>编译前清理工程</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;==========Build Clean Begin==========&quot;</span><br><span class="line">## 编译前清理工程</span><br><span class="line"></span><br><span class="line"># project形式</span><br><span class="line"># xcodebuild clean -project $&#123;PROJECT_ROOT_PATH&#125;/$&#123;PROJECT_NAME&#125;.xcworkspace \</span><br><span class="line"># 				 -scheme $&#123;SCHEME_NAME&#125; \</span><br><span class="line"># 				 -configuration $&#123;BUILD_CONFIGURATION&#125; \</span><br><span class="line">#				 -quiet || exit</span><br><span class="line"></span><br><span class="line"># workspace</span><br><span class="line">xcodebuild clean -workspace $&#123;PROJECT_ROOT_PATH&#125;/$&#123;PROJECT_NAME&#125;.xcworkspace \</span><br><span class="line">				 -scheme $&#123;SCHEME_NAME&#125; \</span><br><span class="line">				 -configuration $&#123;BUILD_CONFIGURATION&#125; \</span><br><span class="line">				 -quiet || exit</span><br><span class="line"></span><br><span class="line">echo &quot;==========Build Clean End==========&quot;</span><br><span class="line"></span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>开始编译Archive工程</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;==========Build Archive Begin==========&quot;</span><br><span class="line">## 开始编译Archive工程</span><br><span class="line"></span><br><span class="line"># 解锁钥匙串 -p 后面跟电脑密码 根据需要设置 XXX</span><br><span class="line">security unlock-keychain -p &quot;1127&quot;</span><br><span class="line"></span><br><span class="line"># project</span><br><span class="line"># xcodebuild archive -project $&#123;PROJECT_ROOT_PATH&#125;/$&#123;PROJECT_NAME&#125;.xcodeproj \</span><br><span class="line"># 				   -scheme $&#123;SCHEME_NAME&#125; \</span><br><span class="line"># 				   -configuration $&#123;BUILD_CONFIGURATION&#125; \</span><br><span class="line"># 				   -sdk $&#123;SDK_NAME&#125; \</span><br><span class="line"># 				   -archivePath $&#123;EXPORT_ARCHIVE_PATH&#125; \</span><br><span class="line"># 				   -quiet || exit</span><br><span class="line"></span><br><span class="line"># workspace</span><br><span class="line">xcodebuild archive -workspace $&#123;PROJECT_ROOT_PATH&#125;/$&#123;PROJECT_NAME&#125;.xcworkspace \</span><br><span class="line">				   -scheme $&#123;SCHEME_NAME&#125; \</span><br><span class="line">				   -configuration $&#123;BUILD_CONFIGURATION&#125; \</span><br><span class="line">				   -sdk $&#123;SDK_NAME&#125; \</span><br><span class="line">				   -archivePath $&#123;EXPORT_ARCHIVE_PATH&#125; \</span><br><span class="line">				   -quiet || exit</span><br><span class="line"></span><br><span class="line">echo &quot;==========Build Archive Success==========&quot;</span><br><span class="line"></span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>删除 ExportOptions 文件</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># echo &quot;==========Delete ExportOptions Begin==========&quot;</span><br><span class="line">## 先删除ExportOptions文件</span><br><span class="line"># if [ -f &quot;$&#123;EXPORTOPTIONS_PLIST_PATH&#125;&quot; ] ; then</span><br><span class="line">#     rm -f $&#123;EXPORTOPTIONS_PLIST_PATH&#125;</span><br><span class="line"># fi</span><br><span class="line"># # 根据参数生成ExportOptions文件</span><br><span class="line"># /usr/libexec/PlistBuddy -c  &quot;Add :compileBitcode bool $&#123;COMPILEBITCODE&#125;&quot;  $&#123;EXPORTOPTIONS_PLIST_PATH&#125;</span><br><span class="line"># /usr/libexec/PlistBuddy -c  &quot;Add :method string $&#123;METHOD&#125;&quot;  $&#123;EXPORTOPTIONS_PLIST_PATH&#125;</span><br><span class="line"># /usr/libexec/PlistBuddy -c  &quot;Add :provisioningProfiles:&quot;  $&#123;EXPORTOPTIONS_PLIST_PATH&#125;</span><br><span class="line"># /usr/libexec/PlistBuddy -c  &quot;Add :provisioningProfiles:$&#123;BUNDLE_IDENTIFIER&#125; string $&#123;MOBILEPROVISION_NAME&#125;&quot;  $&#123;EXPORTOPTIONS_PLIST_PATH&#125;</span><br><span class="line"></span><br><span class="line"># echo &quot;==========Delete ExportOptions End==========&quot;</span><br><span class="line"></span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>导出ipa包</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;==========Export IPA Begin==========&quot;</span><br><span class="line"># 导出ipa包</span><br><span class="line">xcodebuild -exportArchive \</span><br><span class="line">		   -archivePath $&#123;EXPORT_ARCHIVE_PATH&#125; \</span><br><span class="line">		   -exportPath $&#123;EXPORT_IPA_PATH&#125; \</span><br><span class="line">		   -exportOptionsPlist $&#123;EXPORTOPTIONS_PLIST_PATH&#125; \</span><br><span class="line">		   -quiet || exit</span><br><span class="line"></span><br><span class="line"># 检查ipa包是否存在</span><br><span class="line">if [ -e $&#123;EXPORT_IPA_PATH&#125;/$&#123;SCHEME_NAME&#125;.ipa ]; then</span><br><span class="line">	echo &quot;导出ipa包成功 😃 😃 😃&quot;</span><br><span class="line">	# 打开IPA包的目录</span><br><span class="line">	open $&#123;EXPORT_IPA_PATH&#125;</span><br><span class="line">else</span><br><span class="line">    echo &quot;导出ipa包失败 😢 😢 😢&quot;</span><br><span class="line">fi</span><br><span class="line">echo &quot;==========Export IPA End==========&quot;</span><br><span class="line"></span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br><span class="line"></span><br><span class="line">echo &quot;==========Delete Archive Start==========&quot;</span><br><span class="line"># 删除编译的.xcarchive文件，可根据各自情况选择是否保留</span><br><span class="line">if [ -d &quot;$&#123;EXPORT_ARCHIVE_PATH&#125;&quot; ]; then</span><br><span class="line">	rm -rf $&#123;EXPORT_ARCHIVE_PATH&#125;</span><br><span class="line">	echo &quot;删除xcarchive文件夹成功 😃 😃 😃&quot;</span><br><span class="line">fi</span><br><span class="line">echo &quot;==========Delete Archive End==========&quot;</span><br><span class="line"></span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>上传IPA到蒲公英</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"># echo &quot;============Upload Pgyer Begin============&quot;</span><br><span class="line"># ## 上传蒲公英 https://www.pgyer.com/doc/view/upload_one_command</span><br><span class="line"></span><br><span class="line"># # &#123;$filePath&#125;是应用安装包文件的路径</span><br><span class="line"># # &#123;$uKey&#125;是开发者的用户 Key，在应用管理-API中查看</span><br><span class="line"># # &#123;$apiKey&#125;是开发者的 API Key，在应用管理-API中查看</span><br><span class="line"></span><br><span class="line"># # U_KEY</span><br><span class="line"># U_KEY=&quot;eb7e409601493709e587b1b30206e27b&quot;</span><br><span class="line"># # API_KEY</span><br><span class="line"># API_KEY=&quot;26f45bbd98549c89a14753329e234372&quot;</span><br><span class="line"># # 上传到蒲公英</span><br><span class="line"># if [ -e &quot;$&#123;EXPORT_IPA_PATH&#125;/$&#123;SCHEME_NAME&#125;.ipa&quot; ]; then</span><br><span class="line">#    echo &quot;开始上传ipa到蒲公英&quot;</span><br><span class="line">#    curl -F &quot;file=@$&#123;EXPORT_IPA_PATH&#125;/$&#123;SCHEME_NAME&#125;.ipa&quot; \</span><br><span class="line">#    		-F &quot;uKey=4a5bc52e6763795e18b69bd82dd23a9e&quot; \</span><br><span class="line">#    		-F &quot;_api_key=$&#123;API_KEY&#125;&quot; \</span><br><span class="line">#    		&quot;https://www.pgyer.com/apiv1/app/upload&quot;</span><br><span class="line">#    echo &quot;上传ipa到蒲公英成功&quot;</span><br><span class="line"># else</span><br><span class="line">#    echo &quot;上传ipa到蒲公英失败&quot;</span><br><span class="line"># fi</span><br><span class="line"></span><br><span class="line"># echo &quot;============Upload Pgyer End============&quot;</span><br><span class="line"></span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br><span class="line">echo &#x27;//////////////////////////////////////////&#x27;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>上传到App Store</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># echo &quot;============Uploading App Store Begin============&quot;</span><br><span class="line"># 上传App Store</span><br><span class="line"># ALTOOL_PATH=&quot;/Applications/Xcode.app/Contents/Applications/Application Loader.app/Contents/Frameworks/ITunesSoftwareService.framework/Versions/A/Support/altool&quot;</span><br><span class="line"></span><br><span class="line"># 将-u 后面的XXX替换成自己的AppID账号，-p后面的XXX替换成自己的密码</span><br><span class="line"># &quot;$ALTOOL_PATH&quot; --validate-app -f $&#123;EXPORT_IPA_PATH&#125;/$&#123;SCHEME_NAME&#125;.ipa -u 13718004742@163.com -p ZJzj5425541 -t ios --output-format xml</span><br><span class="line"># &quot;$ALTOOL_PATH&quot; --upload-app -f $&#123;EXPORT_IPA_PATH&#125;/$&#123;SCHEME_NAME&#125;.ipa -u  13718004742@163.com -p ZJzj5425541 -t ios --output-format xml</span><br><span class="line"></span><br><span class="line"># echo &quot;============Uploading App Store End============&quot;</span><br><span class="line"></span><br><span class="line">exit 0</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>注：<br>上面的一些配置可用可不用，具体根据项目和需求去添加</p>
+</blockquote>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：Xcode学习04：Shell自动化脚本打IPA包</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-05-01 21:46:19</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/05/01/Xcode/Xcode学习04：Shell自动化脚本打IPA包/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/Xcode-%E5%B8%B8%E7%94%A8/">#Xcode-常用</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/09/10/OC%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%9606%EF%BC%9A%E5%90%AF%E5%8A%A8%E4%BC%98%E5%8C%96/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">性能优化06：启动优化</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/04/30/Xcode/Xcode%E5%AD%A6%E4%B9%A003%EF%BC%9AXode%E6%8A%A5xxxiPhone-Developer-Mode-DIsabled/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Xcode学习03：Xode报xxxiPhone(Developer Mode Disabled)</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">Xcode学习04：Shell自动化脚本打IPA包</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-text">实现</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

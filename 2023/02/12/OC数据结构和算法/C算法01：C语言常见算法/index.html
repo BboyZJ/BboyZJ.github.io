@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/02/12/oc数据结构和算法/c算法01：c语言常见算法/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="C算法01：C语言常见算法">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/02/12/OC数据结构和算法/C算法01：C语言常见算法/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="C算法01：C语言常见算法">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            C算法01：C语言常见算法 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">C算法01：C语言常见算法</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-02-12 00:06:03</span>
+        <span class="mobile">2023-02-12 00:06</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-04-26 00:29:41</span>
+            <span class="mobile">2023-04-26 00:29</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E5%92%8C%E7%AE%97%E6%B3%95/">数据结和算法</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="二叉树算法题"><a href="#二叉树算法题" class="headerlink" title="二叉树算法题"></a>二叉树算法题</h1><ol>
+<li>已知某二叉树的前序遍历为 A-B-D-F-G-H-I-E-C,中序遍历为 F-D-H-G-I-B-E-A-C,请还原这颗二叉树。</li>
+</ol>
+<p><strong>解题思路：</strong></p>
+<p>从前序遍历中，我们确定了根节点为A，在从中序遍历中得出 F-D-H-G-I-B-E 在根节点的左边，C 在根节点的右边，那么我们就可以构建我们的二叉树雏形</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304260017458.png"
+                     
+                ></p>
+<p>那么剩下的前序遍历为 B-D-F-G-H-I-E，中序遍历为 F-D-H-G-I-B-E，B就是我们新的 根节点，从中序遍历中得出 F-D-H-G-I 在B的左边，E在B的右边，继续构建</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304260020437.png"
+                     
+                ></p>
+<p>那么剩下的前序遍历为 D-F-G-H-I，中序遍历为 F-D-H-G-I，D就是我们新的 <code>根结点</code>，从中序遍历中得出F在D的左边，H-G-I 在D的右边，继续构建</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304260022250.png"
+                     
+                ></p>
+<p>那么剩下的前序遍历为 G-H-I，中序遍历为 H-G-I，G 就是我们新的 <code>根结点</code>，从中序遍历中得出H在G的左边，I在G的右边，继续构建</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304260023532.png"
+                     
+                ></p>
+<blockquote>
+<p>结论：<br>前序(根左右)：A-B-D-F-G-H-I-E-C<br>中序(左根右)：F-D-H-I-G-B-E-A-C<br>后序(左右根)：F-H-I-G-D-EB-C-A<br>注：光有前序和中序是无法还原二叉树的</p>
+</blockquote>
+<h1 id="输出一个非负整数的位数"><a href="#输出一个非负整数的位数" class="headerlink" title="输出一个非负整数的位数"></a>输出一个非负整数的位数</h1><p><strong>例如：</strong></p>
+<p>1<del>9 &#x2F; 10 &#x3D; 0<br>10</del>99 &#x2F; 10 &#x3D; 1~9<br>….</p>
+<p>分析：除以10其实就是将最后一位数去掉</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 传入一个非负整数，返回其位数</span><br><span class="line">int numLen(unsigned int num) &#123;</span><br><span class="line">    int len = 0;</span><br><span class="line">    while (num &gt; 0) &#123;</span><br><span class="line">        num = num / 10;;</span><br><span class="line">        len += 1;</span><br><span class="line">    &#125;</span><br><span class="line">    return  len;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    int num = 12345;</span><br><span class="line">    int len = numLen(num);</span><br><span class="line">    printf(&quot;%d 是个 %d 位数\n&quot;,num,len);</span><br><span class="line">    </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line">====</span><br><span class="line">12345 是个 5 位数</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="给定一个非负整数num，反复将各个位上的数宇相加。直到结果为一位数。返回这个结果。"><a href="#给定一个非负整数num，反复将各个位上的数宇相加。直到结果为一位数。返回这个结果。" class="headerlink" title="给定一个非负整数num，反复将各个位上的数宇相加。直到结果为一位数。返回这个结果。"></a>给定一个非负整数num，反复将各个位上的数宇相加。直到结果为一位数。返回这个结果。</h1><p><strong>示例：</strong></p>
+<p>输入：num &#x3D; 5<br>输出：5<br>输入：12345<br>输出：15</p>
+<p><strong>思路：</strong></p>
+<p><code>num / 10</code> 可以去掉最后一位，<code>num % 10</code> 可以得到最后一位的 <code>数</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">// 正整数的长度</span><br><span class="line">int numLen(int num) &#123;</span><br><span class="line">    int len = 0;</span><br><span class="line">    while (num &gt; 0) &#123;</span><br><span class="line">        num = num / 10;</span><br><span class="line">        len += 1;</span><br><span class="line">    &#125;</span><br><span class="line">    return len;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 求各个位数之和</span><br><span class="line">int sumNum(int num) &#123;</span><br><span class="line">    int sum = 0;</span><br><span class="line">    // 如果大于10</span><br><span class="line">    if (num &gt; 10) &#123;</span><br><span class="line">        int len = numLen(num);</span><br><span class="line">        // 先加上最后一位</span><br><span class="line">        sum += num % 10;</span><br><span class="line">        for (int i = 0; i &lt; len - 1; i ++) &#123;</span><br><span class="line">            // 去掉最后一位</span><br><span class="line">            num = num / 10;</span><br><span class="line">            // 得到最后一位的数并累加</span><br><span class="line">            sum += num % 10;</span><br><span class="line">        &#125;</span><br><span class="line">        return sum;</span><br><span class="line">    &#125;</span><br><span class="line">    return num;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    </span><br><span class="line">    int num = 125;</span><br><span class="line">    int sum = sumNum(num);</span><br><span class="line">    printf(&quot;%d 各个数之和为：%d\n&quot;,num,sum);</span><br><span class="line">    </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">=====</span><br><span class="line">125 各个数之和为：8</span><br></pre></td></tr></table></figure></div>
+
+
+<h1 id="斐波那契额数列：兔子数列"><a href="#斐波那契额数列：兔子数列" class="headerlink" title="斐波那契额数列：兔子数列"></a>斐波那契额数列：兔子数列</h1><p>当前数是前两个数之和:</p>
+<p>打印出这样的数字：0 1 1 2 3 5 8 13 …</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">// 递归求和</span><br><span class="line">int fibonaci(int i) &#123;</span><br><span class="line">    if (i == 0) &#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">    if (i == 1) &#123;</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    return fibonaci(i - 1) + fibonaci(i - 2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    // 斐波那契额数列</span><br><span class="line">    for (int i = 0; i &lt; 10; i ++) &#123;</span><br><span class="line">        printf(&quot;%d\t\n&quot;,fibonaci(i));</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">0	</span><br><span class="line">1	</span><br><span class="line">1	</span><br><span class="line">2	</span><br><span class="line">3	</span><br><span class="line">5	</span><br><span class="line">8	</span><br><span class="line">13	</span><br><span class="line">21	</span><br><span class="line">34</span><br><span class="line">....</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="求-n-的阶乘"><a href="#求-n-的阶乘" class="headerlink" title="求 n 的阶乘"></a>求 n 的阶乘</h1><p>问：求 1x2x3x4x…n ?</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// 求 n! 传入一个无符号整型</span><br><span class="line">double factorial(unsigned int i)&#123;</span><br><span class="line">    if (i &lt;=1 )&#123;</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    return i * factorial(i-1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    int i = 5;</span><br><span class="line">    printf(&quot;%d 的阶乘是：%f\n&quot;,i,factorial(i));</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">=====</span><br><span class="line">5 的阶乘是：120.000000</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="汽水瓶"><a href="#汽水瓶" class="headerlink" title="汽水瓶"></a>汽水瓶</h1><p>某商店规定：三个空汽水瓶可以换一瓶汽水，允许向老板借空汽水瓶（但是必须要归还）。<br>小张手上有n个空汽水瓶，她想知道自己最多可以喝到多少瓶汽水。<br>数据范围：输入的正整数满足<br>1 ≤ n ≤ 100</p>
+<p>注意：本题存在多组输入。输入的 0 表示输入结束，并不用输出结果。</p>
+<p><strong>示例1：</strong><br>输入例子：<br>3<br>10<br>81<br>0<br>输出例子：<br>1<br>5<br>40<br>例子说明：<br>样例 1 解释：用三个空瓶换一瓶汽水，剩一个空瓶无法继续交换<br>样例 2 解释：用九个空瓶换三瓶汽水，剩四个空瓶再用三个空瓶换一瓶汽水，剩两个空瓶，向老板借一个空瓶再用三个空瓶换一瓶汽水喝完得一个空瓶还给老板</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">int main(int argc, char* argv[]) &#123;</span><br><span class="line">    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];</span><br><span class="line">    // 定义空气水平为num，最多可喝到ret</span><br><span class="line">    int num,ret;</span><br><span class="line">    while (scanf(&quot;%d&quot;, &amp;num) != EOF) &#123; // 汽水瓶可以是0，这里跳出循环</span><br><span class="line">        // 初始值</span><br><span class="line">        ret = 0;</span><br><span class="line">        if (num &gt; 0) &#123;</span><br><span class="line">            // 如果空瓶 &gt;= 3 那么一直可置换</span><br><span class="line">            while (num &gt;= 3) &#123;</span><br><span class="line">                // 汽水 = 汽水 + 空瓶3个换一瓶汽水</span><br><span class="line">                ret = ret + num/3;</span><br><span class="line">                // 空瓶3个换1个空瓶 + 剩余未置换的空瓶</span><br><span class="line">                num = num/3 + num%3;</span><br><span class="line">            &#125;</span><br><span class="line">            // 如果还剩2个空瓶，则还能置换一瓶汽水</span><br><span class="line">            if (num == 2) &#123;</span><br><span class="line">                ret ++;</span><br><span class="line">            &#125;</span><br><span class="line">            printf(&quot;%d&quot;,ret);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    [pool drain];</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="字符串去重"><a href="#字符串去重" class="headerlink" title="字符串去重"></a>字符串去重</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    // 字符串</span><br><span class="line">    char str[] = &quot;abcabdAAVCBC&quot;;</span><br><span class="line">    // 长度</span><br><span class="line">    long len = strlen(str);</span><br><span class="line">    // 数组</span><br><span class="line">    char ret[30] = &#123;0&#125;;</span><br><span class="line">    int num = 0;</span><br><span class="line">    for (int i = 0; i &lt; len; i ++) &#123;</span><br><span class="line">        int flag = 0;</span><br><span class="line">        // num 每增加1 代表数组添加一个元素</span><br><span class="line">        for (int j = 0; j &lt; num; j ++) &#123;</span><br><span class="line">            // 遍历数组，如果其中包含某个字符，则不去添加</span><br><span class="line">            if (str[i] == ret[j]) &#123;</span><br><span class="line">                flag = 1;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        // 添加元素</span><br><span class="line">        if (flag == 0) &#123;</span><br><span class="line">            ret[num] = str[i];</span><br><span class="line">            num ++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    printf(&quot;ret == %s\n&quot;,ret);</span><br><span class="line">    </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="明明的随机数"><a href="#明明的随机数" class="headerlink" title="明明的随机数"></a>明明的随机数</h1><p>明明生成了N个1到500之间的随机整数。请你删去其中重复的数字，即相同的数字只保留一个，把其余相同的数去掉，然后再把这些数从小到大排序，按照排好的顺序输出。<br>数据范围： 1≤n≤1000  ，输入的数字大小满足 1≤val≤500 </p>
+<p>输入描述：<br>第一行先输入随机整数的个数 N 。<br>接下来的 N 行每行输入一个整数，代表明明生成的随机数。<br>具体格式可以参考下面的”示例”。</p>
+<p>示例1：<br>输入例子：<br>3<br>2<br>2<br>1<br>输出例子：<br>1<br>2<br>例子说明：输入解释：<br>第一个数字是3，也即这个小样例的N&#x3D;3，说明用计算机生成了3个1到500之间的随机整数，接下来每行一个随机数字，共3行，也即这3个随机数字为：<br>2<br>2<br>1<br>所以样例的输出为：<br>1<br>2 </p>
+<p><strong>c 语言实现：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">int main(int argc, char* argv[]) &#123;</span><br><span class="line">    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];</span><br><span class="line">    int n; // 个数</span><br><span class="line">    int arr[1001]; // 数组</span><br><span class="line">    int j,k;    //定义循环因子，嵌套双层循环</span><br><span class="line">    while (scanf(&quot;%d&quot;, &amp;n) != EOF) &#123;</span><br><span class="line">        // 生成随机数并添加到数组中</span><br><span class="line">        for (int i = 0; i &lt; n; i ++) &#123;</span><br><span class="line">            int r = rand()%1000;</span><br><span class="line">            arr[i] = r;</span><br><span class="line">        &#125;</span><br><span class="line">        // 冒泡排序</span><br><span class="line">        for(j=0; j&lt;n-1; j++)    //设置循环后界</span><br><span class="line">        &#123;</span><br><span class="line">            for(k=0; k&lt;n-j-1; k++)    //不断向后进行比较</span><br><span class="line">            &#123;</span><br><span class="line">                if(arr[k]&gt;arr[k+1])    //比较相邻的元素</span><br><span class="line">                &#123;</span><br><span class="line">                    int temp=arr[k];    //三杯水交换法</span><br><span class="line">                    arr[k]=arr[k+1];</span><br><span class="line">                    arr[k+1]=temp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        /* 输出数组中每个元素的值 */</span><br><span class="line">        for (int m = 0; m &lt; n; m++ )&#123;</span><br><span class="line">        printf(&quot;Element[%d] = %d\n&quot;, m, arr[m] );</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    [pool drain];</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="进制转换"><a href="#进制转换" class="headerlink" title="进制转换"></a>进制转换</h1><p>16进制转10进制</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line">#include&lt;stdlib.h&gt;</span><br><span class="line"></span><br><span class="line">int main(int argc, char* argv[]) &#123;</span><br><span class="line">    char a[] = &quot;1c&quot;;</span><br><span class="line">    func(a);</span><br><span class="line">    printf(&quot;%d\n&quot;,func(a));</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int func(char a[])&#123;</span><br><span class="line">    // 长度</span><br><span class="line">    long len = strlen(a);</span><br><span class="line">    int i,j,num=0;</span><br><span class="line">    for (i = 0; i &lt; len; i ++) &#123;</span><br><span class="line">        if (a[i] == &#x27;A&#x27;)</span><br><span class="line">            //pow() 函数用来求 x 的 y 次方的值。</span><br><span class="line">            num += 10 * pow(16, len - i - 1); </span><br><span class="line">        else if (a[i] == &#x27;B&#x27;)</span><br><span class="line">            num += 11 * pow(16, len - i - 1);</span><br><span class="line">        else if (a[i] == &#x27;C&#x27;)</span><br><span class="line">            num += 12 * pow(16, len - i - 1);</span><br><span class="line">        else if (a[i]==&#x27;D&#x27;)</span><br><span class="line">            num += 13 * pow(16, len - i - 1);</span><br><span class="line">        else if (a[i] == &#x27;E&#x27;)</span><br><span class="line">            num += 14 * pow(16, len - i - 1);</span><br><span class="line">        else</span><br><span class="line">            num += i * pow(16, len - i - 1);</span><br><span class="line">    &#125;</span><br><span class="line">    return num;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：C算法01：C语言常见算法</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-02-12 00:06:03</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/02/12/OC数据结构和算法/C算法01：C语言常见算法/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E5%92%8C%E7%AE%97%E6%B3%95/">#数据结和算法</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/02/13/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A001%EF%BC%9AC%E8%AF%AD%E8%A8%80%E6%A6%82%E8%BF%B0/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">C语言学习01：C语言概述</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/02/09/Swift%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B6/Swift%E5%AD%A6%E4%B9%A023%EF%BC%9AKingfisher%E4%BD%BF%E7%94%A8/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习：Kingfisher使用</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">C算法01：C语言常见算法</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E7%AE%97%E6%B3%95%E9%A2%98"><span class="nav-text">二叉树算法题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E4%B8%80%E4%B8%AA%E9%9D%9E%E8%B4%9F%E6%95%B4%E6%95%B0%E7%9A%84%E4%BD%8D%E6%95%B0"><span class="nav-text">输出一个非负整数的位数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%99%E5%AE%9A%E4%B8%80%E4%B8%AA%E9%9D%9E%E8%B4%9F%E6%95%B4%E6%95%B0num%EF%BC%8C%E5%8F%8D%E5%A4%8D%E5%B0%86%E5%90%84%E4%B8%AA%E4%BD%8D%E4%B8%8A%E7%9A%84%E6%95%B0%E5%AE%87%E7%9B%B8%E5%8A%A0%E3%80%82%E7%9B%B4%E5%88%B0%E7%BB%93%E6%9E%9C%E4%B8%BA%E4%B8%80%E4%BD%8D%E6%95%B0%E3%80%82%E8%BF%94%E5%9B%9E%E8%BF%99%E4%B8%AA%E7%BB%93%E6%9E%9C%E3%80%82"><span class="nav-text">给定一个非负整数num，反复将各个位上的数宇相加。直到结果为一位数。返回这个结果。</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E9%A2%9D%E6%95%B0%E5%88%97%EF%BC%9A%E5%85%94%E5%AD%90%E6%95%B0%E5%88%97"><span class="nav-text">斐波那契额数列：兔子数列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B1%82-n-%E7%9A%84%E9%98%B6%E4%B9%98"><span class="nav-text">求 n 的阶乘</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B1%BD%E6%B0%B4%E7%93%B6"><span class="nav-text">汽水瓶</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8E%BB%E9%87%8D"><span class="nav-text">字符串去重</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%98%8E%E6%98%8E%E7%9A%84%E9%9A%8F%E6%9C%BA%E6%95%B0"><span class="nav-text">明明的随机数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2"><span class="nav-text">进制转换</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/02/03/swift/swift学习03：error handing错误处理/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Swift学习03：swift中guard语句">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/02/03/Swift/Swift学习03：Error Handing错误处理/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Swift学习03：swift中guard语句">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            Swift学习03：swift中guard语句 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">Swift学习03：swift中guard语句</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-02-03 19:54:25</span>
+        <span class="mobile">2023-02-03 19:54</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-05-05 15:40:30</span>
+            <span class="mobile">2023-05-05 15:40</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/Swift-%E5%B8%B8%E7%94%A8/">Swift-常用</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>对异常的正确处理能够明确反映在代码执行中出现的问题，使得接下来的debug快速定位问题所在的地方，提高debug效率，同时也能对不同情况做出不同响应</p>
+<h1 id="异常处理的历史由来"><a href="#异常处理的历史由来" class="headerlink" title="异常处理的历史由来"></a>异常处理的历史由来</h1><ul>
+<li><p>swift1.0：cocoa touch 的 NSError，swift没有真正自己的异常处理机制</p>
+</li>
+<li><p>swift2.0：加入 ErrorType protocol</p>
+</li>
+<li><p>swift3.0：改名 Error protocol</p>
+</li>
+</ul>
+<h1 id="swift3-0-Error-protocol-的使用"><a href="#swift3-0-Error-protocol-的使用" class="headerlink" title="swift3.0 Error protocol 的使用"></a>swift3.0 Error protocol 的使用</h1><p>首先定义一个枚举，遵循协议 <code>Error</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">enum MyError : Error &#123;</span><br><span class="line">　　case one</span><br><span class="line">　　case two</span><br><span class="line">　　case three</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Error-Handing-异常处理"><a href="#Error-Handing-异常处理" class="headerlink" title="Error Handing 异常处理"></a>Error Handing 异常处理</h1><p>swift2.0 引入了 <code>guard、try、do catch、throw、throws</code> 这 <code>六个关键字</code> 组成的异常处理机制</p>
+<h1 id="guard"><a href="#guard" class="headerlink" title="guard"></a>guard</h1><ol>
+<li>什么是guard？</li>
+</ol>
+<p><code>guard</code> 是 <code>swift2.0</code> 推出的新的判断语句的用法。<code>guard</code> 语句和 <code>if</code> 语句类似，都是根据关键字之后的表达式的布尔值决定下一步执行什么。和if语句不同的是，guard语句只有一个代码块，而if语句可有多个代码块。（如 if 、else if、 else）</p>
+<ol start="2">
+<li>guard有什么作用？</li>
+</ol>
+<p>顾名思义，<code>guard</code> 是作为 <code>保卫</code> 作用而存在的。当你不满足我的要求，那么请您出去；如果满足，则执行下一步操作。</p>
+<ol start="3">
+<li>guard与if相比</li>
+</ol>
+<p>与 <code>if</code> 语句相同的是，<code>guard</code> 也是基于一个表达式的 <code>布尔值</code> 去判断一段代码是否该被执行。与 <code>if</code> 语句不同的是，<code>guard</code> 只有在条件不满足的时候才会执行这段代码。你可以把 <code>guard</code> 近似的看做是 <code>Assert</code>，但是你可以优雅的退出而非崩溃。</p>
+<ol start="4">
+<li>guard 用法？</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">guard 条件 else &#123;</span><br><span class="line">    // 条件不成立执行</span><br><span class="line">&#125;</span><br><span class="line">// 条件成功往下执行</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>当 <code>guard</code> 语句条件为 <code>false</code> 时，执行大括号里面的代码</li>
+<li>当 <code>guard</code> 语句条件为 <code>true</code> 时，跳过guard语句</li>
+</ul>
+<p><strong>举例：登录的时候判断用户名和密码是否为空</strong></p>
+<ul>
+<li>私有方法判断用户名和密码是否为空</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">private func login(_ info:[String:String]) &#123;</span><br><span class="line">        let username = info[&quot;username&quot;]!</span><br><span class="line">        let password = info[&quot;password&quot;]!</span><br><span class="line">        // 判断是否有用户名，如果有往下执行，没值执行括号里的内容</span><br><span class="line">        guard !username.isEmpty else &#123;</span><br><span class="line">            print(&quot;请输入用户名&quot;);</span><br><span class="line">            return</span><br><span class="line">        &#125;</span><br><span class="line">        // 判断是否有密码</span><br><span class="line">        guard !password.isEmpty else &#123;</span><br><span class="line">            print(&quot;请输入密码&quot;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        print(&quot;用户名：\(username)&quot;,&quot;密码：\(password)&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>调用</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">login([&quot;username&quot;:&quot;zj&quot;,&quot;password&quot;:&quot;&quot;])</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>查看打印结果</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请输入密码</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="do-catch"><a href="#do-catch" class="headerlink" title="do catch"></a>do catch</h1><ul>
+<li><p>do 后面大括号中的代码抛出了异常，就会执行 <code>catch</code></p>
+</li>
+<li><p>do 后面大括号中的代码没有抛出异常，就不会执行 <code>catch</code></p>
+</li>
+</ul>
+<p><strong>举例</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">override func viewDidLoad() &#123;</span><br><span class="line">        super.viewDidLoad()</span><br><span class="line">        // Do any additional setup after loading the view.</span><br><span class="line">     </span><br><span class="line">        let data = Data()</span><br><span class="line">        doCatch(data)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">func doCatch(_ data: Data) &#123;</span><br><span class="line">    do &#123;</span><br><span class="line">        // 这里的代码抛出了异常，就会执行catch</span><br><span class="line">        let dict = try JSONSerialization.jsonObject(with: data)</span><br><span class="line">        print(dict)</span><br><span class="line">    &#125;catch &#123;</span><br><span class="line">        // catch中默认提供error信息，当序列化不成功时，但会error</span><br><span class="line">        print(error)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">======</span><br><span class="line">Error Domain=NSCocoaErrorDomain Code=3840 &quot;Unable to parse empty data.&quot; UserInfo=&#123;NSDebugDescription=Unable to parse empty data.&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>由于data是空的，解析异常，执行catch</p>
+<h1 id="throws和throw"><a href="#throws和throw" class="headerlink" title="throws和throw"></a>throws和throw</h1><ul>
+<li>使用 <code>throws</code> 放在参数列表后面 <code>表明</code> 一个方法有 <code>异常抛出</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func 方法名字(参数列表) throws -&gt; 返回值类型 &#123;</span><br><span class="line">    内部使用 thorw抛出异常</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>举例</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"> override func viewDidLoad() &#123;</span><br><span class="line">    super.viewDidLoad()</span><br><span class="line">    // Do any additional setup after loading the view.</span><br><span class="line">    </span><br><span class="line">    do &#123;</span><br><span class="line">        var str: () = try test(str: &quot;three&quot;)</span><br><span class="line">        print(str)</span><br><span class="line">    &#125;catch MyError.one &#123;</span><br><span class="line">        print(&quot;MyError.one&quot;)</span><br><span class="line">    &#125;catch MyError.two &#123;</span><br><span class="line">        print(&quot;MyError.two&quot;)</span><br><span class="line">    &#125;catch &#123;</span><br><span class="line">        print(error)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func test(str: String) throws -&gt; void&#123;</span><br><span class="line">    if str == &quot;one&quot; &#123;</span><br><span class="line">        throw MyError.one</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        throw MyError.two</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">=====</span><br><span class="line">MyError.two</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="try、try-、try"><a href="#try、try-、try" class="headerlink" title="try、try?、try!"></a>try、try?、try!</h1><ol>
+<li>try</li>
+</ol>
+<ul>
+<li><p>出现异常处理异常</p>
+</li>
+<li><p><code>try</code> 配合 <code>do catch</code> 使用</p>
+</li>
+</ul>
+<ol start="2">
+<li>try? （常用方式）</li>
+</ol>
+<ul>
+<li><p>不处理异常</p>
+</li>
+<li><p>使用这个关键字返回一个 <code>可选值类型</code></p>
+</li>
+<li><p>如果有异常，返回 <code>nil</code></p>
+</li>
+<li><p>如果没有异常，返回 <code>可选值</code></p>
+</li>
+</ul>
+<p><strong>举例：将服务器返回的JSON数据反序列化成字典</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">func tryTest() &#123;</span><br><span class="line">    // 字典</span><br><span class="line">    let jsonstr = &quot;&#123;\&quot;status\&quot;:\&quot;1\&quot;,\&quot;data\&quot;:&#123;\&quot;udid\&quot;:\&quot;5bce8b974adbc6a60858d41657f1761305f62ce9\&quot;,\&quot;time\&quot;:\&quot;1580546728\&quot;,\&quot;orderid\&quot;:\&quot;20200201164519672\&quot;&#125;&#125;&quot;</span><br><span class="line">    let jsondata = jsonstr.data(using: .utf8)</span><br><span class="line"> </span><br><span class="line">    let success = try? JSONSerialization.jsonObject(with: jsondata!, options: .mutableContainers) as Any</span><br><span class="line">    print(success!)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">========</span><br><span class="line">Optional(&#123;</span><br><span class="line">    data =     &#123;</span><br><span class="line">        orderid = 20200201164519672;</span><br><span class="line">        time = 1580546728;</span><br><span class="line">        udid = 5bce8b974adbc6a60858d41657f1761305f62ce9;</span><br><span class="line">    &#125;;</span><br><span class="line">    status = 1;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>try! （不建议使用，非常危险）</li>
+</ol>
+<ul>
+<li>不让异常传播，一旦出现了异常，那么程序会停止</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 原生解析方法</span><br><span class="line">let dicArr = try! JSONSerialization.jsonObject(with: jsonData!, options: .allowFragments) as! [[String:AnyObject]]</span><br><span class="line">print(&quot;打印所有数据:\(dicArr)&quot;)</span><br><span class="line"></span><br><span class="line">=====</span><br><span class="line">[[&quot;id&quot;: 3], [&quot;id&quot;: 5]]</span><br></pre></td></tr></table></figure></div>
+
+
+<h1 id="Assert-断言"><a href="#Assert-断言" class="headerlink" title="Assert 断言"></a>Assert 断言</h1><ol>
+<li>有什么作用？</li>
+</ol>
+<p><code>不符合条件</code> 的主动崩溃。</p>
+<ol start="2">
+<li>用法</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private func assertTest(_ someValue: Bool) &#123;</span><br><span class="line">    // 一些奇怪的错误发生</span><br><span class="line">    assert(someValue, &quot;some strange error happen&quot;)</span><br><span class="line">    // 打印</span><br><span class="line">    print(&quot;zj&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>当 <code>someValue</code> 为 <code>真</code> 时会继续执行下面的代码，打印 <code>zj</code></p>
+</li>
+<li><p>如果为 <code>假</code>，则会抛出异常，会让程序终止在此处,同时打印出信息，其中文件路径和异常代码所在的行数编译器会自动打出:</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2023-04-23 19:14:57.417918+0800 Assert[40173:730298] Assertion failed: some strange error happen: file Assert/ViewController.swift, line 20</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="NSExcetption"><a href="#NSExcetption" class="headerlink" title="NSExcetption"></a>NSExcetption</h1>
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：Swift学习03：swift中guard语句</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-02-03 19:54:25</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/02/03/Swift/Swift学习03：Error Handing错误处理/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/Swift-%E5%B8%B8%E7%94%A8/">#Swift-常用</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/02/04/Swift/Swift%E5%AD%A6%E4%B9%A004%EF%BC%9Aswift%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E5%A3%B0%E6%98%8E/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习04：swift中方法的声明</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/02/03/Swift/Swift%E5%AD%A6%E4%B9%A012%EF%BC%9Aswift%E4%B8%AD@available%E5%92%8C#available/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习12：swift中@available和#available</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">Swift学习03：swift中guard语句</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E7%9A%84%E5%8E%86%E5%8F%B2%E7%94%B1%E6%9D%A5"><span class="nav-text">异常处理的历史由来</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift3-0-Error-protocol-%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-text">swift3.0 Error protocol 的使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Error-Handing-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-text">Error Handing 异常处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#guard"><span class="nav-text">guard</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#do-catch"><span class="nav-text">do catch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#throws%E5%92%8Cthrow"><span class="nav-text">throws和throw</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#try%E3%80%81try-%E3%80%81try"><span class="nav-text">try、try?、try!</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Assert-%E6%96%AD%E8%A8%80"><span class="nav-text">Assert 断言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSExcetption"><span class="nav-text">NSExcetption</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

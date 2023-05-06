@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-22 16:28:42</span>
-            <span class="mobile">2023-04-22 16:28</span>
+            <span class="pc">2023-04-23 21:46:10</span>
+            <span class="mobile">2023-04-23 21:46</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -696,10 +696,25 @@
 <li><p>HTTPS：超文本传输安全协议，等价于HTTP协议 + SSL&#x2F;TLS协议；端口号443；响应速度慢；</p>
 </li>
 </ul>
+<h2 id="为什么客户端在四次挥手后还等待2MSL-重点"><a href="#为什么客户端在四次挥手后还等待2MSL-重点" class="headerlink" title="为什么客户端在四次挥手后还等待2MSL? 重点"></a>为什么客户端在四次挥手后还等待2MSL? <strong>重点</strong></h2><p>MSL：一段TCP报文在传输过程中最大生命周期</p>
+<p>因为客户端发出最后的ACK确认报文时，并不能确定服务器能接收到该报文，所以客户端发送完ACK报文后，需要设置一个时长为2MSL计时器，<code>2MSL是服务端发出FIN报文和客户端发出的ACK确认报文所能保持有效的最大时长</code>。</p>
 <h1 id="Socket-重要"><a href="#Socket-重要" class="headerlink" title="Socket 重要"></a>Socket <strong>重要</strong></h1><ol>
 <li>什么是socket？</li>
 </ol>
-<p>Socket 俗称 <code>套接字</code>，是网络通信的基石。它可以通过 <code>IP地址、端口号、TCP/UDP协议</code> 实现客户端和服务端的双向通信。</p>
+<ul>
+<li><p><code>Socket</code> 俗称 <code>套接字</code>，是 <code>网络通信的基本操作单元</code>。它可以通过 <code>IP地址、端口号、TCP/UDP协议</code> 实现客户端和服务端的双向通信。</p>
+</li>
+<li><p>不属于协议范畴，而是一个接口（API），是对 <code>TCP/IP协议</code> 的封装</p>
+</li>
+<li><p>可以基于TCP连接，也可以基于UDP连接</p>
+<ul>
+<li><p>基于TCP连接，需要三次握手，是可靠的</p>
+</li>
+<li><p>基于UDP连接，不需要握手，是不可靠的，大多数IM都是不可靠的</p>
+</li>
+</ul>
+</li>
+</ul>
 <ol start="2">
 <li>长链接 和 短链接</li>
 </ol>
@@ -815,7 +830,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC学习22：TCP/UDP/HTTP/HTTPS/Socket/WebSocket/WebService探索</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OSI%E6%A8%A1%E5%9E%8B"><span class="nav-text">OSI模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#URL"><span class="nav-text">URL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IP%EF%BC%88%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="nav-text">IP（网络层协议）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP-amp-UDP%EF%BC%88%E4%BC%A0%E8%BE%93%E5%B1%82%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="nav-text">TCP &amp; UDP（传输层协议）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP%EF%BC%88%E4%BC%A0%E8%BE%93%E6%8E%A7%E5%88%B6%E5%8D%8F%E8%AE%AE%EF%BC%8CTransmission-Control-Protocol%EF%BC%89"><span class="nav-text">TCP（传输控制协议，Transmission Control Protocol）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UDP-%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE%E6%8A%A5%E5%8D%8F%E8%AE%AE%EF%BC%8CUser-Data-Protocol"><span class="nav-text">UDP(用户数据报协议，User Data Protocol)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-%E5%92%8C-UDP-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">TCP 和 UDP 的区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%EF%BC%88%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="nav-text">HTTP（应用层协议）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTPS%EF%BC%88%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="nav-text">HTTPS（应用层协议）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS-%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-text">HTTPS 工作过程：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS%E8%BF%9E%E6%8E%A5%E8%BF%87%E7%A8%8B"><span class="nav-text">HTTPS连接过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS%E5%92%8CHTTP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">HTTPS和HTTP的区别？ 重点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Socket-%E9%87%8D%E8%A6%81"><span class="nav-text">Socket 重要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebSocket"><span class="nav-text">WebSocket</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebService"><span class="nav-text">WebService</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OSI%E6%A8%A1%E5%9E%8B"><span class="nav-text">OSI模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#URL"><span class="nav-text">URL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IP%EF%BC%88%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="nav-text">IP（网络层协议）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP-amp-UDP%EF%BC%88%E4%BC%A0%E8%BE%93%E5%B1%82%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="nav-text">TCP &amp; UDP（传输层协议）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP%EF%BC%88%E4%BC%A0%E8%BE%93%E6%8E%A7%E5%88%B6%E5%8D%8F%E8%AE%AE%EF%BC%8CTransmission-Control-Protocol%EF%BC%89"><span class="nav-text">TCP（传输控制协议，Transmission Control Protocol）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UDP-%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE%E6%8A%A5%E5%8D%8F%E8%AE%AE%EF%BC%8CUser-Data-Protocol"><span class="nav-text">UDP(用户数据报协议，User Data Protocol)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-%E5%92%8C-UDP-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">TCP 和 UDP 的区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%EF%BC%88%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="nav-text">HTTP（应用层协议）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTPS%EF%BC%88%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="nav-text">HTTPS（应用层协议）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS-%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-text">HTTPS 工作过程：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS%E8%BF%9E%E6%8E%A5%E8%BF%87%E7%A8%8B"><span class="nav-text">HTTPS连接过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS%E5%92%8CHTTP%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">HTTPS和HTTP的区别？ 重点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%9C%A8%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E5%90%8E%E8%BF%98%E7%AD%89%E5%BE%852MSL-%E9%87%8D%E7%82%B9"><span class="nav-text">为什么客户端在四次挥手后还等待2MSL? 重点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Socket-%E9%87%8D%E8%A6%81"><span class="nav-text">Socket 重要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebSocket"><span class="nav-text">WebSocket</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebService"><span class="nav-text">WebService</span></a></li></ol>
 
     </div>
 </div>

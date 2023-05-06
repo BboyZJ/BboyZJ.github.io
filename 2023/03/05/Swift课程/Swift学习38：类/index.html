@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-31 15:58:37</span>
-            <span class="mobile">2023-03-31 15:58</span>
+            <span class="pc">2023-05-05 12:42:19</span>
+            <span class="mobile">2023-05-05 12:42</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -351,7 +351,7 @@
 <li>class <code>可以继承</code>。struct <code>不能继承</code>。</li>
 <li>class 有 <code>引用计数</code>，可以 <code>多次引用</code>。struct 没有引用计数</li>
 <li>class 有 <code>类型转换</code>，允许在 <code>运行时检查和解释一个类实例的类型</code>。struct 没有</li>
-<li>class 有 <code>解构器</code> 允许一个 <code>类实例释放任何其所被分配的资源</code></li>
+<li>class 有 <code>反初始化器</code> 允许一个 <code>类实例释放任何其所被分配的资源</code></li>
 <li>class 分配在 <code>堆</code> 中，动态分配释放内存。struct 分配在 <code>栈</code> 中，系统分配是否内存</li>
 <li>struct 比 class 更轻量级，<code>栈</code> 只访问一次拿到数据，<code>堆</code> 访问两次拿到数据（第一次获取指针，第二次获取数据）</li>
 </ul>
@@ -425,7 +425,7 @@
 <h1 id="计算属性"><a href="#计算属性" class="headerlink" title="计算属性"></a>计算属性</h1><ul>
 <li><p>除了 <code>存储属性</code>，<code>类</code> 还能定义 <code>计算属性</code>，而它实际 <code>并不是存储值</code>。</p>
 </li>
-<li><p>相反，它提供一个 <code>读取器</code> 和一个 <code>可选的设置器</code> 来间接得到和设置其它的 <code>属性和值</code>。类似于 <code>OC</code> 的 <code>set/get</code> 方法去设值和取值</p>
+<li><p>相反，它提供一个 <code>读取器</code> 和一个 <code>可选的设置器</code> 来间接得到和设置它的 <code>属性和值</code>。类似于 <code>OC</code> 的 <code>set/get</code> 方法去设值和取值</p>
 </li>
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// 定义计算属性</span><br><span class="line">class Point &#123;</span><br><span class="line">    var x = 0.0,y = 0.0</span><br><span class="line">&#125;</span><br><span class="line">class Size &#123;</span><br><span class="line">    var width = 0.0,height = 0.0</span><br><span class="line">&#125;</span><br><span class="line">class Rect &#123;</span><br><span class="line">    // 存储属性</span><br><span class="line">    var origin = Point()</span><br><span class="line">    var size = Size()</span><br><span class="line">    // 计算属性：可以通过origin 和 size 计算出来</span><br><span class="line">    var center: Point &#123;</span><br><span class="line">        get &#123;</span><br><span class="line">            let centerX = origin.x + size.width/2.0</span><br><span class="line">            let centerY = origin.y + size.height/2.0</span><br><span class="line">            return Point(x:centerX, y:centerY)</span><br><span class="line">        &#125;</span><br><span class="line">        set(newCenter) &#123;</span><br><span class="line">            origin.x = newCenter.x - size.width/2.0</span><br><span class="line">            origin.y = newCenter.y - size.height/2.0</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let rect = Rect(origin: Point(x: 0,y: 0),size: Size(width: 100,height: 100))</span><br><span class="line">print(rect.center)</span><br><span class="line"></span><br><span class="line">=============</span><br><span class="line">Point(x: 50.0, y: 50.0)</span><br></pre></td></tr></table></figure></div>
@@ -433,7 +433,7 @@
 <h1 id="简写-setter"><a href="#简写-setter" class="headerlink" title="简写 setter"></a>简写 setter</h1><ul>
 <li>如果一个 <code>计算属性</code> 的 <code>设置器</code> 没有为将要被设置的值定义一个名字，那么它将被默认命名为 <code>newValue</code></li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set &#123;</span><br><span class="line">    origin.x = newCenter.x - size.width/2.0</span><br><span class="line">    origin.y = newCenter.y - size.height/2.0</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set(newCenter) &#123;</span><br><span class="line">    origin.x = newCenter.x - size.width/2.0</span><br><span class="line">    origin.y = newCenter.y - size.height/2.0</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <h1 id="简写-getter"><a href="#简写-getter" class="headerlink" title="简写 getter"></a>简写 getter</h1><ul>
 <li>如果整个 <code>getter</code> 的函数体是一个 <code>单一的表达式</code>，那么 <code>getter</code> 隐士返回这个表达式</li>
@@ -465,7 +465,6 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 全局变量</span><br><span class="line">class Sum &#123;</span><br><span class="line">    var count: Int = 0 &#123;</span><br><span class="line">        willSet &#123;</span><br><span class="line">            print(&quot;count : \(newValue)&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">        didSet &#123;</span><br><span class="line">            print(&quot;did change count from \(oldValue) to \(count)&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let sum = Sum()</span><br><span class="line">sum.count = 10 // 全局变量</span><br><span class="line">print(sum.count)</span><br><span class="line"></span><br><span class="line">==============</span><br><span class="line">count : 10</span><br><span class="line">did change count from 0 to 10</span><br></pre></td></tr></table></figure></div>
 <h1 id="类型属性"><a href="#类型属性" class="headerlink" title="类型属性"></a>类型属性</h1><ul>
 <li>使用 <code>static</code> 关键字来定义 <code>类型属性</code>。</li>
-<li></li>
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 类型属性</span><br><span class="line">class SuperClass &#123;</span><br><span class="line">    // 类型属性</span><br><span class="line">    static var name: String = &quot;ZJ&quot;</span><br><span class="line">&#125;</span><br><span class="line">print(SuperClass.name)</span><br><span class="line"></span><br><span class="line">=======</span><br><span class="line">ZJ</span><br></pre></td></tr></table></figure></div>
 
@@ -477,7 +476,7 @@
 <h1 id="定义实例方法"><a href="#定义实例方法" class="headerlink" title="定义实例方法"></a>定义实例方法</h1><ul>
 <li><p><code>实例方法</code> 是属于 <code>特定类实例、结构体实例或枚举实例的函数</code>，提供 <code>访问和修改实例属性的方法</code></p>
 </li>
-<li><p><code>每一个类的实例都隐含一个叫做 </code>self<code> 的属性</code>，它完全与实例本身相等。你可以用 <code>self</code> 属性在当前实例中调用自身的方法</p>
+<li><p><code>每一个类的实例都隐含一个叫做 self 的属性</code>，它完全与实例本身相等。你可以用 <code>self</code> 属性在当前实例中调用自身的方法</p>
 </li>
 <li><p>实际上，你不需要经常在代码中写 <code>self</code>。如果你没有显示地写出 <code>self</code>，<code>swift</code> 会在你方法中使用已知属性或方法的时候假定你调用了当前实例中的属性或者方法</p>
 </li>

@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-09 02:54:39</span>
-            <span class="mobile">2023-03-09 02:54</span>
+            <span class="pc">2023-04-25 16:47</span>
+            <span class="mobile">2023-04-25 16</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -325,7 +325,83 @@
             
 
             <div class="article-content markdown-body">
-                
+                <h1 id="什么是-Pch？"><a href="#什么是-Pch？" class="headerlink" title="什么是 Pch？"></a>什么是 Pch？</h1><p><code>pch</code> 文件是一个标准的 <code>预编译头文件(Pre-Compiled Header)</code>，在 <code>Xcode6</code> 之前的版本中，系统模板会在 <code>Supporting Files文件夹</code> 自动创建。但在 <code>Xcode6</code> 之后的版本中取消了这一文件，如果我们需要使用 <code>pch</code> 文件，则需要 <code>手动创建</code>。</p>
+<p><strong>去掉的原因：</strong></p>
+<blockquote>
+<p>1、去掉自动导入的系统框架类库的头文件，可以提高原文件的复用性，便于迁移。<br>2、一个体积大的 <code>Prefix Header</code> 会大大增加编译时间。</p>
+</blockquote>
+<h1 id="Pch-有什么作用？"><a href="#Pch-有什么作用？" class="headerlink" title="Pch 有什么作用？"></a>Pch 有什么作用？</h1><ul>
+<li><p>存放一些 <code>全局的宏（整个项目中都用的上的宏）</code></p>
+</li>
+<li><p>用来包含一些 <code>全局头文件（整个项目中都用得上的头文件）</code></p>
+</li>
+<li><p>能自动打开或者关闭日志输出功能</p>
+</li>
+</ul>
+<h1 id="Pch-缺点？"><a href="#Pch-缺点？" class="headerlink" title="Pch 缺点？"></a>Pch 缺点？</h1><p>如果你的pch文件确实很大，那那肯定影响编译速度，苹果去掉他可能是要加快编译时间增加用户体验。虽然失去了编程的便利性。事实上，正确运用pch文件时预编译后的头文件会被缓存起来，再次编译的时候就不需要重新编译pch文件中导入的内容，编译速度并不会降低很多。很重要的一点就是pch文件确实给我们编程带来便利，我们不用在每个文件内重复引用另一个文件；那怎样才能提高编译速度呢？降低编译速度的罪魁祸首就是大量的共用性不高的宏定义和头文件的引入。编译的时候整个工程范围地查找和替换这些宏定义字段，重复导入这些头文件，不慢就奇怪了。</p>
+<h1 id="Pch-使用"><a href="#Pch-使用" class="headerlink" title="Pch 使用"></a>Pch 使用</h1><ol>
+<li>创建 <code>.pch</code> 文件</li>
+</ol>
+<ul>
+<li>File -&gt; New -&gt; File… 或 Command + N</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304251246187.png"
+                     
+                ></p>
+<ul>
+<li>命名一个名字，然后点击 Create，就生成好了 pch 文件</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304251249378.png"
+                     
+                ></p>
+<ol start="2">
+<li>配置文件路径</li>
+</ol>
+<p>创建好了 pch 文件，但并不代表现在就能用了，还需要给 pch文件 配置路径</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304251254644.png"
+                     
+                ></p>
+<ul>
+<li>把 <code>Precompile Prefix Header</code> 为 <code>YES</code>，这样的话 <code>pch会被预编译</code>，预编译后的pch文件会被 <code>缓存起来</code>，从而提高编译速度。当 <code>Precompile Prefix Header</code> 为 <code>NO</code> 时，那么 <code>pch不会被预编译</code>，而是在每一个用到它导入的框架类库的 <code>.m</code> 文件中编译一次</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304251258661.png"
+                     
+                ></p>
+<ul>
+<li>给 <code>Prefix Header</code> 设置路径，只需要点击pch文件然后按住鼠标左键拖过来就行，但是 <code>/Users/mac/Desktop/OC学习/OC面试重点/Pch/Pch/PrefixHeader.pch</code> 代表的是 <code>绝对路径</code>，当用别的电脑时就不能识别了，这时就可以用到 <code>$(SRCROOT)</code> 来替换 ，在iOS中 <code>$(SRCROOT)</code> 代表的是 <code>项目根目录</code> 下，路径形式为：$(SRCROOT)&#x2F;当前工程名字&#x2F;需要包含头文件所在文件夹，所以把路径改为 <code>$(SRCROOT)/Pch/PrefixHeader.pch</code></li>
+</ul>
+<blockquote>
+<p>注：<br>$(SRCROOT) ：项目根目录</p>
+</blockquote>
+<ol start="3">
+<li>使用</li>
+</ol>
+<ul>
+<li>一般会在 <code>pch</code> 文件下添加全局的头文件前，添加如下代码</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#ifndef PrefixHeader_pch</span><br><span class="line">#define PrefixHeader_pch</span><br><span class="line"></span><br><span class="line">// 判断一下，将OC头文件和C语言的源文件有效隔离，把OC头文件只拷贝到OC的源文件中</span><br><span class="line">#ifdef __OBJC__</span><br><span class="line"></span><br><span class="line">在这里引入全局的头文件</span><br><span class="line"></span><br><span class="line">// OC文件判断结束</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">#endif /* PrefixHeader_pch */</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>这个宏定义的作用是 <code>保证只有oc文件可以调用pch里面的头文件</code>，一些非OC语言不能调用，比如 <code>.cpp,.mm</code>。如果不加入，那么如果代码中带有 <code>.cpp,.mm</code> 文件，那么将报错。</p>
+</li>
+<li><p><code>NSObjCRuntime.h、NSObject.h、NSZone.h</code> 将会报出编译异常。</p>
+</li>
+<li><p>这样你就可以在pch文件当中添加一些常用头文件、宏定义了，在编程过程中非常方便！！</p>
+</li>
+</ul>
+
             </div>
 
             
@@ -406,7 +482,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC学习11：Pch文件</div>
-        
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Pch%EF%BC%9F"><span class="nav-text">什么是 Pch？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Pch-%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">Pch 有什么作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Pch-%E7%BC%BA%E7%82%B9%EF%BC%9F"><span class="nav-text">Pch 缺点？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Pch-%E4%BD%BF%E7%94%A8"><span class="nav-text">Pch 使用</span></a></li></ol>
 
     </div>
 </div>

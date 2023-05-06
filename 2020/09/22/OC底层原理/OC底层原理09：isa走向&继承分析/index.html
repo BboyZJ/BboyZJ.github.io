@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-22 11:06:33</span>
-            <span class="mobile">2023-04-22 11:06</span>
+            <span class="pc">2023-04-26 18:03:26</span>
+            <span class="mobile">2023-04-26 18:03</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -347,23 +347,23 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/94885178-22345480-04a2-11eb-99ce-97d34625106a.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304261755492.png"
                      
                 ></p>
 <ul>
 <li><p><code>x/4gx person</code> ：查看 <code>person</code> 的内存分布情况，拿到 <code>isa</code> 的指针地址 <code>0x001d8001000021d1</code></p>
 </li>
 <li><p><code>p/x person</code> ：拿到 <code>0x0000000101159370</code> 地址，这个地址首先代表 <code>首地址</code>，其次代表 <code>当前对象</code>，也代表 <code>isa</code>，</p>
-<p>  <strong>那么为什么即代表当前对象，又代表 isa 呢？</strong></p>
-<ul>
-<li>任何自定义的类，如<code>ZJPerson</code>，均继承自<code>NSObject</code>，<code>NSObject</code> 默认第一个参数为 <code>Class isa</code>，所以首地址会指向 <code>isa</code>，<code>isa</code> 又代表当前的类</li>
-</ul>
 </li>
+</ul>
+<p><strong>那么为什么即代表当前对象，又代表 isa 呢？</strong></p>
+<p>任何自定义的类，如 <code>ZJPerson</code>，均继承自 <code>NSObject</code>，<code>NSObject</code> 默认第一个参数为 <code>Class isa</code>，所以首地址会指向 <code>isa</code>，<code>isa</code> 又代表当前的类</p>
+<ul>
 <li><p><code>p/x 0x001d8001000021d1 &amp; 0x00007ffffffffff8ULL</code>：获取 <code>类ZJPerson</code>  的指针地址 <code>0x00000001000021d0</code></p>
 </li>
 <li><p><code>po 0x00000001000021d0</code>：根据 <code>类</code> 的指针地址 <code>0x00000001000021d0</code> 打印 <code>类信息</code>，<code>得到</code> 类 <code>ZJPerson</code></p>
 </li>
-<li><p>查看类的<code>内存分布</code>有三种方式：</p>
+<li><p>查看类的 <code>内存分布</code> 有三种方式：</p>
 <ul>
 <li>通过 <code>类</code> 的 <code>指针地址</code>: <code>x 0x00000001000021d0</code></li>
 <li>通过 <code>class</code> 的 API: <code>x ZJPerson.class</code>    </li>
@@ -372,16 +372,16 @@
 </li>
 <li><p><code>x/4gx 0x00000001000021d0</code>：查看 <code>类ZJPerson</code> 的 <code>内存分布</code> 情况，拿到 <code>isa</code> 指针地址 <code>0x00000001000021a8</code></p>
 </li>
-<li><p><code>po 0x00000001000021a8</code>：打印<code>ZJPerson类</code>的<code>isa</code>指针指向的内容，即 <code>元类</code>，其元类也是<code>ZJPerson</code></p>
+<li><p><code>po 0x00000001000021a8</code>：打印<code>ZJPerson类</code> 的 <code>isa</code> 指针指向的内容，即 <code>元类</code>，其元类也是 <code>ZJPerson</code></p>
 </li>
-<li><p><code>p/x 0x00000001000021a8 &amp; 0x00007ffffffffff8ULL</code>：通过 <code>类isa &amp; mask </code>获取<code>元类</code>的isa指针地址<code>0x00000001000021a8</code></p>
+<li><p><code>p/x 0x00000001000021a8 &amp; 0x00007ffffffffff8ULL</code>：通过 <code>类isa &amp; mask</code> 获取 <code>元类</code> 的 <code>isa</code> 指针地址 <code>0x00000001000021a8</code></p>
 </li>
 <li><p><code>po 0x00000001000021a8</code>：打印 <code>元类</code> 的指针信息，拿到 <code>ZJPerson</code></p>
 </li>
 </ul>
-<p>根据调试过程，我们产生了一个疑问：为什么图中的 <code>p/x 0x001d8001000021d1 &amp; 0x00007ffffffffff8ULL</code> 与 <code>p/x 0x00000001000021a8 &amp; 0x00007ffffffffff8ULL</code> 中的类信息打印出来都是 <code>ZJPerson</code>？</p>
+<p><strong>根据调试过程，我们产生了一个疑问：为什么图中的 <code>p/x 0x001d8001000021d1 &amp; 0x00007ffffffffff8ULL</code> 与 <code>p/x 0x00000001000021a8 &amp; 0x00007ffffffffff8ULL</code> 中的类信息打印出来都是 <code>ZJPerson</code>？</strong></p>
 <ul>
-<li><p><code>0x001d8001000021d1</code> 是 <code>person对象的</code> isa指针地址，其 <code>&amp; mask</code> 后得到的结果是获取对象 <code>person</code> 的 <code>类ZJPerson</code></p>
+<li><p><code>0x001d8001000021d1</code> 是person对象的isa指针地址，其 <code>&amp; mask</code> 后得到的结果是获取对象 <code>person</code> 的 <code>类ZJPerson</code></p>
 </li>
 <li><p><code>0x00000001000021a8</code> 是 <code>元类的isa指针地址</code>，即 <code>ZJPerson类的类</code> 的isa指针地址，在Apple中，我们简称 <code>ZJPerson类的类</code> 为 <code>元类</code></p>
 </li>
@@ -404,15 +404,15 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/94929091-335b8080-04f7-11eb-85f5-1c3f710f9019.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304261758480.png"
                      
                 ></p>
 <p>由上图 <code>lldb</code> 探索可以得出一个关系链：<code>对象 --&gt; 类 --&gt; 元类 --&gt; NSobject --&gt; 指向自己</code></p>
-<p>下面用一张图表示 isa走向 流程：</p>
+<p>下面用一张图表示 <code>isa走向</code> 流程：</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/94932912-445ac080-04fc-11eb-8f04-02e10bc53b8d.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304261759243.png"
                      
                 ></p>
 <p>由上面的分析结果我们可知：</p>
@@ -422,26 +422,30 @@
 <li><code>元类</code> 的 <code>isa</code> 指针指向 <code>根元类</code></li>
 <li><code>根元类</code> 的 <code>isa</code> 指针指向 <code>自己</code></li>
 </ul>
-<h1 id="NSObject到底有几个？"><a href="#NSObject到底有几个？" class="headerlink" title="NSObject到底有几个？"></a>NSObject到底有几个？</h1><p>由上图可知，最后的根元类是NSObject，这和我们日常开发中所知道的NSObject是同一个吗？</p>
+<h1 id="NSObject到底有几个？"><a href="#NSObject到底有几个？" class="headerlink" title="NSObject到底有几个？"></a>NSObject到底有几个？</h1><p>由上图可知，最后的根元类是 <code>NSObject</code>，这和我们日常开发中所知道的 <code>NSObject</code> 是同一个吗？</p>
 <p>有以下两种验证方式</p>
 <ul>
 <li>【方法一】lldb命令验证</li>
 <li>【方法二】代码验证</li>
 </ul>
-<p>【方法一】lldb命令验证</p>
+<ol>
+<li>【方法一】lldb命令验证</li>
+</ol>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/94935738-fd6eca00-04ff-11eb-89d7-c8a00645f1b2.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304261800161.png"
                      
                 ></p>
-<p>从图中可以看出，由实例对象 <code>person</code> 最终 <code>isa</code> 找到的根源个 <code>NSObject</code>，与下面 开发中使用的 <code>NSobject</code> 相同，所以可以得出一个结论：<code>内存中只存在一份根元类NSObject</code>，根元类的元类是指向它自己</p>
-<p>【方法二】代码验证</p>
+<p>从图中可以看出，由实例对象 <code>person</code> 最终 <code>isa</code> 找到的根源个 <code>NSObject</code>，与下面开发中使用的 <code>NSobject</code> 相同，所以可以得出一个结论：<code>内存中只存在一份根元类NSObject</code>，根元类的元类是指向它自己</p>
+<ol start="2">
+<li>【方法二】代码验证</li>
+</ol>
 <p>通过三种不同的方式获取类，看他们打印的地址是否相同</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// MARK: -分析类对象在内存中存在几份</span><br><span class="line">void testClassNum()&#123;</span><br><span class="line">    Class class1 = [ZJPerson class];</span><br><span class="line">    Class class2 = [ZJPerson alloc].class;</span><br><span class="line">    Class class3 = object_getClass([ZJPerson alloc]);</span><br><span class="line">    NSLog(@&quot;\n%p-\n%p-\n%p&quot;, class1, class2, class3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>以上代码的运行结果是</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2020-10-02 22:46:53.183944+0800 ZJObjc[21320:623345] </span><br><span class="line">0x100002190-</span><br><span class="line">0x100002190-</span><br><span class="line">0x100002190</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2020-10-02 22:46:53.183944+0800 ZJObjc[21320:623345] </span><br><span class="line">0x100002190-</span><br><span class="line">0x100002190-</span><br><span class="line">0x100002190-</span><br></pre></td></tr></table></figure></div>
 
 <p>从打印结果中可以看出，打印的 <code>地址</code> 都是 <code>同一个</code> ，所以 <code>类对象</code> 在内存中 <code>只存在一份</code>。</p>
 <p><strong>【面试题】</strong></p>
@@ -463,30 +467,30 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/94942562-0fa13600-0509-11eb-998d-27656ba81a74.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304261801588.png"
                      
                 ></p>
 <h1 id="ZJTeacher-和-NSObject-isa-走位图"><a href="#ZJTeacher-和-NSObject-isa-走位图" class="headerlink" title="ZJTeacher 和 NSObject isa 走位图"></a>ZJTeacher 和 NSObject isa 走位图</h1><p>由上面 <code>继承</code> 和 <code>isa走位图</code> 分析，我们可以得出 <code>ZJTeacher</code> 和 <code>NSObject</code> 的 <code>isa走位</code> 图：</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/94943543-72df9800-050a-11eb-857a-f9b0988c705d.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304261801770.png"
                      
                 ></p>
 <h1 id="继承-和-isa走位图"><a href="#继承-和-isa走位图" class="headerlink" title="继承 和 isa走位图"></a>继承 和 isa走位图</h1><p>根据上面的探索以及各种验证，我们可以得到著名的 <code>继承 &amp; isa走位图</code>：</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/94944488-e930ca00-050b-11eb-80ca-e204a449909c.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304261802639.png"
                      
                 ></p>
 <p><strong>isa走位链三条：</strong></p>
 <ul>
-<li><p><code>teacher（实例对象） -&gt; ZJTeacher（类） -&gt; ZJTeacher（元类）-&gt; NSObject（根元类）-&gt; NSObject（根根元类）</code></p>
+<li><p><code>teacher（实例对象） -&gt; ZJTeacher（类） -&gt; ZJTeacher（元类）-&gt; NSObject（根元类）-&gt; NSObject（根根元类）其实就是 自己</code></p>
 </li>
-<li><p><code>person（实例对象） -&gt; ZJPerson（类） -&gt; ZJPerson（元类）-&gt; NSObject（根元类）-&gt; NSObject（根根元类）</code></p>
+<li><p><code>person（实例对象） -&gt; ZJPerson（类） -&gt; ZJPerson（元类）-&gt; NSObject（根元类）-&gt; NSObject（根根元类）其实就是 自己</code></p>
 </li>
-<li><p><code>object（实例对象） -&gt; NSObject（类） -&gt; NSObject（元类）-&gt; NSObject（根元类）-&gt; NSObject（根根元类）</code></p>
+<li><p><code>object（实例对象） -&gt; NSObject（类） -&gt; NSObject（元类）-&gt; NSObject（根元类）-&gt; NSObject（根根元类）其实就是 自己</code></p>
 </li>
 </ul>
 <p><strong>继承链两条：</strong></p>
