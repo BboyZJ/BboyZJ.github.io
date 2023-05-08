@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-05-06 18:51:35</span>
-            <span class="mobile">2023-05-06 18:51</span>
+            <span class="pc">2023-05-08 14:57:25</span>
+            <span class="mobile">2023-05-08 14:57</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -337,7 +337,7 @@
 <li><p>渲染图片数据</p>
 </li>
 </ol>
-<p>性能问题一般是发生在 <code>解码图片</code> 这个步骤上，<code>SDWebImage</code> 解码图片解码的代码是在 <code>SDWebImageCoderHelper</code> 中的 <code>decodedImageWithImage</code> 函数中，并 <code>缓存起来</code>，以保证 <code>tableViews/collectionViews</code> 交互更加流畅，如果是 加载高分辨率图片的话，会适得其反，有可能造成 <code>内存占用过高</code> 和 <code>内存峰值过高</code> 的问题</p>
+<p>性能问题一般是发生在 <code>解码图片</code> 这个步骤上，<code>SDWebImage</code> 解码图片解码的代码是在 <code>SDWebImageCoderHelper</code> 中的 <code>decodedImageWithImage</code> 函数中，并 <code>缓存起来</code>，以保证 <code>tableViews/collectionViews</code> 交互更加流畅，如果是 <code>加载高分辨率图片</code> 的话，会适得其反，有可能造成 <code>内存占用过高</code> 和 <code>内存峰值过高</code> 的问题</p>
 <h1 id="优化的思路"><a href="#优化的思路" class="headerlink" title="优化的思路"></a>优化的思路</h1><ul>
 <li><p><code>SDWebImage</code> 加载高清图的性能问题，主要是其直接加载高清图原来尺寸导致的，而 <code>加载一张图片的内存占用 = 图片Width * 图片Height * 4</code>。</p>
 </li>
