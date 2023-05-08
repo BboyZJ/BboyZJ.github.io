@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-26 17:53:21</span>
-            <span class="mobile">2023-04-26 17:53</span>
+            <span class="pc">2023-05-07 13:31:22</span>
+            <span class="mobile">2023-05-07 13:31</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -417,9 +417,11 @@
 </li>
 </ul>
 <h1 id="补充知识-内存偏移"><a href="#补充知识-内存偏移" class="headerlink" title="补充知识-内存偏移"></a>补充知识-内存偏移</h1><p>在分析 <code>类信息</code> 中存储哪些信息之前，需要先 <code>了解内存偏移</code>，因为分析 <code>类信息</code> 需要用到内存偏移</p>
-<p><strong>1、【普通指针】</strong></p>
+<ol>
+<li>【普通指针】</li>
+</ol>
 <p>定义一个方法</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 普通指针</span><br><span class="line">void testOffset1()&#123;</span><br><span class="line">    // a/b : 变量  10 ： 值</span><br><span class="line">    int a = 10;</span><br><span class="line">    int b = 10;</span><br><span class="line">    // a/b : 打印得值 &amp;a/&amp;b : 取a的地址指针</span><br><span class="line">    NSLog(@&quot;%d---%p&quot;,a,&amp;a);</span><br><span class="line">    NSLog(@&quot;%d---%p&quot;,b,&amp;b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 普通指针</span><br><span class="line">void testOffset1()&#123;</span><br><span class="line">    // a/b 是 变量 、 10 是 值</span><br><span class="line">    int a = 10;</span><br><span class="line">    int b = 10;</span><br><span class="line">    // a/b : 打印得值 &amp;a/&amp;b : 取a的地址指针</span><br><span class="line">    NSLog(@&quot;%d---%p&quot;,a,&amp;a);</span><br><span class="line">    NSLog(@&quot;%d---%p&quot;,b,&amp;b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <p><strong>在mian.m调用，查看打印结果：</strong></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2020-10-04 13:41:07.378260+0800 KCObjc[23781:838866] 10---0x7ffeefbff4a8</span><br><span class="line">2020-10-04 13:41:07.378948+0800 KCObjc[23781:838866] 10---0x7ffeefbff4ac</span><br></pre></td></tr></table></figure></div>
@@ -438,7 +440,9 @@
                      data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304261700634.png"
                      
                 ></p>
-<p><strong>2、【对象指针】</strong></p>
+<ol start="2">
+<li>【对象指针】</li>
+</ol>
 <p>定义一个方法</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 对象指针</span><br><span class="line">void testOffset2()&#123;</span><br><span class="line">    // p1：指针</span><br><span class="line">    ZJPerson * p1 = [ZJPerson alloc];</span><br><span class="line">    ZJPerson * p2 = [ZJPerson alloc];</span><br><span class="line">    NSLog(@&quot;%@---%p&quot;,p1,&amp;p1);</span><br><span class="line">    NSLog(@&quot;%@---%p&quot;,p2,&amp;p2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
@@ -459,7 +463,9 @@
                      data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304261703110.png"
                      
                 ></p>
-<p><strong>3、【数组指针】</strong></p>
+<ol start="3">
+<li>【数组指针】</li>
+</ol>
 <p>定义一个方法</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 数组指针</span><br><span class="line">void testOffset3()&#123;</span><br><span class="line">    int c[4] = &#123;1,2,3,4&#125;;</span><br><span class="line">    int *d = c;</span><br><span class="line">    NSLog(@&quot;%p -- %p - %p&quot;, &amp;c, &amp;c[0], &amp;c[1]);</span><br><span class="line">    NSLog(@&quot;%p -- %p - %p&quot;, d, d+1, d+2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
@@ -500,12 +506,14 @@
 </li>
 <li><p><code>superclass</code> 属性：<code>Class</code> 类型，<code>Class</code> 是由 <code>objc_object</code> 定义的，是一个指针，占 <code>8</code> 字节</p>
 </li>
-<li><p><code>cache</code> 属性：简单从类型 <code>class_data_bits_t</code> 目前无法得知，而 <code>class_data_bits_t</code> 是一个结构体类型，结构体的 <code>内存大小</code> 需要根据 <code>内部的属性</code> 来确定，而 <code>结构体指针才是8字节</code></p>
+<li><p><code>cache</code> 属性：<code>cache_t</code> 类型</p>
 </li>
-<li><p><code>bits</code> 属性：只有 <code>首地址</code> 经过上面 <code>3个属性</code> 的 <code>内存大小总和</code> 的 <code>平移</code>，才能获取到 <code>bits</code></p>
+<li><p><code>bits</code> 属性：简单从类型 <code>class_data_bits_t</code> 目前无法得知，而 <code>class_data_bits_t</code> 是一个结构体类型，结构体的 <code>内存大小</code> 需要根据 <code>内部的属性</code> 来确定，而 <code>结构体指针才是8字节</code>，只有 <code>首地址</code> 经过上面 <code>3个属性</code> 的 <code>内存大小总和</code> 的 <code>平移</code>，才能获取到 <code>bits</code></p>
 </li>
 </ul>
-<p><strong>我们知道了 <code>objc_class</code> 中 <code>存储</code> 了 <code>类</code> 的 <code>信息</code>，那么如何去验证呢?</strong></p>
+<blockquote>
+<p>结论：<br>我们知道了 <code>objc_class</code> 中存储了 <code>类</code> 的 <code>信息</code>，那么如何去验证呢?</p>
+</blockquote>
 <p><strong>【验证方法】lldb 调试验证：</strong></p>
 <ul>
 <li>自定义一个ZJPerson类，继承自NSObject</li>
@@ -715,7 +723,7 @@
 <li>成员变量列表有4个：<code>hobby、objc、_nickName、_name</code> 。</li>
 <li>属性列表有2个： <code>nickName、name</code>。</li>
 </ul>
-<h1 id="成员变量的存储（ivars）"><a href="#成员变量的存储（ivars）" class="headerlink" title="成员变量的存储（ivars）"></a>成员变量的存储（ivars）</h1><p>由上面的属性列表分析可得出 <code>property_list</code> 中只有 <code>属性</code>，没有 <code>成员变量</code>，那么问题来了，成员变量 <code>存储在哪里</code> ？为什么会有这种情况？</p>
+<h1 id="成员变量的存储（ivars）"><a href="#成员变量的存储（ivars）" class="headerlink" title="成员变量的存储（ivars）"></a>成员变量的存储（ivars）</h1><p>由上面的属性列表分析可得出 <code>property_list</code> 中只有 <code>属性</code>，没有 <code>成员变量</code>，那么问题来了， <code>成员变量存储在哪里</code> ？为什么会有这种情况？</p>
 <p>通过 <code>objc4-781最新源码</code> 查看 <code>objc_class</code> 中 <code>bits属性</code> 中存储数据的类 <code>class_rw_t</code> 的结构发现，除了 <code>methods、properties、protocols</code> 方法，还有一个 <code>ro</code> 方法，其返回类型是 <code>class_ro_t</code> ，如下图所示:</p>
 <p><img  
                      lazyload

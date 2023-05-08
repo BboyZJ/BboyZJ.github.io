@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-23 15:04:48</span>
-            <span class="mobile">2023-04-23 15:04</span>
+            <span class="pc">2023-05-05 19:36:36</span>
+            <span class="mobile">2023-05-05 19:36</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -439,7 +439,7 @@
 <ul>
 <li>用来监听runloop的活动：</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/ Run Loop Observer Activities */</span><br><span class="line">typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) &#123;</span><br><span class="line">    kCFRunLoopEntry = (1UL &lt;&lt; 0), //即将进入Loop</span><br><span class="line">    kCFRunLoopBeforeTimers = (1UL &lt;&lt; 1), //即将处理timers</span><br><span class="line">    kCFRunLoopBeforeSources = (1UL &lt;&lt; 2), //即将处理sources</span><br><span class="line">    kCFRunLoopBeforeWaiting = (1UL &lt;&lt; 5), //即将进入休眠</span><br><span class="line">    kCFRunLoopAfterWaiting = (1UL &lt;&lt; 6), //刚从休眠中唤醒</span><br><span class="line">    kCFRunLoopExit = (1UL &lt;&lt; 7), //即将推出Loop</span><br><span class="line">    kCFRunLoopAllActivities = 0x0FFFFFFFU</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/ Run Loop Observer Activities */</span><br><span class="line">typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) &#123;</span><br><span class="line">    kCFRunLoopEntry = (1UL &lt;&lt; 0), //即将进入Loop</span><br><span class="line">    kCFRunLoopBeforeTimers = (1UL &lt;&lt; 1), //即将处理timers</span><br><span class="line">    kCFRunLoopBeforeSources = (1UL &lt;&lt; 2), //即将处理sources</span><br><span class="line">    kCFRunLoopBeforeWaiting = (1UL &lt;&lt; 5), //即将进入休眠</span><br><span class="line">    kCFRunLoopAfterWaiting = (1UL &lt;&lt; 6), //刚从休眠中唤醒</span><br><span class="line">    kCFRunLoopExit = (1UL &lt;&lt; 7), //即将退出Loop</span><br><span class="line">    kCFRunLoopAllActivities = 0x0FFFFFFFU</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>添加Observer监听RunLoop的所有状态</li>
@@ -526,7 +526,7 @@
 <p>二者缺一不可。</p>
 <p>如果是在VC中创建的 <code>NSTimer</code>，这种情况下，<code>self</code> 和 <code>_timer</code> 相互强引用，<code>VC</code> 的 <code>Dealloc</code> 方法不会执行，所以定时器的销毁方法不能放在 <code>Dealloc</code> 中，需要放在 <code>Dealloc</code> 之前（viewWillDIsappear），原因我们放到最后说明。</p>
 <ol start="4">
-<li>NSTimer的时间准确吗？</li>
+<li>NSTimer的时间准确吗？<strong>重点</strong></li>
 </ol>
 <p><code>不准确</code>，NSTimer不是采用实时机制！</p>
 <p>原因：NSTimer的精确度略低了点，比如NSTimer的触发时间到的时候，<code>runloop如果在阻塞状态</code>，触发时间就会推迟到下一个runloop周期。</p>

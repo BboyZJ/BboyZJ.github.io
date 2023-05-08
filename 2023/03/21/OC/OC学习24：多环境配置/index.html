@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-29 13:07:53</span>
-            <span class="mobile">2023-03-29 13:07</span>
+            <span class="pc">2023-05-06 15:29:52</span>
+            <span class="mobile">2023-05-06 15:29</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -330,7 +330,7 @@
 <li>Target : 对指定代码和资源文件的具体构建方式。</li>
 <li>Scheme : 对指定的Target的环境配置</li>
 </ul>
-<p>在实际开发中，我们必须要进行网络请求（<code>内网和外网</code>），而网络请求则就要针对不同的环境（<code>开发</code>、<code>测试</code>、<code>生产</code>）有不同的的<code>主机名称（URL_HOST）</code>，那么我们如何获取某个环境下的<code>URL_HOST</code>，那么在这个过程中，我们需要进行配置，而 <code>多环境配置</code> 的方式有三种：</p>
+<p>在实际开发中，我们必须要进行网络请求（<code>内网和外网</code>），而网络请求则就要针对不同的环境（<code>开发</code>、<code>测试</code>、<code>生产</code>）有不同的的 <code>主机名称（URL_HOST）</code>，那么我们如何获取某个环境下的<code>URL_HOST</code>，那么在这个过程中，我们需要进行配置，而 <code>多环境配置</code> 的方式有三种：</p>
 <ol>
 <li>Target 配置</li>
 <li>Scheme 配置</li>
@@ -459,7 +459,7 @@
                      
                 ></p>
 <ol start="5">
-<li>将 <code>URL_HOST</code> 添加到 <code>info.plist</code> 文件中，<code>Build Settings</code> 中的 配置可以通过 <code>info.plist</code> 暴露出来，可以直接读出来</li>
+<li>将 <code>URL_HOST</code> 添加到 <code>info.plist</code> 文件中，<code>Build Settings</code> 中的配置可以通过 <code>info.plist</code> 暴露出来，可以直接读出来</li>
 </ol>
 <p><img  
                      lazyload
@@ -520,7 +520,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/148355970-ade68d43-9816-4697-92d6-b451aa09e20d.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305061526194.png"
                      
                 ></p>
 <ul>
@@ -570,7 +570,7 @@
 <ol start="5">
 <li>项目中代码取出</li>
 </ol>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSString * path = [NSBundle.mainBundle pathForResource:@&quot;Info&quot; ofType:@&quot;plist&quot;];</span><br><span class="line">    NSDictionary * infoDic = [[NSDictionary alloc] initWithContentsOfFile:path];</span><br><span class="line">    NSLog(@&quot;%@&quot;,infoDic[@&quot;HOST_URL&quot;]);</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSString * path = [NSBundle.mainBundle pathForResource:@&quot;Info&quot; ofType:@&quot;plist&quot;];</span><br><span class="line">NSDictionary * infoDic = [[NSDictionary alloc] initWithContentsOfFile:path];</span><br><span class="line">NSLog(@&quot;%@&quot;,infoDic[@&quot;HOST_URL&quot;]);</span><br></pre></td></tr></table></figure></div>
 
 <p>切换不同的 scheme 的打印结果</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Debug：http://127.0.0.1</span><br><span class="line"></span><br><span class="line">Beta： http://127.0.0.2</span><br><span class="line"></span><br><span class="line">Release：https://www.bboyzj.cn</span><br></pre></td></tr></table></figure></div>

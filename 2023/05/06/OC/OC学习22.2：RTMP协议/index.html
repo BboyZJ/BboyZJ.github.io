@@ -9,18 +9,18 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://www.bboyzj.cn/2020/11/19/oc底层原理/oc底层原理18：类的加载（下）/"/>
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/05/06/oc/oc学习22.2：rtmp协议/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="OC底层原理18：类的加载（下）">
+    <meta property="og:title" content="OC学习22.2：RTMP协议">
     <meta property="og:description" content="我是小J，关注我">
-    <meta property="og:url" content="https://www.bboyzj.cn2020/11/19/OC底层原理/OC底层原理18：类的加载（下）/">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/05/06/OC/OC学习22.2：RTMP协议/">
     <meta property="og:image" content="/images/redefine-logo.svg">
     <meta property="og:site_name" content="BboyZJ">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="OC底层原理18：类的加载（下）">
+    <meta name="twitter:title" content="OC学习22.2：RTMP协议">
     <meta name="twitter:description" content="我是小J，关注我">
     <meta name="twitter:image" content="/images/redefine-logo.svg">
     <!--- Icon Part-->
@@ -31,7 +31,7 @@
     
     <title>
         
-            OC底层原理18：类的加载（下） -
+            OC学习22.2：RTMP协议 -
         
         BboyZJ
     </title>
@@ -249,7 +249,7 @@
             
             
                 <div class="article-title">
-                    <h1 class="article-title-regular">OC底层原理18：类的加载（下）</h1>
+                    <h1 class="article-title-regular">OC学习22.2：RTMP协议</h1>
                 </div>
             
                 
@@ -271,15 +271,15 @@
                             <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="pc">2020-11-19 15:21:46</span>
-        <span class="mobile">2020-11-19 15:21</span>
+        <span class="pc">2023-05-06 19:35:34</span>
+        <span class="mobile">2023-05-06 19:35</span>
         <span class="hover-info">Created</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-22 11:07:40</span>
-            <span class="mobile">2023-04-22 11:07</span>
+            <span class="pc">2023-05-06 19:45:13</span>
+            <span class="mobile">2023-05-06 19:45</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -302,7 +302,7 @@
             <ul>
                 
                     <li>
-                        <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
                     </li>
                 
             </ul>
@@ -325,18 +325,29 @@
             
 
             <div class="article-content markdown-body">
-                
+                <h1 id="什么是RTMP协议？"><a href="#什么是RTMP协议？" class="headerlink" title="什么是RTMP协议？"></a>什么是RTMP协议？</h1><p><code>RTMP协议</code> 是一个专门为 <code>高效传输视频，音频和数据</code> 而设计的协议。它通过建立一个 <code>二进制TCP连接</code> 或者 <code>连接HTTP隧道</code> 实现 <code>实时的视频和声音传输</code>。</p>
+<h1 id="RTMP作用？"><a href="#RTMP作用？" class="headerlink" title="RTMP作用？"></a>RTMP作用？</h1><ul>
+<li><p>RTMP比传统媒介服务器流出的媒介协议支持更多。它支持可能包含 <code>声音、影像和脚本数据</code> 从服务器到客户和从客户到服务器多条线路的动态传输。<code>RTMP对声音、影像和脚本数据分别处理</code>。</p>
+</li>
+<li><p>声音和视频数据被分开地缓冲在服务器中。如果声音数据在声音缓冲器中达到某一极限，所有在缓冲器中的数据将被丢掉，并且最近到达的数据被允许开始收集在缓冲中并被送到各个客户。视频数据被以相似的方式处理，不同是当新的关键帧到达时，缓冲器中数据才被清除。在丢掉旧的帧数据时，如果发现客户端的数据有误，则将新旧两个不同的帧进行拟合。</p>
+</li>
+<li><p>RTMP对数据给予不同的优先级别。在实时交谈中，声音是最重要的，影像给予低优先级，而脚本数据被给予的优先权介于声音和影像中间。</p>
+</li>
+<li><p>RTMP协议可以创建多个数据流，但是每个数据流只能有一个方向。使用RTMP可以构建这样的一个系统，客户端可以同时与RTMP服务器和应用服务器进行交互，使得服务端的负荷得以分散，虽然在这种改进的系统结构中，RTMP服务器的性能要求比较高。</p>
+</li>
+</ul>
+
             </div>
 
             
                 <div class="post-copyright-info">
                     <div class="article-copyright-info-container">
     <ul>
-        <li>Post title：OC底层原理18：类的加载（下）</li>
+        <li>Post title：OC学习22.2：RTMP协议</li>
         <li>Post author：张建</li>
-        <li>Create time：2020-11-19 15:21:46</li>
+        <li>Create time：2023-05-06 19:35:34</li>
         <li>
-            Post link：https://redefine.ohevan.com/2020/11/19/OC底层原理/OC底层原理18：类的加载（下）/
+            Post link：https://redefine.ohevan.com/2023/05/06/OC/OC学习22.2：RTMP协议/
         </li>
         <li>
             Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
@@ -351,7 +362,7 @@
                 <ul class="post-tags-box">
                     
                         <li class="tag-item">
-                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">#OC-底层原理探索篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">#OC-学习</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -365,13 +376,13 @@
                         <div class="article-prev">
                             <a class="prev"
                             rel="prev"
-                            href="/BboyZJ.github.io/2020/11/29/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8619%EF%BC%9A%E7%B1%BB%E6%89%A9%E5%B1%95%E4%B8%8E%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1/"
+                            href="/BboyZJ.github.io/2023/09/10/OC%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%9606%EF%BC%9A%E5%90%AF%E5%8A%A8%E4%BC%98%E5%8C%96/"
                             >
                                 <span class="left arrow-icon flex-center">
                                     <i class="fa-solid fa-chevron-left"></i>
                                 </span>
                                 <span class="title flex-center">
-                                    <span class="post-nav-title-item">OC底层原理19：类扩展与关联对象</span>
+                                    <span class="post-nav-title-item">性能优化06：启动优化</span>
                                     <span class="post-nav-item">Prev posts</span>
                                 </span>
                             </a>
@@ -381,10 +392,10 @@
                         <div class="article-next">
                             <a class="next"
                             rel="next"
-                            href="/BboyZJ.github.io/2020/11/03/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8617%EF%BC%9A%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%EF%BC%88%E4%B8%8A%EF%BC%89/"
+                            href="/BboyZJ.github.io/2023/05/06/OC/OC%E5%AD%A6%E4%B9%A043%EF%BC%9AiOS%E5%A4%9A%E4%B8%AAUIImageView%E5%8A%A0%E8%BD%BD%E9%AB%98%E6%B8%85%E5%A4%A7%E5%9B%BE/"
                             >
                                 <span class="title flex-center">
-                                    <span class="post-nav-title-item">OC底层原理17：类的加载（上）</span>
+                                    <span class="post-nav-title-item">OC学习43：iOS多个UIImageView加载高清大图</span>
                                     <span class="post-nav-item">Next posts</span>
                                 </span>
                                 <span class="right arrow-icon flex-center">
@@ -405,8 +416,8 @@
                 <div class="post-toc-wrap">
     <div class="post-toc">
         <div class="toc-title">On this page</div>
-        <div class="page-title">OC底层原理18：类的加载（下）</div>
-        
+        <div class="page-title">OC学习22.2：RTMP协议</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFRTMP%E5%8D%8F%E8%AE%AE%EF%BC%9F"><span class="nav-text">什么是RTMP协议？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RTMP%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">RTMP作用？</span></a></li></ol>
 
     </div>
 </div>

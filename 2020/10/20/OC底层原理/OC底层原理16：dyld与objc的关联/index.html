@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-22 11:07:31</span>
-            <span class="mobile">2023-04-22 11:07</span>
+            <span class="pc">2023-05-07 17:29:35</span>
+            <span class="mobile">2023-05-07 17:29</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -328,7 +328,7 @@
                 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文的主要目的是理解 <code>dyld</code> 与 <code>objc</code> 是如何关联的？</p>
 <p>在上两篇文章中，我们梳理了 <code>dyld</code> 的加载流程，下面来详细介绍下 <code>dyld</code> 和 <code>objc</code> 的关联</p>
 <h1 id="objc-init-源码解析"><a href="#objc-init-源码解析" class="headerlink" title="_objc_init 源码解析"></a>_objc_init 源码解析</h1><p>首先，来看下libObjc中的_objc_init方法源码</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">void _objc_init(void)</span><br><span class="line">&#123;</span><br><span class="line">    static bool initialized = false;</span><br><span class="line">    if (initialized) return;</span><br><span class="line">    initialized = true;</span><br><span class="line">    </span><br><span class="line">    // fixme defer initialization until an objc-using image is found?</span><br><span class="line">    //读取影响运行时的环境变量，如果需要，还可以打开环境变量帮助 export OBJC_HELP = 1</span><br><span class="line">    environ_init();</span><br><span class="line">    //关于线程key的绑定，例如线程数据的析构函数</span><br><span class="line">    tls_init();</span><br><span class="line">    //运行C++静态构造函数，在dyld调用我们的静态析构函数之前，libc会调用_objc_init(),因此我们必须自己做</span><br><span class="line">    static_init();</span><br><span class="line">    //runtime运行时环境初始化，里面主要是unattachedCategories、allocatedClasses -- 分类初始化</span><br><span class="line">    runtime_init();</span><br><span class="line">    //初始化libobjc的异常处理系统</span><br><span class="line">    exception_init();</span><br><span class="line">    //缓存条件初始化</span><br><span class="line">    cache_init();</span><br><span class="line">    //启动回调机制，通常这不会做什么，因为所有的初始化都是惰性的，但是对于某些进程，我们会迫不及待地加载trampolines dylib</span><br><span class="line">    _imp_implementationWithBlock_init();</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     _dyld_objc_notify_register -- dyld 注册的地方</span><br><span class="line">     - 仅供objc运行时使用</span><br><span class="line">     - 注册处理程序，以便在映射、取消映射 和初始化objc镜像文件时使用，dyld将使用包含objc_image_info的镜像文件数组，回调 mapped 函数</span><br><span class="line">     </span><br><span class="line">     map_images:dyld将image镜像文件加载进内存时，会触发该函数</span><br><span class="line">     load_images：dyld初始化image会触发该函数</span><br><span class="line">     unmap_image：dyld将image移除时会触发该函数</span><br><span class="line">     */</span><br><span class="line">    _dyld_objc_notify_register(&amp;map_images, load_images, unmap_image);</span><br><span class="line"></span><br><span class="line">#if __OBJC2__</span><br><span class="line">    didCallDyldNotifyRegister = true;</span><br><span class="line">#endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">void _objc_init(void)</span><br><span class="line">&#123;</span><br><span class="line">    static bool initialized = false;</span><br><span class="line">    if (initialized) return;</span><br><span class="line">    initialized = true;</span><br><span class="line">    </span><br><span class="line">    // fixme defer initialization until an objc-using image is found?</span><br><span class="line">    // 读取影响运行时的环境变量，如果需要，还可以打开环境变量帮助 export OBJC_HELP = 1</span><br><span class="line">    environ_init();</span><br><span class="line">    // 关于线程key的绑定，例如线程数据的析构函数</span><br><span class="line">    tls_init();</span><br><span class="line">    // 运行C++静态构造函数，在dyld调用我们的静态析构函数之前，libc会调用_objc_init(),因此我们必须自己做</span><br><span class="line">    static_init();</span><br><span class="line">    // runtime运行时环境初始化，里面主要是unattachedCategories、allocatedClasses -- 分类初始化</span><br><span class="line">    runtime_init();</span><br><span class="line">    // 初始化libobjc的异常处理系统</span><br><span class="line">    exception_init();</span><br><span class="line">    // 缓存条件初始化</span><br><span class="line">    cache_init();</span><br><span class="line">    // 启动回调机制，通常这不会做什么，因为所有的初始化都是惰性的，但是对于某些进程，我们会迫不及待地加载trampolines dylib</span><br><span class="line">    _imp_implementationWithBlock_init();</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     _dyld_objc_notify_register -- dyld 注册的地方</span><br><span class="line">     - 仅供objc运行时使用</span><br><span class="line">     - 注册处理程序，以便在映射、取消映射 和初始化objc镜像文件时使用，dyld将使用包含objc_image_info的镜像文件数组，回调 mapped 函数</span><br><span class="line">     </span><br><span class="line">     map_images:dyld将image镜像文件加载进内存时，会触发该函数</span><br><span class="line">     load_images：dyld初始化image会触发该函数</span><br><span class="line">     unmap_image：dyld将image移除时会触发该函数</span><br><span class="line">     */</span><br><span class="line">    _dyld_objc_notify_register(&amp;map_images, load_images, unmap_image);</span><br><span class="line"></span><br><span class="line">#if __OBJC2__</span><br><span class="line">    didCallDyldNotifyRegister = true;</span><br><span class="line">#endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>根据源码所知，主要分为以下几部分：</p>
 <ul>
@@ -360,7 +360,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773579333765.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071724048.jpg"
                      
                 ></p>
 <ul>
@@ -369,7 +369,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773579589190.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071725681.jpg"
                      
                 ></p>
 <p>这些环境变量，均可以通过target – Edit Scheme – Run –Arguments – Environment Variables配置，其中常用的环境变量主要有以下几个（环境变量汇总见文末！）：</p>
@@ -389,7 +389,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773580099731.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071725835.jpg"
                      
                 ></p>
 <ul>
@@ -398,7 +398,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773580228270.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071726611.jpg"
                      
                 ></p>
 <ul>
@@ -407,7 +407,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773580340549.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071726307.jpg"
                      
                 ></p>
 <p>所以OBJC_DISABLE_NONPOINTER_ISA可以控制isa优化开关，从而优化整个内存结构</p>
@@ -420,7 +420,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773580657204.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071726629.jpg"
                      
                 ></p>
 <p>所以，OBJC_PRINT_LOAD_METHODS可以监控所有的+load方法，从而处理启动优化（后续会总结下启动优化方法）</p>
@@ -466,7 +466,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773582748130.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071726822.png"
                      
                 ></p>
 <p>上述方式只适合收集应用级异常，我们要做的就是用自定义的函数替代该ExceptionHandler即可</p>
@@ -511,14 +511,14 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773584642372.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071727201.jpg"
                      
                 ></p>
 <p>然后通过查找sNotifyObjCInit，最终找到了_dyld_objc_notify_register –&gt; registerObjCNotifiers,在该方法中将_dyld_objc_notify_register传入的参数赋值给了3个回调方法</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773584780090.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071727679.png"
                      
                 ></p>
 <p>所以 有以下等价关系</p>
@@ -535,7 +535,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773585169000.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071727568.jpg"
                      
                 ></p>
 <ul>
@@ -544,7 +544,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773585293740.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071728593.jpg"
                      
                 ></p>
 <p>所以有以下结论：map_images是先于load_images调用，即先map_images ，再load_images</p>
@@ -552,7 +552,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773585533757.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071728968.png"
                      
                 ></p>
 <ul>
@@ -567,22 +567,22 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773586139259.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071728059.jpg"
                      
                 ><br><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773586302636.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071728857.jpg"
                      
                 ><br><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773586473283.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071729392.jpg"
                      
                 ><br><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16773586635126.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071729232.jpg"
                      
                 ></p>
 

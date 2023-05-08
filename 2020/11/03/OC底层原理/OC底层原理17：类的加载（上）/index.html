@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-22 11:07:36</span>
-            <span class="mobile">2023-04-22 11:07</span>
+            <span class="pc">2023-05-07 17:23:17</span>
+            <span class="mobile">2023-05-07 17:23</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -325,7 +325,904 @@
             
 
             <div class="article-content markdown-body">
-                
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在上一篇 <a href="">OC底层原理16：dyld与objc的关联</a> 文章中，我们理解了 <code>dyld与objc</code> 是如何关联的，本文的主要目的是理解 <code>类的相关信息</code> 是如何 <code>加载</code> 到 <code>内存</code> 的，其中重点关注 <code>map_images</code> 和 <code>load_images</code></p>
+<ul>
+<li><p><code>map_images</code>：主要是管理 <code>文件中和动态库中</code> 的所有符号，即 <code>class、protocol、selector、category</code> 等</p>
+</li>
+<li><p><code>load_images</code>：加载执行 <code>load方法</code></p>
+</li>
+</ul>
+<p>其中 <code>代码</code> 通过 <code>编译</code>，读取到 <code>Mach-O可执行文件</code> 中，再从Mach-O中读取到 <code>内存</code>，如下图所示</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071335051.png"
+                     
+                ></p>
+<h1 id="map-images：加载镜像文件到内存"><a href="#map-images：加载镜像文件到内存" class="headerlink" title="map_images：加载镜像文件到内存"></a>map_images：加载镜像文件到内存</h1><p>在查看源码之前，首先需要说明为什么 <code>map_images</code> 有 <code>&amp;</code>，而 <code>load_images</code> 没有</p>
+<ul>
+<li><p><code>map_images</code> 是 <code>引用类型</code>，外界变了，跟着变。</p>
+</li>
+<li><p><code>load_images</code> 是 <code>值类型</code>，不传递值</p>
+</li>
+</ul>
+<h1 id="map-images源码流程"><a href="#map-images源码流程" class="headerlink" title="map_images源码流程"></a>map_images源码流程</h1><p><code>map_images</code> 方法的主要作用是将 <code>Mach-O</code> 中的 <code>类信息</code> 加载到 <code>内存</code></p>
+<ul>
+<li>进入 <code>map_images</code> 的源码</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">map_images(unsigned count, const char * const paths[],</span><br><span class="line">           const struct mach_header * const mhdrs[])</span><br><span class="line">&#123;</span><br><span class="line">    mutex_locker_t lock(runtimeLock);</span><br><span class="line">    return map_images_nolock(count, paths, mhdrs);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>进入 <code>map_images_nolock</code> 源码，其关键代码是 <code>_read_images</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">map_images_nolock(unsigned mhCount, const char * const mhPaths[],</span><br><span class="line">                  const struct mach_header * const mhdrs[])</span><br><span class="line">&#123;</span><br><span class="line">    //...省略</span><br><span class="line"></span><br><span class="line">    // Find all images with Objective-C metadata.查找所有带有Objective-C元数据的映像</span><br><span class="line">    hCount = 0;</span><br><span class="line"></span><br><span class="line">    // Count classes. Size various table based on the total.计算类的个数</span><br><span class="line">    int totalClasses = 0;</span><br><span class="line">    int unoptimizedTotalClasses = 0;</span><br><span class="line">    // 代码块：作用域，进行局部处理，即局部处理一些事件</span><br><span class="line">    &#123;</span><br><span class="line">        //...省略</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //...省略</span><br><span class="line"></span><br><span class="line">    if (hCount &gt; 0) &#123;</span><br><span class="line">        // 加载镜像文件</span><br><span class="line">        _read_images(hList, hCount, totalClasses, unoptimizedTotalClasses);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    firstTime = NO;</span><br><span class="line">    </span><br><span class="line">    // Call image load funcs after everything is set up.一切设置完成后，调用镜像加载功能。</span><br><span class="line">    for (auto func : loadImageFuncs) &#123;</span><br><span class="line">        for (uint32_t i = 0; i &lt; mhCount; i++) &#123;</span><br><span class="line">            func(mhdrs[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="read-images-源码实现"><a href="#read-images-源码实现" class="headerlink" title="_read_images 源码实现"></a>_read_images 源码实现</h1><p><code>_read_images</code> 主要是主要是 <code>加载类信息</code>，即 <code>类、分类、协议等</code>，进入 <code>_read_images</code> 源码实现，主要分为以下几部分：</p>
+<ul>
+<li>1、条件控制进行的一次加载</li>
+<li>2、修复预编译阶段的@selector的混乱问题</li>
+<li>3、错误混乱的类处理</li>
+<li>4、修复重映射一些没有被镜像文件加载进来的类</li>
+<li>5、修复一些消息</li>
+<li>6、当类里面有协议时：readProtocol 读取协议</li>
+<li>7、修复没有被加载的协议</li>
+<li>8、分类处理</li>
+<li>9、类的加载处理</li>
+<li>10、没有被处理的类，优化那些被侵犯的类</li>
+</ul>
+<p>1、条件控制进行的一次加载</p>
+<p>在 <code>doneOnce</code> 流程中通过 <code>NXCreateMapTable</code> 创建表，存放类信息，即创建一张类的 <code>哈希表gdb_objc_realized_classes</code>，其目的是为了类查找方便、快捷</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">if (!doneOnce) &#123;</span><br><span class="line">     </span><br><span class="line">    //...省略</span><br><span class="line">    </span><br><span class="line">    // namedClasses</span><br><span class="line">    // Preoptimized classes don&#x27;t go in this table.</span><br><span class="line">    // 4/3 is NXMapTable&#x27;s load factor</span><br><span class="line">    int namedClassesSize = </span><br><span class="line">        (isPreoptimized() ? unoptimizedTotalClasses : totalClasses) * 4 / 3;</span><br><span class="line">//创建表（哈希表key-value），目的是查找快</span><br><span class="line">    gdb_objc_realized_classes =</span><br><span class="line">        NXCreateMapTable(NXStrValueMapPrototype, namedClassesSize);</span><br><span class="line"></span><br><span class="line">    ts.log(&quot;IMAGE TIMES: first time tasks&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>查看 <code>gdb_objc_realized_classes</code> 的注释说明，这个 <code>哈希表</code> 用于 <code>存储不在共享缓存且已命名类</code>，无论类是否实现，其容量是类数量的 <code>4/3</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// This is a misnomer: gdb_objc_realized_classes is actually a list of </span><br><span class="line">// named classes not in the dyld shared cache, whether realized or not.</span><br><span class="line">//gdb_objc_realized_classes实际上是不在dyld共享缓存中的已命名类的列表，无论是否实现</span><br><span class="line">NXMapTable *gdb_objc_realized_classes;  // exported for debuggers in objc-gdb.h</span><br></pre></td></tr></table></figure></div>
+
+<p>2、修复预编译阶段的@selector的混乱问题</p>
+<p>主要是通过通过 <code>_getObjc2SelectorRefs </code>拿到Mach_O中的静态段 <code>__objc_selrefs</code>，遍历列表调用 <code>sel_registerNameNoLock</code> 将 <code>SEL</code> 添加到 <code>namedSelectors</code> 哈希表中</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// Fix up @selector references 修复@selector引用</span><br><span class="line">// sel 不是简单的字符串，而是带地址的字符串</span><br><span class="line">static size_t UnfixedSelectors;</span><br><span class="line">&#123;</span><br><span class="line">    mutex_locker_t lock(selLock);</span><br><span class="line">    for (EACH_HEADER) &#123;</span><br><span class="line">        if (hi-&gt;hasPreoptimizedSelectors()) continue;</span><br><span class="line"></span><br><span class="line">        bool isBundle = hi-&gt;isBundle();</span><br><span class="line">        // 通过_getObjc2SelectorRefs拿到Mach-O中的静态段__objc_selrefs</span><br><span class="line">        SEL *sels = _getObjc2SelectorRefs(hi, &amp;count);</span><br><span class="line">        UnfixedSelectors += count;</span><br><span class="line">        for (i = 0; i &lt; count; i++) &#123; //列表遍历</span><br><span class="line">            const char *name = sel_cname(sels[i]);</span><br><span class="line">            // 注册sel操作，即将sel添加到</span><br><span class="line">            SEL sel = sel_registerNameNoLock(name, isBundle);</span><br><span class="line">            if (sels[i] != sel) &#123; // 当sel与sels[i]地址不一致时，需要调整为一致的</span><br><span class="line">                sels[i] = sel;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>其中 <code>_getObjc2SelectorRefs</code> 的源码如下，表示获取 <code>Mach-O</code> 中的静态段 <code>__objc_selrefs</code>，后续通过 <code>_getObjc2</code> 开头的Mach-O静态段获取，都对应不同的 <code>section name</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//      function name                 content type     section name</span><br><span class="line">GETSECT(_getObjc2SelectorRefs,        SEL,             &quot;__objc_selrefs&quot;); </span><br><span class="line">GETSECT(_getObjc2MessageRefs,         message_ref_t,   &quot;__objc_msgrefs&quot;); </span><br><span class="line">GETSECT(_getObjc2ClassRefs,           Class,           &quot;__objc_classrefs&quot;);</span><br><span class="line">GETSECT(_getObjc2SuperRefs,           Class,           &quot;__objc_superrefs&quot;);</span><br><span class="line">GETSECT(_getObjc2ClassList,           classref_t const,      &quot;__objc_classlist&quot;);</span><br><span class="line">GETSECT(_getObjc2NonlazyClassList,    classref_t const,      &quot;__objc_nlclslist&quot;);</span><br><span class="line">GETSECT(_getObjc2CategoryList,        category_t * const,    &quot;__objc_catlist&quot;);</span><br><span class="line">GETSECT(_getObjc2CategoryList2,       category_t * const,    &quot;__objc_catlist2&quot;);</span><br><span class="line">GETSECT(_getObjc2NonlazyCategoryList, category_t * const,    &quot;__objc_nlcatlist&quot;);</span><br><span class="line">GETSECT(_getObjc2ProtocolList,        protocol_t * const,    &quot;__objc_protolist&quot;);</span><br><span class="line">GETSECT(_getObjc2ProtocolRefs,        protocol_t *,    &quot;__objc_protorefs&quot;);</span><br><span class="line">GETSECT(getLibobjcInitializers,       UnsignedInitializer, &quot;__objc_init_func&quot;);</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>sel_registerNameNoLock</code> 源码路径如下：<code>sel_registerNameNoLock -&gt; __sel_registerName</code>,如下所示，其关键代码是 <code>auto it = namedSelectors.get().insert(name);</code>，即将sel插入 <code>namedSelectors</code> 哈希表</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">SEL sel_registerNameNoLock(const char *name, bool copy) &#123;</span><br><span class="line">    return __sel_registerName(name, 0, copy);  // NO lock, maybe copy</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">👇</span><br><span class="line">static SEL __sel_registerName(const char *name, bool shouldLock, bool copy) </span><br><span class="line">&#123;</span><br><span class="line">    SEL result = 0;</span><br><span class="line"></span><br><span class="line">    if (shouldLock) selLock.assertUnlocked();</span><br><span class="line">    else selLock.assertLocked();</span><br><span class="line"></span><br><span class="line">    if (!name) return (SEL)0;</span><br><span class="line"></span><br><span class="line">    result = search_builtins(name);</span><br><span class="line">    if (result) return result;</span><br><span class="line">    </span><br><span class="line">    conditional_mutex_locker_t lock(selLock, shouldLock);</span><br><span class="line">    auto it = namedSelectors.get().insert(name);//sel插入表</span><br><span class="line">    if (it.second) &#123;</span><br><span class="line">        // No match. Insert.</span><br><span class="line">        *it.first = (const char *)sel_alloc(name, copy);</span><br><span class="line">    &#125;</span><br><span class="line">    return (SEL)*it.first;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>其中 <code>selector --&gt; sel</code> 并不是简单的字符串，是带地址的字符串</li>
+</ul>
+<p>如下所示，<code>sels[i]与sel</code> 字符串一致，但是地址不一致，所以需要调整为一致的。即fix up，可以通过打印调试显示如下</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071345374.png"
+                     
+                ></p>
+<p>3、错误混乱的类处理</p>
+<p>主要是从Mach-O中取出所有类，在遍历进行处理</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">// 3、错误混乱的类处理</span><br><span class="line">// Discover classes. Fix up unresolved future classes. Mark bundle classes.</span><br><span class="line">bool hasDyldRoots = dyld_shared_cache_some_image_overridden();</span><br><span class="line">// 读取类：readClass</span><br><span class="line">for (EACH_HEADER) &#123;</span><br><span class="line">    if (! mustReadClasses(hi, hasDyldRoots)) &#123;</span><br><span class="line">        // Image is sufficiently optimized that we need not call readClass()</span><br><span class="line">        continue;</span><br><span class="line">    &#125;</span><br><span class="line">    // 从编译后的类列表中取出所有类，即从Mach-O中获取静态段__objc_classlist，是一个classref_t类型的指针</span><br><span class="line">    classref_t const *classlist = _getObjc2ClassList(hi, &amp;count);</span><br><span class="line"></span><br><span class="line">    bool headerIsBundle = hi-&gt;isBundle();</span><br><span class="line">    bool headerIsPreoptimized = hi-&gt;hasPreoptimizedClasses();</span><br><span class="line"></span><br><span class="line">    for (i = 0; i &lt; count; i++) &#123;</span><br><span class="line">        Class cls = (Class)classlist[i];//此时获取的cls只是一个地址</span><br><span class="line">        Class newCls = readClass(cls, headerIsBundle, headerIsPreoptimized); //读取类，经过这步后，cls获取的值才是一个名字</span><br><span class="line">        // 经过调试，并未执行if里面的流程</span><br><span class="line">        // 初始化所有懒加载的类需要的内存空间，但是懒加载类的数据现在是没有加载到的，连类都没有初始化</span><br><span class="line">        if (newCls != cls  &amp;&amp;  newCls) &#123;</span><br><span class="line">            // Class was moved but not deleted. Currently this occurs </span><br><span class="line">            // only when the new class resolved a future class.</span><br><span class="line">            // Non-lazily realize the class below.</span><br><span class="line">            // 将懒加载的类添加到数组中</span><br><span class="line">            resolvedFutureClasses = (Class *)</span><br><span class="line">                realloc(resolvedFutureClasses, </span><br><span class="line">                        (resolvedFutureClassCount+1) * sizeof(Class));</span><br><span class="line">            resolvedFutureClasses[resolvedFutureClassCount++] = newCls;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">ts.log(&quot;IMAGE TIMES: discover classes&quot;);</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>通过代码调试，知道了在未执行readClass方法前，cls只是一个地址</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071346326.png"
+                     
+                ></p>
+<ul>
+<li>在执行后，cls是一个类的名称</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071347487.png"
+                     
+                ></p>
+<p>所以到这步为止，类的信息目前仅存储了 <code>地址+名称</code></p>
+<p>4、修复重映射一些没有被镜像文件加载进来的类</p>
+<p>主要是将未映射的 <code>Class</code> 和 <code>Super Class</code> 进行重映射，其中</p>
+<ul>
+<li><p><code>_getObjc2ClassRefs</code>  是获取 <code>Mach-O</code> 中的静态段 <code>__objc_classrefs</code> 即类的引用</p>
+</li>
+<li><p><code>_getObjc2SuperRefs</code> 是获取 <code>Mach-O</code> 中的静态段 <code>__objc_superrefs</code> 即父类的引用</p>
+</li>
+<li><p>通过注释可以得知，被 <code>remapClassRef</code> 的类都是懒加载的类，所以最初经过调试时，这部分代码是没有执行的</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">//4、修复重映射一些没有被镜像文件加载进来的类</span><br><span class="line">// Fix up remapped classes 修正重新映射的类</span><br><span class="line">// Class list and nonlazy class list remain unremapped.类列表和非惰性类列表保持未映射</span><br><span class="line">// Class refs and super refs are remapped for message dispatching.类引用和超级引用将重新映射以进行消息分发</span><br><span class="line">//经过调试，并未执行if里面的流程</span><br><span class="line">//将未映射的Class 和 Super Class重映射，被remap的类都是懒加载的类</span><br><span class="line">if (!noClassesRemapped()) &#123;</span><br><span class="line">    for (EACH_HEADER) &#123;</span><br><span class="line">        Class *classrefs = _getObjc2ClassRefs(hi, &amp;count);//Mach-O的静态段 __objc_classrefs</span><br><span class="line">        for (i = 0; i &lt; count; i++) &#123;</span><br><span class="line">            remapClassRef(&amp;classrefs[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        // fixme why doesn&#x27;t test future1 catch the absence of this?</span><br><span class="line">        classrefs = _getObjc2SuperRefs(hi, &amp;count);//Mach_O中的静态段 __objc_superrefs</span><br><span class="line">        for (i = 0; i &lt; count; i++) &#123;</span><br><span class="line">            remapClassRef(&amp;classrefs[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ts.log(&quot;IMAGE TIMES: remap classes&quot;);</span><br></pre></td></tr></table></figure></div>
+
+<p>5、修复一些消息</p>
+<p>主要是通过 <code>_getObjc2MessageRefs</code> 获取 <code>Mach-O</code> 的静态段 <code>__objc_msgrefs</code>，并遍历通过 <code>fixupMessageRef</code> 将函数指针进行注册，并fix为新的函数指针</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#if SUPPORT_FIXUP</span><br><span class="line">//5、修复一些消息</span><br><span class="line">    // Fix up old objc_msgSend_fixup call sites</span><br><span class="line">    for (EACH_HEADER) &#123;</span><br><span class="line">        // _getObjc2MessageRefs 获取Mach-O的静态段 __objc_msgrefs</span><br><span class="line">        message_ref_t *refs = _getObjc2MessageRefs(hi, &amp;count);</span><br><span class="line">        if (count == 0) continue;</span><br><span class="line"></span><br><span class="line">        if (PrintVtables) &#123;</span><br><span class="line">            _objc_inform(&quot;VTABLES: repairing %zu unsupported vtable dispatch &quot;</span><br><span class="line">                         &quot;call sites in %s&quot;, count, hi-&gt;fname());</span><br><span class="line">        &#125;</span><br><span class="line">        //经过调试，并未执行for里面的流程</span><br><span class="line">        //遍历将函数指针进行注册，并fix为新的函数指针</span><br><span class="line">        for (i = 0; i &lt; count; i++) &#123;</span><br><span class="line">            fixupMessageRef(refs+i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ts.log(&quot;IMAGE TIMES: fix up objc_msgSend_fixup&quot;);</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure></div>
+
+<p>6、当类里面有协议时：readProtocol 读取协议</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">// 6、当类里面有协议时：readProtocol 读取协议</span><br><span class="line">// Discover protocols. Fix up protocol refs. 发现协议。修正协议参考</span><br><span class="line">// 遍历所有协议列表，并且将协议列表加载到Protocol的哈希表中</span><br><span class="line">for (EACH_HEADER) &#123;</span><br><span class="line">    extern objc_class OBJC_CLASS_$_Protocol;</span><br><span class="line">    //cls = Protocol类，所有协议和对象的结构体都类似，isa都对应Protocol类</span><br><span class="line">    Class cls = (Class)&amp;OBJC_CLASS_$_Protocol;</span><br><span class="line">    ASSERT(cls);</span><br><span class="line">    //获取protocol哈希表 -- protocol_map</span><br><span class="line">    NXMapTable *protocol_map = protocols();</span><br><span class="line">    bool isPreoptimized = hi-&gt;hasPreoptimizedProtocols();</span><br><span class="line"></span><br><span class="line">    // Skip reading protocols if this is an image from the shared cache</span><br><span class="line">    // and we support roots</span><br><span class="line">    // Note, after launch we do need to walk the protocol as the protocol</span><br><span class="line">    // in the shared cache is marked with isCanonical() and that may not</span><br><span class="line">    // be true if some non-shared cache binary was chosen as the canonical</span><br><span class="line">    // definition</span><br><span class="line">    if (launchTime &amp;&amp; isPreoptimized &amp;&amp; cacheSupportsProtocolRoots) &#123;</span><br><span class="line">        if (PrintProtocols) &#123;</span><br><span class="line">            _objc_inform(&quot;PROTOCOLS: Skipping reading protocols in image: %s&quot;,</span><br><span class="line">                         hi-&gt;fname());</span><br><span class="line">        &#125;</span><br><span class="line">        continue;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    bool isBundle = hi-&gt;isBundle();</span><br><span class="line">    //通过_getObjc2ProtocolList 获取到Mach-O中的静态段__objc_protolist协议列表，</span><br><span class="line">    //即从编译器中读取并初始化protocol</span><br><span class="line">    protocol_t * const *protolist = _getObjc2ProtocolList(hi, &amp;count);</span><br><span class="line">    for (i = 0; i &lt; count; i++) &#123;</span><br><span class="line">        //通过添加protocol到protocol_map哈希表中</span><br><span class="line">        readProtocol(protolist[i], cls, protocol_map, </span><br><span class="line">                     isPreoptimized, isBundle);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ts.log(&quot;IMAGE TIMES: discover protocols&quot;);</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>通过 <code>NXMapTable *protocol_map = protocols();</code> 创建protocol哈希表，表的名称为protocol_map</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/***********************************************************************</span><br><span class="line">* protocols</span><br><span class="line">* Returns the protocol name =&gt; protocol map for protocols.</span><br><span class="line">* Locking: runtimeLock must read- or write-locked by the caller</span><br><span class="line">**********************************************************************/</span><br><span class="line">static NXMapTable *protocols(void)</span><br><span class="line">&#123;</span><br><span class="line">    static NXMapTable *protocol_map = nil;</span><br><span class="line">    </span><br><span class="line">    runtimeLock.assertLocked();</span><br><span class="line"></span><br><span class="line">    INIT_ONCE_PTR(protocol_map, </span><br><span class="line">                  NXCreateMapTable(NXStrValueMapPrototype, 16), </span><br><span class="line">                  NXFreeMapTable(v) );</span><br><span class="line"></span><br><span class="line">    return protocol_map;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>通过 <code>_getObjc2ProtocolList</code> 获取到 <code>Mach-O</code> 中的静态段 <code>__objc_protolist</code> 协议列表，即从编译器中读取并初始化 <code>protocol</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protocol_t * const *protolist = _getObjc2ProtocolList(hi, &amp;count);</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>循环遍历协议列表，通过 <code>readProtocol</code> 方法将协议添加到 <code>protocol_map</code> 哈希表中</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">readProtocol(protolist[i], cls, protocol_map, </span><br><span class="line">                         isPreoptimized, isBundle);</span><br></pre></td></tr></table></figure></div>
+
+<p>7、修复没有被加载的协议</p>
+<p>主要是通过 <code>_getObjc2ProtocolRefs</code> 获取到Mach-O的静态段 <code>__objc_protorefs</code>（与6中的__objc_protolist并不是同一个东西），然后遍历需要修复的协议，通过 <code>remapProtocolRef</code> 比较当前协议和协议列表中的同一个内存地址的协议是否相同，如果不同则替换</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">//7、修复没有被加载的协议</span><br><span class="line">// Fix up @protocol references</span><br><span class="line">// Preoptimized images may have the right </span><br><span class="line">// answer already but we don&#x27;t know for sure.</span><br><span class="line">for (EACH_HEADER) &#123;</span><br><span class="line">    // At launch time, we know preoptimized image refs are pointing at the</span><br><span class="line">    // shared cache definition of a protocol.  We can skip the check on</span><br><span class="line">    // launch, but have to visit @protocol refs for shared cache images</span><br><span class="line">    // loaded later.</span><br><span class="line">    if (launchTime &amp;&amp; cacheSupportsProtocolRoots &amp;&amp; hi-&gt;isPreoptimized())</span><br><span class="line">        continue;</span><br><span class="line">    //_getObjc2ProtocolRefs 获取到Mach-O的静态段 __objc_protorefs</span><br><span class="line">    protocol_t **protolist = _getObjc2ProtocolRefs(hi, &amp;count);</span><br><span class="line">    for (i = 0; i &lt; count; i++) &#123;//遍历</span><br><span class="line">        //比较当前协议和协议列表中的同一个内存地址的协议是否相同，如果不同则替换</span><br><span class="line">        remapProtocolRef(&amp;protolist[i]);//经过代码调试，并未执行</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ts.log(&quot;IMAGE TIMES: fix up @protocol references&quot;);</span><br></pre></td></tr></table></figure></div>
+
+<p>其中 <code>remapProtocolRef</code> 的源码实现如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/***********************************************************************</span><br><span class="line">* remapProtocolRef</span><br><span class="line">* Fix up a protocol ref, in case the protocol referenced has been reallocated.</span><br><span class="line">* Locking: runtimeLock must be read- or write-locked by the caller</span><br><span class="line">**********************************************************************/</span><br><span class="line">static size_t UnfixedProtocolReferences;</span><br><span class="line">static void remapProtocolRef(protocol_t **protoref)</span><br><span class="line">&#123;</span><br><span class="line">    runtimeLock.assertLocked();</span><br><span class="line">    //获取协议列表中统一内存地址的协议</span><br><span class="line">    protocol_t *newproto = remapProtocol((protocol_ref_t)*protoref);</span><br><span class="line">    if (*protoref != newproto) &#123;//如果当前协议 与 同一内存地址协议不同，则替换</span><br><span class="line">        *protoref = newproto;</span><br><span class="line">        UnfixedProtocolReferences++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>8、分类处理</p>
+<p>主要是 <code>处理分类</code>，需要在分类初始化并将数据加载到类后才执行，对于运行时出现的分类，将分类的发现推迟推迟到对 <code>_dyld_objc_notify_register</code> 的调用完成后的第一个 <code>load_images</code> 调用为止</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 8、分类处理</span><br><span class="line">// Discover categories. Only do this after the initial category 发现分类</span><br><span class="line">// attachment has been done. For categories present at startup,</span><br><span class="line">// discovery is deferred until the first load_images call after</span><br><span class="line">// the call to _dyld_objc_notify_register completes. rdar://problem/53119145</span><br><span class="line">if (didInitialAttachCategories) &#123;</span><br><span class="line">    for (EACH_HEADER) &#123;</span><br><span class="line">        load_categories_nolock(hi);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ts.log(&quot;IMAGE TIMES: discover categories&quot;);</span><br></pre></td></tr></table></figure></div>
+
+<p>9、类的加载处理</p>
+<p>主要是实现 <code>类的加载处理</code>，实现非懒加载类</p>
+<ul>
+<li><p>通过 <code>_getObjc2NonlazyClassList</code> 获取Mach-O的静态段 <code>__objc_nlclslist</code> 非懒加载类表</p>
+</li>
+<li><p>通过 <code>addClassTableEntry</code> 将非懒加载类插入类表，存储到内存，如果已经添加就不会载添加，需要确保整个结构都被添加</p>
+</li>
+<li><p>通过 <code>realizeClassWithoutSwift</code> 实现当前的类，因为前面3中的 <code>readClass</code> 读取到内存的仅仅只有 <code>地址+名称</code>，类的data数据并没有加载出来</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">// Realize non-lazy classes (for +load methods and static instances) 初始化非懒加载类，进行rw、ro等操作：realizeClassWithoutSwift</span><br><span class="line">    //懒加载类 -- 别人不动我，我就不动</span><br><span class="line">    //实现非懒加载的类，对于load方法和静态实例变量</span><br><span class="line">    for (EACH_HEADER) &#123;</span><br><span class="line">        //通过_getObjc2NonlazyClassList获取Mach-O的静态段__objc_nlclslist非懒加载类表</span><br><span class="line">        classref_t const *classlist = </span><br><span class="line">            _getObjc2NonlazyClassList(hi, &amp;count);</span><br><span class="line">        for (i = 0; i &lt; count; i++) &#123;</span><br><span class="line">            Class cls = remapClass(classlist[i]);</span><br><span class="line">            </span><br><span class="line">            const char *mangledName  = cls-&gt;mangledName();</span><br><span class="line">             const char *LGPersonName = &quot;LGPerson&quot;;</span><br><span class="line">            </span><br><span class="line">             if (strcmp(mangledName, LGPersonName) == 0) &#123;</span><br><span class="line">                 auto kc_ro = (const class_ro_t *)cls-&gt;data();</span><br><span class="line">                 printf(&quot;_getObjc2NonlazyClassList: 这个是我要研究的 %s \n&quot;,LGPersonName);</span><br><span class="line">             &#125;</span><br><span class="line">            </span><br><span class="line">            if (!cls) continue;</span><br><span class="line"></span><br><span class="line">            addClassTableEntry(cls);//插入表，但是前面已经插入过了，所以不会重新插入</span><br><span class="line"></span><br><span class="line">            if (cls-&gt;isSwiftStable()) &#123;</span><br><span class="line">                if (cls-&gt;swiftMetadataInitializer()) &#123;</span><br><span class="line">                    _objc_fatal(&quot;Swift class %s with a metadata initializer &quot;</span><br><span class="line">                                &quot;is not allowed to be non-lazy&quot;,</span><br><span class="line">                                cls-&gt;nameForLogging());</span><br><span class="line">                &#125;</span><br><span class="line">                // fixme also disallow relocatable classes</span><br><span class="line">                // We can&#x27;t disallow all Swift classes because of</span><br><span class="line">                // classes like Swift.__EmptyArrayStorage</span><br><span class="line">            &#125;</span><br><span class="line">            //实现当前的类，因为前面readClass读取到内存的仅仅只有地址+名称，类的data数据并没有加载出来</span><br><span class="line">            //实现所有非懒加载的类(实例化类对象的一些信息，例如rw)</span><br><span class="line">            realizeClassWithoutSwift(cls, nil);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ts.log(&quot;IMAGE TIMES: realize non-lazy classes&quot;);</span><br></pre></td></tr></table></figure></div>
+
+<p>10、没有被处理的类，优化那些被侵犯的类</p>
+<p>主要是实现没有被处理的类，优化被侵犯的类</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// Realize newly-resolved future classes, in case CF manipulates them</span><br><span class="line">    if (resolvedFutureClasses) &#123;</span><br><span class="line">        for (i = 0; i &lt; resolvedFutureClassCount; i++) &#123;</span><br><span class="line">            Class cls = resolvedFutureClasses[i];</span><br><span class="line">            if (cls-&gt;isSwiftStable()) &#123;</span><br><span class="line">                _objc_fatal(&quot;Swift class is not allowed to be future&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            //实现类</span><br><span class="line">            realizeClassWithoutSwift(cls, nil);</span><br><span class="line">            cls-&gt;setInstancesRequireRawIsaRecursively(false/*inherited*/);</span><br><span class="line">        &#125;</span><br><span class="line">        free(resolvedFutureClasses);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ts.log(&quot;IMAGE TIMES: realize future classes&quot;);</span><br><span class="line"></span><br><span class="line">    if (DebugNonFragileIvars) &#123;</span><br><span class="line">        //实现所有类</span><br><span class="line">        realizeAllClasses();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>我们需要重点关注的是3中的 <code>readClass</code> 以及9中 <code>realizeClassWithoutSwift</code> 两个方法</p>
+<h1 id="readClass：读取类"><a href="#readClass：读取类" class="headerlink" title="readClass：读取类"></a>readClass：读取类</h1><p><code>readClass</code> 主要是 <code>读取类</code>，在未调用该方法前，<code>cls</code> 只是一个 <code>地址</code>，执行该方法后，<code>cls</code> 是 <code>类的名称</code>，其源码实现如下，关键代码是 <code>addNamedClass</code> 和 <code>addClassTableEntry</code>，源码实现如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">/***********************************************************************</span><br><span class="line">* readClass</span><br><span class="line">* Read a class and metaclass as written by a compiler. 读取编译器编写的类和元类</span><br><span class="line">* Returns the new class pointer. This could be:  返回新的类指针，可能是：</span><br><span class="line">* - cls</span><br><span class="line">* - nil  (cls has a missing weak-linked superclass)</span><br><span class="line">* - something else (space for this class was reserved by a future class)</span><br><span class="line">*</span><br><span class="line">* Note that all work performed by this function is preflighted by </span><br><span class="line">* mustReadClasses(). Do not change this function without updating that one.</span><br><span class="line">*</span><br><span class="line">* Locking: runtimeLock acquired by map_images or objc_readClassPair</span><br><span class="line">**********************************************************************/</span><br><span class="line">Class readClass(Class cls, bool headerIsBundle, bool headerIsPreoptimized)</span><br><span class="line">&#123;</span><br><span class="line">    const char *mangledName = cls-&gt;mangledName();//名字</span><br><span class="line">    </span><br><span class="line">    // **CJL写的** ----如果想进入自定义，自己加一个判断</span><br><span class="line">    const char *LGPersonName = &quot;LGPerson&quot;;</span><br><span class="line">    if (strcmp(mangledName, LGPersonName) == 0) &#123;</span><br><span class="line">        auto kc_ro = (const class_ro_t *)cls-&gt;data();</span><br><span class="line">        printf(&quot;%s -- 研究重点--%s\n&quot;, __func__,mangledName);</span><br><span class="line">    &#125;</span><br><span class="line">    // 当前类的父类中若有丢失的weak-linked类，则返回nil</span><br><span class="line">    if (missingWeakSuperclass(cls)) &#123;</span><br><span class="line">        // No superclass (probably weak-linked). </span><br><span class="line">        // Disavow any knowledge of this subclass.</span><br><span class="line">        if (PrintConnecting) &#123;</span><br><span class="line">            _objc_inform(&quot;CLASS: IGNORING class &#x27;%s&#x27; with &quot;</span><br><span class="line">                         &quot;missing weak-linked superclass&quot;, </span><br><span class="line">                         cls-&gt;nameForLogging());</span><br><span class="line">        &#125;</span><br><span class="line">        addRemappedClass(cls, nil);</span><br><span class="line">        cls-&gt;superclass = nil;</span><br><span class="line">        return nil;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    cls-&gt;fixupBackwardDeployingStableSwift();</span><br><span class="line">    // 判断是不是后期要处理的类</span><br><span class="line">    //  正常情况下，不会走到popFutureNamedClass，因为这是专门针对未来待处理的类的操作</span><br><span class="line">    //  通过断点调试，不会走到if流程里面，因此也不会对ro、rw进行操作</span><br><span class="line">    Class replacing = nil;</span><br><span class="line">    if (Class newCls = popFutureNamedClass(mangledName)) &#123;</span><br><span class="line">        // This name was previously allocated as a future class.</span><br><span class="line">        // Copy objc_class to future class&#x27;s struct.</span><br><span class="line">        // Preserve future&#x27;s rw data block.</span><br><span class="line">        </span><br><span class="line">        if (newCls-&gt;isAnySwift()) &#123;</span><br><span class="line">            _objc_fatal(&quot;Can&#x27;t complete future class request for &#x27;%s&#x27; &quot;</span><br><span class="line">                        &quot;because the real class is too big.&quot;, </span><br><span class="line">                        cls-&gt;nameForLogging());</span><br><span class="line">        &#125;</span><br><span class="line">        //  读取class的data，设置ro、rw</span><br><span class="line">        //  经过调试，并不会走到这里</span><br><span class="line">        class_rw_t *rw = newCls-&gt;data();</span><br><span class="line">        const class_ro_t *old_ro = rw-&gt;ro();</span><br><span class="line">        memcpy(newCls, cls, sizeof(objc_class));</span><br><span class="line">        rw-&gt;set_ro((class_ro_t *)newCls-&gt;data());</span><br><span class="line">        newCls-&gt;setData(rw);</span><br><span class="line">        freeIfMutable((char *)old_ro-&gt;name);</span><br><span class="line">        free((void *)old_ro);</span><br><span class="line">        </span><br><span class="line">        addRemappedClass(cls, newCls);</span><br><span class="line">        </span><br><span class="line">        replacing = cls;</span><br><span class="line">        cls = newCls;</span><br><span class="line">    &#125;</span><br><span class="line">    //  判断是否类是否已经加载到内存</span><br><span class="line">    if (headerIsPreoptimized  &amp;&amp;  !replacing) &#123;</span><br><span class="line">        // class list built in shared cache</span><br><span class="line">        // fixme strict assert doesn&#x27;t work because of duplicates</span><br><span class="line">        // ASSERT(cls == getClass(name));</span><br><span class="line">        ASSERT(getClassExceptSomeSwift(mangledName));</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        addNamedClass(cls, mangledName, replacing);//加载共享缓存中的类</span><br><span class="line">        addClassTableEntry(cls);//插入表，即相当于从mach-O文件 读取到 内存 中</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // for future reference: shared cache never contains MH_BUNDLEs</span><br><span class="line">    if (headerIsBundle) &#123;</span><br><span class="line">        cls-&gt;data()-&gt;flags |= RO_FROM_BUNDLE;</span><br><span class="line">        cls-&gt;ISA()-&gt;data()-&gt;flags |= RO_FROM_BUNDLE;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return cls;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>通过源码实现，主要分为以下几步：</p>
+<ul>
+<li>通过 <code>mangledName</code> 获取类的名字，其中 <code>mangledName</code> 方法的源码实现如下</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">const char *mangledName() &#123; </span><br><span class="line">        // fixme can&#x27;t assert locks here</span><br><span class="line">        ASSERT(this);</span><br><span class="line"></span><br><span class="line">        if (isRealized()  ||  isFuture()) &#123; //这个初始化判断在lookupImp也有类似的</span><br><span class="line">            return data()-&gt;ro()-&gt;name;//如果已经实例化，则从ro中获取name</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return ((const class_ro_t *)data())-&gt;name;//反之，从mach-O的数据data中获取name</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>当前类的父类中若有丢失的 <code>weak-linked</code> 类，则返回 <code>nil</code></p>
+</li>
+<li><p>判断是不是后期需要处理的类，在正常情况下，不会走到 <code>popFutureNamedClass</code>，因为这是 <code>专门针对未来待处理的类的操作</code>，也可以通过断点调试，可知不会走到 <code>if流程</code> 里面，因此也不会对<code>ro、rw</code> 进行操作</p>
+<ul>
+<li><p><code>data</code> 是 <code>mach-O</code> 的数据，并 <code>不在class的内存</code> 中</p>
+</li>
+<li><p><code>ro</code> 的 <code>赋值</code> 是从 <code>mach-O</code> 中的 <code>data</code> 强转赋值的</p>
+</li>
+<li><p><code>rw</code> 里的 <code>ro</code> 是从 <code>ro</code> 复制过去的</p>
+</li>
+</ul>
+</li>
+<li><p>通过 <code>addNamedClass</code> 将当前类添加到已经创建好的 <code>gdb_objc_realized_classes</code> 哈希表，该表用于存放所有类</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">/***********************************************************************</span><br><span class="line">* addNamedClass 加载共享缓存中的类 插入表</span><br><span class="line">* Adds name =&gt; cls to the named non-meta class map. 将name=&gt; cls添加到命名的非元类映射</span><br><span class="line">* Warns about duplicate class names and keeps the old mapping.</span><br><span class="line">* Locking: runtimeLock must be held by the caller</span><br><span class="line">**********************************************************************/</span><br><span class="line">static void addNamedClass(Class cls, const char *name, Class replacing = nil)</span><br><span class="line">&#123;</span><br><span class="line">    runtimeLock.assertLocked();</span><br><span class="line">    Class old;</span><br><span class="line">    if ((old = getClassExceptSomeSwift(name))  &amp;&amp;  old != replacing) &#123;</span><br><span class="line">        inform_duplicate(name, old, cls);</span><br><span class="line"></span><br><span class="line">        // getMaybeUnrealizedNonMetaClass uses name lookups.</span><br><span class="line">        // Classes not found by name lookup must be in the</span><br><span class="line">        // secondary meta-&gt;nonmeta table.</span><br><span class="line">        addNonMetaClass(cls);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        //添加到gdb_objc_realized_classes哈希表</span><br><span class="line">        NXMapInsert(gdb_objc_realized_classes, name, cls);</span><br><span class="line">    &#125;</span><br><span class="line">    ASSERT(!(cls-&gt;data()-&gt;flags &amp; RO_META));</span><br><span class="line"></span><br><span class="line">    // wrong: constructed classes are already realized when they get here</span><br><span class="line">    // ASSERT(!cls-&gt;isRealized());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>通过 <code>addClassTableEntry</code>，将初始化的类添加到 <code>allocatedClasses</code> 表，这个表在 <a href="">OC底层原理16：dyld与objc的关联</a> 文章中提及过，是在 <code>_objc_init</code> 中的 <code>runtime_init</code> 就创建了 <code>allocatedClasses</code> 表</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">/***********************************************************************</span><br><span class="line">* addClassTableEntry 将一个类添加到所有类的表中</span><br><span class="line">* Add a class to the table of all classes. If addMeta is true,</span><br><span class="line">* automatically adds the metaclass of the class as well.</span><br><span class="line">* Locking: runtimeLock must be held by the caller.</span><br><span class="line">**********************************************************************/</span><br><span class="line">static void</span><br><span class="line">addClassTableEntry(Class cls, bool addMeta = true)</span><br><span class="line">&#123;</span><br><span class="line">    runtimeLock.assertLocked();</span><br><span class="line"></span><br><span class="line">    // This class is allowed to be a known class via the shared cache or via</span><br><span class="line">    // data segments, but it is not allowed to be in the dynamic table already.</span><br><span class="line">    auto &amp;set = objc::allocatedClasses.get();//开辟的类的表，在objc_init中的runtime_init就创建了表</span><br><span class="line"></span><br><span class="line">    ASSERT(set.find(cls) == set.end());</span><br><span class="line"></span><br><span class="line">    if (!isKnownClass(cls))</span><br><span class="line">        set.insert(cls);</span><br><span class="line">    if (addMeta)</span><br><span class="line">        //添加到allocatedClasses哈希表</span><br><span class="line">        addClassTableEntry(cls-&gt;ISA(), false);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>如果我们想在 <code>readClass</code> 源码中想 <code>定位到自定义的类</code>，可以 <code>自定义加if判断</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071408989.png"
+                     
+                ></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>所以综上所述，<code>readClass</code> 的主要作用就是将 <code>Mach-O</code> 中的类读取到 <code>内存</code>，即插入表中，但是目前的类仅有两个信息：<code>地址以及名称</code>，而mach-O的其中的data数据还未读取出来</p>
+<h1 id="realizeClassWithoutSwift：实现类"><a href="#realizeClassWithoutSwift：实现类" class="headerlink" title="realizeClassWithoutSwift：实现类"></a>realizeClassWithoutSwift：实现类</h1><p><code>realizeClassWithoutSwift</code> 方法中有 <code>ro、rw</code> 的相关操作，这个方法在消息流程的慢速查找中有所提及,方法路径为：慢速查找(<code>lookUpImpOrForward</code>) – <code>realizeClassMaybeSwiftAndLeaveLocked</code> – <code>realizeClassMaybeSwiftMaybeRelock</code> – <code>realizeClassWithoutSwift</code>（实现类）</p>
+<p><code>realizeClassWithoutSwift</code> 方法主要作用是 <code>实现类</code>，将类的 <code>data</code> 数据加载到内存中，主要有以下几部分操作：</p>
+<ul>
+<li>【第一步】读取 <code>data</code> 数据，并设置 <code>ro、rw</code></li>
+<li>【第二步】递归调用 <code>realizeClassWithoutSwift</code> 完善继承链</li>
+<li>【第三步】通过 <code>methodizeClass</code> 方法化类</li>
+</ul>
+<p><strong>第一步：读取data数据</strong></p>
+<p>读取 <code>class</code> 的 <code>data</code> 数据，并将其强转为 <code>ro</code>，以及 <code>rw</code> 初始化和 <code>ro</code> 拷贝一份到 <code>rw</code> 中的 <code>ro</code></p>
+<ul>
+<li><p><code>ro</code> 表示 <code>readOnly</code>，即 <code>只读</code>，其在编译时就已经确定了内存，包含类名称、方法、协议和实例变量的信息，由于是只读的，所以属于 <code>Clean Memory</code>，而 <code>Clean Memory</code> 是指加载后不会发生更改的内存</p>
+</li>
+<li><p><code>rw</code> 表示 <code>readWrite</code>，即 <code>可读可写</code>，由于其动态性，可能会往类中添加属性、方法、添加协议，在最新的2020的 <code>WWDC</code> 的对内存优化的说明 <a class="link"   target="_blank" rel="noopener" href="https://developer.apple.com/videos/play/wwdc2020/10163/" >Advancements in the Objective-C runtime - WWDC 2020 - Videos - Apple Developer <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 中，提到 <code>rw</code>，其实在 <code>rw</code> 中只有10%的类真正的更改了它们的方法，所以有了rw，即 <code>类的额外信息</code>。对于那些确实需要额外信息的类，可以分配 <code>rw</code> 扩展记录中的一个，并将其滑入类中供其使用。其中 <code>rw</code> 就属于 <code>dirty memory</code>，而 <code>dirty memory</code> 是指在进程运行时会发生更改的内存，类结构一经使用就会变成 <code>ditry memory</code>，因为运行时会向它写入新数据，例如 <code>创建一个新的方法缓存</code>，并从类中指向它</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// fixme verify class is not in an un-dlopened part of the shared cache?</span><br><span class="line">//读取class的data()，以及ro/rw创建</span><br><span class="line">auto ro = (const class_ro_t *)cls-&gt;data(); //读取类结构的bits属性、//ro -- clean memory，在编译时就已经确定了内存</span><br><span class="line">auto isMeta = ro-&gt;flags &amp; RO_META; //判断元类</span><br><span class="line">if (ro-&gt;flags &amp; RO_FUTURE) &#123;</span><br><span class="line">    // This was a future class. rw data is already allocated.</span><br><span class="line">    rw = cls-&gt;data(); //dirty memory 进行赋值</span><br><span class="line">    ro = cls-&gt;data()-&gt;ro();</span><br><span class="line">    ASSERT(!isMeta);</span><br><span class="line">    cls-&gt;changeInfo(RW_REALIZED|RW_REALIZING, RW_FUTURE);</span><br><span class="line">&#125; else &#123; //此时将数据读取进来了，也赋值完毕了</span><br><span class="line">    // Normal class. Allocate writeable class data.</span><br><span class="line">    rw = objc::zalloc&lt;class_rw_t&gt;(); //申请开辟zalloc -- rw</span><br><span class="line">    rw-&gt;set_ro(ro);//rw中的ro设置为临时变量ro</span><br><span class="line">    rw-&gt;flags = RW_REALIZED|RW_REALIZING|isMeta;</span><br><span class="line">    cls-&gt;setData(rw);//将cls的data赋值为rw形式</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>【第二步】递归调用 realizeClassWithoutSwift 完善 继承链</strong></p>
+<p>递归调用 <code>realizeClassWithoutSwift</code> 完善 <code>继承链</code>,并设置当前类、父类、元类的 <code>rw</code></p>
+<ul>
+<li><p>递归调用 <code>realizeClassWithoutSwift</code> 设置 <code>父类、元类</code></p>
+</li>
+<li><p>设置 <code>父类和元类的isa指向</code></p>
+</li>
+<li><p>通过 <code>addSubclass</code> 和 <code>addRootClass</code> 设置父子的双向链表指向关系，即父类中可以找到子类，子类中可以找到父类</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"> // Realize superclass and metaclass, if they aren&#x27;t already.</span><br><span class="line">    // This needs to be done after RW_REALIZED is set above, for root classes.</span><br><span class="line">    // This needs to be done after class index is chosen, for root metaclasses.</span><br><span class="line">    // This assumes that none of those classes have Swift contents,</span><br><span class="line">    //   or that Swift&#x27;s initializers have already been called.</span><br><span class="line">    //   fixme that assumption will be wrong if we add support</span><br><span class="line">    //   for ObjC subclasses of Swift classes. --</span><br><span class="line">    //递归调用realizeClassWithoutSwift完善继承链,并处理当前类的父类、元类</span><br><span class="line">    //递归实现 设置当前类、父类、元类的 rw，主要目的是确定继承链 （类继承链、元类继承链）</span><br><span class="line">    //实现元类、父类</span><br><span class="line">    //当isa找到根元类之后，根元类的isa是指向自己的，不会返回nil从而导致死循环——remapClass中对类在表中进行查找的操作，如果表中已有该类，则返回一个空值；如果没有则返回当前类，这样保证了类只加载一次并结束递归</span><br><span class="line">    supercls = realizeClassWithoutSwift(remapClass(cls-&gt;superclass), nil);</span><br><span class="line">    metacls = realizeClassWithoutSwift(remapClass(cls-&gt;ISA()), nil);</span><br><span class="line">    </span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">// Update superclass and metaclass in case of remapping -- class 是 双向链表结构 即父子关系都确认了</span><br><span class="line">// 将父类和元类给我们的类 分别是isa和父类的对应值</span><br><span class="line">cls-&gt;superclass = supercls;</span><br><span class="line">cls-&gt;initClassIsa(metacls);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">// Connect this class to its superclass&#x27;s subclass lists</span><br><span class="line">//双向链表指向关系 父类中可以找到子类 子类中也可以找到父类</span><br><span class="line">//通过addSubclass把当前类放到父类的子类列表中去</span><br><span class="line">if (supercls) &#123;</span><br><span class="line">    addSubclass(supercls, cls);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    addRootClass(cls);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>这里有一个问题，<code>realizeClassWithoutSwift</code> 递归调用时，<code>isa</code> 找到 <code>根元类</code> 之后，根元类的 <code>isa</code> 是 <code>指向自己</code>，并不会返回 <code>nil</code>，所以有以下递归终止条件，其目的是保证类只加载一次</p>
+<ul>
+<li><p>在 <code>realizeClassWithoutSwift</code> 中</p>
+<ul>
+<li><p>如果类 <code>不存在</code>，则返回 <code>nil</code></p>
+</li>
+<li><p>如果类 <code>已经实现</code>，则直接返回 <code>cls</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">static Class realizeClassWithoutSwift(Class cls, Class previously)</span><br><span class="line">&#123;</span><br><span class="line">    runtimeLock.assertLocked();</span><br><span class="line">    </span><br><span class="line">    //如果类不存在，则返回nil</span><br><span class="line">    if (!cls) return nil;</span><br><span class="line">    如果类已经实现，则直接返回cls</span><br><span class="line">    if (cls-&gt;isRealized()) return cls;</span><br><span class="line">    ASSERT(cls == remapClass(cls));</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>在 <code>remapClass</code> 方法中，如果 <code>cls</code> 不存在，则直接返回 <code>nil</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">/***********************************************************************</span><br><span class="line">* remapClass</span><br><span class="line">* Returns the live class pointer for cls, which may be pointing to </span><br><span class="line">* a class struct that has been reallocated.</span><br><span class="line">* Returns nil if cls is ignored because of weak linking.</span><br><span class="line">* Locking: runtimeLock must be read- or write-locked by the caller</span><br><span class="line">**********************************************************************/</span><br><span class="line">static Class remapClass(Class cls)</span><br><span class="line">&#123;</span><br><span class="line">    runtimeLock.assertLocked();</span><br><span class="line"></span><br><span class="line">    if (!cls) return nil;//如果cls不存在，则返回nil</span><br><span class="line"></span><br><span class="line">    auto *map = remappedClasses(NO);</span><br><span class="line">    if (!map)</span><br><span class="line">        return cls;</span><br><span class="line">    </span><br><span class="line">    auto iterator = map-&gt;find(cls);</span><br><span class="line">    if (iterator == map-&gt;end())</span><br><span class="line">        return cls;</span><br><span class="line">    return std::get&lt;1&gt;(*iterator);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>【第三步】通过 <code>methodizeClass</code> 方法化类</p>
+<p>通过 <code>methodizeClass</code> 方法，从 <code>ro</code> 中读取方法列表（包括分类中的方法）、属性列表、协议列表赋值给 <code>rw</code>，并返回 <code>cls</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// Attach categories 附加类别 -- 疑问：ro中也有方法列表 rw中也有方法列表，下面这个方法可以说明</span><br><span class="line">//将ro数据写入到rw</span><br><span class="line">methodizeClass(cls, previously);</span><br><span class="line"></span><br><span class="line">return cls;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>断点调试 <code>realizeClassWithoutSwift</code></strong></p>
+<p>如果我们需要跟踪自定义类，同样需要 <code>_read_images</code> 方法中的第九步的<code>realizeClassWithoutSwift</code> 调用前，以及 <code>realizeClassWithoutSwift</code> 方法中增加自定义逻辑，主要是为了方便 <code>调试自定义类</code></p>
+<ul>
+<li><code>_read_images</code> 方法中的第九步的 <code>realizeClassWithoutSwift</code> 调用前增加自定义逻辑</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071419089.png"
+                     
+                ></p>
+<ul>
+<li>realizeClassWithoutSwift方法中增加自定义逻辑</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071419766.png"
+                     
+                ></p>
+<p>下面，开启我们的断点调试</p>
+<ul>
+<li>在 <code>LGPerson</code> 中重写 <code>+load</code> 函数</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071420555.png"
+                     
+                ></p>
+<ul>
+<li>重新运行程序，我们就走到了 <code>_read_images</code> 的第九步中的自定义逻辑部分</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071420333.png"
+                     
+                ></p>
+<ul>
+<li>在 <code>realizeClassWithoutSwift</code> 调用部分加断点，运行并断住</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071421940.png"
+                     
+                ></p>
+<ul>
+<li>继续运行程序，断点来到 <code>realizeClassWithoutSwift</code> 方法自定义判断的代码中</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071421465.png"
+                     
+                ></p>
+<ul>
+<li>继续在 <code>auto ro =</code> 加断点，继续运行，断住 <code>--</code> 这部分主要是 <code>读取data</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071422586.png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071422647.png"
+                     
+                ></p>
+<ul>
+<li>在else里面的 <code>rw-&gt;set_ro(ro);</code> 处加断点，断住，查看 <code>rw</code>，此时的 <code>rw</code> 是 <code>0x0</code>,查看 <code>rw</code>，其中包括 <code>ro</code> 和 <code>rw</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071423831.png"
+                     
+                ></p>
+<ul>
+<li><code>x/4gx cls</code> 其中红框部分为0</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071423835.png"
+                     
+                ></p>
+<ul>
+<li>继续运行，然后查看 <code>x/4gx cls</code>，此时还是为 <code>0x0</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071425379.png"
+                     
+                ></p>
+<p>这里我们需要去查看 <code>set_ro</code> 的源码实现，其路径为：<code>set_ro -- set_ro_or_rwe</code>（找到 <code>get_ro_or_rwe</code>，是通过 <code>ro_or_rw_ext_t</code> 类型从 <code>ro_or_rw_ext</code> 中获取） – <code>ro_or_rw_ext_t</code> 中的 <code>ro</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071426580.png"
+                     
+                ></p>
+<p>通过源码可知 <code>ro</code> 的获取主要分两种情况：<code>有没有运行时</code>，</p>
+<pre><code>* 如果 `有运行时`，从 `rw` 中读取
+
+* 反之，如果 `没有运行时`，从 `ro` 中读取
+</code></pre>
+<ul>
+<li>在 <code>if (supercls &amp;&amp; !isMeta)</code> 处加断点，继续运行断住，此时断点的 <code>cls</code> 是地址，猜测<code>cls</code> 可能是元类</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071427582.png"
+                     
+                ></p>
+<p>下面来进行验证：通过 <code>cls</code> 的 <code>isa</code> 指针地址来验证，是同一个地址，这个是存在一个 <code>递归</code>（在supercls &#x3D; 、metacls &#x3D;部分递归）</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071428111.png"
+                     
+                ></p>
+<h1 id="methodizeClass：方法化类"><a href="#methodizeClass：方法化类" class="headerlink" title="methodizeClass：方法化类"></a>methodizeClass：方法化类</h1><p>其中 <code>methodizeClass</code> 的源码实现如下，主要分为几部分：</p>
+<ul>
+<li><p>将 <code>属性列表、方法列表、协议列表</code> 等贴到 <code>rwe</code> 中</p>
+</li>
+<li><p>附加 <code>分类</code> 中的方法（将在下一篇文章中进行解释说明）</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">static void methodizeClass(Class cls, Class previously)</span><br><span class="line">&#123;</span><br><span class="line">    runtimeLock.assertLocked();</span><br><span class="line"></span><br><span class="line">    bool isMeta = cls-&gt;isMetaClass();</span><br><span class="line">    auto rw = cls-&gt;data(); // 初始化一个rw</span><br><span class="line">    auto ro = rw-&gt;ro();</span><br><span class="line">    auto rwe = rw-&gt;ext();</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    // Install methods and properties that the class implements itself.</span><br><span class="line">    //将属性列表、方法列表、协议列表等贴到rw中</span><br><span class="line">    // 将ro中的方法列表加入到rw中</span><br><span class="line">    method_list_t *list = ro-&gt;baseMethods();//获取ro的baseMethods</span><br><span class="line">    if (list) &#123;</span><br><span class="line">        prepareMethodLists(cls, &amp;list, 1, YES, isBundleClass(cls));//methods进行排序</span><br><span class="line">        if (rwe) rwe-&gt;methods.attachLists(&amp;list, 1);//对rwe进行处理</span><br><span class="line">    &#125;</span><br><span class="line">    // 加入属性</span><br><span class="line">    property_list_t *proplist = ro-&gt;baseProperties;</span><br><span class="line">    if (rwe &amp;&amp; proplist) &#123;</span><br><span class="line">        rwe-&gt;properties.attachLists(&amp;proplist, 1);</span><br><span class="line">    &#125;</span><br><span class="line">    // 加入协议</span><br><span class="line">    protocol_list_t *protolist = ro-&gt;baseProtocols;</span><br><span class="line">    if (rwe &amp;&amp; protolist) &#123;</span><br><span class="line">        rwe-&gt;protocols.attachLists(&amp;protolist, 1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Root classes get bonus method implementations if they don&#x27;t have </span><br><span class="line">    // them already. These apply before category replacements.</span><br><span class="line">    if (cls-&gt;isRootMetaclass()) &#123;</span><br><span class="line">        // root metaclass</span><br><span class="line">        addMethod(cls, @selector(initialize), (IMP)&amp;objc_noop_imp, &quot;&quot;, NO);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Attach categories.</span><br><span class="line">    // 加入分类中的方法</span><br><span class="line">    if (previously) &#123;</span><br><span class="line">        if (isMeta) &#123;</span><br><span class="line">            objc::unattachedCategories.attachToClass(cls, previously,</span><br><span class="line">                                                     ATTACH_METACLASS);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            // When a class relocates, categories with class methods</span><br><span class="line">            // may be registered on the class itself rather than on</span><br><span class="line">            // the metaclass. Tell attachToClass to look for those.</span><br><span class="line">            objc::unattachedCategories.attachToClass(cls, previously,</span><br><span class="line">                                                     ATTACH_CLASS_AND_METACLASS);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    objc::unattachedCategories.attachToClass(cls, cls,</span><br><span class="line">                                             isMeta ? ATTACH_METACLASS : ATTACH_CLASS);</span><br><span class="line"></span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="rwe的逻辑"><a href="#rwe的逻辑" class="headerlink" title="rwe的逻辑"></a>rwe的逻辑</h1><p>方法列表加入 <code>rwe</code> 的逻辑如下：</p>
+<ul>
+<li><p>获取 <code>ro</code> 的 <code>baseMethods</code></p>
+</li>
+<li><p>通过 <code>prepareMethodLists</code> 方法排序</p>
+</li>
+<li><p>对 <code>rwe</code> 进行处理即通过 <code>attachLists</code> 插入</p>
+</li>
+</ul>
+<h1 id="方法如何排序"><a href="#方法如何排序" class="headerlink" title="方法如何排序"></a>方法如何排序</h1><p>在消息流程的 <a href="">OC底层原理14-2：objc_msgSend方法列表查找(慢速查找)汇编分析</a> 中，方法的查找算法是通过 <code>二分查找算法</code>，说明 <code>sel-imp</code> 是有排序的，那么是如何排序的呢？</p>
+<ul>
+<li>进入 <code>prepareMethodLists</code> 的源码实现,其内部是通过 <code>fixupMethodList</code> 方法排序</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">static void </span><br><span class="line">prepareMethodLists(Class cls, method_list_t **addedLists, int addedCount,</span><br><span class="line">                   bool baseMethods, bool methodsFromBundle)</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    // Add method lists to array.</span><br><span class="line">    // Reallocate un-fixed method lists.</span><br><span class="line">    // The new methods are PREPENDED to the method list array.</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; addedCount; i++) &#123;</span><br><span class="line">        method_list_t *mlist = addedLists[i];</span><br><span class="line">        ASSERT(mlist);</span><br><span class="line"></span><br><span class="line">        // Fixup selectors if necessary</span><br><span class="line">        if (!mlist-&gt;isFixedUp()) &#123;</span><br><span class="line">            fixupMethodList(mlist, methodsFromBundle, true/*sort*/);//排序</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>进入 <code>fixupMethodList</code> 源码实现，是根据 <code>selector address</code> 排序</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">static void </span><br><span class="line">fixupMethodList(method_list_t *mlist, bool bundleCopy, bool sort)</span><br><span class="line">&#123;</span><br><span class="line">    runtimeLock.assertLocked();</span><br><span class="line">    ASSERT(!mlist-&gt;isFixedUp());</span><br><span class="line"></span><br><span class="line">    // fixme lock less in attachMethodLists ?</span><br><span class="line">    // dyld3 may have already uniqued, but not sorted, the list</span><br><span class="line">    if (!mlist-&gt;isUniqued()) &#123;</span><br><span class="line">        mutex_locker_t lock(selLock);</span><br><span class="line">    </span><br><span class="line">        // Unique selectors in list.</span><br><span class="line">        for (auto&amp; meth : *mlist) &#123;</span><br><span class="line">            const char *name = sel_cname(meth.name);</span><br><span class="line">            meth.name = sel_registerNameNoLock(name, bundleCopy);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Sort by selector address.根据sel地址排序</span><br><span class="line">    if (sort) &#123;</span><br><span class="line">        method_t::SortBySELAddress sorter;</span><br><span class="line">        std::stable_sort(mlist-&gt;begin(), mlist-&gt;end(), sorter);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // Mark method list as uniqued and sorted</span><br><span class="line">    mlist-&gt;setFixedUp();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="验证方法排序"><a href="#验证方法排序" class="headerlink" title="验证方法排序"></a>验证方法排序</h1><p>下面我们可以通过 <code>调试来验证</code> 方法的排序</p>
+<ul>
+<li>在 <code>methodizeClass</code> 方法中添加自定义逻辑，并断住</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071634172.png"
+                     
+                ></p>
+<ul>
+<li><p>读取 <code>ro</code> 中的 <code>methodlist</code></p>
+<ul>
+<li>p kc_ro</li>
+<li>p $0-&gt;baseMethodList（通过 auto kc_ro &#x3D; kc_rw-&gt;ro(); – ro() – class_ro_t类型查看属性）</li>
+<li>p *$1</li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071636447.png"
+                     
+                ></p>
+<p>p $2.get(0)<br>p $2.get(1)<br>p $2.get(2)<br>p $2.get(3) …</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071637729.png"
+                     
+                ></p>
+<ul>
+<li>进入 <code>prepareMethodLists</code> 方法，将 <code>ro</code> 中的 <code>baseMethods</code> 进行排序</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071637191.png"
+                     
+                ></p>
+<ul>
+<li>进入 <code>prepareMethodLists</code> 源码，加自定义断点（主要是为了针对性研究），执行断点，运行到自定义逻辑并断住（这里加 <code>kc_isMeta</code>，主要是用于过滤掉同名的元类中的 <code>methods</code>）</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071638150.png"
+                     
+                ></p>
+<ul>
+<li>一步步执行，来到 <code>fixupMethodList</code>，即对 <code>sel</code> 排序</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071639666.png"
+                     
+                ></p>
+<ul>
+<li>进入 <code>fixupMethodList</code> 源码实现，（sel 根据selAdress 排序） ，再次断点，来到下图部分，即方法经过了一层排序</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071639199.png"
+                     
+                ></p>
+<ul>
+<li>p mlist</li>
+<li>p *$7</li>
+<li>p 8.get(0)、p8.get(1)、p 8.get(2)、p8.get(3)</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071640995.png"
+                     
+                ></p>
+<p>所以 排序前后的 <code>methodlist</code> 对比如下，所以总结如下：<code>methodizeClass</code> 方法中实现类中方法（协议等）的序列化</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071640304.png"
+                     
+                ></p>
+<h1 id="attachToClass方法"><a href="#attachToClass方法" class="headerlink" title="attachToClass方法"></a>attachToClass方法</h1><p>在 <code>methodlist</code> 方法主要是将 <code>分类添加到主类</code> 中，其源码实现如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">void attachToClass(Class cls, Class previously, int flags)</span><br><span class="line">&#123;</span><br><span class="line">    runtimeLock.assertLocked();</span><br><span class="line">    ASSERT((flags &amp; ATTACH_CLASS) ||</span><br><span class="line">           (flags &amp; ATTACH_METACLASS) ||</span><br><span class="line">           (flags &amp; ATTACH_CLASS_AND_METACLASS));</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    const char *mangledName  = cls-&gt;mangledName();</span><br><span class="line">    const char *LGPersonName = &quot;LGPerson&quot;;</span><br><span class="line"></span><br><span class="line">    if (strcmp(mangledName, LGPersonName) == 0) &#123;</span><br><span class="line">        bool kc_isMeta = cls-&gt;isMetaClass();</span><br><span class="line">        auto kc_rw = cls-&gt;data();</span><br><span class="line">        auto kc_ro = kc_rw-&gt;ro();</span><br><span class="line">        if (!kc_isMeta) &#123;</span><br><span class="line">            printf(&quot;%s: 这个是我要研究的 %s \n&quot;,__func__,LGPersonName);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    auto &amp;map = get();</span><br><span class="line">    auto it = map.find(previously); // 找到一个分类进来一次，即一个个加载分类，不要混乱</span><br><span class="line"></span><br><span class="line">    if (it != map.end()) &#123; // 这里会走进来：当主类没有实现load，分类开始加载，迫使主类加载，会走到if流程里面</span><br><span class="line">        category_list &amp;list = it-&gt;second;</span><br><span class="line">        if (flags &amp; ATTACH_CLASS_AND_METACLASS) &#123; // 判断是否是元类</span><br><span class="line">            int otherFlags = flags &amp; ~ATTACH_CLASS_AND_METACLASS;</span><br><span class="line">            attachCategories(cls, list.array(), list.count(), otherFlags | ATTACH_CLASS); // 实例方法</span><br><span class="line">            attachCategories(cls-&gt;ISA(), list.array(), list.count(), otherFlags | ATTACH_METACLASS); // 类方法</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            // 如果不是元类，则只走一次 attachCategories</span><br><span class="line">            attachCategories(cls, list.array(), list.count(), flags);</span><br><span class="line">        &#125;</span><br><span class="line">        map.erase(it);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>因为 <code>attachToClass</code> 中的外部循环是找到一个分类就会进到 <code>attachCategories</code> 一次，即找一个就循环一次</p>
+<h1 id="attachCategories方法"><a href="#attachCategories方法" class="headerlink" title="attachCategories方法"></a>attachCategories方法</h1><p>在 <code>attachCategories</code> 方法中准备分类的数据，其源码实现如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">static void</span><br><span class="line">attachCategories(Class cls, const locstamped_category_t *cats_list, uint32_t cats_count,</span><br><span class="line">                 int flags)</span><br><span class="line">&#123;</span><br><span class="line">    if (slowpath(PrintReplacedMethods)) &#123;</span><br><span class="line">        printReplacements(cls, cats_list, cats_count);</span><br><span class="line">    &#125;</span><br><span class="line">    if (slowpath(PrintConnecting)) &#123;</span><br><span class="line">        _objc_inform(&quot;CLASS: attaching %d categories to%s class &#x27;%s&#x27;%s&quot;,</span><br><span class="line">                     cats_count, (flags &amp; ATTACH_EXISTING) ? &quot; existing&quot; : &quot;&quot;,</span><br><span class="line">                     cls-&gt;nameForLogging(), (flags &amp; ATTACH_METACLASS) ? &quot; (meta)&quot; : &quot;&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     * Only a few classes have more than 64 categories during launch.</span><br><span class="line">     * This uses a little stack, and avoids malloc.</span><br><span class="line">     *</span><br><span class="line">     * Categories must be added in the proper order, which is back</span><br><span class="line">     * to front. To do that with the chunking, we iterate cats_list</span><br><span class="line">     * from front to back, build up the local buffers backwards,</span><br><span class="line">     * and call attachLists on the chunks. attachLists prepends the</span><br><span class="line">     * lists, so the final result is in the expected order.</span><br><span class="line">     */</span><br><span class="line">    constexpr uint32_t ATTACH_BUFSIZ = 64;</span><br><span class="line">    method_list_t   *mlists[ATTACH_BUFSIZ];</span><br><span class="line">    property_list_t *proplists[ATTACH_BUFSIZ];</span><br><span class="line">    protocol_list_t *protolists[ATTACH_BUFSIZ];</span><br><span class="line"></span><br><span class="line">    uint32_t mcount = 0;</span><br><span class="line">    uint32_t propcount = 0;</span><br><span class="line">    uint32_t protocount = 0;</span><br><span class="line">    bool fromBundle = NO;</span><br><span class="line">    bool isMeta = (flags &amp; ATTACH_METACLASS);</span><br><span class="line">    /*</span><br><span class="line">     rwe的创建，</span><br><span class="line">     那么为什么要在这里进行`rwe的初始化`？因为我们现在要做一件事：往`本类`中`添加属性、方法、协议`等</span><br><span class="line">     */</span><br><span class="line">    auto rwe = cls-&gt;data()-&gt;extAllocIfNeeded();</span><br><span class="line">        </span><br><span class="line">    // mlists 是一个二维数组</span><br><span class="line">    for (uint32_t i = 0; i &lt; cats_count; i++) &#123;</span><br><span class="line">        auto&amp; entry = cats_list[i];</span><br><span class="line"></span><br><span class="line">        method_list_t *mlist = entry.cat-&gt;methodsForMeta(isMeta);</span><br><span class="line">        if (mlist) &#123;</span><br><span class="line">            if (mcount == ATTACH_BUFSIZ) &#123;//mcount = 0，ATTACH_BUFSIZ= 64，不会走到if里面的流程</span><br><span class="line">                prepareMethodLists(cls, mlists, mcount, NO, fromBundle);//准备排序</span><br><span class="line">                rwe-&gt;methods.attachLists(mlists, mcount);</span><br><span class="line">                mcount = 0;</span><br><span class="line">            &#125;</span><br><span class="line">            mlists[ATTACH_BUFSIZ - ++mcount] = mlist;</span><br><span class="line">            fromBundle |= entry.hi-&gt;isBundle();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        property_list_t *proplist =</span><br><span class="line">            entry.cat-&gt;propertiesForMeta(isMeta, entry.hi);</span><br><span class="line">        if (proplist) &#123;</span><br><span class="line">            if (propcount == ATTACH_BUFSIZ) &#123;</span><br><span class="line">                rwe-&gt;properties.attachLists(proplists, propcount);</span><br><span class="line">                propcount = 0;</span><br><span class="line">            &#125;</span><br><span class="line">            proplists[ATTACH_BUFSIZ - ++propcount] = proplist;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        protocol_list_t *protolist = entry.cat-&gt;protocolsForMeta(isMeta);</span><br><span class="line">        if (protolist) &#123;</span><br><span class="line">            if (protocount == ATTACH_BUFSIZ) &#123;</span><br><span class="line">                rwe-&gt;protocols.attachLists(protolists, protocount);</span><br><span class="line">                protocount = 0;</span><br><span class="line">            &#125;</span><br><span class="line">            protolists[ATTACH_BUFSIZ - ++protocount] = protolist;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (mcount &gt; 0) &#123;</span><br><span class="line">        prepareMethodLists(cls, mlists + ATTACH_BUFSIZ - mcount, mcount, NO, fromBundle);//排序</span><br><span class="line">        rwe-&gt;methods.attachLists(mlists + ATTACH_BUFSIZ - mcount, mcount);//mlists + ATTACH_BUFSIZ - mcount 为内存平移</span><br><span class="line">        if (flags &amp; ATTACH_EXISTING) flushCaches(cls);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    rwe-&gt;properties.attachLists(proplists + ATTACH_BUFSIZ - propcount, propcount);</span><br><span class="line"></span><br><span class="line">    rwe-&gt;protocols.attachLists(protolists + ATTACH_BUFSIZ - protocount, protocount);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>在 <code>auto rwe = cls-&gt;data()-&gt;extAllocIfNeeded();</code> 是进行 <code>rwe</code> 的创建,那么为什么要在这里进行 <code>rwe</code> 的初始化？？因为我们现在要做一件事：<code>往本类中添加属性、方法、协议等</code>,即对原来的 <code>clean memory</code> 要进行处理了</p>
+<ul>
+<li><p>进入 <code>extAllocIfNeeded</code> 方法的源码实现，判断 <code>rwe</code> 是否存在，如果存在则直接获取，如果不存在则开辟</p>
+</li>
+<li><p>进入 <code>extAlloc</code> 源码实现，即对 <code>rwe 0-1</code> 的过程，在此过程中，就将本类的 <code>data</code> 数据加载进去了</p>
+</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">class_rw_ext_t *extAllocIfNeeded() &#123;</span><br><span class="line">    auto v = get_ro_or_rwe();</span><br><span class="line">    if (fastpath(v.is&lt;class_rw_ext_t *&gt;())) &#123; //判断rwe是否存在</span><br><span class="line">        return v.get&lt;class_rw_ext_t *&gt;();//如果存在，则直接获取</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        return extAlloc(v.get&lt;const class_ro_t *&gt;());//如果不存在则进行开辟</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">👇//extAlloc源码实现</span><br><span class="line">class_rw_ext_t *</span><br><span class="line">class_rw_t::extAlloc(const class_ro_t *ro, bool deepCopy)</span><br><span class="line">&#123;</span><br><span class="line">    runtimeLock.assertLocked();</span><br><span class="line">    //此时只有rw，需要对rwe进行数据添加，即0-1的过程</span><br><span class="line">    auto rwe = objc::zalloc&lt;class_rw_ext_t&gt;();//创建</span><br><span class="line">    </span><br><span class="line">    rwe-&gt;version = (ro-&gt;flags &amp; RO_META) ? 7 : 0;</span><br><span class="line"></span><br><span class="line">    method_list_t *list = ro-&gt;baseMethods();</span><br><span class="line">    if (list) &#123;</span><br><span class="line">        if (deepCopy) list = list-&gt;duplicate();</span><br><span class="line">        rwe-&gt;methods.attachLists(&amp;list, 1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // See comments in objc_duplicateClass</span><br><span class="line">    // property lists and protocol lists historically</span><br><span class="line">    // have not been deep-copied</span><br><span class="line">    //</span><br><span class="line">    // This is probably wrong and ought to be fixed some day</span><br><span class="line">    property_list_t *proplist = ro-&gt;baseProperties;</span><br><span class="line">    if (proplist) &#123;</span><br><span class="line">        rwe-&gt;properties.attachLists(&amp;proplist, 1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protocol_list_t *protolist = ro-&gt;baseProtocols;</span><br><span class="line">    if (protolist) &#123;</span><br><span class="line">        rwe-&gt;protocols.attachLists(&amp;protolist, 1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    set_ro_or_rwe(rwe, ro);</span><br><span class="line">    return rwe;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>其中关键代码是 <code>rwe-&gt;methods.attachLists(mlists + ATTACH_BUFSIZ - mcount, mcount);</code> 即存入mlists的末尾，mlists的数据来源前面的for循环</p>
+</li>
+<li><p>在调试运行时，发现 <code>category_t</code> 中的 <code>name</code> 编译时是 <code>LGPerson</code>（参考clang编译时的那么），运行时是 <code>LGA</code> 即分类的名字</p>
+</li>
+<li><p>代码 <code>mlists[ATTACH_BUFSIZ - ++mcount] = mlist;</code>，经过调试发现此时的 <code>mcount</code> 等于 <code>1</code>，即可以理解为 <code>倒序插入</code>,<code>64</code> 的原因是允许容纳64个（最多64个分类）</p>
+</li>
+</ul>
+<blockquote>
+<p>总结: <code>本类</code> 中 <code>需要添加属性、方法等</code>，所以需要 <code>初始化rwe</code>,rwe的初始化主要涉及：<code>分类、addMethod、addProperty、addprotocol</code> ， 即对原始类进行修改或者处理时，才会进行rwe的初始化</p>
+</blockquote>
+<h1 id="attachLists方法：插入"><a href="#attachLists方法：插入" class="headerlink" title="attachLists方法：插入"></a>attachLists方法：插入</h1><ul>
+<li>其中 <code>方法、属性</code> 继承于 <code>entsize_list_tt</code>，<code>协议</code> 则是类似 <code>entsize_list_tt</code> 实现，都是 <code>二维数组</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">struct method_list_t : entsize_list_tt&lt;method_t, method_list_t, 0x3&gt; </span><br><span class="line"></span><br><span class="line">struct property_list_t : entsize_list_tt&lt;property_t, property_list_t, 0&gt; </span><br><span class="line"></span><br><span class="line">struct protocol_list_t &#123;</span><br><span class="line">    // count is pointer-sized by accident.</span><br><span class="line">    uintptr_t count;</span><br><span class="line">    protocol_ref_t list[0]; // variable-size</span><br><span class="line"></span><br><span class="line">    size_t byteSize() const &#123;</span><br><span class="line">        return sizeof(*this) + count*sizeof(list[0]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protocol_list_t *duplicate() const &#123;</span><br><span class="line">        return (protocol_list_t *)memdup(this, this-&gt;byteSize());</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>进入 <code>attachLists</code> 方法的源码实现</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">void attachLists(List* const * addedLists, uint32_t addedCount) &#123;</span><br><span class="line">    if (addedCount == 0) return;</span><br><span class="line"></span><br><span class="line">    if (hasArray()) &#123;</span><br><span class="line">        // many lists -&gt; many lists</span><br><span class="line">        // 计算数组中旧lists的大小</span><br><span class="line">        uint32_t oldCount = array()-&gt;count;</span><br><span class="line">        // 计算新的容量大小 = 旧数据大小+新数据大小</span><br><span class="line">        uint32_t newCount = oldCount + addedCount;</span><br><span class="line">        // 根据新的容量大小，开辟一个数组，类型是 array_t，通过array()获取</span><br><span class="line">        setArray((array_t *)realloc(array(), array_t::byteSize(newCount)));</span><br><span class="line">        // 设置数组大小</span><br><span class="line">        array()-&gt;count = newCount;</span><br><span class="line">        // 旧的数据从 addedCount 数组下标开始 存放旧的lists，大小为 旧数据大小 * 单个旧list大小</span><br><span class="line">        memmove(array()-&gt;lists + addedCount, array()-&gt;lists, </span><br><span class="line">                oldCount * sizeof(array()-&gt;lists[0]));</span><br><span class="line">        // 新数据从数组 首位置开始存储，存放新的lists，大小为 新数据大小 * 单个list大小</span><br><span class="line">        memcpy(</span><br><span class="line">               array()-&gt;lists, addedLists, </span><br><span class="line">               addedCount * sizeof(array()-&gt;lists[0]));</span><br><span class="line">    &#125;</span><br><span class="line">    else if (!list  &amp;&amp;  addedCount == 1) &#123;</span><br><span class="line">        // 0 lists -&gt; 1 list</span><br><span class="line">        // 将list加入mlists的第一个元素，此时的list是一个一维数组</span><br><span class="line">        list = addedLists[0];</span><br><span class="line">    &#125; </span><br><span class="line">    else &#123;</span><br><span class="line">        // 1 list -&gt; many lists 有了一个list，有往里加很多list</span><br><span class="line">        // 新的list就是分类，来自LRU的算法思维，即最近最少使用</span><br><span class="line">        // 获取旧的list</span><br><span class="line">        List* oldList = list;</span><br><span class="line">        uint32_t oldCount = oldList ? 1 : 0;</span><br><span class="line">        // 计算容量和 = 旧list个数+新lists的个数</span><br><span class="line">        uint32_t newCount = oldCount + addedCount;</span><br><span class="line">        // 开辟一个容量和大小的集合，类型是 array_t，即创建一个数组，放到array中，通过array()获取</span><br><span class="line">        setArray((array_t *)malloc(array_t::byteSize(newCount)));</span><br><span class="line">        // 设置数组的大小</span><br><span class="line">        array()-&gt;count = newCount;</span><br><span class="line">        // 判断old是否存在，old肯定是存在的，将旧的list放入到数组的末尾</span><br><span class="line">        if (oldList) array()-&gt;lists[addedCount] = oldList;</span><br><span class="line">        // memcpy（开始位置，放什么，放多大） 是内存平移，从数组起始位置存入新的list</span><br><span class="line">        // 其中array()-&gt;lists 表示首位元素位置</span><br><span class="line">        memcpy(array()-&gt;lists, addedLists, </span><br><span class="line">               addedCount * sizeof(array()-&gt;lists[0]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>从源码可以得知，<code>插入表</code> 主要分为三种情况：</p>
+<ul>
+<li><p>【情况1：多对多】如果当前调用 <code>attachLists</code> 的 <code>list_array_tt</code> 二维数组中有多个一维数组</p>
+<ul>
+<li><p>计算数组中旧 <code>lists</code> 的大小</p>
+</li>
+<li><p>计算新的容量大小 &#x3D; 旧数据大小+新数据大小</p>
+</li>
+<li><p>根据新的容量大小，开辟一个数组，类型是 <code>array_t</code>，通过 <code>array()</code> 获取</p>
+</li>
+<li><p>设置数组大小</p>
+</li>
+<li><p>旧的数据从 addedCount 数组下标开始 存放旧的lists，大小为 旧数据大小 * 单个旧list大小，即整段平移，可以简单理解为原来的数据移动到后面，即指针偏移</p>
+</li>
+<li><p>新数据从数组 首位置开始存储，存放新的lists，大小为 新数据大小 * 单个list大小，可以简单理解为越晚加进来，越在前面，越在前面，调用时则优先调用</p>
+</li>
+</ul>
+</li>
+<li><p>【情况2：0对一】如果调用 <code>attachLists</code> 的 <code>list_array_tt</code> 二维数组为空且新增大小数目为 <code>1</code></p>
+<ul>
+<li>直接赋值 <code>addedList</code> 的 <code>第一个list</code></li>
+</ul>
+</li>
+<li><p>【情况3：一对多】如果当前调用 <code>attachLists</code> 的 <code>list_array_tt</code> 二维数组只有一个一维数组</p>
+<ul>
+<li><p>获取旧的list</p>
+</li>
+<li><p>计算 <code>容量和 = 旧list个数+新lists的个数</code></p>
+</li>
+<li><p>开辟一个容量和大小的集合，类型是 <code>array_t</code>，即创建一个数组，放到 <code>array</code> 中，通过<code>array()</code> 获取</p>
+</li>
+<li><p>设置数组的大小</p>
+</li>
+<li><p>判断old是否存在，old肯定是存在的，将 <code>旧的list放入到数组的末尾</code></p>
+</li>
+<li><p><code>memcpy（开始位置，放什么，放多大）</code> 是 <code>内存平移</code>，从数组 <code>起始位置开始存入新的list</code>，其中 <code>array()-&gt;lists</code> 表示首位元素位置</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>针对 <code>情况3</code>，这里的lists是指 <code>分类</code></p>
+<ul>
+<li><p>这是日常开发中，为什么 <code>子类实现父类方法会把父类方法覆盖</code> 的原因</p>
+</li>
+<li><p>同理，对于同名方法，<code>分类方法覆盖类方法</code> 的原因</p>
+</li>
+<li><p>这个操作来自一个算法思维 <code>LRU即最近最少使用</code>，<code>加这个newlist的目的是由于要使用这个newlist中的方法</code>，这个 <code>newlist</code> 对于用户的价值要高，即优先调用</p>
+</li>
+<li><p>会来到 <code>1对多</code> 的原因 ，主要是 <code>有分类的添加</code>，即旧的元素在后面，新的元素在前面 ，究其根本原因主要是 <code>优先调用category</code>，这也是分类的意义所在</p>
+</li>
+</ul>
+<h1 id="memmove和memcpy的区别"><a href="#memmove和memcpy的区别" class="headerlink" title="memmove和memcpy的区别"></a>memmove和memcpy的区别</h1><ul>
+<li><p>在不知道需要平移的内存大小时，需要 <code>memmove</code> 进行内存平移，保证安全</p>
+</li>
+<li><p><code>memcpy</code> 从原内存地址的起始位置开始拷贝若干个字节到目标内存地址中，<code>速度快</code></p>
+</li>
+</ul>
+<h1 id="rwe-数据加载"><a href="#rwe-数据加载" class="headerlink" title="rwe 数据加载"></a>rwe 数据加载</h1><p><strong>rwe – 本类的数据加载【重点！！！】</strong></p>
+<p>下面通过调试来验证 <code>rwe数据0-1的过程</code>，即 <code>添加类的方法列表</code></p>
+<ul>
+<li><p>在 <code>attachCategories -&gt; extAllocIfNeeded -&gt; extAlloc</code> 增加自定义逻辑，运行，并断住，从堆栈信息可以看出是从 <code>attachCategories</code> 方法中 <code>auto rwe = cls-&gt;data()-&gt;extAllocIfNeeded();</code> 过来的，这里的作用是 <code>开辟rwe</code>，</p>
+<ul>
+<li><p>那么为什么要在这里进行 <code>rwe的初始化</code>？因为我们现在要做一件事：往 <code>本类</code> 中 <code>添加属性、方法、协议等</code>,即对原来的 <code>clean memory</code> 要进行处理了</p>
+</li>
+<li><p><code>rwe</code> 是在 <code>分类处理</code> 时才会进行处理，即rwe初始化，且有以下几个方法会涉及rwe的初始化 ，分别是：<code>分类 + addMethod + addPro + addProtocol</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071659349.png"
+                     
+                ></p>
+<ul>
+<li><code>p rwe</code></li>
+<li><code>p *$0</code> , 此时的 <code>rwe</code> 中的 <code>list_array_tt</code> 是空的</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071700969.png"
+                     
+                ></p>
+<ul>
+<li><p>继续往下执行到if (list) {断住</p>
+<ul>
+<li><code>p list</code></li>
+<li><code>p *$2</code> ，此时的 <code>list</code> 是 <code>LGPerson</code> 本类的方法列表</li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071701893.png"
+                     
+                ></p>
+<ul>
+<li>在 <code>attachLists</code> 方法中的 <code>if (hasArray()) &#123;</code> 处设置断点，并运行断住，继续往下执行，会走到 else-if流程，即0对1 – <code>LGPerson本类的方法列表的添加</code> 会走 <code>0对1流程</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071702247.png"
+                     
+                ></p>
+<ul>
+<li><code>p addedLists</code> ，此时是一个list指针的地址，给了 <code>mlists</code> 的第一个元素, 类型是<code>method_list_t *const *</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071702033.png"
+                     
+                ></p>
+<ul>
+<li><code>p addedLists[0]</code></li>
+<li><code>p *$5</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071703598.png"
+                     
+                ></p>
+<ul>
+<li><code>p addedLists[1]</code></li>
+<li><code>p *$7</code> ,也会有值，主要是因为内存是连续的，访问的是别人的</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071703432.png"
+                     
+                ></p>
+<blockquote>
+<p>总结 ：所以 <code>0对1</code> 是一种 <code>一维赋值</code>，函数路径为：<code>map_images -&gt; _read_images -&gt;readClass -&gt; realizeClassWithoutSwift -&gt; methodizeClass -&gt; prepareMethodLists -&gt; fixupMethodList -&gt; attachToClass -&gt; load_categories_nolock -&gt; attachCategories -&gt; extAllocIfNeeded -&gt; extAlloc -&gt; attachLists</code></p>
+</blockquote>
+<h1 id="rwe-–-LGA分类数据加载【重点！！！】"><a href="#rwe-–-LGA分类数据加载【重点！！！】" class="headerlink" title="rwe – LGA分类数据加载【重点！！！】"></a>rwe – LGA分类数据加载【重点！！！】</h1><ul>
+<li><p>继续执行一步，打印list</p>
+<ul>
+<li><code>p list</code> ，此时的list是 <code>method_list_t</code> 结构</li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071705570.png"
+                     
+                ></p>
+<ul>
+<li><p>接上面，继续往下执行，走到 <code>method_list_t *mlist = entry.cat-&gt;methodsForMeta(isMeta);</code>，</p>
+<ul>
+<li>p mlist</li>
+<li>p *$10 ，此时的mlist是 分类LGA 的</li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071706758.png"
+                     
+                ></p>
+<ul>
+<li>在 <code>if (mcount &gt; 0) &#123;</code> 部分加断点，继续往下执行，并断住</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071706627.png"
+                     
+                ></p>
+<ul>
+<li>往下执行一步，此时的 <code>mlists</code> 为 <code>集合的集合</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071707173.png"
+                     
+                ></p>
+<ul>
+<li><p>其中 <code>mlists + ATTACH_BUFSIZ - mcount</code> 为 <code>内存平移</code></p>
+<ul>
+<li><code>p mlists + ATTACH_BUFSIZ - mcount</code> , 因为mcount &#x3D; 1， ATTACH_BUFSIZ &#x3D; 64，从首位平移到63位，即最后一个元素</li>
+<li>p *$14</li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071708333.png"
+                     
+                ></p>
+<ul>
+<li><code>p *$15</code> ,<code>mlists</code> 最后一个元素的类容为 <code>本类的方法列表</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071708416.png"
+                     
+                ></p>
+<ul>
+<li>进入 <code>attachLists</code> 方法， 在 <code>if (hasArray()) &#123;</code> 处加断点，继续执行，由于已经有了一个list，所以会走到 <code>1对多</code> 的流程</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071709402.png"
+                     
+                ></p>
+<ul>
+<li>执行到最后，输出当前的array 即 <code>p array()</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071709312.png"
+                     
+                ></p>
+<p>这个 <code>list_array_tt&lt;method_t, method_list_t&gt;</code> 表示 array中会放很多的 <code>method_list_t</code>，method_list_t中会放很多 <code>method_t</code></p>
+<blockquote>
+<p>总结:如果本类 <code>只有一个分类</code>，则会走到情况3，即 <code>1对多</code> 的情况</p>
+</blockquote>
+<h1 id="rwe-–-LGB分类数据加载【重点！！！】"><a href="#rwe-–-LGB分类数据加载【重点！！！】" class="headerlink" title="rwe – LGB分类数据加载【重点！！！】"></a>rwe – LGB分类数据加载【重点！！！】</h1><p>如果再加一个 <code>分类LGB</code>，走到第三种情况，即 <code>多对多</code></p>
+<ul>
+<li>再次走到 <code>attachCategories -- if (mcount &gt; 0) &#123;，</code> 进入 <code>attachLists</code>，走到 <code>多对多</code> 的情况</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071711162.png"
+                     
+                ></p>
+<ul>
+<li>查看当前 <code>array</code> 的形式即 <code>p array()</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071711677.png"
+                     
+                ></p>
+<ul>
+<li>p $25[0]</li>
+<li>p $25[1]</li>
+<li>p $25[2]</li>
+<li>p $26.lists[0]</li>
+<li>p *$29 ,第一个里面存储的LGB的方法列表</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071712366.png"
+                     
+                ></p>
+<p>其输出的顺序是：</p>
+<blockquote>
+<p>总结：<br>综上所述，<code>attachLists</code> 方法主要是将 <code>类</code> 和 <code>分类</code> 的数据加载到 <code>rwe</code> 中<br>首先 <code>加载本类的data数据</code>，此时的 <code>rwe没有数据为空</code>，走 <code>0对1流程</code><br>当加入 <code>一个分类</code> 时，此时的 <code>rwe仅有一个list</code>，即 <code>本类的list</code>，走 <code>1对多流程</code><br>再加入一个分类 时，此时的 <code>rwe中有两个list</code>，即 <code>本类+分类的list</code>，走 <code>多对多流程</code></p>
+</blockquote>
+<p>如下图所示：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071714172.png"
+                     
+                ></p>
+<h1 id="懒加载类-和-非懒加载类"><a href="#懒加载类-和-非懒加载类" class="headerlink" title="懒加载类 和 非懒加载类"></a>懒加载类 和 非懒加载类</h1><ul>
+<li>在验证方法排序的基础上，继续在 <code>rwe</code> 加断点，此时为NULL</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071715273.png"
+                     
+                ></p>
+<ul>
+<li>继续往下一步步执行，<code>rwe</code> 仍为 <code>NULL</code>，不会走 <code>if</code> 里面的流程</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071716857.png"
+                     
+                ></p>
+<p>在这里，尽管方法处理完毕，但是并没有从 <code>rw</code> 中存储到 <code>rwe</code> 中，那么问题来了，到目前为止，从<code>data -&gt; ro -&gt; rw -&gt; 看到了rwe</code>,即 <code>realizeClassWithoutSwift（ro、rw操作）</code>-&gt; <code>methodizeClass</code>，但是并没有走if里面的流程，为什么？</p>
+<p>究其根本原因是 <code>_read_images</code> 方法中的第九步 <code>实现非懒加载类</code>，那么我们是如何将 <code>懒加载类</code> 变成 <code>非懒加载类</code> 的呢?</p>
+<p>主要是在运行objc源码前，我们在LGPerson中实现了一个 <code>+load</code> 方法，反之，如果去掉 <code>+load</code> 方法，是懒加载类，不会走到 <code>第九步的for循环</code> 中</p>
+<p>所以，综上所述，<code>懒加载类</code> 和 <code>非懒加载类</code> 的 <code>区别</code> 就是 <code>是否实现了+load方法</code></p>
+<ul>
+<li><code>实现+load</code>，则是 <code>非懒加载类</code>，</li>
+<li>反之，是 <code>懒加载类</code></li>
+</ul>
+<p><strong>为什么实现load方法就会变成非懒加载类？</strong></p>
+<ul>
+<li>主要是因为 <code>load</code> 会 <code>提前加载</code>（load方法会在 <code>load_images</code> 调用，<code>前提</code> 是 <code>类存在</code>）</li>
+</ul>
+<p><code>懒加载类</code> 在什么时候 <code>加载</code>？</p>
+<ul>
+<li>在 <code>调用方法</code> 的时候加载</li>
+</ul>
+<p><strong>调试验证 懒加载类加载的时机</strong></p>
+<p>下面通过代码调试来验证</p>
+<ul>
+<li>注释掉LGPerson中的 <code>+load</code> 方法,并在 <code>main</code> 中实例化 <code>person</code> 处加一个断点</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071720891.png"
+                     
+                ></p>
+<ul>
+<li>在 <code>_read_images</code> 的第九步 for循环加一个断点 <code>-- readClass -- main的断点处</code></li>
+</ul>
+<p>继续往下执行，走到 <code>realizeClassWithoutSwift -- methodizeClass -- prepareMethodLists -- [person kc_instanceMethod1];</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071720622.png"
+                     
+                ></p>
+<p>堆栈信息验证</p>
+<p>也可以通过 <code>bt</code> 堆栈信息查看，方法为什么能来？其 <code>本质</code> 是因为 走到<code>realizeClassWithoutSwift</code>，其本质是调用 <code>alloc</code>，即 <code>消息的发送</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071721861.png"
+                     
+                ></p>
+<p>所以 <code>懒加载类</code> 和 <code>非懒加载类</code> 的 <code>数据加载时机</code> 如下图所示</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071722512.png"
+                     
+                ></p>
+<p>总结</p>
+<ul>
+<li><p><code>readClass</code> 主要是读取类，即此时的类仅有地址+名称，还没有data数据</p>
+</li>
+<li><p><code>realizeClassWithoutSwift</code> 主要是实现类，即将类的data数据读取到内存中</p>
+<ul>
+<li><p>methodizeClass方法中实现类中方法（协议等）的&#96;序列化</p>
+</li>
+<li><p>attachCategories方法中实现类以及分类的数据加载</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>综上所述，<code>类从Mach-O加载到内存</code> 的流程图如下所示</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071723079.png"
+                     
+                ></p>
+
             </div>
 
             
@@ -365,13 +1262,13 @@
                         <div class="article-prev">
                             <a class="prev"
                             rel="prev"
-                            href="/BboyZJ.github.io/2020/11/19/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8618%EF%BC%9A%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%EF%BC%88%E4%B8%8B%EF%BC%89/"
+                            href="/BboyZJ.github.io/2020/11/19/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8618%EF%BC%9A%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%EF%BC%88%E4%B8%8B%EF%BC%89%E5%88%86%E7%B1%BB/"
                             >
                                 <span class="left arrow-icon flex-center">
                                     <i class="fa-solid fa-chevron-left"></i>
                                 </span>
                                 <span class="title flex-center">
-                                    <span class="post-nav-title-item">OC底层原理18：类的加载（下）</span>
+                                    <span class="post-nav-title-item">OC底层原理18：类的加载（下）分类</span>
                                     <span class="post-nav-item">Prev posts</span>
                                 </span>
                             </a>
@@ -406,7 +1303,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC底层原理17：类的加载（上）</div>
-        
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#map-images%EF%BC%9A%E5%8A%A0%E8%BD%BD%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6%E5%88%B0%E5%86%85%E5%AD%98"><span class="nav-text">map_images：加载镜像文件到内存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#map-images%E6%BA%90%E7%A0%81%E6%B5%81%E7%A8%8B"><span class="nav-text">map_images源码流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#read-images-%E6%BA%90%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-text">_read_images 源码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#readClass%EF%BC%9A%E8%AF%BB%E5%8F%96%E7%B1%BB"><span class="nav-text">readClass：读取类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#realizeClassWithoutSwift%EF%BC%9A%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="nav-text">realizeClassWithoutSwift：实现类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#methodizeClass%EF%BC%9A%E6%96%B9%E6%B3%95%E5%8C%96%E7%B1%BB"><span class="nav-text">methodizeClass：方法化类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rwe%E7%9A%84%E9%80%BB%E8%BE%91"><span class="nav-text">rwe的逻辑</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E5%A6%82%E4%BD%95%E6%8E%92%E5%BA%8F"><span class="nav-text">方法如何排序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95%E6%8E%92%E5%BA%8F"><span class="nav-text">验证方法排序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#attachToClass%E6%96%B9%E6%B3%95"><span class="nav-text">attachToClass方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#attachCategories%E6%96%B9%E6%B3%95"><span class="nav-text">attachCategories方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#attachLists%E6%96%B9%E6%B3%95%EF%BC%9A%E6%8F%92%E5%85%A5"><span class="nav-text">attachLists方法：插入</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#memmove%E5%92%8Cmemcpy%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">memmove和memcpy的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rwe-%E6%95%B0%E6%8D%AE%E5%8A%A0%E8%BD%BD"><span class="nav-text">rwe 数据加载</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rwe-%E2%80%93-LGA%E5%88%86%E7%B1%BB%E6%95%B0%E6%8D%AE%E5%8A%A0%E8%BD%BD%E3%80%90%E9%87%8D%E7%82%B9%EF%BC%81%EF%BC%81%EF%BC%81%E3%80%91"><span class="nav-text">rwe – LGA分类数据加载【重点！！！】</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rwe-%E2%80%93-LGB%E5%88%86%E7%B1%BB%E6%95%B0%E6%8D%AE%E5%8A%A0%E8%BD%BD%E3%80%90%E9%87%8D%E7%82%B9%EF%BC%81%EF%BC%81%EF%BC%81%E3%80%91"><span class="nav-text">rwe – LGB分类数据加载【重点！！！】</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%87%92%E5%8A%A0%E8%BD%BD%E7%B1%BB-%E5%92%8C-%E9%9D%9E%E6%87%92%E5%8A%A0%E8%BD%BD%E7%B1%BB"><span class="nav-text">懒加载类 和 非懒加载类</span></a></li></ol>
 
     </div>
 </div>

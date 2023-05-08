@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-21 18:46:50</span>
-            <span class="mobile">2023-04-21 18:46</span>
+            <span class="pc">2023-05-05 21:22:03</span>
+            <span class="mobile">2023-05-05 21:22</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -333,8 +333,8 @@
 <ul>
 <li>GCD 是苹果公司为多核的并行运算提出的解决方案</li>
 <li>GCD 会自动利用更多的 <code>CPU</code> 内核（比如双核、四核）</li>
-<li>GCD 会自动管理线程的声明周期（创建线程、调度任务、销毁线程）</li>
-<li>程序员只需要告诉 GCD 想要执行什么任务，不需要编写任何线程管理代码</li>
+<li>GCD 会自动管理线程的生命周期（创建线程、调度任务、销毁线程）</li>
+<li>程序员只需要告诉 <code>GCD</code> 想要执行什么任务，不需要编写任何线程管理代码</li>
 </ul>
 <p><strong>【重点】</strong>用一句话总结 GCD ： <code>将任务添加到队列，并且指定执行任务的函数。</code></p>
 <h1 id="GCD-核心"><a href="#GCD-核心" class="headerlink" title="GCD 核心"></a>GCD 核心</h1><p>在日常开发中，GCD一般写成下面的形式</p>
@@ -374,14 +374,14 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/149465279-a50d057c-c1c8-43a2-ba81-1d90363a8d30.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305052117912.png"
                      
                 ></p>
 <p>队列主要分为 <code>串行队列（Serial Dispatch Queue）</code> 和 <code>并发队列(Concurrent Dispatch Queue)</code> 两种，如下图所示</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://user-images.githubusercontent.com/25925248/149465296-06fbc7d7-d367-47c5-80d9-99a24ff0edcb.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305052118444.png"
                      
                 ></p>
 <ul>
@@ -395,7 +395,7 @@
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 串行队列的获取方法</span><br><span class="line">dispatch_queue_t serialQueue1 = dispatch_queue_create(&quot;com.ZJ.Queue&quot;,DISPATCH_QUQUQ_SERIAL);</span><br><span class="line"></span><br><span class="line">dispatch_quque_t serialQuquq2 = dispatch_ququq_create(&quot;com.ZJ.Queue&quot;,Null);</span><br></pre></td></tr></table></figure></div>
 
 <ul>
-<li><p>并发队列：一次可以 <code>并发执行多个任务</code>，即 <code>开启多个线程</code>，并同时执行任务（通俗理解：同意时刻可以调度多个任务执行）</p>
+<li><p>并发队列：一次可以 <code>并发执行多个任务</code>，即 <code>开启多个线程</code>，并同时执行任务（通俗理解：同一时刻可以调度多个任务执行）</p>
 <ul>
 <li>使用 <code>dispach_queue_create(&quot;xxx&quot;,DISPATCH_QUQUQ_CONCURRENT)</code> 创建并发队列</li>
 <li>注意：<code>并发队列</code> 的并发功能 <code>只有在异步函数下才有效</code></li>
@@ -408,10 +408,10 @@
 <ul>
 <li><p><code>主队列（Main Dispatch Queue）</code>：GCD 中提供的 <code>特殊的串行队列</code></p>
 <ul>
-<li>专门用来 <code>在主线程上调度任务的串行队列</code>，依赖于主线程、主Runloop，在main函数调用之前 自动创建</li>
+<li>专门用来 <code>在主线程上调度任务的串行队列</code>，依赖于主线程、主Runloop，在main函数调用之前 <code>自动创建</code></li>
 <li>不会开启线程</li>
 <li>如果当前主线程正在有任务执行，那么无论主队列中当前被添加了什么任务，都不会被调用</li>
-<li>使用 <code>dispatch_get_main_queue()</code> 获得 主队列</li>
+<li>使用 <code>dispatch_get_main_queue()</code> 获得 <code>主队列</code></li>
 <li>通常在返回 <code>主线程 更新UI</code> 时使用</li>
 </ul>
 </li>

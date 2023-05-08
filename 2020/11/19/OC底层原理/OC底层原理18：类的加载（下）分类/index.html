@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2020/11/19/oc底层原理/oc底层原理18：类的加载（下）分类/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC底层原理18：类的加载（下）分类">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2020/11/19/OC底层原理/OC底层原理18：类的加载（下）分类/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC底层原理18：类的加载（下）分类">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC底层原理18：类的加载（下）分类 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC底层原理18：类的加载（下）分类</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2020-11-19 15:21:46</span>
+        <span class="mobile">2020-11-19 15:21</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-05-08 12:13:18</span>
+            <span class="mobile">2023-05-08 12:13</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <p>在上一篇 <a href="">OC底层原理17：类的加载（上）</a> 中，理解了 <code>类是如何从Mach-O加载到内存</code> 中，这次我们来解释下 <code>分类</code> 是如何 <code>加载</code> 到 <code>类</code> 中的，以及 <code>分类和类搭配使用</code> 的情况</p>
+<h1 id="分类的本质"><a href="#分类的本质" class="headerlink" title="分类的本质"></a>分类的本质</h1><p>前提：在main中定义 <code>LGperson</code> 的分类LG</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071732104.png"
+                     
+                ></p>
+<p>探索分类的本质，有以下三种方式</p>
+<ul>
+<li>【方式一】通过 <code>clang</code></li>
+<li>【方式二】通过 <code>Xcode</code> 文档搜索 <code>Category</code></li>
+<li>【方式三】通过 <code>objc</code> 源码搜索 <code>category_t</code></li>
+</ul>
+<h1 id="方式一：通过clang"><a href="#方式一：通过clang" class="headerlink" title="方式一：通过clang"></a>方式一：通过clang</h1><ul>
+<li><p>【方式一】<code>clang -rewrite-objc main.m -o main.cpp</code> 查看底层编译，即 <code>main.cpp</code></p>
+<ul>
+<li>其中 <code>分类</code> 的类型是 <code>_category_t</code></li>
+<li>分类的倒数第二个0，表示的是 <code>没有协议</code>，所以 <code>赋值为0</code></li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071734729.png"
+                     
+                ></p>
+<ul>
+<li>搜索 <code>struct _category_t</code>，如下所示</li>
+</ul>
+<p>其中有两个 <code>method_list_t</code>，分别表示 <code>实例方法</code> 和 <code>类方法</code>；<code>protocol_list_t</code> 表示协议列表；</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071734119.png"
+                     
+                ></p>
+<ul>
+<li>搜索 <code>_CATEGORY_INSTANCE_METHODS_LGPerson_</code>，找到其底层实现</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071735470.png"
+                     
+                ></p>
+<p>其中有3个方法，格式为：<code>sel+签名+地址</code>，是 <code>method_t</code> 结构体的属性即key</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071735692.png"
+                     
+                ></p>
+<ul>
+<li><p>搜索method_t，其中对应关系如下</p>
+<ul>
+<li><code>name</code> 对应 <code>sel</code></li>
+<li><code>type</code> 对应 <code>方法签名</code></li>
+<li><code>imp</code> 对应 <code>函数地址</code></li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071736184.png"
+                     
+                ></p>
+<p>同时，我们发现了一个问题：查看 <code>_prop_list_t</code>，明明 <code>分类</code> 中定义了 <code>属性</code>，但是在底层编译中并没有看到属性，如下图所示，这是因为 <code>分类中定义的属性没有相应的set、get方法</code>，我们可以通过 <code>关联对象</code> 来设置（关于如何设置 <code>关联对象</code>，我们将在后续的扩展中进行说明）</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071736711.png"
+                     
+                ></p>
+<h1 id="方式二：通过Xcode文档搜索-Category"><a href="#方式二：通过Xcode文档搜索-Category" class="headerlink" title="方式二：通过Xcode文档搜索 Category"></a>方式二：通过Xcode文档搜索 Category</h1><p>如果不会 <code>clang</code>，可以通过 <code>Xcode</code> 文档搜索 <code>Category</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071737680.png"
+                     
+                ></p>
+<h1 id="方式三：通过objc源码搜索-category-t"><a href="#方式三：通过objc源码搜索-category-t" class="headerlink" title="方式三：通过objc源码搜索 category_t"></a>方式三：通过objc源码搜索 category_t</h1><p>还可以通过objc源码搜索 <code>category_t</code> 类型</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071737210.png"
+                     
+                ></p>
+<h1 id="总结-面试重点"><a href="#总结-面试重点" class="headerlink" title="总结 面试重点"></a>总结 <strong>面试重点</strong></h1><p>综上所述，分类的 <code>本质</code> 是一个 <code>_category_t</code> 类型</p>
+<ul>
+<li><p>有两个属性：<code>name（类的名称）</code> 和 <code>cls（类对象）</code></p>
+</li>
+<li><p>有两个 <code>method_list_t</code> 类型的方法列表，表示分类中实现的 <code>实例方法+类方法</code></p>
+</li>
+<li><p>一个 <code>protocol_list_t</code> 类型的 <code>协议列表</code>，表示分类中实现的 <code>协议</code></p>
+</li>
+<li><p>一个 <code>prop_list_t</code> 类型的 <code>属性列表</code>，表示分类中定义的 <code>属性</code>，一般在分类中添加的属性都是通过关联对象来实现</p>
+</li>
+<li><p>需要注意的是，分类中的 <code>属性</code> 是没有 <code>set、get</code> 方法</p>
+</li>
+</ul>
+<h1 id="分类的加载"><a href="#分类的加载" class="headerlink" title="分类的加载"></a>分类的加载</h1><p>前提：创建LGPerson的两个分类：<code>LGA、LGB</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071739766.png"
+                     
+                ></p>
+<p>在上一篇文章中的 <code>realizeClassWithoutSwift -&gt; methodizeClass -&gt; attachToClass -&gt; load_categories_nolock -&gt; extAlloc -&gt;attachCategories</code> 中提及了 <code>rwe</code> 的加载，其中分析了分类的 <code>data数据</code> 时如何加载到 <code>类</code> 中的，且分类的加载顺序是：<code>LGA -&gt; LGB</code> 的顺序加载到类中，即 <code>越晚加进来，越在前面</code></p>
+<p>其中查看 <code>methodizeClass</code> 的源码实现，可以发现 <code>类的数据</code> 和 <code>分类的数据</code> 是分开处理的，主要是因为在 <code>编译阶段</code>，就已经确定好了 <code>方法的归属位置</code>（即 <code>实例方法</code> 存储在 <code>类</code> 中，<code>类方法</code> 存储在 <code>元类</code> 中），而 <code>分类</code> 是后面才加进来的</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071741123.png"
+                     
+                ></p>
+<p>其中分类需要通过 <code>attatchToClass</code> 添加到类，然后才能在外界进行使用，在此过程，我们已经知道了分类加载三步骤的后面两个步骤，分类的加载主要分为3步：</p>
+<ul>
+<li><p>分类数据 <code>加载时机</code>：根据 <code>类和分类是否实现load方法</code> 来区分不同的时机</p>
+</li>
+<li><p><code>attachCategories</code> 准备 <code>分类数据</code></p>
+</li>
+<li><p><code>attachLists</code> 将 <code>分类数据添加到主类中</code></p>
+</li>
+</ul>
+<h1 id="分类的加载时机"><a href="#分类的加载时机" class="headerlink" title="分类的加载时机"></a>分类的加载时机</h1><p>下面我们来探索 <code>分类数据的加载时机</code>，以 <code>主类LGPerson + 分类LGA、LGB 均实现+load方法</code> 为例</p>
+<p>通过第二步数据准备反推第一步的加载时机</p>
+<ul>
+<li><p>通过上一篇文章我们了解到，在走到 <code>attachCategories</code> 方法时，<code>必然会有分类数据的加载</code>，可以通过 <code>反推法</code> 查看在什么时候调用 <code>attachCategories</code> 的，通过查找，有两个方法中调用</p>
+<ul>
+<li>load_categories_nolock方法中</li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071743586.png"
+                     
+                ></p>
+<ul>
+<li><code>addToClass</code> 方法中，这里经过调试发现，从来不会进到if流程中，除非加载两次，一般的类一般只会加载一次</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071743226.png"
+                     
+                ></p>
+<ul>
+<li>不加任何断点，运行objc代码，可以得出以下打印日志，通过日志可以发现addToClass方法的下一步就是 <code>load_categories_nolock</code> 方法就是加载分类数据</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071744179.png"
+                     
+                ></p>
+<ul>
+<li><p>全局搜索 <code>load_categories_nolock</code> 的调用，有两次调用</p>
+<ul>
+<li>一次在 <code>loadAllCategories</code> 方法中</li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071744510.png"
+                     
+                ></p>
+<ul>
+<li>一次在 <code>_read_images</code> 方法中</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071745156.png"
+                     
+                ></p>
+<ul>
+<li>但是经过调试发现，是不会走 <code>_read_images</code> 方法中的if流程的，而是走的loadAllCategories方法中的</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071745082.png"
+                     
+                ></p>
+<ul>
+<li>全局搜索查看 <code>loadAllCategories</code> 的调用，发现是在 <code>load_images</code> 时调用的</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071745199.png"
+                     
+                ></p>
+<h1 id="通过堆栈信息分析"><a href="#通过堆栈信息分析" class="headerlink" title="通过堆栈信息分析"></a>通过堆栈信息分析</h1><ul>
+<li>在 <code>attachCategories</code> 中加自定义逻辑的断点，<code>bt</code> 查看堆栈信息</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071746646.png"
+                     
+                ></p>
+<p>所以综上所述，该情况下的 <code>分类的数据加载时机</code> 的反推 <code>路径</code> 为：<code>attachCategories -&gt; load_categories_nolock -&gt; loadAllCategories -&gt; load_images</code></p>
+<p>而我们的分类加载正常的流程的路径为：<code>realizeClassWithoutSwift -&gt; methodizeClass -&gt; attachToClass -&gt;attachCategories</code></p>
+<p>其中正向和反向的流程如下图所示：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071747570.png"
+                     
+                ></p>
+<p>我们再来看一种情况：主类+分类LGA实现+load，分类LGB不实现+load方法</p>
+<ul>
+<li><p>断点定在 <code>attachCategories</code> 中加自定义逻辑部分，一步步往下执行</p>
+<ul>
+<li><code>p entry.cat</code></li>
+<li><code>p *$0</code></li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071747938.png"
+                     
+                ></p>
+<ul>
+<li><p>继续往下执行，会再次来到 <code>attachCategories</code> 方法中断住</p>
+<ul>
+<li><code>p entry.cat</code></li>
+<li><code>p *$0</code></li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071748625.png"
+                     
+                ></p>
+<blockquote>
+<p>总结：<code>只要有一个分类是非懒加载分类，那么所有的分类都会被标记位非懒加载分类</code>，意思就是 <code>加载一次已经开辟了rwe</code>，就不会再次懒加载，重新去处理 <code>LGPerson</code></p>
+</blockquote>
+<h1 id="分类和类的搭配使用"><a href="#分类和类的搭配使用" class="headerlink" title="分类和类的搭配使用"></a>分类和类的搭配使用</h1><p>通过上面的两个例子，我们可以大致将 <code>类</code> 和 <code>分类</code> 是否实现 <code>+load</code> 的情况分为4种：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071749972.png"
+                     
+                ></p>
+<ul>
+<li><p>【情况1】<code>非懒加载类 + 非懒加载分类</code></p>
+</li>
+<li><p>【情况2】<code>非懒加载类 + 懒加载分类</code></p>
+</li>
+<li><p>【情况3】<code>懒加载类 + 懒加载分类</code></p>
+</li>
+<li><p>【情况4】<code>懒加载类 + 非懒加载分类</code></p>
+</li>
+</ul>
+<h1 id="非懒加载类-与-非懒加载分类"><a href="#非懒加载类-与-非懒加载分类" class="headerlink" title="非懒加载类 与 非懒加载分类"></a>非懒加载类 与 非懒加载分类</h1><p>即 <code>主类实现了+load方法，分类同样实现了+load方法</code>，在前文分类的加载时机时，我们已经分析过这种情况，所以可以直接得出结论，这种情况下</p>
+<ul>
+<li><p>类的数据加载是通过 <code>_getObjc2NonlazyClassList</code> 加载，即 <code>ro、rw</code> 的操作，对 <code>rwe</code> 赋值初始化，是在 <code>extAlloc</code> 方法中</p>
+</li>
+<li><p><code>分类的数据加载</code> 是通过 <code>load_images</code> 加载到类中的</p>
+</li>
+</ul>
+<p>其调用路径为：</p>
+<ul>
+<li><p><code>map_images -&gt; map_images_nolock -&gt; _read_images -&gt; readClass -&gt; _getObjc2NonlazyClassList -&gt; realizeClassWithoutSwift -&gt; methodizeClass -&gt; attachToClass</code> ,此时的 <code>mlists</code> 是 <code>一维数组</code>，然后走到 <code>load_images</code> 部分</p>
+</li>
+<li><p><code>load_images --&gt; loadAllCategories -&gt; load_categories_nolock -&gt; load_categories_nolock -&gt; attachCategories -&gt; attachLists</code>，此时的 <code>mlists</code> 是 <code>二维数组</code></p>
+</li>
+</ul>
+<p>下面为源码中调试的打印日志：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16834533761390.png"
+                     
+                ></p>
+<h1 id="非懒加载类-与-懒加载分类"><a href="#非懒加载类-与-懒加载分类" class="headerlink" title="非懒加载类 与 懒加载分类"></a>非懒加载类 与 懒加载分类</h1><p>即 <code>主类实现了+load方法，分类未实现+load方法</code></p>
+<ul>
+<li><p>打开 <code>realizeClassWithoutSwift</code> 中的自定义断点，看一下ro</p>
+<ul>
+<li>查看 <code>kc_ro</code></li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071757080.png"
+                     
+                ></p>
+<ul>
+<li><code>p kc_ro-&gt;baseMethodList</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071758522.png"
+                     
+                ></p>
+<ul>
+<li><code>p 1.get(0) ~ p1.get(4)</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071758798.png"
+                     
+                ></p>
+<ul>
+<li><code>p 1.get(5)、 p1.get(10)</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071759643.png"
+                     
+                ></p>
+<p>从上面的打印输出可以看出，方法的顺序是 <code>LGB—LGA-LGPerson类</code>，此时分类已经加载进来了，但是还没有排序，说明在没有进行非懒加载时，通过 <code>cls-&gt;data</code> 读取 <code>Mach-O</code> 数据时，数据就已经编译进来了，不需要运行时添加进去</p>
+<ul>
+<li><p>来到 <code>methodizeClass</code> 方法中断点部分</p>
+<ul>
+<li><code>p list</code></li>
+<li><code>p $0-&gt;get(0)- p $0-&gt;get(5)</code></li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071800963.png"
+                     
+                ></p>
+<ul>
+<li><p>来到 <code>prepareMethodLists</code> 的 <code>for</code> 循环部分</p>
+<ul>
+<li><code>p addedLists[0]</code></li>
+<li><code>p addedLists[1]</code></li>
+<li><code>p *$1</code></li>
+<li><code>p *$2</code></li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071801090.png"
+                     
+                ></p>
+<ul>
+<li><p>来到 <code>fixupMethodList</code> 方法中的 <code>if (sort) &#123;</code> 部分</p>
+<ul>
+<li>其中 <code>SortBySELAddress</code> 的源码实现如下：<code>根据名字的地址进行排序</code></li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071802588.png"
+                     
+                ></p>
+<ul>
+<li><p>走到 <code>mlist-&gt;setFixedUp();</code> ，在读取list</p>
+<ul>
+<li><code>p mlist</code></li>
+<li><code>p $7-&gt;get(0) ~ p $7-&gt;get(3)</code></li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305071803791.png"
+                     
+                ></p>
+<ul>
+<li><code>p $7-&gt;get(4) ~ p $7-&gt;get(6)</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081150564.png"
+                     
+                ></p>
+<p>通过打印发现，仅 <code>对同名方法进行了排序</code>，而分类中的其他方法是不需要排序的，其你imp地址是有序的（从小到大） – <code>fixupMethodList</code> 中的排序 <code>只针对 name 地址进行排序</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081151895.png"
+                     
+                ></p>
+<ul>
+<li>不加任何断点，运行程序，获取打印日志</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081152238.png"
+                     
+                ></p>
+<blockquote>
+<p>总结：<code>非懒加载类</code> 与 <code>懒加载分类</code> 的数据加载，有如下结论：<br><code>类</code> 和 <code>分类的加载</code> 是在 <code>read_images</code> 就加载数据了<br>其中 <code>data数据</code> 在 <code>编译时期</code> 就已经完成了</p>
+</blockquote>
+<h1 id="懒加载类-与-懒加载分类"><a href="#懒加载类-与-懒加载分类" class="headerlink" title="懒加载类 与 懒加载分类"></a>懒加载类 与 懒加载分类</h1><p>即 <code>主类和分类均未实现+load方法</code></p>
+<ul>
+<li>不加任何断点，运行程序，获取打印日志</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081153735.png"
+                     
+                ></p>
+<ul>
+<li><p>其中 <code>realizeClassMaybeSwiftMaybeRelock</code> 是消息流程中慢速查找中有的函数，即在 <code>第一次调用消息时才有的函数</code></p>
+</li>
+<li><p>在 <code>readClass</code> 断住,然后读取 <code>kc_ro</code>，即读取整个 <code>data</code></p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081154125.png"
+                     
+                ></p>
+<p>此时的 <code>baseMethodList</code> 的 <code>count</code> 还是16，说明也是从 <code>data</code> 中读取出来的，所以不需要经过一层缓慢的 <code>load_images</code> 加载进来</p>
+<blockquote>
+<p>总结：<code>懒加载类</code> 与 <code>懒加载分类</code> 的数据加载是在 <code>消息第一次调用</code> 时记载</p>
+</blockquote>
+<h1 id="懒加载类-与-非懒加载分类"><a href="#懒加载类-与-非懒加载分类" class="headerlink" title="懒加载类 与 非懒加载分类"></a>懒加载类 与 非懒加载分类</h1><p>即 <code>主类未实现+load方法</code>， <code>分类实现了+load方法</code></p>
+<ul>
+<li>不加任何断点，运行程序，获取打印日志</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081156142.png"
+                     
+                ></p>
+<ul>
+<li>在打印的日志中没有看到 <code>load_categories_nolock</code> 方法，查看 <code>attachCategories -- extAlloc -- attachToClass -- attachCategories</code>，在 <code>attachToClass</code> 中加断点</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081156774.png"
+                     
+                ></p>
+<ul>
+<li>在 <code>readClass</code> 方法中断住，查看 <code>kc_ro</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081157593.png"
+                     
+                ></p>
+<p>其中 <code>baseMethodList</code> 的 count 是8个，打印看看：对象方法3个+属性的setget方法共4个+1个cxx方法 ，即 <code>现在只有主类的数据</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081157399.png"
+                     
+                ></p>
+<ul>
+<li>查看kc_ro结构</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081158352.png"
+                     
+                ></p>
+<ul>
+<li><code>p kc_ro-&gt;baseMethodList</code></li>
+<li><code>p 0-&gt;get(0) ~ p0-&gt;get(3)、p $0-&gt;get(7)</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081158724.png"
+                     
+                ></p>
+<ul>
+<li>为了调试分类的数据加载， 继续往下执行，<code>bt</code> 查看堆栈：<code>load_images -&gt; loadAllCategories -&gt; load_categories_nolock</code></li>
+</ul>
+<blockquote>
+<p>总结：<code>懒加载类 + 非懒加载分类</code> 的数据加载，<code>只要分类实现了load，会迫使主类提前加载</code>,即 <code>主类 强行转换为 非懒加载类样式</code></p>
+</blockquote>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><code>类和分类</code> 搭配使用，其数据的加载时机总结如下：</p>
+<ul>
+<li><p>【情况1】<code>非懒加载类 + 非懒加载分类</code>，其数据的加载在 <code>load_images</code> 方法中，首先对类进行加载，然后把分类的信息贴到类中</p>
+</li>
+<li><p>【情况2】<code>非懒加载类 + 懒加载分类</code>，其数据加载在 <code>read_image</code> 就加载数据，数据来自<code>data</code>，data在 <code>编译时期</code> 就已经完成，即data中除了类的数据，还有分类的数据，与类绑定在一起</p>
+</li>
+<li><p>【情况3】<code>懒加载类 + 懒加载分类</code> ，其数据加载 <code>推迟到第一次消息时</code>，数据同样来自 <code>data</code>，<code>data</code> 在 <code>编译时期</code> 就已经完成</p>
+</li>
+<li><p>【情况4】<code>懒加载类 + 非懒加载分类</code> ，只要分类实现了load，会迫使主类提前加载，即在 <code>_read_images</code> 中不会对类做实现操作，需要在 <code>load_images</code> 方法中触发类的数据加载，即 <code>rwe</code> 初始化，同时加载分类数据</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081202167.png"
+                     
+                ></p>
+<h1 id="补充：load-images原理分析"><a href="#补充：load-images原理分析" class="headerlink" title="补充：load_images原理分析"></a>补充：load_images原理分析</h1><p><code>load_images</code> 方法的主要作用是 <code>加载镜像文件</code>，其中最重要的有两个方法：<code>prepare_load_methods</code>（加载） 和 <code>call_load_methods</code>（调用）</p>
+<ul>
+<li>进入 <code>load_images</code> 源码实现</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081203398.png"
+                     
+                ></p>
+<ul>
+<li><p>进入 <code>prepare_load_methods</code> 源码</p>
+<ul>
+<li>进入 <code>_getObjc2NonlazyClassList -&gt; schedule_class_load</code> 源码,这里主要是根据 <code>类的继承链递归调用获取load</code>，直到 <code>cls</code> 不存在才结束递归，目的是 <code>为了确保父类的load优先加载</code></li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081204276.png"
+                     
+                ></p>
+<ul>
+<li>进入 <code>add_class_to_loadable_list</code> ，主要是将 <code>load方法和cls类名</code> 一起加到<code>loadable_classes</code> 表中</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081205700.png"
+                     
+                ></p>
+<ul>
+<li>进入 <code>getLoadMethod</code>，主要是获取方法的 <code>sel为load</code> 的方法</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081205046.png"
+                     
+                ></p>
+<ul>
+<li><code>_getObjc2NonlazyCategoryList -&gt; realizeClassWithoutSwift -&gt; add_category_to_loadable_list</code> ,主要是将非懒加载分类的load方法加入表中</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081206889.png"
+                     
+                ></p>
+<ul>
+<li>进入 <code>add_category_to_loadable_list</code> 实现,获取所有的非懒加载分类中的load方法，将 <code>分类名+load</code> 加入表 <code>loadable_categories</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081206472.png"
+                     
+                ></p>
+<ul>
+<li><p>进入 <code>call_load_methods</code> 源码，主要有3部分操作</p>
+<ul>
+<li><p>反复调用 <code>类的+load</code>，直到不再有</p>
+</li>
+<li><p><code>调用一次分类的+load</code></p>
+</li>
+<li><p>如果有类或更多未尝试的分类，则运行更多的+load</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081207838.png"
+                     
+                ></p>
+<ul>
+<li>进入 <code>call_class_loads</code>，主要是 <code>加载类的load方法</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16835188718660.jpg"
+                     
+                ></p>
+<p>其中 <code>load</code> 方法中有两个隐藏参数，第一个为 <code>id 即self</code>，第二个为 <code>sel，即cmd</code></p>
+<ul>
+<li><code>call_category_loads</code>，主要是加载一次分类的load方法</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081208376.png"
+                     
+                ></p>
+<p>综上所述，<code>load_images</code> 方法整体调用过程及原理图示如下：</p>
+<ul>
+<li>调用过程图示</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081209119.png"
+                     
+                ></p>
+<ul>
+<li>原理图示</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305081209522.png"
+                     
+                ></p>
+<p>主要分为两步</p>
+<ul>
+<li><p>从所有的 <code>非懒加载类和分类</code> 中的 <code>+load分别添加到表</code> 中</p>
+</li>
+<li><p>调用 <code>类和分类的+load</code> 方法</p>
+</li>
+</ul>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC底层原理18：类的加载（下）分类</li>
+        <li>Post author：张建</li>
+        <li>Create time：2020-11-19 15:21:46</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2020/11/19/OC底层原理/OC底层原理18：类的加载（下）分类/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">#OC-底层原理探索篇</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2020/11/29/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8619%EF%BC%9A%E7%B1%BB%E6%89%A9%E5%B1%95%E4%B8%8E%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理19：类扩展与关联对象</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2020/11/03/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8617%EF%BC%9A%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%EF%BC%88%E4%B8%8A%EF%BC%89/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理17：类的加载（上）</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC底层原理18：类的加载（下）分类</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E7%B1%BB%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="nav-text">分类的本质</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E9%80%9A%E8%BF%87clang"><span class="nav-text">方式一：通过clang</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E9%80%9A%E8%BF%87Xcode%E6%96%87%E6%A1%A3%E6%90%9C%E7%B4%A2-Category"><span class="nav-text">方式二：通过Xcode文档搜索 Category</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%89%EF%BC%9A%E9%80%9A%E8%BF%87objc%E6%BA%90%E7%A0%81%E6%90%9C%E7%B4%A2-category-t"><span class="nav-text">方式三：通过objc源码搜索 category_t</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-%E9%9D%A2%E8%AF%95%E9%87%8D%E7%82%B9"><span class="nav-text">总结 面试重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD"><span class="nav-text">分类的加载</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%97%B6%E6%9C%BA"><span class="nav-text">分类的加载时机</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E5%A0%86%E6%A0%88%E4%BF%A1%E6%81%AF%E5%88%86%E6%9E%90"><span class="nav-text">通过堆栈信息分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E7%B1%BB%E5%92%8C%E7%B1%BB%E7%9A%84%E6%90%AD%E9%85%8D%E4%BD%BF%E7%94%A8"><span class="nav-text">分类和类的搭配使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%9E%E6%87%92%E5%8A%A0%E8%BD%BD%E7%B1%BB-%E4%B8%8E-%E9%9D%9E%E6%87%92%E5%8A%A0%E8%BD%BD%E5%88%86%E7%B1%BB"><span class="nav-text">非懒加载类 与 非懒加载分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%9E%E6%87%92%E5%8A%A0%E8%BD%BD%E7%B1%BB-%E4%B8%8E-%E6%87%92%E5%8A%A0%E8%BD%BD%E5%88%86%E7%B1%BB"><span class="nav-text">非懒加载类 与 懒加载分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%87%92%E5%8A%A0%E8%BD%BD%E7%B1%BB-%E4%B8%8E-%E6%87%92%E5%8A%A0%E8%BD%BD%E5%88%86%E7%B1%BB"><span class="nav-text">懒加载类 与 懒加载分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%87%92%E5%8A%A0%E8%BD%BD%E7%B1%BB-%E4%B8%8E-%E9%9D%9E%E6%87%92%E5%8A%A0%E8%BD%BD%E5%88%86%E7%B1%BB"><span class="nav-text">懒加载类 与 非懒加载分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%EF%BC%9Aload-images%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90"><span class="nav-text">补充：load_images原理分析</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

@@ -250,6 +250,133 @@
                 
 
                 <h3 class="home-article-title">
+                    <a href="/BboyZJ.github.io/2020/09/24/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8610%EF%BC%9A%E7%B1%BB%20&%20%E7%B1%BB%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90/">
+                        OC底层原理10：类 &amp; 类结构分析
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        前言本章主要的目的是分析 类 和 类结构 
+objc_class 和 objc_object为什么 对象 和 类 都有 isa指针？
+在 iOS-OC底层原理08：isa和类关联探索 中，使用 clang 编译过 main.m 文件，从编译后的 ma...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Thu Sep 24 2020 21:58:37 GMT+0800">
+                
+                    2020-09-24
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category"><i class="fa-solid fa-folders"></i></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                        </li>
+                    
+                    
+                </ul>
+            </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/BboyZJ.github.io/2020/09/24/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8610%EF%BC%9A%E7%B1%BB%20&%20%E7%B1%BB%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90/">Read more<span class="seo-reader-text">OC底层原理10：类 &amp; 类结构分析</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/BboyZJ.github.io/2020/09/22/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8609%EF%BC%9Aisa%E8%B5%B0%E5%90%91&%E7%BB%A7%E6%89%BF%E5%88%86%E6%9E%90/">
+                        OC底层原理09：isa走向&amp;继承分析
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        本文的主要目的是分析 isa走向 和 继承 的分析
+准备工作定义两个类 :
+
+继承自 NSObject 的 ZJPerson 类
+
+1234@interface ZJPerson : NSObject@end@implementation ZJPer...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Tue Sep 22 2020 21:57:52 GMT+0800">
+                
+                    2020-09-22
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category"><i class="fa-solid fa-folders"></i></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                        </li>
+                    
+                    
+                </ul>
+            </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/BboyZJ.github.io/2020/09/22/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8609%EF%BC%9Aisa%E8%B5%B0%E5%90%91&%E7%BB%A7%E6%89%BF%E5%88%86%E6%9E%90/">Read more<span class="seo-reader-text">OC底层原理09：isa走向&amp;继承分析</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+
+                <h3 class="home-article-title">
                     <a href="/BboyZJ.github.io/2020/09/22/OC/OC%E5%AD%A6%E4%B9%A028%EF%BC%9AGitee%E4%BD%BF%E7%94%A8%E6%8E%A2%E7%B4%A2/">
                         OC学习28：Gitee使用探索
                     </a>
@@ -750,141 +877,6 @@ NSObject调用all...
     </div>
 
     <a href="/BboyZJ.github.io/2020/09/05/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8602%EF%BC%9AObjc4%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/">Read more<span class="seo-reader-text">OC底层原理02：Objc4源码编译</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2020/09/04/OC/OC%E5%AD%A6%E4%B9%A026%EF%BC%9AAPP%E5%9B%BE%E6%A0%873D-Touch%E8%8F%9C%E5%8D%95%E6%8E%A2%E7%B4%A2/">
-                        OC学习26：APP图标3D Touch菜单探索
-                    </a>
-                </h3>
-
-                <div class="home-article-content markdown-body">
-                    
-                        前言3D Touch是指给 APP 图标添加菜单，一共有两种方式：静态添加 和 动态添加。
-静态添加
-直接在 info.plist 文件中设置如下字段：
-
-
-菜单字段 UIApplicationShortcutItems 数组，可以设置多个 item...
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Fri Sep 04 2020 11:36:06 GMT+0800">
-                
-                    2020-09-04
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category"><i class="fa-solid fa-folders"></i></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
-                        </li>
-                    
-                    
-                </ul>
-            </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/BboyZJ.github.io/2020/09/04/OC/OC%E5%AD%A6%E4%B9%A026%EF%BC%9AAPP%E5%9B%BE%E6%A0%873D-Touch%E8%8F%9C%E5%8D%95%E6%8E%A2%E7%B4%A2/">Read more<span class="seo-reader-text">OC学习26：APP图标3D Touch菜单探索</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2020/09/03/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8601%EF%BC%9A%E6%9F%A5%E6%89%BE%E6%BA%90%E7%A0%81%E6%9C%89%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">
-                        OC底层原理01：查找源码有三种方式
-                    </a>
-                </h3>
-
-                <div class="home-article-content markdown-body">
-                    
-                        前言本文主要介绍下源码探索的三种方法：
-
-1、符号断点直接跟流程
-
-2、通过按住 control+step into
-
-3、汇编跟流程
-
-
-下符号断点的形式直接跟流程
-切换到Show the breakpoing navigator栏，打击左下角“+...
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Sep 03 2020 01:35:35 GMT+0800">
-                
-                    2020-09-03
-                
-            </span>
-        </span>
-        
-            <span class="home-article-category"><i class="fa-solid fa-folders"></i></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
-                        </li>
-                    
-                    
-                </ul>
-            </span>
-        
-        
-            <span class="home-article-tag">
-                <i class="fa-solid fa-tags"></i>&nbsp;
-                <ul>
-                    
-                        <li>
-                            
-                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
-                        </li>
-                    
-                </ul>
-            </span>
-        
-    </div>
-
-    <a href="/BboyZJ.github.io/2020/09/03/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8601%EF%BC%9A%E6%9F%A5%E6%89%BE%E6%BA%90%E7%A0%81%E6%9C%89%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F/">Read more<span class="seo-reader-text">OC底层原理01：查找源码有三种方式</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
