@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-19 16:35:02</span>
-            <span class="mobile">2023-04-19 16:35</span>
+            <span class="pc">2023-05-09 11:15:22</span>
+            <span class="mobile">2023-05-09 11:15</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -337,10 +337,10 @@
 </li>
 <li><p>在 <code>iOS</code> 中默认使用 <code>autoresizing</code> 布局方式，做了相对父控件大小的伸缩，使用不方便。</p>
 </li>
-<li><p>关闭 <code>aotoresizing</code> 布局，translatesAutoresizingMaskIntoConstraints &#x3D; false，可以开启 <code>自动布局</code></p>
+<li><p>关闭 <code>aotoresizing</code> 布局，<code>translatesAutoresizingMaskIntoConstraints = false</code>，可以开启 <code>自动布局</code></p>
 </li>
 </ul>
-<h1 id="NSLayoutConstraint"><a href="#NSLayoutConstraint" class="headerlink" title="NSLayoutConstraint"></a>NSLayoutConstraint</h1><p>只需要创建一个NSLayoutConstraint，然后激活，添加到对应的view即可。不过，是每一个约束都要创建，所以代码较长。创建一个NSLayoutConstraint只需要一个方法，为了方便，我们对每一个参数进行注释：</p>
+<h1 id="NSLayoutConstraint"><a href="#NSLayoutConstraint" class="headerlink" title="NSLayoutConstraint"></a>NSLayoutConstraint</h1><p>只需要创建一个 <code>NSLayoutConstraint</code>，然后激活，添加到对应的view即可。不过，是每一个约束都要创建，所以代码较长。创建一个NSLayoutConstraint只需要一个方法，为了方便，我们对每一个参数进行注释：</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">NSLayoutConstraint.init(item: Any, //要约束的目标(比如 redView)</span><br><span class="line"></span><br><span class="line">attribute: NSLayoutAttribute, //要约束的属性（比如top）</span><br><span class="line"></span><br><span class="line">relatedBy: NSLayoutRelation, //约束类型（比如equal）</span><br><span class="line"></span><br><span class="line">toItem: Any?,//相对于哪个目标（比如superView）</span><br><span class="line"></span><br><span class="line">attribute: NSLayoutAttribute, //相对于这个目标的属性（比如bottom）</span><br><span class="line"></span><br><span class="line">multiplier: CGFloat, //倍数（比如一半为0.5）</span><br><span class="line"></span><br><span class="line">constant: CGFloat)//常数（差值，比如-10）</span><br></pre></td></tr></table></figure></div>
 
 <p>举例添加一个view到界面上，距上距左各20，宽200，高100.</p>

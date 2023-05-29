@@ -250,24 +250,25 @@
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2021/03/23/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8627%EF%BC%9AGCD%E4%B9%8B%20NSThread%20&%20GCD%20&%20NSOperation/">
-                        OC底层原理27：GCD之 NSThread &amp; GCD &amp; NSOperation
+                    <a href="/BboyZJ.github.io/2022/01/25/OC%E9%80%86%E5%90%91/OC%E9%80%86%E5%90%9112%EF%BC%9AMach-O%E6%96%87%E4%BB%B6%EF%BC%88%E4%B8%8A%EF%BC%89/">
+                        OC逆向12：Mach-O文件（上）
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        前言本文主要目的是介绍 NSThread、GCD、NSOperation 常见的使用方式
-NSThreadNSThread 是苹果官方提供 面向对象 的线程操作技术，是对 thread 的上层封装，比较偏向于底层，简单方便，可以直接操作线程对象，使用...
+                        前言本文主要介绍 Mach-O文件格式 以及 通用二进制文件
+Mach-O 文件概述
+Mach-O其实是 Mach Object 文件格式的缩写，是 Mac 以及 iOS 上 可执行文件的格式，类似于 Window 上的 PE格式（Portable ...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Mar 23 2021 14:59:47 GMT+0800">
+            <span class="home-article-date" data-date="Tue Jan 25 2022 09:33:32 GMT+0800">
                 
-                    2021-03-23
+                    2022-01-25
                 
             </span>
         </span>
@@ -277,7 +278,7 @@ NSThreadNSThread 是苹果官方提供 面向对象 的线程操作技术，是�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/OC-%E9%80%86%E5%90%91%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-逆向探索篇</a>&nbsp;
                         </li>
                     
                     
@@ -291,7 +292,7 @@ NSThreadNSThread 是苹果官方提供 面向对象 的线程操作技术，是�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/iOS-OC/">iOS-OC</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -299,7 +300,7 @@ NSThreadNSThread 是苹果官方提供 面向对象 的线程操作技术，是�
         
     </div>
 
-    <a href="/BboyZJ.github.io/2021/03/23/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8627%EF%BC%9AGCD%E4%B9%8B%20NSThread%20&%20GCD%20&%20NSOperation/">Read more<span class="seo-reader-text">OC底层原理27：GCD之 NSThread &amp; GCD &amp; NSOperation</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2022/01/25/OC%E9%80%86%E5%90%91/OC%E9%80%86%E5%90%9112%EF%BC%9AMach-O%E6%96%87%E4%BB%B6%EF%BC%88%E4%B8%8A%EF%BC%89/">Read more<span class="seo-reader-text">OC逆向12：Mach-O文件（上）</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -311,31 +312,29 @@ NSThreadNSThread 是苹果官方提供 面向对象 的线程操作技术，是�
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2021/03/10/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8626%EF%BC%9AGCD%E4%B9%8B%E5%87%BD%E6%95%B0%E4%B8%8E%E9%98%9F%E5%88%97/">
-                        OC底层原理26：GCD之函数与队列
+                    <a href="/BboyZJ.github.io/2022/01/07/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E9%AB%98%E7%BA%A7%E5%BC%BA%E5%8C%9604%EF%BC%9AZJBlog/">
+                        OC高级强化04：静态库和动态库
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        GCD简介
-什么是GCD？
+                        常见的库文件格式
+.a 静态库
+.dylib 传统意义的动态库
+.framework 可静态库也可动态库
+.xcframework 2018年推出的针对不同架构的库
 
-全称是 Grand Central Dispatch，纯 C 语言，提供了非常强大的函数
-2、GCD 的优势
-
-GCD 是苹果公司为多核的并行运算提出的解决方案
-GCD 会自动利用更多的 CPU 内核（比如双核、四核）
-...
+什么是库？库(Library)说白了就是一段编译好的而进行代码，加上头文件就可以供...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Mar 10 2021 14:45:48 GMT+0800">
+            <span class="home-article-date" data-date="Fri Jan 07 2022 15:52:13 GMT+0800">
                 
-                    2021-03-10
+                    2022-01-07
                 
             </span>
         </span>
@@ -367,7 +366,7 @@ GCD 会自动利用更多的 CPU 内核（比如双核、四核）
         
     </div>
 
-    <a href="/BboyZJ.github.io/2021/03/10/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8626%EF%BC%9AGCD%E4%B9%8B%E5%87%BD%E6%95%B0%E4%B8%8E%E9%98%9F%E5%88%97/">Read more<span class="seo-reader-text">OC底层原理26：GCD之函数与队列</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2022/01/07/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E9%AB%98%E7%BA%A7%E5%BC%BA%E5%8C%9604%EF%BC%9AZJBlog/">Read more<span class="seo-reader-text">OC高级强化04：静态库和动态库</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -379,28 +378,31 @@ GCD 会自动利用更多的 CPU 内核（比如双核、四核）
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2021/02/21/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8625%EF%BC%9A%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2/">
-                        OC底层原理25：多线程原理探索
+                    <a href="/BboyZJ.github.io/2022/01/07/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E9%AB%98%E7%BA%A7%E5%BC%BA%E5%8C%9603%EF%BC%9A%E7%AC%A6%E5%8F%B7%E4%B8%8E%E9%93%BE%E6%8E%A5/">
+                        OC高级强化03：符号与链接
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        前言本文的目的在于了解 进程、线程、多线程、线程池 等的基本概念及原理
-线程和进程的定义线程
+                        编译成目标文件.o的过程
+对代码进行 汇编
+把 符号 进行 归类 -&gt; 重定位符号表
 
-线程是进程的基本执行单元，一个进程的所有任务都在线程中执行
-进程要想执行任务，必须得有线程，一个进程至少要有一条线程
-程序启动会默认开启一条线程，这条线程...
+
+重定位符号表 -&gt; .m&#x2F;.o 用到的 API
+
+
+.o -&gt; 链接 -&gt; 符号表和重定位符号表 合并到 一张表中 -&gt;...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sun Feb 21 2021 09:35:17 GMT+0800">
+            <span class="home-article-date" data-date="Fri Jan 07 2022 14:38:12 GMT+0800">
                 
-                    2021-02-21
+                    2022-01-07
                 
             </span>
         </span>
@@ -432,7 +434,7 @@ GCD 会自动利用更多的 CPU 内核（比如双核、四核）
         
     </div>
 
-    <a href="/BboyZJ.github.io/2021/02/21/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8625%EF%BC%9A%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2/">Read more<span class="seo-reader-text">OC底层原理25：多线程原理探索</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2022/01/07/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E9%AB%98%E7%BA%A7%E5%BC%BA%E5%8C%9603%EF%BC%9A%E7%AC%A6%E5%8F%B7%E4%B8%8E%E9%93%BE%E6%8E%A5/">Read more<span class="seo-reader-text">OC高级强化03：符号与链接</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -444,31 +446,23 @@ GCD 会自动利用更多的 CPU 内核（比如双核、四核）
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2021/02/14/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8624%EF%BC%9A%E5%86%85%E5%AD%98%E4%BA%94%E5%A4%A7%E5%8C%BA/">
-                        OC底层原理24：内存五大区
+                    <a href="/BboyZJ.github.io/2022/01/05/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E9%AB%98%E7%BA%A7%E5%BC%BA%E5%8C%9602%EF%BC%9AMach-O%E4%B8%8E%E9%93%BE%E6%8E%A5%E5%99%A8/">
+                        OC高级强化02：Mach-O与链接器
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        前言在iOS中，内存主要分为 栈区、堆区、全局区、常量区、代码区 五个区域，如下图所示：
-
-栈区定义
-
-栈是 系统数据结构，其对应的 进程或者线程是唯一的
-
-栈是 向低地址扩展 的数据结构
-
-栈是一块 连续的内存区域，遵循 先进后出（FILO） 原则...
+                        Mach-O 是什么？Mach-O(Mach Object)是 macOS、iOS、iPadOS 用来 存储程序和库 的 文件格式。对应系统通过应用 二进制接口（application binary interface，缩写 ABI）来运行该格式的文...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sun Feb 14 2021 16:38:08 GMT+0800">
+            <span class="home-article-date" data-date="Wed Jan 05 2022 17:28:20 GMT+0800">
                 
-                    2021-02-14
+                    2022-01-05
                 
             </span>
         </span>
@@ -500,7 +494,7 @@ GCD 会自动利用更多的 CPU 内核（比如双核、四核）
         
     </div>
 
-    <a href="/BboyZJ.github.io/2021/02/14/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8624%EF%BC%9A%E5%86%85%E5%AD%98%E4%BA%94%E5%A4%A7%E5%8C%BA/">Read more<span class="seo-reader-text">OC底层原理24：内存五大区</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2022/01/05/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E9%AB%98%E7%BA%A7%E5%BC%BA%E5%8C%9602%EF%BC%9AMach-O%E4%B8%8E%E9%93%BE%E6%8E%A5%E5%99%A8/">Read more<span class="seo-reader-text">OC高级强化02：Mach-O与链接器</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -512,24 +506,28 @@ GCD 会自动利用更多的 CPU 内核（比如双核、四核）
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2021/01/25/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8623%EF%BC%9AKVO%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
-                        OC底层原理23：KVO底层原理分析
+                    <a href="/BboyZJ.github.io/2022/01/04/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E9%AB%98%E7%BA%A7%E5%BC%BA%E5%8C%9601%EF%BC%9A%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">
+                        OC高级强化01：多环境配置
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        前言KVO 全称 Key Value Observing，中文名为 键值观察，KVO是一种机制，它 允许将其他对象的指定属性的更改通知给对象
-在 key Value Observing Programming Guide  官方文档中，有这么一句话：...
+                        多环境配置
+Project : 包含了项目所有的代码、资源文件和所有信息。
+Target : 对指定代码和资源文件的具体构建方式。
+Scheme : 对指定的Target的环境配置
+
+在实际开发中，我们必须要进行网络请求（内网和外网），而网络请求则就...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Mon Jan 25 2021 16:34:11 GMT+0800">
+            <span class="home-article-date" data-date="Tue Jan 04 2022 16:24:40 GMT+0800">
                 
-                    2021-01-25
+                    2022-01-04
                 
             </span>
         </span>
@@ -561,7 +559,7 @@ GCD 会自动利用更多的 CPU 内核（比如双核、四核）
         
     </div>
 
-    <a href="/BboyZJ.github.io/2021/01/25/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8623%EF%BC%9AKVO%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">Read more<span class="seo-reader-text">OC底层原理23：KVO底层原理分析</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2022/01/04/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E9%AB%98%E7%BA%A7%E5%BC%BA%E5%8C%9601%EF%BC%9A%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">Read more<span class="seo-reader-text">OC高级强化01：多环境配置</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -573,23 +571,23 @@ GCD 会自动利用更多的 CPU 内核（比如双核、四核）
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2021/01/17/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8622%EF%BC%9AKVC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
-                        OC底层原理22：KVC底层原理分析
+                    <a href="/BboyZJ.github.io/2021/11/26/OC/OC%E5%AD%A6%E4%B9%A037%EF%BC%9ACoreText(%E4%B8%80)CoreText%E5%AE%9E%E7%8E%B0%E5%9B%BE%E6%96%87%E6%B7%B7%E6%8E%92/">
+                        OC学习37：CoreText(一)CoreText实现图文混排
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        前言KVC 的全称是 Key-Value-Coding ，翻译成中文是 键值编码 ，键值编码是由NSKeyValueCoding 非正式协议启动的一种机制，对象采用该协议来间接访问其属性。既可以通过一个 字符串Key来访问某个属性。这种间接访问机制补...
+                        简介CoreText 是用于处理文字和字体的底层技术。它直接和 Core Graphics(又被称为Quartz)打交道。Quartz是一个2D图形渲染引擎，能够处理OSX和iOS中图形显示问题。与其他UI组件相比，由于CoreText直接和Quar...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sun Jan 17 2021 16:33:44 GMT+0800">
+            <span class="home-article-date" data-date="Fri Nov 26 2021 09:00:29 GMT+0800">
                 
-                    2021-01-17
+                    2021-11-26
                 
             </span>
         </span>
@@ -613,7 +611,7 @@ GCD 会自动利用更多的 CPU 内核（比如双核、四核）
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/iOS/">iOS</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -621,7 +619,7 @@ GCD 会自动利用更多的 CPU 内核（比如双核、四核）
         
     </div>
 
-    <a href="/BboyZJ.github.io/2021/01/17/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8622%EF%BC%9AKVC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">Read more<span class="seo-reader-text">OC底层原理22：KVC底层原理分析</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2021/11/26/OC/OC%E5%AD%A6%E4%B9%A037%EF%BC%9ACoreText(%E4%B8%80)CoreText%E5%AE%9E%E7%8E%B0%E5%9B%BE%E6%96%87%E6%B7%B7%E6%8E%92/">Read more<span class="seo-reader-text">OC学习37：CoreText(一)CoreText实现图文混排</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -633,26 +631,28 @@ GCD 会自动利用更多的 CPU 内核（比如双核、四核）
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2021/01/10/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8621%EF%BC%9AMethod-Swizzling%E6%96%B9%E6%B3%95%E4%BA%A4%E6%8D%A2/">
-                        OC底层原理21：Method-Swizzling方法交换
+                    <a href="/BboyZJ.github.io/2021/07/22/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8641%EF%BC%9A%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96%EF%BC%88%E4%B8%80%EF%BC%89%E9%87%8E%E6%8C%87%E9%92%88%E6%8E%A2%E6%B5%8B/">
+                        OC底层原理41：内存优化（一）野指针探测
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        method-swizzling 是什么？
-method-swizzling 的含义是 方法交换，其主要作用是 在运行时将一个方法的实现替换成另一个方法的实现，这就是我们常说的 iOS黑魔法
+                        前言本文主要讲解两种 野指针检测 的原理和实现
+技术点：野指针探测本文的主要目的是理解 野指针 的形成过程以及如果去 检测野指针
+引子在介绍野指针之前，首先说下目前的异常处理类型，附 苹果官网链接 
+异常类型异常类型分为两类：
 
-在OC中就是 利用method-swizzling实现A...
+软件异常：主要来自 ...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sun Jan 10 2021 15:22:47 GMT+0800">
+            <span class="home-article-date" data-date="Thu Jul 22 2021 14:51:26 GMT+0800">
                 
-                    2021-01-10
+                    2021-07-22
                 
             </span>
         </span>
@@ -684,7 +684,7 @@ method-swizzling 的含义是 方法交换，其主要作用是 在运行时将�
         
     </div>
 
-    <a href="/BboyZJ.github.io/2021/01/10/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8621%EF%BC%9AMethod-Swizzling%E6%96%B9%E6%B3%95%E4%BA%A4%E6%8D%A2/">Read more<span class="seo-reader-text">OC底层原理21：Method-Swizzling方法交换</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2021/07/22/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8641%EF%BC%9A%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96%EF%BC%88%E4%B8%80%EF%BC%89%E9%87%8E%E6%8C%87%E9%92%88%E6%8E%A2%E6%B5%8B/">Read more<span class="seo-reader-text">OC底层原理41：内存优化（一）野指针探测</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -696,26 +696,25 @@ method-swizzling 的含义是 方法交换，其主要作用是 在运行时将�
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2020/12/15/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8620%EF%BC%9AOC%E5%BA%95%E5%B1%82%E9%9D%A2%E8%AF%95%E9%A2%98%E8%A7%A3%E6%9E%90/">
-                        OC底层原理20：OC底层面试题解析
+                    <a href="/BboyZJ.github.io/2021/07/13/OC/OC%E5%AD%A6%E4%B9%A015%EF%BC%9ASDWebImage%E6%8E%A2%E7%B4%A2/">
+                        OC学习15：SDWebImage探索
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        【面试题1】Runtime Associate 方法关系的对象，需要在dealloc中释放？当我们对象释放时，会调用 dealloc
-
-C++函数释放：objc_cxxDestruce
-移除关联属性：_object_remove_associatio...
+                        简介SDWebImage 是一个 异步加载图片的库，提供了一个UIImageView+WebCache类支持来自互联网的远程图片，具有缓存管理、异步下载、同一个URL次数控制和优化等特征。
+SDWebImage 加载图片的流程
+通过 UIImageV...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Tue Dec 15 2020 15:22:19 GMT+0800">
+            <span class="home-article-date" data-date="Tue Jul 13 2021 10:11:45 GMT+0800">
                 
-                    2020-12-15
+                    2021-07-13
                 
             </span>
         </span>
@@ -739,7 +738,7 @@ C++函数释放：objc_cxxDestruce
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -747,7 +746,7 @@ C++函数释放：objc_cxxDestruce
         
     </div>
 
-    <a href="/BboyZJ.github.io/2020/12/15/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8620%EF%BC%9AOC%E5%BA%95%E5%B1%82%E9%9D%A2%E8%AF%95%E9%A2%98%E8%A7%A3%E6%9E%90/">Read more<span class="seo-reader-text">OC底层原理20：OC底层面试题解析</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2021/07/13/OC/OC%E5%AD%A6%E4%B9%A015%EF%BC%9ASDWebImage%E6%8E%A2%E7%B4%A2/">Read more<span class="seo-reader-text">OC学习15：SDWebImage探索</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -759,23 +758,33 @@ C++函数释放：objc_cxxDestruce
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2020/11/29/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8619%EF%BC%9A%E7%B1%BB%E6%89%A9%E5%B1%95%E4%B8%8E%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1/">
-                        OC底层原理19：类扩展与关联对象
+                    <a href="/BboyZJ.github.io/2021/07/05/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8640%EF%BC%9A%E7%BB%84%E4%BB%B6%E5%8C%96%EF%BC%88%E4%BA%8C%EF%BC%89%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E8%AE%AF%E6%96%B9%E5%BC%8F/">
+                        OC底层原理40：组件化（二）组件间通讯方式
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        
+                        前言本文主要讲组件化之间是如何 通讯 的
+组件化通讯方案目前的主流方式有三种：
+
+URL 路由
+
+target-action
+
+protocol 匹配
+
+
+URL路由目前iOS上大部分路由工具都是基于URL匹配的，或者根据命名约定，用runtime方...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sun Nov 29 2020 15:22:06 GMT+0800">
+            <span class="home-article-date" data-date="Mon Jul 05 2021 14:50:58 GMT+0800">
                 
-                    2020-11-29
+                    2021-07-05
                 
             </span>
         </span>
@@ -807,7 +816,7 @@ C++函数释放：objc_cxxDestruce
         
     </div>
 
-    <a href="/BboyZJ.github.io/2020/11/29/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8619%EF%BC%9A%E7%B1%BB%E6%89%A9%E5%B1%95%E4%B8%8E%E5%85%B3%E8%81%94%E5%AF%B9%E8%B1%A1/">Read more<span class="seo-reader-text">OC底层原理19：类扩展与关联对象</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2021/07/05/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8640%EF%BC%9A%E7%BB%84%E4%BB%B6%E5%8C%96%EF%BC%88%E4%BA%8C%EF%BC%89%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E8%AE%AF%E6%96%B9%E5%BC%8F/">Read more<span class="seo-reader-text">OC底层原理40：组件化（二）组件间通讯方式</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -819,26 +828,28 @@ C++函数释放：objc_cxxDestruce
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2020/11/19/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8618%EF%BC%9A%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%EF%BC%88%E4%B8%8B%EF%BC%89%E5%88%86%E7%B1%BB/">
-                        OC底层原理18：类的加载（下）分类
+                    <a href="/BboyZJ.github.io/2021/06/22/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8639%EF%BC%9A%E7%BB%84%E4%BB%B6%E5%8C%96%EF%BC%88%E4%B8%80%EF%BC%89%E6%96%B9%E6%A1%88/">
+                        OC底层原理39：组件化（一）方案
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        在上一篇 OC底层原理17：类的加载（上） 中，理解了 类是如何从Mach-O加载到内存 中，这次我们来解释下 分类 是如何 加载 到 类 中的，以及 分类和类搭配使用 的情况
-分类的本质前提：在main中定义 LGperson 的分类LG
+                        组件化方案
+常用的组件化方案主要有两种：
 
-探索分...
+本地组件化：主要是通过在 工程中创建library，利用 cocoapods 的 workspec 进行本地管理，不需要将项目上传git，而是直接在本项目中以 framework 的方法进行调用
+
+coco...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Nov 19 2020 15:21:46 GMT+0800">
+            <span class="home-article-date" data-date="Tue Jun 22 2021 14:50:12 GMT+0800">
                 
-                    2020-11-19
+                    2021-06-22
                 
             </span>
         </span>
@@ -870,7 +881,7 @@ C++函数释放：objc_cxxDestruce
         
     </div>
 
-    <a href="/BboyZJ.github.io/2020/11/19/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8618%EF%BC%9A%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%EF%BC%88%E4%B8%8B%EF%BC%89%E5%88%86%E7%B1%BB/">Read more<span class="seo-reader-text">OC底层原理18：类的加载（下）分类</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2021/06/22/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8639%EF%BC%9A%E7%BB%84%E4%BB%B6%E5%8C%96%EF%BC%88%E4%B8%80%EF%BC%89%E6%96%B9%E6%A1%88/">Read more<span class="seo-reader-text">OC底层原理39：组件化（一）方案</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>

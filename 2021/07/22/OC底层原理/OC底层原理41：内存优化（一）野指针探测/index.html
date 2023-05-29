@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-05-06 19:52:12</span>
-            <span class="mobile">2023-05-06 19:52</span>
+            <span class="pc">2023-05-09 16:02:22</span>
+            <span class="mobile">2023-05-09 16:02</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -326,7 +326,7 @@
 
             <div class="article-content markdown-body">
                 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文主要讲解两种 <code>野指针检测</code> 的原理和实现</p>
-<h1 id="技术点：野指针探测"><a href="#技术点：野指针探测" class="headerlink" title="技术点：野指针探测"></a>技术点：野指针探测</h1><p>本文的主要目的是理解 <code>野指针</code> 的形成过程以及如果去 检测野指针</p>
+<h1 id="技术点：野指针探测"><a href="#技术点：野指针探测" class="headerlink" title="技术点：野指针探测"></a>技术点：野指针探测</h1><p>本文的主要目的是理解 <code>野指针</code> 的形成过程以及如果去 <code>检测野指针</code></p>
 <h1 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h1><p>在介绍野指针之前，首先说下目前的异常处理类型，附 <a class="link"   target="_blank" rel="noopener" href="https://developer.apple.com/documentation/xcode/understanding-the-exception-types-in-a-crash-report" >苹果官网链接 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
 <h1 id="异常类型"><a href="#异常类型" class="headerlink" title="异常类型"></a>异常类型</h1><p>异常类型分为两类：</p>
 <ul>
@@ -337,12 +337,12 @@
 </ul>
 <p>而处理异常时，需要关注两个概念</p>
 <ul>
-<li><p><code>Mach</code>异常：<code>Mach</code>层异常</p>
+<li><p><code>Mach</code>异常：<code>Mach</code> 层异常</p>
 </li>
 <li><p><code>UNIX</code>信号：BSD层获取</p>
 </li>
 </ul>
-<p>iOS中的POSIX API就是通过Mach之上的BSD层实现的，如下图所示：</p>
+<p>iOS中的POSIX API就是通过 <code>Mach</code> 之上的 <code>BSD</code> 层实现的，如下图所示：</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
@@ -350,9 +350,9 @@
                      
                 ></p>
 <ul>
-<li><p><code>Mach</code> 是一个受 <code>Acccent</code> 启发而高出的Unix系统</p>
+<li><p><code>Mach</code> 是一个受 <code>Acccent</code> 启发而搞出的Unix系统</p>
 </li>
-<li><p><code>BSD</code> 层是建立在Mach之上，是XNU中一个不可分割的一部分，BSD负责提供可靠的、现代的API</p>
+<li><p><code>BSD</code> 层是建立在 <code>Mach</code> 之上，是XNU中一个不可分割的一部分，BSD负责提供可靠的、现代的API</p>
 </li>
 <li><p><code>POSIX</code> 表示可移植操作系统接口（Portable Operation System Interface）</p>
 </li>
@@ -361,12 +361,12 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16488657025540.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305091557539.jpg"
                      
                 ></p>
 <ul>
-<li>硬件异常流程：硬件异常 -&gt; Mach异常 -&gt; UNIX信号</li>
-<li>软件异常流程：软件异常 -&gt; UNIX异常</li>
+<li>硬件异常流程：<code>硬件异常 -&gt; Mach异常 -&gt; UNIX信号</code></li>
+<li>软件异常流程：<code>软件异常 -&gt; UNIX异常</code></li>
 </ul>
 <h1 id="Mach异常与UNIX信号的转换"><a href="#Mach异常与UNIX信号的转换" class="headerlink" title="Mach异常与UNIX信号的转换"></a>Mach异常与UNIX信号的转换</h1><p>下面是 <code>Mach异常</code> 与 <code>UNIX信号</code> 的转换关系代码，来自 <code>xnu</code> 中的 <code>bsd/uxkern/ux_exception.c</code></p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">switch(exception) &#123;</span><br><span class="line">case EXC_BAD_ACCESS:</span><br><span class="line">    if (code == KERN_INVALID_ADDRESS)</span><br><span class="line">        *ux_signal = SIGSEGV;</span><br><span class="line">    else</span><br><span class="line">        *ux_signal = SIGBUS;</span><br><span class="line">    break;</span><br><span class="line"></span><br><span class="line">case EXC_BAD_INSTRUCTION:</span><br><span class="line">    *ux_signal = SIGILL;</span><br><span class="line">    break;</span><br><span class="line"></span><br><span class="line">case EXC_ARITHMETIC:</span><br><span class="line">    *ux_signal = SIGFPE;</span><br><span class="line">    break;</span><br><span class="line"></span><br><span class="line">case EXC_EMULATION:</span><br><span class="line">    *ux_signal = SIGEMT;</span><br><span class="line">    break;</span><br><span class="line"></span><br><span class="line">case EXC_SOFTWARE:</span><br><span class="line">    switch (code) &#123;</span><br><span class="line"></span><br><span class="line">    case EXC_UNIX_BAD_SYSCALL:</span><br><span class="line">    *ux_signal = SIGSYS;</span><br><span class="line">    break;</span><br><span class="line">    case EXC_UNIX_BAD_PIPE:</span><br><span class="line">    *ux_signal = SIGPIPE;</span><br><span class="line">    break;</span><br><span class="line">    case EXC_UNIX_ABORT:</span><br><span class="line">    *ux_signal = SIGABRT;</span><br><span class="line">    break;</span><br><span class="line">    case EXC_SOFT_SIGNAL:</span><br><span class="line">    *ux_signal = SIGKILL;</span><br><span class="line">    break;</span><br><span class="line">    &#125;</span><br><span class="line">    break;</span><br><span class="line"></span><br><span class="line">case EXC_BREAKPOINT:</span><br><span class="line">    *ux_signal = SIGTRAP;</span><br><span class="line">    break;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
@@ -377,7 +377,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16488661552655.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305091557295.jpg"
                      
                 ></p>
 <ul>
@@ -386,7 +386,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16488662828917.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305091558216.jpg"
                      
                 ></p>
 <ul>
@@ -395,7 +395,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16488663202265.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305091558462.jpg"
                      
                 ></p>
 <h1 id="野指针"><a href="#野指针" class="headerlink" title="野指针"></a>野指针</h1><p>指向的 <code>对象被释放或收回</code>，但是该 <code>指针没有做任何的修改</code>，以至于 该<code>指针仍指向已经回收的内存地址</code>，这个指针就是 <code>野指针</code></p>
@@ -408,7 +408,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16488665261518.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305091559264.jpg"
                      
                 ></p>
 <h2 id="为什么OC野指针的crash这么多？"><a href="#为什么OC野指针的crash这么多？" class="headerlink" title="为什么OC野指针的crash这么多？"></a>为什么OC野指针的crash这么多？</h2><p>我们一般在APP发版前，都会经过多轮的 <code>自测、内侧、灰度测试</code> 等，按照常理来说，大部分的crash应该都被覆盖了，但是由于 <code>野指针的随机性</code>，使得经常在测试时不会出现crash，而是在 <code>线上出现crash</code>，这对App体验来说是非常致命的</p>
@@ -421,7 +421,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16488670422301.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305091559246.jpg"
                      
                 ></p>
 <ul>
@@ -430,7 +430,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16488671458859.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305091559732.jpg"
                      
                 ></p>
 <ul>
@@ -439,7 +439,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16488672958625.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305091559441.jpg"
                      
                 ></p>
 <h2 id="两种方案对比"><a href="#两种方案对比" class="headerlink" title="两种方案对比"></a>两种方案对比</h2><ul>
@@ -481,7 +481,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16488770386627.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305091600931.jpg"
                      
                 ></p>
 <ul>
@@ -503,7 +503,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16488771182594.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305091600861.jpg"
                      
                 ></p>
 <h1 id="Zombie-Objects"><a href="#Zombie-Objects" class="headerlink" title="Zombie Objects"></a>Zombie Objects</h1><p><strong>僵尸对象</strong></p>
@@ -516,16 +516,16 @@
 <p><strong>苹果的僵尸对象检测原理</strong></p>
 <p>首先我们来看下Xcode中僵尸对象是如何实现的，具体操作步骤可以参考这篇文章 <a class="link"   target="_blank" rel="noopener" href="https://www.jianshu.com/go-wild?ac=2&url=https%253A%252F%252Fzhiyongzou.github.io%252F2017%252F08%252F25%252FiOS-Zombie-Object-%2525E5%252583%2525B5%2525E5%2525B0%2525B8%2525E5%2525AF%2525B9%2525E8%2525B1%2525A1-%2525E5%25258E%25259F%2525E7%252590%252586%2525E6%25258E%2525A2%2525E7%2525B4%2525A2%252F" >iOS Zombie Objects(僵尸对象)原理探索 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
 <ul>
-<li>从 dealloc 的源码中，我们可以看到 Replaced by NSZombie，即 对象释放 时，NSZombie 将 dealloc 里做替换，如下所示</li>
+<li>从 <code>dealloc</code> 的源码中，我们可以看到 <code>Replaced by NSZombie</code>，即 <code>对象释放</code> 时，<code>NSZombie</code> 将 <code>dealloc</code> 里做替换，如下所示</li>
 </ul>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16488773598076.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305091600774.jpg"
                      
                 ></p>
 <p>所以僵尸对象的生成过程伪代码如下</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">//1、获取到即将deallocted对象所属类（Class）</span><br><span class="line">Class cls = object_getClass(self);</span><br><span class="line"></span><br><span class="line">//2、获取类名</span><br><span class="line">const char *clsName = class_getName(cls)</span><br><span class="line"></span><br><span class="line">//3、生成僵尸对象类名</span><br><span class="line">const char *zombieClsName = &quot;_NSZombie_&quot; + clsName;</span><br><span class="line"></span><br><span class="line">//4、查看是否存在相同的僵尸对象类名，不存在则创建</span><br><span class="line">Class zombieCls = objc_lookUpClass(zombieClsName);</span><br><span class="line">if (!zombieCls) &#123;</span><br><span class="line">     //5、获取僵尸对象类 _NSZombie_</span><br><span class="line"> Class baseZombieCls = objc_lookUpClass(“_NSZombie_&quot;);</span><br><span class="line"></span><br><span class="line">     //6、创建 zombieClsName 类</span><br><span class="line"> zombieCls = objc_duplicateClass(baseZombieCls, zombieClsName, 0);</span><br><span class="line">&#125;</span><br><span class="line">//7、在对象内存未被释放的情况下销毁对象的成员变量及关联引用。</span><br><span class="line">   objc_destructInstance(self);</span><br><span class="line"></span><br><span class="line">//8、修改对象的 isa 指针，令其指向特殊的僵尸类</span><br><span class="line">objc_setClass(self, zombieCls);</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// 1、获取到即将deallocted对象所属类（Class）</span><br><span class="line">Class cls = object_getClass(self);</span><br><span class="line"></span><br><span class="line">// 2、获取类名</span><br><span class="line">const char *clsName = class_getName(cls)</span><br><span class="line"></span><br><span class="line">// 3、生成僵尸对象类名</span><br><span class="line">const char *zombieClsName = &quot;_NSZombie_&quot; + clsName;</span><br><span class="line"></span><br><span class="line">// 4、查看是否存在相同的僵尸对象类名，不存在则创建</span><br><span class="line">Class zombieCls = objc_lookUpClass(zombieClsName);</span><br><span class="line">if (!zombieCls) &#123;</span><br><span class="line">     // 5、获取僵尸对象类 _NSZombie_</span><br><span class="line"> Class baseZombieCls = objc_lookUpClass(“_NSZombie_&quot;);</span><br><span class="line"></span><br><span class="line">     // 6、创建 zombieClsName 类</span><br><span class="line"> zombieCls = objc_duplicateClass(baseZombieCls, zombieClsName, 0);</span><br><span class="line">&#125;</span><br><span class="line">// 7、在对象内存未被释放的情况下销毁对象的成员变量及关联引用。</span><br><span class="line">   objc_destructInstance(self);</span><br><span class="line"></span><br><span class="line">// 8、修改对象的 isa 指针，令其指向特殊的僵尸类</span><br><span class="line">objc_setClass(self, zombieCls);</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>当僵尸对象再次被访问时，将进入消息转发流程，开始处理僵尸对象访问，输出日志并发生crash</li>
@@ -533,7 +533,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16488774216302.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305091601048.jpg"
                      
                 ></p>
 <p>所以僵尸对象触发流程伪代码如下</p>
@@ -616,7 +616,7 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="/BboyZJ.github.io/assets/16488787909724.jpg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305091602259.jpg"
                      
                 ></p>
 

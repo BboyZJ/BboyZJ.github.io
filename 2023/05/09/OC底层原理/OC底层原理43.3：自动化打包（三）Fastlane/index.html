@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/05/09/oc底层原理/oc底层原理43.3：自动化打包（三）fastlane/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC底层原理43.3：自动化打包（三）Fastlane">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/05/09/OC底层原理/OC底层原理43.3：自动化打包（三）Fastlane/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC底层原理43.3：自动化打包（三）Fastlane">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC底层原理43.3：自动化打包（三）Fastlane -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC底层原理43.3：自动化打包（三）Fastlane</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-05-09 16:06:17</span>
+        <span class="mobile">2023-05-09 16:06</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-05-10 15:54:55</span>
+            <span class="mobile">2023-05-10 15:54</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>除了Jenkins可以自动打包，还有另一个方式：Fastlane，下面来了解下。</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://fastlane.tools/" >Fastlane <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>是一个完全开源的项目，是一款为iOS和Android开发者提供的自动化构建工具。它可以帮助开发者将 <code>App打包、签名、测试、发布等</code> 流程串联起来，实现完全自动化的工作流。其官网地址为：<a class="link"   target="_blank" rel="noopener" href="https://fastlane.tools/" >https://fastlane.tools/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h1 id="Fastlane安装"><a href="#Fastlane安装" class="headerlink" title="Fastlane安装"></a>Fastlane安装</h1><p>参考 <a class="link"   target="_blank" rel="noopener" href="https://docs.fastlane.tools/getting-started/ios/setup/" >配置文档 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>，安装步骤如下：</p>
+<ul>
+<li>检查ruby版本，需要2.0及以上，并且将gem的source改为 <code>gems.ruby-china.com/</code></li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 查看 Ruby 版本</span><br><span class="line">mac@bogon ~ % ruby -v</span><br><span class="line">ruby 3.0.0p0 (2020-12-25 revision 95aff21468) [x86_64-darwin19]</span><br><span class="line"></span><br><span class="line">// 查看 gem 的source</span><br><span class="line">mac@bogon ~ % gem sources</span><br><span class="line">*** CURRENT SOURCES ***</span><br><span class="line"></span><br><span class="line">https://gems.ruby-china.com/</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>检查Xcode命令行工具是否安装，如果没有安装则会自动开始安装</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xcode-select --install</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>安装Fastlane</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo gem install fastlane --verbose</span><br><span class="line"></span><br><span class="line">// 如果安装出错，则使用以下命令</span><br><span class="line">sudo gem install -n /usr/local/bin fastlane</span><br><span class="line"></span><br><span class="line">// 查看版本验证是否安装成功</span><br><span class="line">fastlane --version</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Fastlane相关block、lanes、actions"><a href="#Fastlane相关block、lanes、actions" class="headerlink" title="Fastlane相关block、lanes、actions"></a>Fastlane相关block、lanes、actions</h1><p>在完善打包逻辑之前，首先介绍Fastlane中提供的常用的 <code>blocks、lanes和actions</code></p>
+<ul>
+<li><p>blocks：fastlane中除了lane的其他模块</p>
+</li>
+<li><p>lanes：Lanes的相关用法介绍</p>
+</li>
+<li><p>actions：fastlane内置好的常用操作</p>
+</li>
+</ul>
+<h1 id="Blocks"><a href="#Blocks" class="headerlink" title="Blocks"></a>Blocks</h1><p>block主要分为三类：</p>
+<ul>
+<li><p>before_all &amp; before_each</p>
+</li>
+<li><p>after_all &amp; after_each</p>
+</li>
+<li><p>error</p>
+</li>
+</ul>
+<h1 id="before-all-amp-before-each"><a href="#before-all-amp-before-each" class="headerlink" title="before_all &amp; before_each"></a>before_all &amp; before_each</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">其中before_all会先于before_each执行，且仅执行一次，</span><br><span class="line">所以许多通用操作流入git代码拉取等，可以放在before_all或者befoe_each中</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>before_all:在lane执行前执行一次</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">before_all do |lane| </span><br><span class="line">   # ...</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">&lt;!--举例--&gt;</span><br><span class="line">before_all do |lane| </span><br><span class="line">   cocoapods #这里会执行pod install</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>before_each：会在任意lane执行前执行，与before_all只执行一次不同，如果在一个 lane 中多次调用了其他的 lane，则其他的 lane 执行前都会执行 before_each。</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">before_each do |lane, options|</span><br><span class="line">  # ...</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="after-all-amp-after-each"><a href="#after-all-amp-after-each" class="headerlink" title="after_all &amp; after_each"></a>after_all &amp; after_each</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">after_all 会在 after_each 执行完后执行，且仅执行一次。</span><br><span class="line">许多通用操作例如发送打包成功的通知等，可以放在 after_all 或 after_each 中。</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>after_all：会在lane执行完后执行一次</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">after_all do |lane|</span><br><span class="line">  # ...</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;!--举例--&gt;</span><br><span class="line">after_all do |lane|</span><br><span class="line">  say(&quot;Successfully finished release (#&#123;lane&#125;)!&quot;)</span><br><span class="line">  slack(</span><br><span class="line">    message: &quot;Successfully submitted new App Update&quot;</span><br><span class="line">  )</span><br><span class="line">  sh(&quot;./send_screenshots_to_team.sh&quot;) # Example</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>after_each：会在任意lane执行完后执行，如果在一个lane中多次调用了其他的lane，则其他的lane执行完后都会执行after_each</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">after_each do |lane, options|</span><br><span class="line">  # ...</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<p>例如下面的例子，before_each将after_each被调用 4 次</p>
+<ul>
+<li>before_each：调用deploy之前、切换到archive之前、切换到sign之前、切换到upload之前</li>
+<li>after_each：执行deploy之后、切换到archive执行之后、切换到sign执行之后、切换到upload执行之后</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">before_each do |lane, options|</span><br><span class="line">  # ...</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">lane :deploy do</span><br><span class="line">  archive</span><br><span class="line">  sign</span><br><span class="line">  upload</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">lane :archive do</span><br><span class="line">  # ...</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">lane :sign do</span><br><span class="line">  # ...</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">lane :upload do</span><br><span class="line">  # ...</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">after_each do |lane, options|</span><br><span class="line">  # ...</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="error"><a href="#error" class="headerlink" title="error"></a>error</h1><p>在任何流程中发生错误时，都会退出并执行error，错误后的after_all和after_each将不会执行</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">error do |lane, exception|</span><br><span class="line">  slack(</span><br><span class="line">    message: &quot;Something went wrong with the release.&quot;,</span><br><span class="line">    success: false,</span><br><span class="line">    payload: &#123; &quot;Error Info&quot; =&gt; exception.error_info.to_s &#125; </span><br><span class="line">  )</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Actions"><a href="#Actions" class="headerlink" title="Actions"></a>Actions</h1><p>一个命名的lane代表一个持续集成的任务，每个任务由多个步骤组成，步骤组成是已经定义好的 <a class="link"   target="_blank" rel="noopener" href="http://docs.fastlane.tools/actions/" >action <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 工具。在终端可以通过 <code>fastlane action actionName</code> 查看某个具体的 <code>action</code>，也可以通过 <code>fastlane action</code> 查看fastlane中定义好的action及说明。</p>
+<p>除了使用ruby代码在lane中实现的各种功能，fastlane也内置了许多写好的独立方法库即action，每一个action都是一个独立Ruby脚本，是fastlane的最小执行单位，下面介绍几个常用的action</p>
+<ul>
+<li><p>1、cocoapods：执行pod install</p>
+</li>
+<li><p>2、gym：项目编译、打包等</p>
+</li>
+<li><p>3、increment_build_number：build号自增</p>
+</li>
+<li><p>4、match：管理证书和配置文件</p>
+</li>
+<li><p>5、app_store_connect_api_key：为其他 action 生成 App Store Connect API token</p>
+</li>
+</ul>
+<p><strong>1、cocoapods</strong></p>
+<p>调用cocoapods action会执行pod install，如果工程中使用了cocoapods管理三方库，需要在Gemfile中添加以下命令</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gem &quot;cocoapods&quot;</span><br></pre></td></tr></table></figure></div>
+
+<p>在lane中使用直接调用即可</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lane :debug do</span><br><span class="line">  cocoapods  # 执行 pod install</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<p>2、gym</p>
+<p><a class="link"   target="_blank" rel="noopener" href="http://docs.fastlane.tools/actions/gym/" >gym <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 是fastlane提供的用于构建、打包的action，是build_app的别名。可以根据配置参数编译iOS应用，并生成ipa包。以下是常用的参数</p>
+<ul>
+<li><p>workspace：workspace 文件路径，使用 <code>cocoapods</code> 后需要使用</p>
+</li>
+<li><p>project：project 文件路径，若有 <code>workspace</code> 此项可忽略</p>
+</li>
+<li><p>scheme： schema名</p>
+</li>
+<li><p>clean：是否在编译前清理工程</p>
+</li>
+<li><p>configuration：编译环境设置，Relese、Debug、自定义</p>
+</li>
+<li><p>export_method：包输出类型，app-store、ad-hoc、package、enterprise、development</p>
+</li>
+<li><p>archive_path : 读取xarchive的路径</p>
+</li>
+<li><p>output_directory：ipa包输出路径</p>
+</li>
+<li><p>output_name：ipa包名称</p>
+</li>
+<li><p>include_symbols：是否集成调试符号，若为 false 则会单独生成符号文件</p>
+</li>
+<li><p>include_bitcode： 是否开启bitcode</p>
+</li>
+</ul>
+<p>其他参数如下：</p>
+<ul>
+<li><p>export_options: 可以指定更详细的打包配置，可以是配置文件路径</p>
+</li>
+<li><p>skip_build_archive: 跳过构建，打包阶段，直接签名；使用archive_path 作为输入</p>
+</li>
+<li><p>skip_archive：仅构建</p>
+</li>
+<li><p>skip_codesigning: 仅构建，打包，不签名</p>
+</li>
+</ul>
+<p>以下是CI中具体的例子</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">lane :release do</span><br><span class="line">  # ...</span><br><span class="line">  gym(</span><br><span class="line">      workspace: &quot;app.xcworkspace&quot;,</span><br><span class="line">      scheme: &quot;app&quot;,</span><br><span class="line">      # 打包前clean</span><br><span class="line">      clean: true,</span><br><span class="line">      # Release、Debug、自定义</span><br><span class="line">      configuration: &quot;Release&quot;,</span><br><span class="line">      # app-store, ad-hoc, package, enterprise, development</span><br><span class="line">      export_method: &quot;ad-hoc&quot;,</span><br><span class="line">      # 文件输出路径</span><br><span class="line">      output_directory: &quot;/Users/user/Desktop/&quot;,</span><br><span class="line">      # ipa名称</span><br><span class="line">      output_name: &quot;app.ipa&quot;,</span><br><span class="line">      # 是否包含调试符号</span><br><span class="line">      include_symbols: true,</span><br><span class="line">      # 是否开启bitcode</span><br><span class="line">      include_bitcode: false,</span><br><span class="line">    )</span><br><span class="line">    # ...</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<p>3、increment_build_number</p>
+<ul>
+<li>通过app_store_build_number获取最新版本的build_number</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">currentBuildNumber = app_store_build_number(</span><br><span class="line">  api_key: api_key,        # 使用app_store_connect_api_key认证</span><br><span class="line">  live: false,             #  live 为 true 查询已发售的版本，false 查询测试的版本</span><br><span class="line">  app_identifier: &quot;com.zm.ZLGithubClient&quot;</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>通过increment_build_number设置项目的build_number</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">increment_build_number(</span><br><span class="line">  build_number: currentBuildNumber + 1</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+
+<p>4、match</p>
+<p>match主要用于证书和配置文件的管理，用于开发成员之间共享，具体的过程可参考代码签名指南</p>
+<p>match配置步骤：</p>
+<ul>
+<li><p>在gitLab上创建一个仓库用于保存证书</p>
+</li>
+<li><p>在项目根目录下执行 fastlane match init，输入仓库的git地址，会在fastlane目录下生成Matchfile文件，包含match的配置信息</p>
+</li>
+</ul>
+<p>match参数说明：</p>
+<ul>
+<li><p>type: 同步的配置文件类型: appstore,adhoc,development,enterprise,默认 development</p>
+</li>
+<li><p>readonly: 默认false，如果是true,不会生成新的证书和描述配置文件</p>
+</li>
+<li><p>app_identifier: 指定描述配置文件的bundle id；如果不指定则使用 AppFile 中的 app_identifier</p>
+</li>
+<li><p>git_url: 证书保存的git地址</p>
+</li>
+<li><p>keychain_name : 保存证书的keychain，默认login.keychain</p>
+</li>
+</ul>
+<p>以下是在CI中使用match的例子</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># match 中需要配置参数</span><br><span class="line"># 证书类型   appstore ， adhoc 还是 development</span><br><span class="line"># app id  </span><br><span class="line"># kaychain 证书保存的keychain</span><br><span class="line"># git_url  证书保存的github远端库</span><br><span class="line">lane :github_action_testFlight do</span><br><span class="line"></span><br><span class="line">match(type: &quot;appstore&quot;,       </span><br><span class="line">      readonly: true,</span><br><span class="line">      app_identifier: &quot;com.used.id&quot;,</span><br><span class="line">      keychain_name: ENV[&#x27;MATCH_KEYCHAIN_NAME&#x27;],</span><br><span class="line">      keychain_password: ENV[&#x27;MATCH_PASSWORD&#x27;],</span><br><span class="line">      git_url: ENV[&#x27;MATCH_GIT_URL&#x27;])</span><br><span class="line"></span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"># ENV[&#x27;MATCH_GIT_URL&#x27;] 是加密保存的参数</span><br></pre></td></tr></table></figure></div>
+
+<p>match说明：</p>
+<ul>
+<li><p>执行这些命令fastlane match development, fastlane match adhoc, fastlane match enterprise，fastlane match appstore，首次执行自动在apple store connect中创建provisioning file，证书并下载加密保存在git仓库，并上传.</p>
+</li>
+<li><p>其他开发者就可以使用fastlane match命令共享github中的证书和配置文件。</p>
+</li>
+</ul>
+<p>5、App Store Connect API</p>
+<p>在早先访问App Store Connect信息时需要双因素认证。而在持续集成的过程中一般无法人机交互(例如github-action)，会导致持续集成无法完成。在WWDC18中，苹果提出了App Store Connect API，提供另外的认证方式。Fastlane也对App Store Connect API提供了支持，具体查看 <a class="link"   target="_blank" rel="noopener" href="https://docs.fastlane.tools/app-store-connect-api/" >Using App Store Connect API <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 文档</p>
+<p>Using App Store Connect API是一个官方公共API，用于管理应用元数据、定价、配置等。但是在使用之前，需要获取AppStore Connect的访问权限，即获取issuer ID和apiKey。</p>
+<p>app_store_connect_api_key 是用来为其他 action 生成 App Store Connect API token 的 action; match,pilot以及 deliver等 action 都可以使用 App Store Connect API token，有如下参数：</p>
+<ul>
+<li><p>key_id：密钥ID，需要在AppStore Connect -&gt; 用户和访问 -&gt; 密钥中创建并获取</p>
+</li>
+<li><p>issuer_id：标识创建认证令牌的发放者。也是在AppStore Connect -&gt; 用户和访问 -&gt; 密钥中获取</p>
+</li>
+<li><p>key_filePath: p8文件的路径</p>
+</li>
+<li><p>key_content： p8文件的内容，未编码直接提供需要将回车替换为\n</p>
+</li>
+<li><p>is_key_content_base64: 是否key的内容经过base64编码</p>
+</li>
+<li><p>in_house: 是app store还是 enterprise</p>
+</li>
+</ul>
+<p>以下是在CI中的使用例子</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">lane :release do</span><br><span class="line">  api_key = app_store_connect_api_key(</span><br><span class="line">    key_id: &quot;xxxxxxxxx&quot;,</span><br><span class="line">    issuer_id: &quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;,</span><br><span class="line">    key_filepath: &quot;./private_keys/AuthKey_xxxxxxxxxx.p8&quot;,</span><br><span class="line">    duration: 1200, # optional</span><br><span class="line">    in_house: false, # optional but may be required if using match/sigh</span><br><span class="line">  )</span><br><span class="line">   </span><br><span class="line">  # 在piolt中使用app_store_connect_api_key</span><br><span class="line">  pilot(api_key: api_key)</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Lanes"><a href="#Lanes" class="headerlink" title="Lanes"></a>Lanes</h1><p>lanes的使用方式请参考文档，可以分为以下几种：</p>
+<ul>
+<li><p>命令行参数传递</p>
+</li>
+<li><p>lane之间的调用</p>
+</li>
+<li><p>返回值</p>
+</li>
+<li><p>如何停止执行中的lane</p>
+</li>
+<li><p>lane的上下文通信</p>
+</li>
+<li><p>如果访问lane的属性</p>
+</li>
+<li><p>私有lane</p>
+</li>
+<li><p>如何配置多个lane的环境变量</p>
+</li>
+</ul>
+<h1 id="命令行参数传递"><a href="#命令行参数传递" class="headerlink" title="命令行参数传递"></a>命令行参数传递</h1><p>1、传递：如果需要将参数从命令行传递到lane，语法如下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//格式</span><br><span class="line">fastlane [lane] key:value key2:value2</span><br><span class="line"></span><br><span class="line">//举例</span><br><span class="line">fastlane deploy submit:false build_number:24</span><br></pre></td></tr></table></figure></div>
+
+<p>2、使用：在lanes中接收传入的值，是通过options实现的，格式为：options[:参数名]</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">lane :deploy do |options| </span><br><span class="line">    # 获取传入的submit</span><br><span class="line">    if options[:submit] </span><br><span class="line">        # Only when submit is true </span><br><span class="line">    end </span><br><span class="line">    # build号增加，获取传入的build_number </span><br><span class="line">    increment_build_number(build_number: options[:build_number])  </span><br><span class="line"> end</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="lane之间的调用"><a href="#lane之间的调用" class="headerlink" title="lane之间的调用"></a>lane之间的调用</h1><p>lane之间的调用，有点类似于函数的调用，通过lane的名字来调用</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">lane :deploy do |options|</span><br><span class="line">  # deploy调用名为build的lanes</span><br><span class="line">  build(release: true) # 传入打包的方式</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">lane :staging do |options|</span><br><span class="line">  # deploy调用名为build的lanes</span><br><span class="line">  build # 不传参也可以工作</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">lane :build do |options|</span><br><span class="line">  build_config = (options[:release] ? &quot;Release&quot; : &quot;Staging&quot;)</span><br><span class="line">  build_ios_app(configuration: build_config)</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h1><p>除此之外，lane还可以检索返回值，在Ruby中，lane定义的最后一行是返回值，在其他lane中通过options进行使用</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">lane :deploy do |options|</span><br><span class="line">  value = calculate(value: 3)</span><br><span class="line">  puts value # =&gt; 5</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">lane :calculate do |options|</span><br><span class="line">  # 返回值</span><br><span class="line">  2 + options[:value] # the last line will always be the return value</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="如何停止执行中的lane"><a href="#如何停止执行中的lane" class="headerlink" title="如何停止执行中的lane"></a>如何停止执行中的lane</h1><p>在lane中可以通过next关键字来停止执行中的lane，如下所示</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">lane :build do |options|</span><br><span class="line">  if cached_build_available?</span><br><span class="line">    UI.important &#x27;Skipping build because a cached build is available!&#x27;</span><br><span class="line">    next # skip doing the rest of this lane</span><br><span class="line">  end</span><br><span class="line">  match</span><br><span class="line">  gym</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">private_lane :cached_build_available? do |options|</span><br><span class="line">  # ...</span><br><span class="line">  true</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<p>当next作用在切换lane时，会控制流程返回到前lane正在执行的位置，即当前lane的next以后的代码将不会执行</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">lane :first_lane do |options|</span><br><span class="line">  puts &quot;If you run: `fastlane first_lane`&quot;</span><br><span class="line">  puts &quot;You&#x27;ll see this!&quot;</span><br><span class="line">  second_lane</span><br><span class="line">  puts &quot;As well as this!&quot;</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">private_lane :second_lane do |options|</span><br><span class="line">  next</span><br><span class="line">  puts &quot;This won&#x27;t be shown&quot;</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="lane的上下文通信"><a href="#lane的上下文通信" class="headerlink" title="lane的上下文通信"></a>lane的上下文通信</h1><p>lane的上下文通信，简单来说就是如何在不同的action间通信。不同的action可以通过分享哈希来进行通信，如下所示</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">lane_context[SharedValues::VARIABLE_NAME_HERE]</span><br><span class="line"></span><br><span class="line">//举例</span><br><span class="line">lane_context[SharedValues::BUILD_NUMBER]                # Generated by `increment_build_number`</span><br><span class="line">lane_context[SharedValues::VERSION_NUMBER]              # Generated by `increment_version_number`</span><br><span class="line">lane_context[SharedValues::SNAPSHOT_SCREENSHOTS_PATH]   # Generated by _snapshot_</span><br><span class="line">lane_context[SharedValues::PRODUCE_APPLE_ID]            # The Apple ID of the newly created app</span><br><span class="line">lane_context[SharedValues::IPA_OUTPUT_PATH]             # Generated by _gym_</span><br><span class="line">lane_context[SharedValues::DSYM_OUTPUT_PATH]            # Generated by _gym_</span><br><span class="line">lane_context[SharedValues::SIGH_PROFILE_PATH]           # Generated by _sigh_</span><br><span class="line">lane_context[SharedValues::SIGH_UDID]                   # The UDID of the generated provisioning profile</span><br><span class="line">lane_context[SharedValues::HOCKEY_DOWNLOAD_LINK]        # Generated by `hockey`</span><br><span class="line">lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]      # Generated by `gradle`</span><br><span class="line">lane_context[SharedValues::GRADLE_ALL_APK_OUTPUT_PATHS] # Generated by `gradle`</span><br><span class="line">lane_context[SharedValues::GRADLE_FLAVOR]               # Generated by `gradle`</span><br><span class="line">lane_context[SharedValues::GRADLE_BUILD_TYPE]           # Generated by `gradle`</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="如果访问lane的属性"><a href="#如果访问lane的属性" class="headerlink" title="如果访问lane的属性"></a>如果访问lane的属性</h1><p>我们也可以通过lane_context动态访问当前lane的属性，如下所示</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">lane_context[SharedValues::PLATFORM_NAME]        # Platform name, e.g. `:ios`, `:android` or empty (for root level lanes)</span><br><span class="line"></span><br><span class="line">lane_context[SharedValues::LANE_NAME]            # The name of the current lane preceded by the platform name (stays the same when switching lanes)</span><br><span class="line"></span><br><span class="line">lane_context[SharedValues::DEFAULT_PLATFORM]     # Default platform</span><br></pre></td></tr></table></figure></div>
+
+<p>同时这些属性也可用作.env文件的环境变量</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ENV[&quot;FASTLANE_PLATFORM_NAME&quot;]</span><br><span class="line">ENV[&quot;FASTLANE_LANE_NAME&quot;]</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="私有lane"><a href="#私有lane" class="headerlink" title="私有lane"></a>私有lane</h1><p>当我们有不同lane调用同一个lane时，可以将这个lane定义为私有的lane，防止在外部通过fastlane laneName进行调用，如下所示，我们不能通过fastlane build来访问私有的lane</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">lane :production do</span><br><span class="line">  # ...</span><br><span class="line">  build(release: true)</span><br><span class="line">  appstore # Deploy to the AppStore</span><br><span class="line">  # ...</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">lane :beta do</span><br><span class="line">  # ...</span><br><span class="line">  build(release: false)</span><br><span class="line">  crashlytics # Distribute to testers</span><br><span class="line">  # ...</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">lane :build do |options|</span><br><span class="line">  # ...</span><br><span class="line">  ipa</span><br><span class="line">  # ...</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">&lt;!--更改为--&gt;</span><br><span class="line">lane :production do</span><br><span class="line">  # ...</span><br><span class="line">  build(release: true)</span><br><span class="line">  appstore # Deploy to the AppStore</span><br><span class="line">  # ...</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">lane :beta do</span><br><span class="line">  # ...</span><br><span class="line">  build(release: false)</span><br><span class="line">  crashlytics # Distribute to testers</span><br><span class="line">  # ...</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">private_lane :build do |options|</span><br><span class="line">  # ...</span><br><span class="line">  ipa</span><br><span class="line">  # ...</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="如何配置多个lane的环境变量"><a href="#如何配置多个lane的环境变量" class="headerlink" title="如何配置多个lane的环境变量"></a>如何配置多个lane的环境变量</h1><p>通常Appfile只会使用配置项的第一个值，如下所示，app_identifier配置了两个值，我们一般只会取第一个com.used.id，而com.ignored.id将被忽略。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">app_identifier &quot;com.used.id&quot;</span><br><span class="line">app_identifier &quot;com.ignored.id&quot;</span><br></pre></td></tr></table></figure></div>
+
+<p>为了避免以上情况，fastlane提供了for_lane和for_platform来解决多个配置的情况，所有的配置文件中都可使用</p>
+<ul>
+<li>for_lane：当调用的lane和指定的lane名称匹配时，会调用对应的block</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">locales [&#x27;en-US&#x27;, &#x27;fr-FR&#x27;, &#x27;ja-JP&#x27;]</span><br><span class="line"></span><br><span class="line">for_lane :screenshots_english_only do</span><br><span class="line">  locales [&#x27;en-US&#x27;]</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">for_lane :screenshots_french_only do</span><br><span class="line">  locales [&#x27;fr-FR&#x27;]</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>for_platform：根据当前的platform决定执行的block<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">app_identifier &quot;com.default.id&quot;</span><br><span class="line"></span><br><span class="line">for_lane :enterprise do</span><br><span class="line">  app_identifier &quot;com.forlane.enterprise&quot;</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">for_platform :mac do</span><br><span class="line">  app_identifier &quot;com.forplatform.mac&quot;</span><br><span class="line"></span><br><span class="line">  for_lane :release do</span><br><span class="line">    app_identifier &quot;com.forplatform.mac.forlane.release&quot;</span><br><span class="line">  end</span><br><span class="line">end</span><br><span class="line"></span><br></pre></td></tr></table></figure></div></li>
+</ul>
+<h1 id="Fastlane配置"><a href="#Fastlane配置" class="headerlink" title="Fastlane配置"></a>Fastlane配置</h1><p>Fastlane的配置主要分为三步：</p>
+<ul>
+<li>fastlane初始化</li>
+<li>创建.env配置全局变量，并修改Appfile</li>
+<li>fastfile完善打包逻辑</li>
+</ul>
+<p><strong>【第一步】fastlane的初始化配置</strong></p>
+<p>主要执行以下命令</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd [项目根目录,xcodeproj的同级目录]</span><br><span class="line">fastlane init</span><br></pre></td></tr></table></figure></div>
+
+<p>init操作主要完成以下操作：</p>
+<ul>
+<li><p>1、会要求输入开发者账户和密码，会存储在钥匙串中，后续使用无需再输入密码</p>
+</li>
+<li><p>2、会检测当前项目的App Identifier是否已经存在Developer中</p>
+</li>
+<li><p>3、会检测App是否已经在AppStore Connect中，如果都满足，过程是比较顺利的</p>
+</li>
+<li><p>4、会在项目工程的目录下生成一个fastlane文件夹，里面是Fastlane的一些配置文件。fastlane可以通过配置Appfile、Deliverfile、Fastfile 来完成各种工作。</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101548649.png"
+                     
+                ></p>
+<p>下面分别介绍下fastlane文件夹中常用的文件：</p>
+<ul>
+<li><p><a class="link"   target="_blank" rel="noopener" href="http://docs.fastlane.tools/advanced/Appfile/#appfile" >Appfile <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>：存放 App 的基本信息包括 App_Identifier 、AppID 、Team_ID 等。这个文件的参数是已经定义好的，新增并没有用</p>
+</li>
+<li><p><a class="link"   target="_blank" rel="noopener" href="http://docs.fastlane.tools/advanced/Fastfile/#fastfile" >Fastfile <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>：最核心的用来控制流程走向的配置文件，是最重要的一个文件，在这个文件里面可以编写和定制我们打包脚本的一个文件，所有自定义的功能都写在这里</p>
+</li>
+<li><p><a class="link"   target="_blank" rel="noopener" href="https://docs.fastlane.tools/actions/deliver/#editing-the-deliverfile" >Deliverfile <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>：可用于配置提交AppStore Connect的一些参数。（注：这个文件只有在选择由fastlane管理metadata为YES时，才会生成，如下所示）</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101550614.png"
+                     
+                ></p>
+<ul>
+<li>.env或.env.default：为了更灵活的使用Appfile的内容，可以使用.env文件来进行环境配置，新增其他的变量在fastfile中使用</li>
+</ul>
+<p>除此之外，还需要关注fastlane同级的Gemfile和Gemfile.lock文件:</p>
+<ul>
+<li><p>Gemfile：私用bundler来安装和引入该App所需的gem，类似于cocoapods中的podfile</p>
+</li>
+<li><p>Gemfile.lock：gem的版本控制文件，类似于cocoapods的podfile.lock文件</p>
+</li>
+</ul>
+<p><strong>【第二步】创建.env配置全局变量，并修改Appfile</strong></p>
+<blockquote>
+<p>注：因为是.env文件是.开头文件，默认是在finder中隐藏的，可以通过快捷键来显示隐藏文件：CMD + Shift + .</p>
+</blockquote>
+<p>为了更加灵活的使用Appfile的内容，可以引入.env文件来进行环境配置，具体的请参考<br><a class="link"   target="_blank" rel="noopener" href="https://docs.fastlane.tools/advanced/other/#environment-variables" >.env环境配置 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>文档。这样在执行命令时，可以在气候加上环境变量，以达到使用不同配置的目的。</p>
+<p>其命名规则为：.env.<environment>，例如：.env.development、.env.release。</p>
+<ul>
+<li>在命令中如下使用</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fastlane &lt;lane-name&gt; --env development</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>Appfile中使用.env，直接读取变量即可</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//.env内容</span><br><span class="line">WORKSPACE=YourApp.xcworkspace </span><br><span class="line">HOCKEYAPP_API_TOKEN=your-hockey-api-token</span><br><span class="line"></span><br><span class="line">//Fastfile中使用.env文件</span><br><span class="line">xcworkspace ENV[&#x27;WORKSPACE&#x27;]</span><br><span class="line">hockey-api-token ENV[&#x27;HOCKEYAPP_API_TOKEN&#x27;] </span><br></pre></td></tr></table></figure></div>
+
+<p><strong>【第三步】Fastfile完善打包逻辑</strong></p>
+<p>编辑fastlane的逻辑可参考fastlane自动部署iOS AppStore文档，构建步骤如下：</p>
+<ul>
+<li><p>更新pod，清理缓存</p>
+</li>
+<li><p>版本号修改</p>
+</li>
+<li><p>编译并打包</p>
+</li>
+<li><p>上传AppStore</p>
+</li>
+</ul>
+<p>以下是具体的编译、打包代码：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"># 因为fastlane存在新老版本兼容问题，所以一般会指定fastlane版本</span><br><span class="line">fastlane_version &quot;2.205.1&quot;</span><br><span class="line"># 设置默认的平台</span><br><span class="line">default_platform(:ios)</span><br><span class="line"></span><br><span class="line"># ======================== .env文件配置获取相关参数 ========================</span><br><span class="line"># 定义两个方便使用和修改的常量</span><br><span class="line">scheme = ENV[&#x27;Scheme&#x27;] #scheme名称</span><br><span class="line">xcodeproj = ENV[&#x27;Xcodeproj&#x27;] </span><br><span class="line">workspace = ENV[&#x27;Workspace&#x27;]</span><br><span class="line">info_plist = ENV[&#x27;Info_Plist&#x27;]</span><br><span class="line"></span><br><span class="line"># 定义指定平台的操作</span><br><span class="line">platform :ios do</span><br><span class="line"></span><br><span class="line">  # ======================== 执行lane前的操作 ========================</span><br><span class="line">  # 所有lane执行之前，可以做如执行cocoapods的pod install</span><br><span class="line">  before_all do |lane, options|</span><br><span class="line">    # 更新pod</span><br><span class="line">    cocoapods(use_bundle_exec: FALSE)</span><br><span class="line">    # 清理缓存</span><br><span class="line">    xcclean(scheme: scheme)</span><br><span class="line">  end</span><br><span class="line"></span><br><span class="line">  # 将正式应用打包并上传到App Store，release是自己取的名字，因为是发布正式版，所以取名叫 release</span><br><span class="line">  desc &quot;Push a new release build to the App Store&quot;</span><br><span class="line">  lane :release do</span><br><span class="line"></span><br><span class="line">    # 打包之前，先将build号递增</span><br><span class="line">    increment_build_number(xcodeproj: &quot;#&#123;xcodeproj&#125;&quot;)</span><br><span class="line"></span><br><span class="line">    # 对应用进行打包</span><br><span class="line">    build_app(</span><br><span class="line">      workspace: &quot;#&#123;workspace&#125;&quot;,</span><br><span class="line">      scheme: &quot;#&#123;scheme&#125;&quot;,</span><br><span class="line">      export_method: &quot;app-store&quot;,</span><br><span class="line">      clean: true,</span><br><span class="line">      xcargs: &quot;-allowProvisioningUpdates&quot;</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    # 将打包完的应用上传到AppStore</span><br><span class="line">    upload_to_app_store(</span><br><span class="line">      skip_metadata: true,</span><br><span class="line">      skip_screenshots: true</span><br><span class="line">    )</span><br><span class="line">  end</span><br><span class="line">  </span><br><span class="line">  # ======================== 执行lane成功后的操作 ========================</span><br><span class="line">  # 所有lane完成之后，可以使用参数lane来区分</span><br><span class="line">  after_all do |lane, options|</span><br><span class="line">    puts &quot;所有lane执行完毕&quot;</span><br><span class="line">  end</span><br><span class="line"></span><br><span class="line"># ======================== 执行lane失败后的操作 ========================</span><br><span class="line">  # 所有lane失败之后，可以使用参数lane来区分</span><br><span class="line">  error do |lane, options|</span><br><span class="line">    puts &quot;lane执行失败&quot;</span><br><span class="line">  end</span><br><span class="line">  </span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<p>到此，fastlane就配置完成了</p>
+<h1 id="Fastlane使用"><a href="#Fastlane使用" class="headerlink" title="Fastlane使用"></a>Fastlane使用</h1><ul>
+<li><p>跳转到项目的根目录：cd [项目根目录]</p>
+</li>
+<li><p>自动打包并上传到AppStore Connect，在终端执行lane：fastlane lanename</p>
+</li>
+</ul>
+<p>除了可以在本地终端执行，还可以在Jenkins构建打包服务，具体步骤参考文档：Jenkins集成fastlane</p>
+<p>最终，Fastlane整体流程汇总如下</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101553871.png"
+                     
+                ></p>
+<p>iOS中打包方式汇总如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101554272.png"
+                     
+                ></p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC底层原理43.3：自动化打包（三）Fastlane</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-05-09 16:06:17</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/05/09/OC底层原理/OC底层原理43.3：自动化打包（三）Fastlane/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">#OC-底层原理探索篇</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/05/09/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8644%EF%BC%9AInstruments%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89Instruments%E4%BB%8B%E7%BB%8D/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理43：Instruments系列（一）Instruments介绍</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/05/09/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8643.2%EF%BC%9A%E8%87%AA%E5%8A%A8%E5%8C%96%E6%89%93%E5%8C%85%EF%BC%88%E4%BA%8C%EF%BC%89Jenkins-GitLab%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%8C%96%E6%89%93%E5%8C%85/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理43.2：自动化打包（二）Jenkins + GitLab实现自动化打包</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC底层原理43.3：自动化打包（三）Fastlane</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fastlane%E5%AE%89%E8%A3%85"><span class="nav-text">Fastlane安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fastlane%E7%9B%B8%E5%85%B3block%E3%80%81lanes%E3%80%81actions"><span class="nav-text">Fastlane相关block、lanes、actions</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Blocks"><span class="nav-text">Blocks</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#before-all-amp-before-each"><span class="nav-text">before_all &amp; before_each</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#after-all-amp-after-each"><span class="nav-text">after_all &amp; after_each</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#error"><span class="nav-text">error</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Actions"><span class="nav-text">Actions</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lanes"><span class="nav-text">Lanes</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92"><span class="nav-text">命令行参数传递</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lane%E4%B9%8B%E9%97%B4%E7%9A%84%E8%B0%83%E7%94%A8"><span class="nav-text">lane之间的调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="nav-text">返回值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%81%9C%E6%AD%A2%E6%89%A7%E8%A1%8C%E4%B8%AD%E7%9A%84lane"><span class="nav-text">如何停止执行中的lane</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lane%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E9%80%9A%E4%BF%A1"><span class="nav-text">lane的上下文通信</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E8%AE%BF%E9%97%AElane%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="nav-text">如果访问lane的属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A7%81%E6%9C%89lane"><span class="nav-text">私有lane</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E5%A4%9A%E4%B8%AAlane%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-text">如何配置多个lane的环境变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fastlane%E9%85%8D%E7%BD%AE"><span class="nav-text">Fastlane配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fastlane%E4%BD%BF%E7%94%A8"><span class="nav-text">Fastlane使用</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

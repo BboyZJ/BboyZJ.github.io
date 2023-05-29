@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-30 11:28:10</span>
-            <span class="mobile">2023-03-30 11:28</span>
+            <span class="pc">2023-05-11 16:57:52</span>
+            <span class="mobile">2023-05-11 16:57</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -326,7 +326,172 @@
 
             <div class="article-content markdown-body">
                 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在开发中最常见的就是 <code>Crash</code>，导致 <code>Crash</code> 的原因有各种各样，本文主要介绍 <code>Crash</code>。</p>
-<h1 id="OC-层面的-Crash"><a href="#OC-层面的-Crash" class="headerlink" title="OC 层面的 Crash"></a>OC 层面的 Crash</h1><ol>
+<h1 id="Crash-的类型"><a href="#Crash-的类型" class="headerlink" title="Crash 的类型"></a>Crash 的类型</h1><p>根据Crash 的不同来源，Crash 分为以下三类：</p>
+<ul>
+<li>Mach 异常</li>
+</ul>
+<p>最底层的 <code>内核级异常</code>。用户态的开发者可以直接通过 <code>Mach API</code> 设置thread，task，host的异常端口，来捕获Mach异常。</p>
+<ul>
+<li>Unix 信号</li>
+</ul>
+<p>又称 <code>BSD</code> 信号，如果开发者 <code>没有捕获Mach异常</code>，则会被 <code>host层</code> 的方法 <code>ux_exception()</code> 将异常转换为对应的 <code>UNIX信号</code>，并通过方法 <code>threadsignal()</code> 将信号投递到出错线程。可以通过方法 <code>signal(x, SignalHandler)</code> 来捕获signal。</p>
+<ul>
+<li>NSException</li>
+</ul>
+<p><code>应用级异常</code>，它是未被捕获的 <code>Objective-C</code> 异常，导致程序向自身发送了 <code>SIGABRT</code> 信号而崩溃，是app自己可控的，对于未捕获的 Objective-C异常，是可以通过 <code>try catch</code> 来捕获的，或者通过 <code>NSSetUncaughtExceptionHandler()</code> 机制来捕获。</p>
+<h1 id="Mach相关知识"><a href="#Mach相关知识" class="headerlink" title="Mach相关知识"></a>Mach相关知识</h1><p>Mach内核作为系统一个底层的基础，仅与驱动操作系统所需的最低需要有关。 其他所有内容都由操作系统的更高层来实现，然后再利用Mach并以其认为合适的任何方式对其进行操作。</p>
+<p>Mach提供了一小部分内核抽象，这些内核抽象被设计为既简单又强大。与Mach异常相关的内核抽象有：</p>
+<ul>
+<li>tasks</li>
+</ul>
+<p>资源所有权单位； 每个任务由一个虚拟地址空间、一个端口权限名称空间和一个或多个线程组成。 （类似于进程）</p>
+<ul>
+<li>threads</li>
+</ul>
+<p>任务中CPU执行的单位。</p>
+<ul>
+<li>ports</li>
+</ul>
+<p>安全的单工通信通道，只能通过发送和接收功能（称为端口权限）进行访问。</p>
+<p>这些内核对象，对于Mach来说都是一个个的Object，这些Objects基于Mach实现自己的功能，并通过Mach Message来进行通信，Mach提供了相关的应用层的API来操作。与Mach异常相关的几个API有：</p>
+<ul>
+<li>task_get_exception_ports：获取task的异常端口</li>
+<li>task_set_exception_ports：设置task的异常端口</li>
+<li>mach_port_allocate：创建调用者指定的端口权限类型</li>
+<li>mach_port_insert_right：将指定的端口插入目标task</li>
+</ul>
+<h1 id="如何捕捉-Mach-异常"><a href="#如何捕捉-Mach-异常" class="headerlink" title="如何捕捉 Mach 异常"></a>如何捕捉 <code>Mach</code> 异常</h1><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305111637663.png"
+                     
+                ></p>
+<p>参考上图，主要的流程是：新建一个监控线程，在监控线程中监听 Mach 异常并处理异常信息。主要的步奏如下图：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305111637589.png"
+                     
+                ></p>
+<p>具体代码如下:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br></pre></td><td class="code"><pre><span class="line">static mach_port_t server_port;</span><br><span class="line">static void *exc_handler(void *ignored);</span><br><span class="line"></span><br><span class="line">//判断是否 Xcode 联调</span><br><span class="line">bool ksdebug_isBeingTraced(void)</span><br><span class="line">&#123;</span><br><span class="line">    struct kinfo_proc procInfo;</span><br><span class="line">    size_t structSize = sizeof(procInfo);</span><br><span class="line">    int mib[] = &#123;CTL_KERN, KERN_PROC, KERN_PROC_PID, getpid()&#125;;</span><br><span class="line">    </span><br><span class="line">    if(sysctl(mib, sizeof(mib)/sizeof(*mib), &amp;procInfo, &amp;structSize, NULL, 0) != 0)</span><br><span class="line">    &#123;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return (procInfo.kp_proc.p_flag &amp; P_TRACED) != 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#define EXC_UNIX_BAD_SYSCALL 0x10000 /* SIGSYS */</span><br><span class="line">#define EXC_UNIX_BAD_PIPE    0x10001 /* SIGPIPE */</span><br><span class="line">#define EXC_UNIX_ABORT       0x10002 /* SIGABRT */</span><br><span class="line">static int signalForMachException(exception_type_t exception, mach_exception_code_t code)</span><br><span class="line">&#123;</span><br><span class="line">    switch(exception)</span><br><span class="line">    &#123;</span><br><span class="line">        case EXC_ARITHMETIC:</span><br><span class="line">            return SIGFPE;</span><br><span class="line">        case EXC_BAD_ACCESS:</span><br><span class="line">            return code == KERN_INVALID_ADDRESS ? SIGSEGV : SIGBUS;</span><br><span class="line">        case EXC_BAD_INSTRUCTION:</span><br><span class="line">            return SIGILL;</span><br><span class="line">        case EXC_BREAKPOINT:</span><br><span class="line">            return SIGTRAP;</span><br><span class="line">        case EXC_EMULATION:</span><br><span class="line">            return SIGEMT;</span><br><span class="line">        case EXC_SOFTWARE:</span><br><span class="line">        &#123;</span><br><span class="line">            switch (code)</span><br><span class="line">            &#123;</span><br><span class="line">                case EXC_UNIX_BAD_SYSCALL:</span><br><span class="line">                    return SIGSYS;</span><br><span class="line">                case EXC_UNIX_BAD_PIPE:</span><br><span class="line">                    return SIGPIPE;</span><br><span class="line">                case EXC_UNIX_ABORT:</span><br><span class="line">                    return SIGABRT;</span><br><span class="line">                case EXC_SOFT_SIGNAL:</span><br><span class="line">                    return SIGKILL;</span><br><span class="line">            &#125;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static NSString *stringForMachException(exception_type_t exception) &#123;</span><br><span class="line">    switch(exception)</span><br><span class="line">    &#123;</span><br><span class="line">        case EXC_ARITHMETIC:</span><br><span class="line">            return @&quot;EXC_ARITHMETIC&quot;;</span><br><span class="line">        case EXC_BAD_ACCESS:</span><br><span class="line">            return @&quot;EXC_BAD_ACCESS&quot;;</span><br><span class="line">        case EXC_BAD_INSTRUCTION:</span><br><span class="line">            return @&quot;EXC_BAD_INSTRUCTION&quot;;</span><br><span class="line">        case EXC_BREAKPOINT:</span><br><span class="line">            return @&quot;EXC_BREAKPOINT&quot;;</span><br><span class="line">        case EXC_EMULATION:</span><br><span class="line">            return @&quot;EXC_EMULATION&quot;;</span><br><span class="line">        case EXC_SOFTWARE:</span><br><span class="line">        &#123;</span><br><span class="line">            return @&quot;EXC_SOFTWARE&quot;;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void installExceptionHandler() &#123;</span><br><span class="line">    if (ksdebug_isBeingTraced()) &#123;</span><br><span class="line">        // 当前正在调试状态, 不启动 mach 监听</span><br><span class="line">        return ;</span><br><span class="line">    &#125;</span><br><span class="line">    kern_return_t kr = mach_port_allocate(mach_task_self(), MACH_PORT_RIGHT_RECEIVE, &amp;server_port);</span><br><span class="line">    assert(kr == KERN_SUCCESS);</span><br><span class="line">    </span><br><span class="line">    kern_return_t rc = 0;</span><br><span class="line">    exception_mask_t excMask = EXC_MASK_BAD_ACCESS |</span><br><span class="line">    EXC_MASK_BAD_INSTRUCTION |</span><br><span class="line">    EXC_MASK_ARITHMETIC |</span><br><span class="line">    EXC_MASK_SOFTWARE |</span><br><span class="line">    EXC_MASK_BREAKPOINT;</span><br><span class="line">    </span><br><span class="line">    rc = mach_port_allocate(mach_task_self(), MACH_PORT_RIGHT_RECEIVE, &amp;server_port);</span><br><span class="line">    if (rc != KERN_SUCCESS) &#123;</span><br><span class="line">        fprintf(stderr, &quot;-------&gt;Fail to allocate exception port\\\\\\\\n&quot;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    rc = mach_port_insert_right(mach_task_self(), server_port, server_port, MACH_MSG_TYPE_MAKE_SEND);</span><br><span class="line">    if (rc != KERN_SUCCESS) &#123;</span><br><span class="line">        fprintf(stderr, &quot;--------&gt;Fail to insert right&quot;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    rc = thread_set_exception_ports(mach_thread_self(), excMask, server_port, EXCEPTION_DEFAULT, MACHINE_THREAD_STATE);</span><br><span class="line">    if (rc != KERN_SUCCESS) &#123;</span><br><span class="line">        fprintf(stderr, &quot;--------&gt;Fail to  set exception\\\\\\\\n&quot;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //建立监听线程</span><br><span class="line">    pthread_t thread;</span><br><span class="line">    pthread_create(&amp;thread, NULL, exc_handler, NULL);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static void *exc_handler(void *ignored) &#123;</span><br><span class="line">    // Exception handler – runs a message loop. Refactored into a standalone function</span><br><span class="line">    // so as to allow easy insertion into a thread (can be in same program or different)</span><br><span class="line">    mach_msg_return_t rc;</span><br><span class="line">    fprintf(stderr, &quot;Exc handler listening\\\\\\\\n&quot;);</span><br><span class="line">    // The exception message, straight from mach/exc.defs (following MIG processing) // copied here for ease of reference.</span><br><span class="line">    typedef struct &#123;</span><br><span class="line">        mach_msg_header_t Head;</span><br><span class="line">        /* start of the kernel processed data */</span><br><span class="line">        mach_msg_body_t msgh_body;</span><br><span class="line">        mach_msg_port_descriptor_t thread;</span><br><span class="line">        mach_msg_port_descriptor_t task;</span><br><span class="line">        /* end of the kernel processed data */</span><br><span class="line">        NDR_record_t NDR;</span><br><span class="line">        exception_type_t exception;</span><br><span class="line">        mach_msg_type_number_t codeCnt;</span><br><span class="line">        integer_t code[2];</span><br><span class="line">        int flavor;</span><br><span class="line">        mach_msg_type_number_t old_stateCnt;</span><br><span class="line">        natural_t old_state[144];</span><br><span class="line">    &#125; Request;</span><br><span class="line">    </span><br><span class="line">    Request exc;</span><br><span class="line"></span><br><span class="line">    struct rep_msg &#123;</span><br><span class="line">        mach_msg_header_t Head;</span><br><span class="line">        NDR_record_t NDR;</span><br><span class="line">        kern_return_t RetCode;</span><br><span class="line">    &#125; rep_msg;</span><br><span class="line">    </span><br><span class="line">    for(;;) &#123;</span><br><span class="line">        // Message Loop: Block indefinitely until we get a message, which has to be</span><br><span class="line">        // 这里会阻塞，直到接收到exception message，或者线程被中断。</span><br><span class="line">        // an exception message (nothing else arrives on an exception port)</span><br><span class="line">        rc = mach_msg( &amp;exc.Head,</span><br><span class="line">                      MACH_RCV_MSG|MACH_RCV_LARGE,</span><br><span class="line">                      0,</span><br><span class="line">                      sizeof(Request),</span><br><span class="line">                      server_port, // Remember this was global – that&#x27;s why.</span><br><span class="line">                      MACH_MSG_TIMEOUT_NONE,</span><br><span class="line">                      MACH_PORT_NULL);</span><br><span class="line">        </span><br><span class="line">        if(rc != MACH_MSG_SUCCESS) &#123;</span><br><span class="line">            /*... */</span><br><span class="line">            break ;</span><br><span class="line">        &#125;;</span><br><span class="line">        </span><br><span class="line">        //Mach Exception 类型</span><br><span class="line">        NSMutableString *crashInfo = [NSMutableString stringWithFormat:@&quot;mach exception:%@ %@\n\n&quot;,stringForMachException(exc.exception), stringForSignal(signalForMachException(exc.exception, exc.code[0]))];</span><br><span class="line">        </span><br><span class="line">        rep_msg.Head = exc.Head;</span><br><span class="line">        rep_msg.NDR = exc.NDR;</span><br><span class="line">        rep_msg.RetCode = KERN_FAILURE;</span><br><span class="line">        </span><br><span class="line">        kern_return_t result;</span><br><span class="line">        if (rc == MACH_MSG_SUCCESS) &#123;</span><br><span class="line">            result = mach_msg(&amp;rep_msg.Head,</span><br><span class="line">                              MACH_SEND_MSG,</span><br><span class="line">                              sizeof (rep_msg),</span><br><span class="line">                              0,</span><br><span class="line">                              MACH_PORT_NULL,</span><br><span class="line">                              MACH_MSG_TIMEOUT_NONE,</span><br><span class="line">                              MACH_PORT_NULL);</span><br><span class="line">        &#125;</span><br><span class="line">        //移除其他 Crash 监听, 防止死锁</span><br><span class="line">        NSSetUncaughtExceptionHandler(NULL);</span><br><span class="line">        signal(SIGHUP, SIG_DFL);</span><br><span class="line">        signal(SIGINT, SIG_DFL);</span><br><span class="line">        signal(SIGQUIT, SIG_DFL);</span><br><span class="line">        signal(SIGABRT, SIG_DFL);</span><br><span class="line">        signal(SIGILL, SIG_DFL);</span><br><span class="line">        signal(SIGSEGV, SIG_DFL);</span><br><span class="line">        signal(SIGFPE, SIG_DFL);</span><br><span class="line">        signal(SIGBUS, SIG_DFL);</span><br><span class="line">        signal(SIGPIPE, SIG_DFL);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return  NULL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>监听 Mach 异常需要注意:</p>
+<ul>
+<li>避免在 Xcode 联调时监听</li>
+</ul>
+<p>原因是我们监听了EXC_BREAKPOINT这类型的Exception，一旦启动 app 联调后，会立即触发EXC_BREAKPOINT。而这段代码处理完后，会进入下一个循环等待，可主线程这是还等着消息处理结果，这就造成等待死锁。</p>
+<p>关于代码中其他分析异常原因的代码，我会在下一篇讲获取堆栈的文章中详细解读。</p>
+<h1 id="Unix-信号-Signal"><a href="#Unix-信号-Signal" class="headerlink" title="Unix 信号(Signal)"></a>Unix 信号(Signal)</h1><p>Mach已经通过异常机制提供了底层的异常处理，但为了兼容更为流行的 <code>POSIX</code> 标准，BSD在Mach异常机制之上构建的 <code>UNIX信号处理机制</code>。异常信号首先被转换为Mach异常，如果没有被外界捕捉，则会被默认的异常处理 <code>ux_exception()</code> 转换为UNIX信号。</p>
+<h1 id="Unix-信号列表"><a href="#Unix-信号列表" class="headerlink" title="Unix 信号列表"></a>Unix 信号列表</h1><p><code>Unix Signal</code> 其实是由 <code>Mach port</code> 抛出的信号转化的，那么都有哪些信号呢？</p>
+<ul>
+<li>SIGHUP</li>
+</ul>
+<p>本信号在用户终端连接(正常或非正常)结束时发出, 通常是在终端的控制进程结束时, 通知同一session内的各个作业, 这时它们与控制终端不再关联。</p>
+<ul>
+<li>SIGINT</li>
+</ul>
+<p>程序终止(interrupt)信号, 在用户键入INTR字符(通常是Ctrl-C)时发出，用于通知前台进程组终止进程。</p>
+<ul>
+<li>SIGQUIT</li>
+</ul>
+<p>和SIGINT类似, 但由QUIT字符(通常是Ctrl-)来控制. 进程在因收到SIGQUIT退出时会产生core文件, 在这个意义上类似于一个程序错误信号。</p>
+<ul>
+<li>SIGABRT</li>
+</ul>
+<p>调用abort函数生成的信号。<br>SIGABRT is a BSD signal sent by an application to itself when an NSException or obj_exception_throw is not caught.</p>
+<ul>
+<li>SIGBUS</li>
+</ul>
+<p>非法地址, 包括内存地址对齐(alignment)出错。比如访问一个四个字长的整数, 但其地址不是4的倍数。它与SIGSEGV的区别在于后者是由于对合法存储地址的非法访问触发的(如访问不属于自己存储空间或只读存储空间)。</p>
+<ul>
+<li>SIGFPE</li>
+</ul>
+<p>在发生致命的算术运算错误时发出. 不仅包括浮点运算错误, 还包括溢出及除数为0等其它所有的算术的错误。</p>
+<ul>
+<li>SIGKILL</li>
+</ul>
+<p>用来立即结束程序的运行. 本信号不能被阻塞、处理和忽略。如果管理员发现某个进程终止不了，可尝试发送这个信号。</p>
+<ul>
+<li>SIGSEGV</li>
+</ul>
+<p>试图访问未分配给自己的内存, 或试图往没有写权限的内存地址写数据.</p>
+<ul>
+<li>SIGPIPE</li>
+</ul>
+<p>管道破裂。这个信号通常在进程间通信产生，比如采用FIFO(管道)通信的两个进程，读管道没打开或者意外终止就往管道写，写进程会收到SIGPIPE信号。</p>
+<ul>
+<li>SIGSYS</li>
+</ul>
+<p>非法的系统调用。</p>
+<ul>
+<li>SIGTRAP</li>
+</ul>
+<p>由断点指令或其它 trap 指令产生. 由d ebugger 使用。</p>
+<ul>
+<li>SIGILL</li>
+</ul>
+<p>执行了非法指令. 通常是因为可执行文件本身出现错误, 或者试图执行数据段. 堆栈溢出时也有可能产生这个信号。</p>
+<p>其他未列出的信号可以参照这篇文章:<a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42568866/article/details/89485722" >linux 各个SIG信号含义 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h1 id="如何捕捉-Unix-信号"><a href="#如何捕捉-Unix-信号" class="headerlink" title="如何捕捉 Unix 信号"></a>如何捕捉 Unix 信号</h1><p>一般来说我们需要捕捉以下信号:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">static const int g_fatalSignals[] =</span><br><span class="line">&#123;</span><br><span class="line">    SIGABRT,</span><br><span class="line">    SIGBUS,</span><br><span class="line">    SIGFPE,</span><br><span class="line">    SIGILL,</span><br><span class="line">    SIGPIPE,</span><br><span class="line">    SIGSEGV,</span><br><span class="line">    SIGSYS,</span><br><span class="line">    SIGTRAP,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<p>而要捕捉 <code>Unix</code> 信号，比 <code>Mach</code> 异常容易多了</p>
+<p>实战：</p>
+<p>AppDelegate.m中：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions &#123;</span><br><span class="line">    // Override point for customization after application launch.</span><br><span class="line">    InstallSignalHandler();//信号量截断</span><br><span class="line">    InstallUncaughtExceptionHandler();//系统异常捕获</span><br><span class="line">    return YES;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>SignalHandler.m的实现：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">void SignalExceptionHandler(int signal)&#123;</span><br><span class="line"></span><br><span class="line">    NSMutableString *mstr = [[NSMutableString alloc] init];</span><br><span class="line"></span><br><span class="line">    [mstr appendString:@&quot;Stack:\n&quot;];</span><br><span class="line"></span><br><span class="line">    void* callstack[128];</span><br><span class="line"></span><br><span class="line">    int i, frames = backtrace(callstack, 128);</span><br><span class="line"></span><br><span class="line">    char** strs = backtrace_symbols(callstack, frames);</span><br><span class="line"></span><br><span class="line">    for (i = 0; i</span><br><span class="line">        [mstr appendFormat:@&quot;%s\n&quot;, strs[i]];</span><br><span class="line">    &#125;</span><br><span class="line">    [SignalHandler saveCreash:mstr];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void InstallSignalHandler(void)&#123;</span><br><span class="line"></span><br><span class="line">    signal(SIGHUP, SignalExceptionHandler);</span><br><span class="line"></span><br><span class="line">    signal(SIGINT, SignalExceptionHandler);</span><br><span class="line"></span><br><span class="line">    signal(SIGQUIT, SignalExceptionHandler);</span><br><span class="line"></span><br><span class="line">    signal(SIGABRT, SignalExceptionHandler);</span><br><span class="line"></span><br><span class="line">    signal(SIGILL, SignalExceptionHandler);</span><br><span class="line"></span><br><span class="line">    signal(SIGSEGV, SignalExceptionHandler);</span><br><span class="line"></span><br><span class="line">    signal(SIGFPE, SignalExceptionHandler);</span><br><span class="line"></span><br><span class="line">    signal(SIGBUS, SignalExceptionHandler);</span><br><span class="line"></span><br><span class="line">    signal(SIGPIPE, SignalExceptionHandler);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>UncaughtExceptionHandler.m的实现：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">void HandleException(NSException *exception)&#123;</span><br><span class="line">    // 异常的堆栈信息</span><br><span class="line">    NSArray *stackArray = [exception callStackSymbols];</span><br><span class="line"></span><br><span class="line">    // 出现异常的原因</span><br><span class="line">    NSString *reason = [exception reason];</span><br><span class="line"></span><br><span class="line">    // 异常名称</span><br><span class="line">    NSString *name = [exception name];</span><br><span class="line">    NSString *exceptionInfo = [NSString stringWithFormat:@&quot;Exception reason：%@\nException name：%@\nException stack：%@&quot;,name, reason, stackArray];</span><br><span class="line">    NSLog(@&quot;%@&quot;, exceptionInfo);</span><br><span class="line">    [UncaughtExceptionHandler saveCreash:exceptionInfo];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void InstallUncaughtExceptionHandler(void)&#123;</span><br><span class="line">    NSSetUncaughtExceptionHandler(&amp;HandleException);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<h1 id="NSException"><a href="#NSException" class="headerlink" title="NSException"></a>NSException</h1><p><code>NSException</code> 是应用级异常，是指 <code>OC</code> 代码运行过程由 <code>Objective-C</code> 抛出的异常，基本上是代码运行过程中的逻辑错误。比如往 <code>NSArray</code> 中插入 <code>nil</code> 对象，或者用 <code>nil</code> 初始化 <code>NSURL</code> 等。最简单区分一个异常是否 <code>NSException</code> 的方式是看这个异常能否被 <code>@try catch finally</code> 给捕获。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@try &#123;</span><br><span class="line">    // 可能会出现崩溃的代码</span><br><span class="line">&#125;</span><br><span class="line">@catch (NSException *exception) &#123;</span><br><span class="line">    // 捕获到的异常exception</span><br><span class="line">    NSLog(@&quot;捕获到的错误：%@&quot;, exception);</span><br><span class="line">&#125;</span><br><span class="line">@finally &#123;</span><br><span class="line">    // 结果处理</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="常见的-NSException-场景"><a href="#常见的-NSException-场景" class="headerlink" title="常见的 NSException 场景"></a>常见的 NSException 场景</h1><ul>
+<li><p>非主线程刷新UI</p>
+</li>
+<li><p>NSInvalidArgumentException</p>
+</li>
+</ul>
+<p>非法参数异常(NSInvalidArgumentException)是 <code>Objective – C</code> 代码最常出现的错误，所以平时在写代码的时候，需要多加注意，加强对参数的检查，避免 <code>传入非法参数</code> 导致异常，其中尤以nil参数为甚。</p>
+<ul>
+<li>NSRangeException</li>
+</ul>
+<p>越界异常(NSRangeException)也是比较常出现的异常。</p>
+<ul>
+<li>NSGenericException</li>
+</ul>
+<p><code>NSGenericException</code> 这个异常最容易出现在foreach操作中，在 <code>for in</code> 循环中如果修改所遍历的数组，无论你是add或remove，都会出错 “for in”,它的内部遍历使用了类似 Iterator进行迭代遍历，一旦元素变动，之前的元素全部被失效，所以在foreach的循环当中，最好不要去进行元素的修改动作，若需要修改，循环改为for遍历，由于内部机制不同，不会产生修改后结果失效的问题。</p>
+<ul>
+<li>NSInternalInconsistencyException</li>
+</ul>
+<p>不一致导致出现的异常</p>
+<p>比如 <code>NSDictionary</code> 当做 <code>NSMutableDictionary</code> 来使用，从他们内部的机理来说，就会产生一些错误:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NSMutableDictionary *info = method return to NSDictionary type;</span><br><span class="line">[info setObject:@“sxm” forKey:@”name”];</span><br></pre></td></tr></table></figure></div>
+
+<p>比如xib界面使用或者约束设置不当</p>
+<ul>
+<li>NSFileHandleOperationException</li>
+</ul>
+<p>处理文件时的一些异常，最常见的还是存储空间不足的问题，比如应用频繁的保存文档，缓存资料或者处理比较大的数据:<br>所以在文件处理里，需要考虑到手机存储空间的问题。</p>
+<ul>
+<li>NSMallocException</li>
+</ul>
+<p>这也是内存不足的问题，无法分配足够的内存空间<br>此外还有</p>
+<ul>
+<li>KVO Crash</li>
+</ul>
+<p>移除未注册的观察者<br>重复移除观察者<br>添加了观察者但是没有实现-observeValueForKeyPath:ofObject:change:context:方法<br>添加移除keypath&#x3D;nil<br>添加移除observer&#x3D;nil</p>
+<ul>
+<li>unrecognized selector send to instance</li>
+</ul>
+<h1 id="监听-NSException-异常"><a href="#监听-NSException-异常" class="headerlink" title="监听 NSException 异常"></a>监听 NSException 异常</h1><p>NSException的监听也十分简单:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void InstallUncaughtExceptionHandler(void) &#123;</span><br><span class="line">    NSSetUncaughtExceptionHandler( &amp;handleUncaughtException );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void handleUncaughtException(NSException *exception) &#123;</span><br><span class="line">    NSString * crashInfo = [NSString stringWithFormat:@&quot;yyyy Exception name：%@\nException reason：%@\nException stack：%@&quot;,[exception name], [exception reason], [exception callStackSymbols]];</span><br><span class="line">    NSLog(@&quot;%@&quot;, crashInfo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>需要注意的是，在监听处理的方法中，是无法直接采集错误到堆栈的。详情我同样会在下一篇的崩溃堆栈收集的文章中介绍。</p>
+<h1 id="项目中：应用层面的-Crash"><a href="#项目中：应用层面的-Crash" class="headerlink" title="项目中：应用层面的 Crash"></a>项目中：应用层面的 Crash</h1><ol>
 <li>NSInvalidArgumentException：非法参数</li>
 </ol>
 <ul>
@@ -394,7 +559,7 @@
 <li><p>解决方案：主线程更新UI</p>
 </li>
 </ul>
-<h1 id="Signal-层面的crash"><a href="#Signal-层面的crash" class="headerlink" title="Signal 层面的crash"></a>Signal 层面的crash</h1><p>除了 <code>OC</code> 层面的 <code>crash</code> 之外，还有 内存错误、访问不存在的内存地址等产生的 <code>crash</code>，则需要利用 <code>unix</code> 标准的 <code>signal</code> 机制，注册 <code>SIGABRT、SIGBUS、SIGSEGV</code> 等信号发生时的处理函数。</p>
+<h1 id="项目中：Signal-层面的crash"><a href="#项目中：Signal-层面的crash" class="headerlink" title="项目中：Signal 层面的crash"></a>项目中：Signal 层面的crash</h1><p>除了 <code>OC</code> 层面的 <code>crash</code> 之外，还有 <code>内存错误、访问不存在的内存地址等</code> 产生的 <code>crash</code>，则需要利用 <code>unix</code> 标准的 <code>signal</code> 机制，注册 <code>SIGABRT、SIGBUS、SIGSEGV</code> 等信号发生时的处理函数。</p>
 <ul>
 <li>SIGKILL：用来立即结束程序的运行的信号。</li>
 <li>SIGSEGV：试图访问未分配给自己的内存, 或试图往没有写权限的内存地址写数据。</li>
@@ -410,6 +575,8 @@
 <li><p>NSSetUncaughtExceptionHandler：iOS SDK 中提供了一个现成的函数</p>
 </li>
 </ol>
+<h1 id="什么是符号表"><a href="#什么是符号表" class="headerlink" title="什么是符号表"></a>什么是符号表</h1><p><code>Xcode</code> 对 <code>target</code> 进行 <code>编译、归档</code>，生成 <code>.xcarchive</code> 文件，这个 <code>.xcarchive</code> 文件包含了 <code>应用、符号表信息以及其他的资源</code>，而 <code>符号表.dSYM</code> 文件就是 <code>符号表</code>，其包含了 <code>一个16进制保存的函数地址映射信息（包括文件名、函数名、行号等）</code>，所以称之为 <code>调试符号信息文件</code></p>
+<h1 id="符号表有什么作用？"><a href="#符号表有什么作用？" class="headerlink" title="符号表有什么作用？"></a>符号表有什么作用？</h1><p><code>符号表</code> 就是用来 <code>符号化 crash log（崩溃日志）</code>，通过 <code>符号化</code> 能够 <code>还原</code> 符号表中的 <code>crash</code> 堆栈信息，最直观的体现就是能够看到 <code>方法名</code>。</p>
 
             </div>
 
@@ -450,13 +617,13 @@
                         <div class="article-prev">
                             <a class="prev"
                             rel="prev"
-                            href="/BboyZJ.github.io/2023/03/09/Swift/Swift%E5%AD%A6%E4%B9%A005%EF%BC%9Aswift%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8/"
+                            href="/BboyZJ.github.io/2023/03/09/OC%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%9603.1%EF%BC%9Abugly%E6%90%9C%E9%9B%86Crash/"
                             >
                                 <span class="left arrow-icon flex-center">
                                     <i class="fa-solid fa-chevron-left"></i>
                                 </span>
                                 <span class="title flex-center">
-                                    <span class="post-nav-title-item">Swift学习05：swift中方法的调用</span>
+                                    <span class="post-nav-title-item">性能优化03.1：bugly搜集Crash</span>
                                     <span class="post-nav-item">Prev posts</span>
                                 </span>
                             </a>
@@ -466,10 +633,10 @@
                         <div class="article-next">
                             <a class="next"
                             rel="next"
-                            href="/BboyZJ.github.io/2023/03/09/OC%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%9603.1%EF%BC%9Abugly%E6%90%9C%E9%9B%86Crash/"
+                            href="/BboyZJ.github.io/2023/03/09/OC/OC%E5%AD%A6%E4%B9%A013%EF%BC%9A%E4%B8%8A%E4%BC%A0App-Store%E6%89%80%E9%9C%80%E5%90%84%E5%9B%BE%E6%A0%87%E5%92%8C%E5%9B%BE%E7%89%87%E5%B0%BA%E5%AF%B8/"
                             >
                                 <span class="title flex-center">
-                                    <span class="post-nav-title-item">性能优化03.1：bugly搜集Crash</span>
+                                    <span class="post-nav-title-item">OC学习13：上传App Store所需各图标和图片尺寸</span>
                                     <span class="post-nav-item">Next posts</span>
                                 </span>
                                 <span class="right arrow-icon flex-center">
@@ -491,7 +658,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">性能优化03：Crash</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OC-%E5%B1%82%E9%9D%A2%E7%9A%84-Crash"><span class="nav-text">OC 层面的 Crash</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Signal-%E5%B1%82%E9%9D%A2%E7%9A%84crash"><span class="nav-text">Signal 层面的crash</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A3%80%E6%B5%8B%E6%96%B9%E5%BC%8F"><span class="nav-text">检测方式</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Crash-%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">Crash 的类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mach%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="nav-text">Mach相关知识</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%8D%95%E6%8D%89-Mach-%E5%BC%82%E5%B8%B8"><span class="nav-text">如何捕捉 Mach 异常</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Unix-%E4%BF%A1%E5%8F%B7-Signal"><span class="nav-text">Unix 信号(Signal)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Unix-%E4%BF%A1%E5%8F%B7%E5%88%97%E8%A1%A8"><span class="nav-text">Unix 信号列表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%8D%95%E6%8D%89-Unix-%E4%BF%A1%E5%8F%B7"><span class="nav-text">如何捕捉 Unix 信号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSException"><span class="nav-text">NSException</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84-NSException-%E5%9C%BA%E6%99%AF"><span class="nav-text">常见的 NSException 场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%91%E5%90%AC-NSException-%E5%BC%82%E5%B8%B8"><span class="nav-text">监听 NSException 异常</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%AD%EF%BC%9A%E5%BA%94%E7%94%A8%E5%B1%82%E9%9D%A2%E7%9A%84-Crash"><span class="nav-text">项目中：应用层面的 Crash</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%AD%EF%BC%9ASignal-%E5%B1%82%E9%9D%A2%E7%9A%84crash"><span class="nav-text">项目中：Signal 层面的crash</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A3%80%E6%B5%8B%E6%96%B9%E5%BC%8F"><span class="nav-text">检测方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%AC%A6%E5%8F%B7%E8%A1%A8"><span class="nav-text">什么是符号表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E8%A1%A8%E6%9C%89%E4%BB%80%E4%B9%88%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">符号表有什么作用？</span></a></li></ol>
 
     </div>
 </div>

@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/05/09/oc底层原理/oc底层原理43.2：自动化打包（二）jenkins-gitlab实现自动化打包/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC底层原理43.2：自动化打包（二）Jenkins + GitLab实现自动化打包">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/05/09/OC底层原理/OC底层原理43.2：自动化打包（二）Jenkins-GitLab实现自动化打包/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC底层原理43.2：自动化打包（二）Jenkins + GitLab实现自动化打包">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC底层原理43.2：自动化打包（二）Jenkins + GitLab实现自动化打包 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC底层原理43.2：自动化打包（二）Jenkins + GitLab实现自动化打包</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-05-09 16:05:56</span>
+        <span class="mobile">2023-05-09 16:05</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-05-10 15:24:20</span>
+            <span class="mobile">2023-05-10 15:24</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>一般大型的公司都有部署好的Jenkins环境，所以这里不再赘述Jenkins的搭建环境过程，对于Jenkins不了解的童鞋可以自行google下。</p>
+<p>Jenkins作为可扩展的自动化服务器，可用作简单的持续集成(CI，Continuous Integration)服务器，或是持续交付(CD，Continuous Deployment)中心。其特点如下：</p>
+<ul>
+<li><p><code>即时性</code>。Jenkins是一个基于Java运行的程序，可立即运行，包含Windows、MacOSX、Linux等。</p>
+</li>
+<li><p>配置简单。可以通过网页轻松配置</p>
+</li>
+<li><p>插件丰富。目前有1000多插件</p>
+</li>
+<li><p>扩展性强，Jenkins可以通过插件架构进行扩展，从而为Jenkins提供了无限可能</p>
+</li>
+<li><p>分布式部署，可以在多态机器上分配工作，帮助开发者快速构建、测试等</p>
+</li>
+</ul>
+<p>所以，对于开发者来说，Jenkins可以简单的通过配置git源和xcode插件配置打包项，就可以实现服务器自动打包了。</p>
+<p>Jenkins实现自动打包的方式主要有两种：</p>
+<ul>
+<li><p>无Jenkins服务器： 搭建Jenkins服务器 + 配置环境 + 自动打包配置</p>
+</li>
+<li><p>有Jenkins服务器： 创建Mac从节点 + 配置环境 + 自动打包配置</p>
+</li>
+</ul>
+<blockquote>
+<p>备注：以下配置的前提都是基于已部署好的Jenkins服务器进行的。</p>
+</blockquote>
+<h1 id="Jenkins环境配置"><a href="#Jenkins环境配置" class="headerlink" title="Jenkins环境配置"></a>Jenkins环境配置</h1><p>全局的配置主要是配置打包所需的证书和签名。使用管理员账户登录Jenkins，安装以下插件：</p>
+<ul>
+<li><p><a class="link"   target="_blank" rel="noopener" href="https://plugins.jenkins.io/credentials/" >Credentials Plugin（权限管理） <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+</li>
+<li><p><a class="link"   target="_blank" rel="noopener" href="https://plugins.jenkins.io/kpp-management-plugin/" >Keychains and Provisioning Profiles Management（管理发布证书+签名） <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<ul>
+<li>发布证书文件路径：&#x2F;Users&#x2F;用户名&#x2F;Library&#x2F;Keychains&#x2F;login.keychain-db</li>
+<li>签名文件夹路径：&#x2F;Users&#x2F;用户名&#x2F;Library&#x2F;MobileDevice&#x2F;Provisioning Profiles</li>
+</ul>
+</li>
+</ul>
+<h1 id="上传证书"><a href="#上传证书" class="headerlink" title="上传证书"></a>上传证书</h1><ul>
+<li><p>1、将发布证书+签名相关文件夹拷贝至桌面，并将 <code>login.keychain-db</code> 改为 <code>login.keychain</code></p>
+</li>
+<li><p>2、manage jenkins -&gt; Keychains and Provisioning Profiles Management -&gt; 选择login文件并upload</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101506330.png"
+                     
+                ></p>
+<ul>
+<li>3、填写正确的code signing，如下所示，红框中的内容就是code signing的值</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101506403.png"
+                     
+                ></p>
+<p>最终效果如下:</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101507220.png"
+                     
+                ></p>
+<h1 id="上传签名"><a href="#上传签名" class="headerlink" title="上传签名"></a>上传签名</h1><ul>
+<li><p>1、填写 <code>Provisioning Profiles</code> 文件的具体路径，格式为：&#x2F;Users&#x2F;管理员用户名&#x2F;Library&#x2F;MobileDevice&#x2F;Provisioning Profiles</p>
+</li>
+<li><p>2、拷贝具体的签名，并upload，最终效果如下所示</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101508071.png"
+                     
+                ></p>
+<h1 id="Mac从节点创建"><a href="#Mac从节点创建" class="headerlink" title="Mac从节点创建"></a>Mac从节点创建</h1><blockquote>
+<p>【前提】：Jenkins的master是Linux系统，首先尝试在Linux打包，但是结果不尽人意，主要有以下问题:<br>1、pod 命令找不到，使用npm，但是npm命令不会生成 <code>.xcworkspace</code> 文件<br>2、<code>.xcodebuild</code> 命令找不到，有文档提示使用Facebook提供的xcbuild，但是仍然报错</p>
+</blockquote>
+<blockquote>
+<p>【结论】<br>iOS在Linux打包比较复杂，需要找到pod、xcode命令相关的替代命令，以及其他未发现的坑。<br>所以为了更好的将自动化应用起来，采用了jenkins配置MaxOSX从节点，用于解决pod、xcode命令找不到的问题。</p>
+</blockquote>
+<p>创建Mac从节点的步骤如下：</p>
+<ul>
+<li>1、开启要绑定的MacOSX系统的电脑的远程登录：<code>系统偏好设置☞共享☞勾选☞远程登录</code>。用于获取远程登录的用户名 + IP</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101510255.png"
+                     
+                ></p>
+<ul>
+<li>在 <code>MacOSX</code> 的user文件中创建 <code>Jenkins</code> 文件夹：<code>/User/Shared/Jenkins</code>，需要开放读写权限</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101510195.png"
+                     
+                ></p>
+<p>3、管理员账户登录jenkins，创建从节点：Manage Jenkins ☞ Manage Node and Clouds ☞ New Node</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101515082.png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101515171.png"
+                     
+                ></p>
+<ul>
+<li>4、配置节点：需要提前安装配置Slave节点的插件：<a class="link"   target="_blank" rel="noopener" href="https://plugins.jenkins.io/ssh-slaves/" >SSH Slaves plugin <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101516484.png"
+                     
+                ></p>
+<p>其中Credentials的配置如下所示：add -&gt; Jenkins -&gt; 选择Username with password</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101517457.png"
+                     
+                ></p>
+<ul>
+<li>5、到此为止，节点创建完成了，会自动连接：MacOSX -&gt; log查看连接日志，以便及时排查问题</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101517647.png"
+                     
+                ></p>
+<h1 id="创建iOS项目"><a href="#创建iOS项目" class="headerlink" title="创建iOS项目"></a>创建iOS项目</h1><p>1、新建项目：New Item，填写项目名称，选择项目风格</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101517792.png"
+                     
+                ></p>
+<p>通用配置</p>
+<p>2、【特别提醒！！！】在项目时，需要配置运行的节点：项目 -&gt; configure -&gt; General</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101518219.png"
+                     
+                ></p>
+<p>源码配置</p>
+<ul>
+<li>3、配置源码 - Source Code Management</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101518947.png"
+                     
+                ></p>
+<p>说明：</p>
+<ul>
+<li>git源码链接：最好是SSH的链接，不要https的</li>
+<li>配置源码的分支，一般是master</li>
+<li>redential：Add - Jenkins - SSH Username with private key，粘贴SSH</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101519581.png"
+                     
+                ></p>
+<p>Item环境配置</p>
+<p>4、配置编译环境 - Build Environment<br>配置keychain，选择对应的code signing（注：创建项目后，需要点击Apply，可能才会显示配置好的证书签名）</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101519593.png"
+                     
+                ></p>
+<p>自动打包脚本配置<br>构建打包shell脚本，主要分为两部分:</p>
+<ul>
+<li>git clone源码 + pod install</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"># 使用方法</span><br><span class="line"># 1、替换自己项目：项目文件夹名（同git名一致）、git地址</span><br><span class="line"># 2、</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 使用cocoapods需要加入这句</span><br><span class="line">#!/bin/bash -l </span><br><span class="line">export LANG=en_US.UTF-8</span><br><span class="line">export LANGUAGE=en_US.UTF-8</span><br><span class="line">export LC_ALL=en_US.UTF-8</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 项目的参数 build：表示是否进行编译</span><br><span class="line">if [ $build == false ]; then</span><br><span class="line">  exit</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">if [ -d &quot;xxxxx&quot; ]; then</span><br><span class="line">    echo &#x27;----------已有项目----------&#x27;</span><br><span class="line">else</span><br><span class="line">    echo &#x27;----------下载项目----------&#x27;</span><br><span class="line">    # 需要替换成自己项目的地址</span><br><span class="line">    git clone git@xxxxx.git  </span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"># 进入项目文件夹</span><br><span class="line">cd xxxxx</span><br><span class="line">echo &#x27;pod install路径--&#x27;$&#123;workdir&#125;</span><br><span class="line"># 切换分支</span><br><span class="line">git checkout dev</span><br><span class="line"># 拉取最新代码 git pull origin 【远程分支名】:【本地分支名】</span><br><span class="line">git pull origin dev:dev</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 更新pod</span><br><span class="line"># 跳转至podfile所在目录</span><br><span class="line">cd xxxxx</span><br><span class="line">cur_dir=$(pwd)</span><br><span class="line">echo &#x27;-----------install路径--&#x27;$&#123;cur_dir&#125;</span><br><span class="line">echo &#x27;---------------------------------------&#x27;</span><br><span class="line">pod install</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>打ipa包 + 上传AppStore</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br></pre></td><td class="code"><pre><span class="line">#项目名</span><br><span class="line">PROJECT_NAME=&#x27;xxxxx&#x27;</span><br><span class="line"></span><br><span class="line">#App名称</span><br><span class="line">APP_NAME=&#x27;xxxxx&#x27;</span><br><span class="line"></span><br><span class="line">#scheme名称</span><br><span class="line">SCHEME_NAME=&#x27;xxxxx&#x27;</span><br><span class="line"></span><br><span class="line">#打包模式</span><br><span class="line">CONFIGURATION=release</span><br><span class="line"></span><br><span class="line">#  下面两个参数只是在手动指定Pofile文件的时候用到，如果使用Xcode自动管理Profile,直接留空就好</span><br><span class="line"># (跟method对应的)mobileprovision文件名，需要先双击安装.mobileprovision文件.手动管理Profile时必填</span><br><span class="line">mobileprovision_name=&quot;&quot;</span><br><span class="line"></span><br><span class="line"># 项目的bundleID，手动管理Profile时必填</span><br><span class="line">bundle_identifier=&quot;&quot;</span><br><span class="line"></span><br><span class="line">echo &quot;--------------------脚本配置参数检查--------------------&quot;</span><br><span class="line">echo &quot;PROJECT_NAME = $&#123;PROJECT_NAME&#125;&quot;</span><br><span class="line">echo &quot;APP_NAME = $&#123;APP_NAME&#125;&quot;</span><br><span class="line">echo &quot;SCHEME_NAME = $&#123;SCHEME_NAME&#125;&quot;</span><br><span class="line">echo &quot;CONFIGURATION = $&#123;CONFIGURATION&#125;&quot;</span><br><span class="line">echo &quot;mobileprovision_name = $&#123;mobileprovision_name&#125;&quot;</span><br><span class="line">echo &quot;bundle_identifier = $&#123;bundle_identifier&#125;&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 指定输出导出文件夹路径，version是项目配置的参数，每次可手动输入</span><br><span class="line">export_path=$&#123;cur_dir&#125;/build-$&#123;version&#125;</span><br><span class="line">#archive文件存放路径</span><br><span class="line">ARCHIVE_PATH=$export_path/$SCHEME_NAME.xcarchive</span><br><span class="line"></span><br><span class="line">#ipa文件存放路径</span><br><span class="line">IPA_PATH=$&#123;export_path&#125;/</span><br><span class="line"></span><br><span class="line">#plist 文件路径：导出ipa所需的文件</span><br><span class="line">EXPORT_OPTIONS_PLIST_PATH=$&#123;cur_dir&#125;/ExportOptions.plist</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">echo &quot;--------------------脚本固定路径检查--------------------&quot;</span><br><span class="line">echo &quot;export_path = $&#123;export_path&#125;&quot;</span><br><span class="line">echo &quot;ARCHIVE_PATH = $&#123;ARCHIVE_PATH&#125;&quot;</span><br><span class="line">echo &quot;IPA_PATH = $&#123;IPA_PATH&#125;&quot;</span><br><span class="line">echo &quot;EXPORT_OPTIONS_PLIST_PATH = $&#123;EXPORT_OPTIONS_PLIST_PATH&#125;&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 先删除export_path文件</span><br><span class="line">if [ -f &quot;$export_path&quot; ] ; then</span><br><span class="line">    echo &quot;$&#123;export_path&#125;文件存在，进行删除&quot;</span><br><span class="line">    rm -f $export_path</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#清理工程</span><br><span class="line">echo &quot;--------------------正在清理工程--------------------&quot;</span><br><span class="line">xcodebuild clean -workspace $&#123;PROJECT_NAME&#125;.xcworkspace -scheme $&#123;SCHEME_NAME&#125;</span><br><span class="line"></span><br><span class="line">echo &quot;--------------------清理完成 🎉 🎉 🎉--------------------&quot;</span><br><span class="line"></span><br><span class="line">security unlock-keychain -p &quot;1109221208l&quot; ~/Library/Keychains/login.keychain</span><br><span class="line"></span><br><span class="line">#生成archive文件</span><br><span class="line">echo &quot;--------------------正在生成 .xcarchive 文件--------------------&quot;</span><br><span class="line">xcodebuild \</span><br><span class="line">-workspace $&#123;PROJECT_NAME&#125;.xcworkspace \</span><br><span class="line">-scheme $&#123;SCHEME_NAME&#125; \</span><br><span class="line">-configuration $&#123;CONFIGURATION&#125; \</span><br><span class="line">-archivePath $&#123;ARCHIVE_PATH&#125; \</span><br><span class="line">archive</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#  检查是否构建成功</span><br><span class="line">#  xcarchive 实际是一个文件夹不是一个文件所以使用 -d 判断</span><br><span class="line">if [ -d &quot;$ARCHIVE_PATH&quot; ] ; then</span><br><span class="line">    echo &quot; 项目构建成功 🚀 🚀 🚀  &quot;</span><br><span class="line">else</span><br><span class="line">    echo &quot; 项目构建失败 😢 😢 😢  &quot;</span><br><span class="line">    exit 1</span><br><span class="line">fi</span><br><span class="line">echo &quot;------------------------------------------------------&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#打ipa包</span><br><span class="line">echo &quot;--------------------正在导出 .ipa 文件--------------------&quot;</span><br><span class="line">echo &#x27;正在 导出 .ipa 文件&#x27;</span><br><span class="line">xcodebuild  -exportArchive \</span><br><span class="line">            -archivePath $&#123;ARCHIVE_PATH&#125; \</span><br><span class="line">            -exportPath $&#123;IPA_PATH&#125; \</span><br><span class="line">            -exportOptionsPlist $&#123;EXPORT_OPTIONS_PLIST_PATH&#125; \</span><br><span class="line">            -allowProvisioningUpdates</span><br><span class="line">       </span><br><span class="line"># 检查文件是否存在</span><br><span class="line">if [ -f &quot;$IPA_PATH/$SCHEME_NAME.ipa&quot; ] ; then</span><br><span class="line">    echo &quot; 导出 $&#123;SCHEME_NAME&#125;.ipa 包成功 🎉  🎉  🎉   &quot;</span><br><span class="line">    echo &quot; ipa包路径：$export_path &quot;</span><br><span class="line">else</span><br><span class="line">    echo &quot; 导出 $&#123;SCHEME_NAME&#125;.ipa 包失败 😢 😢 😢     &quot;</span><br><span class="line">    exit 1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"># 输出打包总用时</span><br><span class="line">echo &quot;使用Jenkins打包总用时: $&#123;SECONDS&#125;s &quot;</span><br><span class="line">echo &quot;------------------------------------------------------&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 将包上传AppStore  </span><br><span class="line">cd build-$&#123;version&#125;</span><br><span class="line">ipa_path=&quot;$SCHEME_NAME.ipa&quot;</span><br><span class="line"># 上传AppStore的密钥ID、Issuer ID</span><br><span class="line">api_key=&quot;FFX6T2CD4W&quot;</span><br><span class="line">issuer_id=&quot;69a6de70-bd1a-47e3-e053-5b8c7c11a4d1&quot;</span><br><span class="line"></span><br><span class="line">echo &quot;--------------------AppStore上传固定参数检查--------------------&quot;</span><br><span class="line">echo &quot;ipa_path = $&#123;ipa_path&#125;&quot;</span><br><span class="line">echo &quot;api_key = $&#123;api_key&#125;&quot;</span><br><span class="line">echo &quot;issuer_id = $&#123;issuer_id&#125;&quot;</span><br><span class="line"></span><br><span class="line"># 项目的参数 upload：表示是否上传AppStore</span><br><span class="line">if [ $upload == false ]; then</span><br><span class="line">  echo &quot;-------未选择上传AppStore--------&quot;</span><br><span class="line">else</span><br><span class="line"></span><br><span class="line">    echo &quot;------------------------------------------------------&quot;</span><br><span class="line">    echo &quot;-------准备上传AppStore--------&quot;</span><br><span class="line">    </span><br><span class="line">    # 验证</span><br><span class="line">    validate=&quot;xcrun altool --validate-app -f $&#123;ipa_path&#125; -t ios --apiKey $&#123;api_key&#125; --apiIssuer $&#123;issuer_id&#125; --verbose&quot;</span><br><span class="line">    echo &quot;running validate cmd&quot; $validate</span><br><span class="line">    uvalidateApp=&quot;$($validate)&quot;</span><br><span class="line">    if [ -z &quot;$uvalidateApp&quot; ]; then</span><br><span class="line">        echo &quot; 校验IPA失败😢 😢 😢   &quot;</span><br><span class="line">        echo &quot;------------------------------------------------------&quot;</span><br><span class="line">    else</span><br><span class="line">        echo &quot; 校验IPA成功🎉  🎉  🎉  &quot;</span><br><span class="line">        echo &quot;------------------------------------------------------&quot;</span><br><span class="line">        </span><br><span class="line">        # 上传</span><br><span class="line">        upload=&quot;xcrun altool --upload-app -f $&#123;ipa_path&#125; -t ios --apiKey $&#123;api_key&#125; --apiIssuer $&#123;issuer_id&#125; --verbose&quot;</span><br><span class="line">        echo &quot;running upload cmd&quot; $upload</span><br><span class="line">        uploadApp=&quot;$($upload)&quot;</span><br><span class="line">        echo uploadApp</span><br><span class="line">        if [ -z &quot;$uploadApp&quot; ]; then</span><br><span class="line">            echo &quot; 传IPA失败😢 😢 😢   &quot;</span><br><span class="line">            echo &quot;------------------------------------------------------&quot;</span><br><span class="line">            # 发送上传失败邮件通知</span><br><span class="line">            mail -s &quot;ipa上传AppStore失败啦 😢 😢 😢 ，请联系管理员&quot; $&#123;notiEmail&#125;</span><br><span class="line">        else</span><br><span class="line">            echo &quot;上传IPA成功🎉  🎉  🎉 &quot;</span><br><span class="line">            echo &quot;------------------------------------------------------&quot;</span><br><span class="line">            # 发送上传成功邮件通知</span><br><span class="line">            mail -s &quot;ipa上传AppStore成功啦 🎉  🎉  🎉&quot; $&#123;notiEmail&#125;</span><br><span class="line">        fi</span><br><span class="line"></span><br><span class="line">    fi</span><br><span class="line">fi</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">exit 0</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>备注：mac电脑需要配置上传相关的密钥，参考文章：使用 <a class="link"   target="_blank" rel="noopener" href="https://www.jianshu.com/p/c5dd61896c29" >xcrun altool <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 上传ipa</p>
+</blockquote>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><ul>
+<li>登录Jenkins，选择对应的打包项目</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101521792.png"
+                     
+                ></p>
+<ul>
+<li>构建一个新的版本</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101522296.png"
+                     
+                ></p>
+<ul>
+<li>自动打包过程中可进入具体的版本，查看终端日志</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101522293.png"
+                     
+                ></p>
+<h1 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h1><ul>
+<li>在执行pod 命令时，提示pod command not found</li>
+</ul>
+<p>解决方法：在shell脚本最前面加上 #!&#x2F;bin&#x2F;bash -l</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash -l</span><br><span class="line">export LANG=en_US.UTF-8</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>pod install 私有三方库报错</li>
+</ul>
+<p>【解决方法】将<a class="link"   target="_blank" rel="noopener" href="https://xxxx.git/" >https://xxxx.git <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 改成 <a class="link"   target="_blank" rel="noopener" href="https://username:password@xxxx.git/" >https://username:password@xxxx.git <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a><br>这里的username、password就是登录gitlab的用户名+密码</p>
+<ul>
+<li>code signing报错</li>
+</ul>
+<p>报错：Command CodeSign failed with a nonzero exit code<br>原因：是 Jenkins，ssh 方式到 slave 机上，默认是没有账户的，但是访问钥匙串要求必须有用户身份，所以添加一步输入密码解锁钥匙串，可以给 Jenkins 一个用户身份。<br>【解决办法】： build 步骤前添加一步解锁钥匙串</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">security unlock-keychain -p &quot;login pwd&quot; ~/Library/Keychains/login.keychain</span><br></pre></td></tr></table></figure></div>
+
+<p>所以，综上所述，Jenkins自动打包流程如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305101524370.png"
+                     
+                ></p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC底层原理43.2：自动化打包（二）Jenkins + GitLab实现自动化打包</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-05-09 16:05:56</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/05/09/OC底层原理/OC底层原理43.2：自动化打包（二）Jenkins-GitLab实现自动化打包/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">#OC-底层原理探索篇</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/05/09/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8643.3%EF%BC%9A%E8%87%AA%E5%8A%A8%E5%8C%96%E6%89%93%E5%8C%85%EF%BC%88%E4%B8%89%EF%BC%89Fastlane/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理43.3：自动化打包（三）Fastlane</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/05/09/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8643.1%EF%BC%9A%E8%87%AA%E5%8A%A8%E5%8C%96%E6%89%93%E5%8C%85%EF%BC%88%E4%B8%80%EF%BC%89Xcode-Shell%E8%84%9A%E6%9C%AC/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC底层原理43.1：自动化打包（一）Xcode + Shell脚本</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC底层原理43.2：自动化打包（二）Jenkins + GitLab实现自动化打包</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Jenkins%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-text">Jenkins环境配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8A%E4%BC%A0%E8%AF%81%E4%B9%A6"><span class="nav-text">上传证书</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8A%E4%BC%A0%E7%AD%BE%E5%90%8D"><span class="nav-text">上传签名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mac%E4%BB%8E%E8%8A%82%E7%82%B9%E5%88%9B%E5%BB%BA"><span class="nav-text">Mac从节点创建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAiOS%E9%A1%B9%E7%9B%AE"><span class="nav-text">创建iOS项目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-text">使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-text">遇到的问题</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-05-05 16:23:16</span>
-            <span class="mobile">2023-05-05 16:23</span>
+            <span class="pc">2023-05-11 17:44:51</span>
+            <span class="mobile">2023-05-11 17:44</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -345,7 +345,7 @@
 <ul>
 <li><p>静态派发</p>
 <ul>
-<li><p>静态派发是指在运行时调用方法 <code>不需要查表</code>，直接跳转到方法的代码中执行。</p>
+<li><p>静态派发是指在 <code>运行时</code> 调用方法 <code>不需要查表</code>，直接跳转到方法的代码中执行。</p>
 </li>
 <li><p>静态派发是有条件的，方法内部的代码必须对编译器透明，并且在运行时不能被更改，这样编译器才能帮助我们。</p>
 </li>
@@ -370,6 +370,21 @@
 </ul>
 </li>
 </ul>
+<h1 id="权限修饰符-面试重点"><a href="#权限修饰符-面试重点" class="headerlink" title="权限修饰符 面试重点"></a>权限修饰符 <strong>面试重点</strong></h1><ul>
+<li><p>open：修饰的属性或者方法在 <code>其他作用域既可以被访问</code>，<code>也可以被继承或重载 override</code>。</p>
+</li>
+<li><p>public ：修饰的属性或者方法可以在 <code>其他作用域允许被访问</code> ，<code>但不能被重载，也不能在继承的 Extension 中被访问</code>。</p>
+</li>
+<li><p>internal：被修饰的属性和方法只能在 <code>模块内</code> 部可以访问，超出模块内部就不可被访问了。（默认）</p>
+</li>
+<li><p>fileprivate ：其修饰的属性或者方法只能在当前的 <code>源文件</code> 里可以访问。</p>
+</li>
+<li><p>private ：只允许在 <code>当前类</code> 中调用，<code>Extension</code> 中不能访问</p>
+</li>
+<li><p>从高到低排序如下：</p>
+</li>
+</ul>
+<p>open &gt; public &gt; interal &gt; fileprivate &gt; private</p>
 <h1 id="swift-是面向对象还是函数式编程？-重点"><a href="#swift-是面向对象还是函数式编程？-重点" class="headerlink" title="swift 是面向对象还是函数式编程？ 重点"></a>swift 是面向对象还是函数式编程？ <strong>重点</strong></h1><ul>
 <li><p>swift 既是面向对象也是面向函数式编程</p>
 </li>
@@ -426,6 +441,17 @@
 <li>struct 比 class <code>更轻量级</code>，<code>栈</code> 只访问一次拿到数据，<code>堆</code> 访问两次拿到数据（第一次<br>获取指针，第二次获取数据）</li>
 </ul>
 </li>
+</ul>
+<h1 id="类的指定初始化器和便捷初始化器？"><a href="#类的指定初始化器和便捷初始化器？" class="headerlink" title="类的指定初始化器和便捷初始化器？"></a>类的指定初始化器和便捷初始化器？</h1><p>类的初始化器代理规则</p>
+<ul>
+<li>指定初始化器必须调用其直接父类的指定初始化器</li>
+<li>便捷初始化器必须调从同类调用一个指定初始化器</li>
+<li>便捷初始化器最终必须调用一个指定初始化器</li>
+</ul>
+<p>更方便的记忆方法</p>
+<ul>
+<li>指定初始化器必须总是向上代理</li>
+<li>便捷初始化器必须是横向代理</li>
 </ul>
 <h1 id="什么是闭包？重点"><a href="#什么是闭包？重点" class="headerlink" title="什么是闭包？重点"></a>什么是闭包？<strong>重点</strong></h1><p>代码中可以 <code>被传递和引用的功能性独立的代码块</code></p>
 <h1 id="闭包作用？重点"><a href="#闭包作用？重点" class="headerlink" title="闭包作用？重点"></a>闭包作用？<strong>重点</strong></h1><ul>
@@ -567,21 +593,6 @@
 <h1 id="mutaing-关键字作用？"><a href="#mutaing-关键字作用？" class="headerlink" title="mutaing 关键字作用？"></a>mutaing 关键字作用？</h1><ul>
 <li>mutaing：结构体内嵌函数修改存储属性</li>
 </ul>
-<h1 id="权限修饰符"><a href="#权限修饰符" class="headerlink" title="权限修饰符"></a>权限修饰符</h1><ul>
-<li><p>open：修饰的属性或者方法在 <code>其他作用域既可以被访问</code>，<code>也可以被继承或重载 override</code>。</p>
-</li>
-<li><p>public ：修饰的属性或者方法可以在 <code>其他作用域允许被访问</code> ，<code>但不能被重载，也不能在继承的 Extension 中被访问</code>。</p>
-</li>
-<li><p>internal：被修饰的属性和方法只能在 <code>模块内</code> 部可以访问，超出模块内部就不可被访问了。（默认）</p>
-</li>
-<li><p>fileprivate ：其修饰的属性或者方法只能在当前的 <code>源文件</code> 里可以访问。</p>
-</li>
-<li><p>private ：只允许在 <code>当前类</code> 中调用，<code>Extension</code> 中不能访问</p>
-</li>
-<li><p>从高到低排序如下：</p>
-</li>
-</ul>
-<p>open &gt; public &gt; interal &gt; fileprivate &gt; private</p>
 <h1 id="dynamic-framework-和-static-framework-的区别是什么？"><a href="#dynamic-framework-和-static-framework-的区别是什么？" class="headerlink" title="dynamic framework 和 static framework 的区别是什么？"></a>dynamic framework 和 static framework 的区别是什么？</h1><ul>
 <li><p>静态库和动态库, 静态库是每一个程序单独打包一份, 而动态库则是多个程序之间共享.</p>
 </li>
@@ -681,7 +692,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">iOS面试题：Swift</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#swift-%E5%92%8C-oc-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">swift 和 oc 的区别？重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OC%E5%92%8CSwift-%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8-%E5%8C%BA%E5%88%AB%EF%BC%9F%E9%87%8D%E7%82%B9%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-text">OC和Swift 方法的调用 区别？重点面试题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift-%E6%98%AF%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%98%E6%98%AF%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">swift 是面向对象还是函数式编程？ 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift%E4%B8%AD%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%E6%9C%89%E5%87%A0%E7%A7%8D%EF%BC%9F%E5%88%86%E5%88%AB%E8%AE%B2%E8%A7%A3%E4%B8%80%E4%B8%8B%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">swift中高阶函数有几种？分别讲解一下？ 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%B1%BB%EF%BC%9F%E4%BB%80%E4%B9%88%E6%98%AF%E7%BB%93%E6%9E%84%E4%BD%93%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">什么是类？什么是结构体？重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#struct-%E5%92%8C-class-%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">struct 和 class 区别？ 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%97%AD%E5%8C%85%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">什么是闭包？重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E4%BD%9C%E7%94%A8%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">闭包作用？重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E7%9A%84%E5%87%A0%E7%A7%8D%E7%B1%BB%E5%9E%8B%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">闭包的几种类型？重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Optional%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">Optional是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Optional%EF%BC%9F"><span class="nav-text">如何使用 Optional？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift%E7%B1%BB%E5%9E%8B%EF%BC%9FSwiift-%E5%80%BC%E7%B1%BB%E5%9E%8B-%E5%92%8C-%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F%E7%89%B9%E7%82%B9%EF%BC%9F"><span class="nav-text">swift类型？Swiift 值类型 和 引用类型的区别？特点？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%87%BD%E6%95%B0%EF%BC%9F"><span class="nav-text">什么是函数？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%9E%9A%E4%B8%BE%EF%BC%9Foc-%E4%B8%8E-swift-%E6%9E%9A%E4%B8%BE%E6%9C%89%E5%95%A5%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">什么是枚举？oc 与 swift 枚举有啥区别？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B3%9B%E5%9E%8B%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">泛型的作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Swift-%E4%B8%AD%E7%9A%84-KVC-%E5%92%8C-KVO"><span class="nav-text">Swift 中的 KVC 和 KVO</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8D%8F%E8%AE%AE%EF%BC%9F%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">什么是协议？作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift-%E5%8D%8F%E8%AE%AE-%E5%92%8C-oc-%E5%8D%8F%E8%AE%AE%E6%9C%89%E5%95%A5%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">swift 协议 和 oc 协议有啥区别？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%89%A9%E5%B1%95%EF%BC%9F%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">什么是扩展？作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#associatedtype-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">associatedtype 关键字作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#final-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">final 关键字作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#inout-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">inout 关键字作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#objc-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">@objc 关键字作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dynamic-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">dynamic 关键字作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mutaing-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">mutaing 关键字作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="nav-text">权限修饰符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dynamic-framework-%E5%92%8C-static-framework-%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">dynamic framework 和 static framework 的区别是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B6"><span class="nav-text">常用的三方框架</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#swift-%E5%92%8C-oc-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">swift 和 oc 的区别？重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OC%E5%92%8CSwift-%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8-%E5%8C%BA%E5%88%AB%EF%BC%9F%E9%87%8D%E7%82%B9%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-text">OC和Swift 方法的调用 区别？重点面试题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E4%BF%AE%E9%A5%B0%E7%AC%A6-%E9%9D%A2%E8%AF%95%E9%87%8D%E7%82%B9"><span class="nav-text">权限修饰符 面试重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift-%E6%98%AF%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%98%E6%98%AF%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">swift 是面向对象还是函数式编程？ 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift%E4%B8%AD%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%E6%9C%89%E5%87%A0%E7%A7%8D%EF%BC%9F%E5%88%86%E5%88%AB%E8%AE%B2%E8%A7%A3%E4%B8%80%E4%B8%8B%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">swift中高阶函数有几种？分别讲解一下？ 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%B1%BB%EF%BC%9F%E4%BB%80%E4%B9%88%E6%98%AF%E7%BB%93%E6%9E%84%E4%BD%93%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">什么是类？什么是结构体？重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#struct-%E5%92%8C-class-%E5%8C%BA%E5%88%AB%EF%BC%9F-%E9%87%8D%E7%82%B9"><span class="nav-text">struct 和 class 区别？ 重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E6%8C%87%E5%AE%9A%E5%88%9D%E5%A7%8B%E5%8C%96%E5%99%A8%E5%92%8C%E4%BE%BF%E6%8D%B7%E5%88%9D%E5%A7%8B%E5%8C%96%E5%99%A8%EF%BC%9F"><span class="nav-text">类的指定初始化器和便捷初始化器？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%97%AD%E5%8C%85%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">什么是闭包？重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E4%BD%9C%E7%94%A8%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">闭包作用？重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AD%E5%8C%85%E7%9A%84%E5%87%A0%E7%A7%8D%E7%B1%BB%E5%9E%8B%EF%BC%9F%E9%87%8D%E7%82%B9"><span class="nav-text">闭包的几种类型？重点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Optional%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">Optional是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Optional%EF%BC%9F"><span class="nav-text">如何使用 Optional？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift%E7%B1%BB%E5%9E%8B%EF%BC%9FSwiift-%E5%80%BC%E7%B1%BB%E5%9E%8B-%E5%92%8C-%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F%E7%89%B9%E7%82%B9%EF%BC%9F"><span class="nav-text">swift类型？Swiift 值类型 和 引用类型的区别？特点？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%87%BD%E6%95%B0%EF%BC%9F"><span class="nav-text">什么是函数？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%9E%9A%E4%B8%BE%EF%BC%9Foc-%E4%B8%8E-swift-%E6%9E%9A%E4%B8%BE%E6%9C%89%E5%95%A5%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">什么是枚举？oc 与 swift 枚举有啥区别？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B3%9B%E5%9E%8B%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">泛型的作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Swift-%E4%B8%AD%E7%9A%84-KVC-%E5%92%8C-KVO"><span class="nav-text">Swift 中的 KVC 和 KVO</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8D%8F%E8%AE%AE%EF%BC%9F%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">什么是协议？作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#swift-%E5%8D%8F%E8%AE%AE-%E5%92%8C-oc-%E5%8D%8F%E8%AE%AE%E6%9C%89%E5%95%A5%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">swift 协议 和 oc 协议有啥区别？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%89%A9%E5%B1%95%EF%BC%9F%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">什么是扩展？作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#associatedtype-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">associatedtype 关键字作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#final-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">final 关键字作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#inout-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">inout 关键字作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#objc-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">@objc 关键字作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dynamic-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">dynamic 关键字作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mutaing-%E5%85%B3%E9%94%AE%E5%AD%97%E4%BD%9C%E7%94%A8%EF%BC%9F"><span class="nav-text">mutaing 关键字作用？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dynamic-framework-%E5%92%8C-static-framework-%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">dynamic framework 和 static framework 的区别是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B6"><span class="nav-text">常用的三方框架</span></a></li></ol>
 
     </div>
 </div>

@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-29 13:07:32</span>
-            <span class="mobile">2023-03-29 13:07</span>
+            <span class="pc">2023-05-25 13:22:54</span>
+            <span class="mobile">2023-05-25 13:22</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -405,7 +405,7 @@
 </ol>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mac@MacdeMBP SRSF % git pull origin master</span><br><span class="line"></span><br><span class="line">warning: no common commits</span><br><span class="line">remote: Enumerating objects: 4, done.</span><br><span class="line">remote: Counting objects: 100% (4/4), done.</span><br><span class="line">remote: Compressing objects: 100% (4/4), done.</span><br><span class="line">remote: Total 4 (delta 0), reused 0 (delta 0), pack-reused 0</span><br><span class="line">Unpacking objects: 100% (4/4), done.</span><br><span class="line">From https://gitee.com/epod/private-study-ios-app</span><br><span class="line"> * branch            master     -&gt; FETCH_HEAD</span><br><span class="line"> * [new branch]      master     -&gt; origin/master</span><br><span class="line">fatal: refusing to merge unrelated histories</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
-<p>此时，你输入 <code>git branch</code>，你 本地 就会默认生成一个存在 <code>master</code>主分支</p>
+<p>此时，你输入 <code>git branch</code>，你 <code>本地</code> 就会默认生成一个存在 <code>master</code>主分支</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mac@MacdeMBP SRSF % git branch</span><br><span class="line">* master</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
 <ol start="4">
@@ -478,7 +478,20 @@
 <p><code>mac@MacdeMBP SRSF % git push origin developer</code></p>
 <p>4）强制合并 <code>developer</code> 和 <code>master</code> 远程分支</p>
 <p><code>mac@MacdeMBP SRSF % git push origin developer:master -f</code></p>
+<h1 id="远程分支强制覆盖本地分支"><a href="#远程分支强制覆盖本地分支" class="headerlink" title="远程分支强制覆盖本地分支"></a>远程分支强制覆盖本地分支</h1><p>有时候同一个分支，远程仓库的和本地的都被修改的面目全非了，变得很不一致了。</p>
+<p>如果想要把本地的替换成远程的，即用远程分支覆盖本地分支。</p>
+<ul>
+<li>第一种方式: <code>reset --hard</code> 参数(推荐)</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git fetch --all</span><br><span class="line">git reset --hard origin/dev (这里dev要修改为对应的分支名)</span><br><span class="line">git pull origin dev</span><br></pre></td></tr></table></figure></div>
 
+<ul>
+<li>第二种方式：pull –force参数</li>
+</ul>
+<p>有的时候，已经知道远程分支与本地分支有不同的commit，比如本地分支有一个临时的commit,远程分支并没有。是不能简单执行git pull的，会报错。<br>此时如果只是想放弃本地的临时提交，强制将远程仓库的代码覆盖到本地分支。就要用到–force参数，强制拉取功能，命令格式如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git pull --force  &lt;远程主机名&gt; &lt;远程分支名&gt;:&lt;本地分支名&gt;</span><br></pre></td></tr></table></figure></div>
+<p>示例：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git pull --force origin dev:dev</span><br></pre></td></tr></table></figure></div>
             </div>
 
             
@@ -559,7 +572,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC学习28：Gitee使用探索</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Gitee"><span class="nav-text">Gitee</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%86%E6%9C%AC%E5%9C%B0%E5%B7%B2%E5%AD%98%E5%9C%A8%E7%9A%84%E4%BB%A3%E7%A0%81%E6%96%87%E4%BB%B6%E6%8E%A8%E9%80%81%E5%88%B0%E8%BF%9C%E7%A8%8BGitee"><span class="nav-text">将本地已存在的代码文件推送到远程Gitee</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3"><span class="nav-text">常见问题解决</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Gitee"><span class="nav-text">Gitee</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%86%E6%9C%AC%E5%9C%B0%E5%B7%B2%E5%AD%98%E5%9C%A8%E7%9A%84%E4%BB%A3%E7%A0%81%E6%96%87%E4%BB%B6%E6%8E%A8%E9%80%81%E5%88%B0%E8%BF%9C%E7%A8%8BGitee"><span class="nav-text">将本地已存在的代码文件推送到远程Gitee</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3"><span class="nav-text">常见问题解决</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF%E5%BC%BA%E5%88%B6%E8%A6%86%E7%9B%96%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF"><span class="nav-text">远程分支强制覆盖本地分支</span></a></li></ol>
 
     </div>
 </div>

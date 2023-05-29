@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-30 11:45:12</span>
-            <span class="mobile">2023-03-30 11:45</span>
+            <span class="pc">2023-05-11 10:20:15</span>
+            <span class="mobile">2023-05-11 10:20</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -414,37 +414,87 @@
                      
                 ></p>
 <ul>
-<li>我们需要用到的是 <code>buglySymboliOS.jar</code> 文件，单独放在一个新建的空文件夹如 <code>buglySymboliOS</code> 里面</li>
+<li>下载后自动解压，得到 <code>buglyqq-upload-symbol</code> 文件夹</li>
 </ul>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303230439971.png"
+                     data-src="/BboyZJ.github.io/assets/16837698777729.jpg"
                      
                 ></p>
 <ul>
-<li>下载后得到 <code>buglyqq-upload-symbol</code> 文件，解压里面 <code>jar包</code>，得到 <code>buglySymboliOS.jar 包</code></li>
+<li>获取dSYM文件UUID</li>
 </ul>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303230439687.png"
-                     
-                ></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202303230439073.png"
-                     
-                ></p>
+<p>使用命令：xcrun dwarfdump –uuid &lt;dSYM文件&gt;</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % xcrun dwarfdump --uuid /Users/mac/Desktop/UBR_ZJ/buglyqq-upload-symbol/dSYM2.5.3/北京环球.app.dSYM</span><br><span class="line">UUID: 8C8C8509-9B83-35F7-BEB7-C40C1DE5480C (arm64) /Users/mac/Desktop/UBR_ZJ/buglyqq-upload-symbol/dSYM2.5.3/北京环球.app.dSYM/Contents/Resources/DWARF/北京环球</span><br></pre></td></tr></table></figure></div>
+
+
 <ul>
-<li>通过终端命令行上传</li>
+<li>cd 到 <code>buglyqq-upload-symbol</code> 文件夹</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar buglyqq-upload-symbol.jar -appid c4f4e4dc67 -appkey cb791b15-dbe1-44d9-bd33-b3fe558b773b -bundleid cn.epod.srsf -version 1.6.2 -platform IOS -inputSymbol /Users/mac/Desktop/appdSYM/中图云书房.app.dSYM</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % cd /Users/mac/Desktop/UBR_ZJ/buglyqq-upload-symbol</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>上传dSYM符号表</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon buglyqq-upload-symbol % java -jar buglyqq-upload-symbol.jar -appid 1964851d56 -appkey dc466ac1-7416-4822-b68b-cc111bac616e -bundleid com.universalbeijingresort.app -version 2.5.3 -platform IOS -inputSymbol /Users/mac/Desktop/UBR_ZJ/buglyqq-upload-symbol/dSYM/北京环球.app.dSYM</span><br></pre></td></tr></table></figure></div>
 
 <blockquote>
-<p>【参数说明】：<br>-addid ：在 bugly 上对应的 appid     c4f4e4dc67<br>-appkey ：在 bugly 上对应的 appkey<br>-bundleid ： iOS平台的 bundle id    cn.epod.srsf<br>-version ：版本号  1.6.2<br>-platform ：平台（注意大小写）IOS Android<br>-inputSymbol ：dSYM调试文件 &#x2F;Users&#x2F;mac&#x2F;Desktop&#x2F;appdSYM&#x2F;中图云书房.app.dSYM</p>
+<p>【参数说明】：<br>-addid ：在 bugly 上对应的 appid<br>-appkey ：在 bugly 上对应的 appkey<br>-bundleid ： iOS平台的 bundle id<br>-version ：版本号  1.6.2<br>-platform ：平台（注意大小写）IOS Android<br>-inputSymbol ：dSYM调试文件 &#x2F;Users&#x2F;mac&#x2F;Desktop&#x2F;UBR_ZJ&#x2F;buglyqq-upload-symbol&#x2F;dSYM&#x2F;北京环球.app.dSYM<br> -inputMapping：mapping所在文件夹目录地址[Android平台特有，ios忽略！</p>
 </blockquote>
+<ul>
+<li>上传成功后，平台显示</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305110959135.png"
+                     
+                ></p>
+<h1 id="自动配置：Xcode-Shell-脚本"><a href="#自动配置：Xcode-Shell-脚本" class="headerlink" title="自动配置：Xcode + Shell 脚本"></a>自动配置：Xcode + Shell 脚本</h1><p>自动配置请首先下载和解压 <a class="link"   target="_blank" rel="noopener" href="https://bugly.qq.com/v2/downloads" >自动配置符号表工具包 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>，然后选择上传方式并配置Xcode的编译执行脚本。（目前不支持了）</p>
+<p><strong>上传方式</strong></p>
+<p>使用脚本自动配置支持两种上传方式（建议用方式二）：</p>
+<ul>
+<li>方式一：直接上传dSYM文件（默认方式 ）</li>
+<li>方式二：提取dSYM文件的符号表文件并上传</li>
+</ul>
+<p>其中，使用方式二需要额外操作以下几步：</p>
+<ul>
+<li><p>下载符号表提取工具依赖的 <a class="link"   target="_blank" rel="noopener" href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" >Java <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 运行环境（JRE或JDK版本需要&gt;&#x3D;1.6）</p>
+</li>
+<li><p>把工具包 <code>buglySymbolIOS.jar</code> 保存在用户主目录（Home）的 <code>bin</code> 目录下（没有bin文件夹,请自行创建）:</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305111007390.png"
+                     
+                ></p>
+<p><strong>配置Xcode编译执行脚本：</strong></p>
+<ul>
+<li>在 <code>Xcode</code> 工程对应 <code>Target</code> 的 <code>Build Phases</code> 中新增 <code>Run Scrpit Phase</code>：</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305111010463.png"
+                     
+                ></p>
+<ul>
+<li><p>打开工具包中的 <code>dSYM_upload.sh</code>，复制所有内容，在新增的 <code>Run Scrpit Phase</code> 中粘贴</p>
+</li>
+<li><p>修改新增的 <code>Run Scrpit</code> 中的 <YOUR_APP_ID> 为您的 <code>App ID</code>，<YOUR_APP_KEY>为您的<code>App Key</code>，<YOUR_BUNDLE_ID> 为App的 <code>Bundle Id</code></p>
+</li>
+</ul>
+<p>脚本默认在 <code>Debug模式及模拟器</code> 编译情况下 <code>不会上传符号表</code>，在需要上传的时候，请修改下列选项</p>
+<ul>
+<li>Debug模式编译是否上传，1＝上传 0＝不上传，默认不上传</li>
+<li>UPLOAD_DEBUG_SYMBOLS&#x3D;0</li>
+<li>模拟器编译是否上传，1＝上传 0＝不上传，默认不上传</li>
+<li>UPLOAD_SIMULATOR_SYMBOLS&#x3D;0</li>
+</ul>
+<p>至此，自动上传符号表脚本配置完毕，<code>Bugly</code> 会在每次 <code>Xcode</code> 工程编译后自动完成符号表配置工作。</p>
 <h1 id="项目中使用"><a href="#项目中使用" class="headerlink" title="项目中使用"></a>项目中使用</h1><ul>
 <li>项目需要集成cocoapods三方依赖管理工具，用cocoapods集成 <code>Bugly</code> SDK</li>
 </ul>
@@ -493,13 +543,13 @@
                         <div class="article-prev">
                             <a class="prev"
                             rel="prev"
-                            href="/BboyZJ.github.io/2023/03/09/OC%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%9603%EF%BC%9ACrash/"
+                            href="/BboyZJ.github.io/2023/03/09/Swift/Swift%E5%AD%A6%E4%B9%A005%EF%BC%9Aswift%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8/"
                             >
                                 <span class="left arrow-icon flex-center">
                                     <i class="fa-solid fa-chevron-left"></i>
                                 </span>
                                 <span class="title flex-center">
-                                    <span class="post-nav-title-item">性能优化03：Crash</span>
+                                    <span class="post-nav-title-item">Swift学习05：swift中方法的调用</span>
                                     <span class="post-nav-item">Prev posts</span>
                                 </span>
                             </a>
@@ -509,10 +559,10 @@
                         <div class="article-next">
                             <a class="next"
                             rel="next"
-                            href="/BboyZJ.github.io/2023/03/09/OC/OC%E5%AD%A6%E4%B9%A013%EF%BC%9A%E4%B8%8A%E4%BC%A0App-Store%E6%89%80%E9%9C%80%E5%90%84%E5%9B%BE%E6%A0%87%E5%92%8C%E5%9B%BE%E7%89%87%E5%B0%BA%E5%AF%B8/"
+                            href="/BboyZJ.github.io/2023/03/09/OC%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%9603%EF%BC%9ACrash/"
                             >
                                 <span class="title flex-center">
-                                    <span class="post-nav-title-item">OC学习13：上传App Store所需各图标和图片尺寸</span>
+                                    <span class="post-nav-title-item">性能优化03：Crash</span>
                                     <span class="post-nav-item">Next posts</span>
                                 </span>
                                 <span class="right arrow-icon flex-center">
@@ -534,7 +584,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">性能优化03.1：bugly搜集Crash</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Bugly-%E4%BB%8B%E7%BB%8D"><span class="nav-text">Bugly 介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bugly-%E4%B8%8A%E4%BC%A0%E6%96%B9%E5%BC%8F"><span class="nav-text">Bugly 上传方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85java%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83"><span class="nav-text">安装java运行环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96-dSYM-%E6%96%87%E4%BB%B6"><span class="nav-text">获取 dSYM 文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E6%89%8B%E5%8A%A8%E4%B8%8A%E4%BC%A0%E7%AC%A6%E5%8F%B7%E8%A1%A8"><span class="nav-text">工具手动上传符号表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8"><span class="nav-text">项目中使用</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Bugly-%E4%BB%8B%E7%BB%8D"><span class="nav-text">Bugly 介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bugly-%E4%B8%8A%E4%BC%A0%E6%96%B9%E5%BC%8F"><span class="nav-text">Bugly 上传方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85java%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83"><span class="nav-text">安装java运行环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96-dSYM-%E6%96%87%E4%BB%B6"><span class="nav-text">获取 dSYM 文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E6%89%8B%E5%8A%A8%E4%B8%8A%E4%BC%A0%E7%AC%A6%E5%8F%B7%E8%A1%A8"><span class="nav-text">工具手动上传符号表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%EF%BC%9AXcode-Shell-%E8%84%9A%E6%9C%AC"><span class="nav-text">自动配置：Xcode + Shell 脚本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8"><span class="nav-text">项目中使用</span></a></li></ol>
 
     </div>
 </div>

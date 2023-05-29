@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/05/20/oc数据结构和算法/oc数据结构03：哈希表的探索/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC数据结构03：哈希表的探索">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/05/20/OC数据结构和算法/OC数据结构03：哈希表的探索/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC数据结构03：哈希表的探索">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC数据结构03：哈希表的探索 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC数据结构03：哈希表的探索</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-05-20 11:12:13</span>
+        <span class="mobile">2023-05-20 11:12</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-05-20 22:22:47</span>
+            <span class="mobile">2023-05-20 22:22</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E5%92%8C%E7%AE%97%E6%B3%95/">数据结和算法</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="哈希表定义"><a href="#哈希表定义" class="headerlink" title="哈希表定义"></a>哈希表定义</h1><ul>
+<li><p><code>哈希表（hash table，也叫散列表）</code>，是根据 <code>键（key）</code> 直接访问在内存存储位置的数据结构。也就是说，它通过 <code>把关键码值映射到表中一个位置来访问记录</code>，以加快查找速度，这个 <code>映射函数</code> 叫做 <code>散列函数</code>，存放记录的数组叫做散列表。</p>
+</li>
+<li><p>给定一个 <code>键key</code>，存在 <code>函数f(x)</code> 和 <code>表M</code>，将 <code>键key</code> 代入 <code>函数f(key)</code>，若能得到 <code>包含键key记录在表中的地址</code>，则称 <code>表M为哈希（Hash）表</code>，<code>函数f(key)为哈希(Hash)函数</code></p>
+</li>
+</ul>
+<h1 id="哈希冲突定义"><a href="#哈希冲突定义" class="headerlink" title="哈希冲突定义"></a>哈希冲突定义</h1><ul>
+<li>对不同的 <code>key</code> 可能得到同一个 <code>哈希地址</code>，即 <code>k1≠k2，而f(k1)=f(k2)</code>，这种现象称为<code>哈希冲突</code>，即 <code>不同的key</code> 经过 <code>hash</code> 处理后都可能得到相同的 <code>hash</code> 值。</li>
+</ul>
+<h1 id="哈希表的本质"><a href="#哈希表的本质" class="headerlink" title="哈希表的本质"></a>哈希表的本质</h1><ul>
+<li>哈希表本质是一个 <code>数组</code>，数组中每一个元素称为 <code>箱子</code>，箱子中存放的是 <code>键值对</code>，根据 <code>下标index</code> 从数组中取 <code>value</code>。关键是如何获取 <code>index</code>，这就需要一个固定的函数（哈希函数），将 <code>key</code> 转换为 <code>index</code></li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305201205754.png"
+                     
+                ></p>
+<h1 id="哈希查找步骤"><a href="#哈希查找步骤" class="headerlink" title="哈希查找步骤"></a>哈希查找步骤</h1><p>使用哈希函数将被查找的键映射（转换）为数组的索引，理想情况下（hash 函数设计合理）不同的键映射的数组下标也不同，所有的查找时间复杂度为 O(1)。但是实际情况下不是这样的，所以哈希查找的第二步就是 <code>处理哈希碰撞冲突</code>。</p>
+<h1 id="常用哈希函数"><a href="#常用哈希函数" class="headerlink" title="常用哈希函数"></a>常用哈希函数</h1><ul>
+<li><p>哈希查找第一步就是使用哈希函数将 <code>键</code> 映射成 <code>索引</code>，这种映射函数就是哈希函数。</p>
+</li>
+<li><p>如果有一个保存 M个元素的 数组，那么就需要一个能够将任意键转换为该数组范围内的索引（0 ~ M-1）的哈希函数，哈希函数需要易于计算并且能够均匀分布所有键。</p>
+</li>
+<li><p>在实际中，我们的键并不都是数字，有可能是字符串，还有可能是几个值的组合等，所以需要实现自己的哈希函数：</p>
+<ul>
+<li><p>直接寻址法：哈希函数为线性函数， f(k)&#x3D;ak+b，a和b为常数</p>
+</li>
+<li><p>数字分析法；</p>
+</li>
+<li><p>平方取中法：将关键字平方以后取中间几位</p>
+</li>
+<li><p>折叠法：先按照一定规则拆分再组合，例如书的索引ISBN 978-7-121-33637-9，可以拆合为97+87+12+13+36+37+9&#x3D;291，哈希值为291</p>
+</li>
+<li><p>随机数法：选择一个随机函数，把关键字的随机函数值作为它的哈希值。通常当关键字的长度不等时用这种方法。</p>
+</li>
+<li><p>除留余数法：f(k)&#x3D;k%n，假设哈希表的长度为m，则n一般为不超过m的最大质数，用于关键字位数较多，并且关键字中每一位上数字分布大致均匀。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="哈希函数的特征"><a href="#哈希函数的特征" class="headerlink" title="哈希函数的特征"></a>哈希函数的特征</h1><ul>
+<li><p>从哈希值不能反向推导出原始数据（所以哈希算法也叫单向哈希算法）；</p>
+</li>
+<li><p>对输入数据非常敏感，哪怕原始数据只修改了一个 Bit，最后得到的哈希值也大不相同；</p>
+</li>
+<li><p>散列冲突的概率要很小，对于不同的原始数据，哈希值相同的概率非常小；</p>
+</li>
+<li><p>哈希算法的执行效率要尽量高效，针对较长的文本，也能快速地计算出哈希值。</p>
+</li>
+</ul>
+<h1 id="哈希碰撞冲突的解决方法"><a href="#哈希碰撞冲突的解决方法" class="headerlink" title="哈希碰撞冲突的解决方法"></a>哈希碰撞冲突的解决方法</h1><p><code>哈希碰撞冲突</code> 就是对于不同的关键字，经过哈希函数计算以后的哈希值相同。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305201206333.png"
+                     
+                ></p>
+<ol>
+<li><p>开放寻址法：使用数组中的空位解决碰撞，当碰撞发生时（即一个键的hash值对应数组的下标被另外一个键占用）直接将下标索引加一（inde +&#x3D; 1），这样出现三种情况：</p>
+<ul>
+<li>未命中（数组下标中的值为空，没有占用）：存入</li>
+<li>命中（数组下标中的值不为空，占用）：继续 index+&#x3D;1 ，直到遇到没有占用的</li>
+</ul>
+</li>
+<li><p>链地址法：简单来说就是 <code>数组 + 链表</code>，将 <code>键</code> 通过 <code>hash</code> 函数映射为大小为 <code>M</code> 的数组的下标索引，数组的每一个元素指向一个链表，链表中的每一个结点存储着 <code>hash</code> 出来的索引值为结点下标的键值对。</p>
+</li>
+<li><p>再散列法</p>
+</li>
+</ol>
+<p>不同的散列函数，地址冲突时计算另一个散列函数地址，直到冲突不再发生，这种方法不易产生“聚集”，但增加了计算时间；</p>
+<ol start="4">
+<li>建立一个公共溢出区</li>
+</ol>
+<h1 id="Apple方案选择"><a href="#Apple方案选择" class="headerlink" title="Apple方案选择"></a>Apple方案选择</h1><p>解决哈希冲突的拉链法和开放定址线性探测法，Apple 都在使用，具体使用哪一种是根据存储数据的生命周期和特性决定的：</p>
+<ul>
+<li><p><code>@synchronized</code> 使用的是 <code>链地址法</code>，链地址法多用于存储的数据是通用类型，能够被反复利用，就像 <code>@synchronized</code> 存储的是锁是一种无关业务的实现结构，程序运行时多个对象使用同一个锁的概率相当高，有效的节省了内存。</p>
+</li>
+<li><p><code>weak</code> 对象 <code>associatedObject</code> 采用的是开放定址法，开放定址线性探测法用于存储的数据是临时的，用完尽快释放，就像 associatedObject，weak。</p>
+</li>
+</ul>
+<h1 id="Hash-在-iOS-中的应用分析"><a href="#Hash-在-iOS-中的应用分析" class="headerlink" title="Hash 在 iOS 中的应用分析"></a>Hash 在 iOS 中的应用分析</h1><ol>
+<li>关联对象 <code>AssociatedObject</code> 的底层实现采用的数据存储结构（<code>Hash 表 + Hash 表</code>）</li>
+</ol>
+<p>关联对象采用的是 <code>HashMap 嵌套 HashMap</code> 的结构存储数据的，简单来说就是根据对象从第一个 <code>HashMap</code> 中取出存储对象所有关联对象的第二个 <code>HashMap</code>，然后根据属性名从第二个 <code>HashMap</code> 中取出属性对应的值和策略。</p>
+<ul>
+<li><p>已知条件一：<code>对象</code>，因此引出第一个 <code>HashMap</code>（AssociationsHashMap），用一个能唯一代表对象的值作为 <code>key</code>，用存储对象的所有关联对象的结构（名字：<code>值+策略</code>）作为 <code>value</code>；</p>
+</li>
+<li><p>已知条件二：<code>属性名字</code>，因此引出第二个 <code>HashMap</code>（ObjectAssociationMap），用属性名字作为key，用属性名字对应的结构体<code>（值+策略）</code>作为 <code>value</code>。</p>
+</li>
+</ul>
+<ol start="2">
+<li><code>weak</code> 底层实现采用的数据存储结构 <code>（Hash 表 + 数组）</code></li>
+</ol>
+<p><code>weak</code> 采用的是一个全局的 <code>HashMap</code> 嵌套数组的结构存储数据的，销毁对象（weak 指针指向的对象）的时候，根据对象从 <code>HashMap</code> 中找到存放所有指向该对象的 <code>weak</code> 指针的数组，然后将数组中的所有元素都置为 <code>nil</code>。</p>
+<p><code>weak</code> 的最大特点就是在对象销毁时，自动置 <code>nil</code>，减少访问野指针的风险，这也是设计 <code>weak</code> 的初衷。</p>
+<p>方案设计实现好后，<code>weak</code> 指针置 <code>nil</code> 的基本步骤：</p>
+<p>对象 <code>dealloc</code> 的时候，从全局的 <code>HashMap</code> 中，根据一个唯一代表对象的值作为 <code>key</code>，找到存储所有指向该对象的 <code>weak</code> 指针的数组；将数组中的所有元素都置为 <code>nil</code>。</p>
+<ol start="3">
+<li>KVO 底层实现采用的数据存储结构（Hash 表 + 数组）</li>
+</ol>
+<p>一个对象可以被 <code>n</code> 个对象观察，一对象的 <code>n</code> 个属性又可以分别被 <code>n</code> 个对象观察。</p>
+<ol start="4">
+<li>iOS App 签名的原理（MD5 + 哈希表 + 非对称加密 RSA）</li>
+</ol>
+<p>一致性哈希算法 + 非对称加解密算法：</p>
+<ul>
+<li><p>数字签名：传递数据时会将原始的数据和数字签名一起发送，对方拿到数据后，通过同样的 <code>Hash</code> 算法得到原始数据的 <code>Hash</code> 的值，然后通过非对称加密，将数字签名中的校验 <code>Hash</code> 值解密出来，最后对比两个 <code>Hash</code> 值是否一致。</p>
+</li>
+<li><p>代码签名：代码签名就是对可执行文件或脚本进行数字签名，用来确认软件在签名后未被修改或损坏的措施。它的原理和数字签名类似，只不过把签名的不是数据，而是代码。</p>
+</li>
+</ul>
+<ol>
+<li><p>对象的引用计数存储的位置（Hash 表）</p>
+</li>
+<li><p>NSDictionary 的实现原理（Hash 表）</p>
+</li>
+<li><p>Runloop 与 线程 的存储关系</p>
+</li>
+</ol>
+<ul>
+<li><p>线程和 Runloop 之间是一一（子线程可以没有）对应的，其关系是保存在一个全局的 Dictionary 里。</p>
+</li>
+<li><p><code>Runloop</code> 保存在一个 <code>全局的可变字典</code> 中，<code>key</code> 是 <code>pthread_t</code>，<code>value</code> 是 <code>cfrunloopref</code>，即 <code>Hash</code> 表。</p>
+</li>
+</ul>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC数据结构03：哈希表的探索</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-05-20 11:12:13</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/05/20/OC数据结构和算法/OC数据结构03：哈希表的探索/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E5%92%8C%E7%AE%97%E6%B3%95/">#数据结和算法</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/05/21/OC/OC%E5%AD%A6%E4%B9%A045%EF%BC%9AMac%E7%94%B5%E8%84%91%E9%85%8D%E7%BD%AEVPN/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习45：Mac电脑配置VPN</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/05/19/OC/OC%E5%AD%A6%E4%B9%A044%EF%BC%9A%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86%E5%92%8C%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习44：正向代理和反向代理服务器</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC数据结构03：哈希表的探索</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E8%A1%A8%E5%AE%9A%E4%B9%89"><span class="nav-text">哈希表定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E5%86%B2%E7%AA%81%E5%AE%9A%E4%B9%89"><span class="nav-text">哈希冲突定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E8%A1%A8%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="nav-text">哈希表的本质</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E6%9F%A5%E6%89%BE%E6%AD%A5%E9%AA%A4"><span class="nav-text">哈希查找步骤</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%93%88%E5%B8%8C%E5%87%BD%E6%95%B0"><span class="nav-text">常用哈希函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E5%87%BD%E6%95%B0%E7%9A%84%E7%89%B9%E5%BE%81"><span class="nav-text">哈希函数的特征</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E7%A2%B0%E6%92%9E%E5%86%B2%E7%AA%81%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-text">哈希碰撞冲突的解决方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Apple%E6%96%B9%E6%A1%88%E9%80%89%E6%8B%A9"><span class="nav-text">Apple方案选择</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hash-%E5%9C%A8-iOS-%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8%E5%88%86%E6%9E%90"><span class="nav-text">Hash 在 iOS 中的应用分析</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
