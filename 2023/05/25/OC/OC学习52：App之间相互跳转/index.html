@@ -278,13 +278,35 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-05-25 21:28:56</span>
-            <span class="mobile">2023-05-25 21:28</span>
+            <span class="pc">2023-06-19 17:20:05</span>
+            <span class="mobile">2023-06-19 17:20</span>
             <span class="hover-info">Updated</span>
         </span>
     
 
     
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
     
 
     
@@ -303,7 +325,154 @@
             
 
             <div class="article-content markdown-body">
-                
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>App间跳转即App进程间的通信，有两种方式：</p>
+<ol>
+<li><code>URL Schemes</code></li>
+</ol>
+<p>这种方式，如果未安装，则无法通信</p>
+<ol start="2">
+<li><code>Universal Links</code></li>
+</ol>
+<p>这种方式，如果未安装则会跳转到Safair，如果已安装会跳转到App</p>
+<blockquote>
+<p>注：App间传值、App间分享、App间跳转。</p>
+</blockquote>
+<h1 id="URL-Schemes"><a href="#URL-Schemes" class="headerlink" title="URL Schemes"></a>URL Schemes</h1><ol>
+<li>首先，创建两个项目 <code>demoA</code> 和 <code>demoB</code></li>
+</ol>
+<ul>
+<li>在 <code>demoA</code> 中配置 <code>URL Schemes</code>，如下：</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16871559941058.jpg"
+                     
+                ></p>
+<ul>
+<li>同理，在 <code>demoB</code> 中配置 <code>URL Schemes</code></li>
+</ul>
+<ol start="2">
+<li>分别在 <code>demoA</code> 和 <code>demoB</code> 中配置 <code>白名单</code>，即在 <code>info.plist</code> 中配置 <code>Queried URL Schemes</code>，如下：</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202306191430081.png"
+                     
+                ></p>
+<p>同理在 <code>demoB</code> 中配置白名单 <code>URL Schemes：demoA</code></p>
+<ol start="3">
+<li>在 <code>demoA</code> 的 <code>View Controller</code> 中实现如下代码：</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ViewController.h&quot;</span><br><span class="line">#import &lt;objc/runtime.h&gt;</span><br><span class="line"></span><br><span class="line">@interface ViewController ()</span><br><span class="line">@property (nonatomic,strong)UIButton * openBtn;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    // Do any additional setup after loading the view.</span><br><span class="line">    </span><br><span class="line">    self.view.backgroundColor = [UIColor whiteColor];</span><br><span class="line">    </span><br><span class="line">    [self.view addSubview:self.openBtn];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)clickBtn&#123;</span><br><span class="line">    /*</span><br><span class="line">     注：</span><br><span class="line">     《demoA》：</span><br><span class="line">     1、需添加URL Schemes，目前为 demoA，需自定义</span><br><span class="line">     2、在info.plist中设置《demoB》白名单为 demoB</span><br><span class="line">     </span><br><span class="line">     《demoB》：</span><br><span class="line">     1、需添加URL Schemes，目前为 demoB，需自定义</span><br><span class="line">     2、在info.plist中设置《文件保险箱》白名单为 demoA</span><br><span class="line">     */</span><br><span class="line">    [self isInstallApp];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 设备是否安装了《demoB》</span><br><span class="line">- (void)isInstallApp&#123;</span><br><span class="line">    // 可拼接任何参数</span><br><span class="line">    NSURL * digitalGuard_url = [NSURL URLWithString:@&quot;demoB://from...&quot;];</span><br><span class="line">    if ([[UIApplication sharedApplication] canOpenURL:digitalGuard_url]) &#123;</span><br><span class="line">        NSLog(@&quot;安装了《demoB》应用&quot;);</span><br><span class="line">        [self openURL:digitalGuard_url];</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        NSLog(@&quot;未安装《demoB》应用&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 打开《demoB》</span><br><span class="line">- (void)openURL:(NSURL *)url&#123;</span><br><span class="line">    if (@available(iOS 10.0, *)) &#123;</span><br><span class="line">        [[UIApplication sharedApplication] openURL:url</span><br><span class="line">                options:@&#123;&#125; completionHandler:^(BOOL success) &#123;</span><br><span class="line">            if (success)&#123;</span><br><span class="line">                NSLog(@&quot;打开《demoB》成功&quot;);</span><br><span class="line">            &#125;else &#123;</span><br><span class="line">                NSLog(@&quot;打开《demoB》失败&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;];;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        [[UIApplication sharedApplication] openURL:url];;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (UIButton *)openBtn&#123;</span><br><span class="line">    if (!_openBtn) &#123;</span><br><span class="line">        _openBtn = [[UIButton alloc] initWithFrame:CGRectMake(100, 100, 200, 50)];</span><br><span class="line">        [_openBtn setTitle:@&quot;demoB&quot; forState:UIControlStateNormal];</span><br><span class="line">        [_openBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];</span><br><span class="line">        _openBtn.backgroundColor = [UIColor redColor];</span><br><span class="line">        _openBtn.layer.cornerRadius = 10;</span><br><span class="line">        [_openBtn addTarget:self action:@selector(clickBtn) forControlEvents:UIControlEventTouchUpInside];</span><br><span class="line">    &#125;</span><br><span class="line">    return _openBtn;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>在 <code>demoA</code> 的 <code>AppDelegate</code> 中实现如下代码，用于接收从 <code>demoB</code> 中跳转过来的事件</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;AppDelegate.h&quot;</span><br><span class="line">#import &quot;ViewController.h&quot;</span><br><span class="line"></span><br><span class="line">@interface AppDelegate ()</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation AppDelegate</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions &#123;</span><br><span class="line">    </span><br><span class="line">    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];</span><br><span class="line">            </span><br><span class="line">    UINavigationController * nav = [[UINavigationController alloc] initWithRootViewController:[ViewController new]];</span><br><span class="line">    </span><br><span class="line">    self.window.rootViewController = nav;</span><br><span class="line">    </span><br><span class="line">    [self.window makeKeyAndVisible];</span><br><span class="line">    </span><br><span class="line">    return YES;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(nonnull NSDictionary&lt;UIApplicationOpenURLOptionsKey,id&gt; *)options&#123;</span><br><span class="line">    // 接收传递的参数</span><br><span class="line">    NSString * urlStr = url.absoluteString;</span><br><span class="line">    </span><br><span class="line">    // 如果是来自于《demoB》</span><br><span class="line">    if ([urlStr containsString:@&quot;demoA://fromAppDemoB&quot;]) &#123;</span><br><span class="line">        // 分割获取来源</span><br><span class="line">        NSArray * arr = [urlStr componentsSeparatedByString:@&quot;&amp;&quot;];</span><br><span class="line">        if (arr.count &gt; 0) &#123;</span><br><span class="line">            NSString * str = arr[1];</span><br><span class="line">            NSArray * authArr = [str componentsSeparatedByString:@&quot;=&quot;];</span><br><span class="line">            if (authArr.count &gt; 0) &#123;</span><br><span class="line">                NSString * authorizationCode = authArr[1];</span><br><span class="line">                NSLog(@&quot;authorizationCode:%@&quot;,authorizationCode);</span><br><span class="line">                [self showAlertWithAuthorizationCode:authorizationCode];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return YES;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)showAlertWithAuthorizationCode:(NSString *)authorizationCode&#123;</span><br><span class="line">    UIAlertController * alertVC = [UIAlertController alertControllerWithTitle:authorizationCode message:nil preferredStyle:UIAlertControllerStyleAlert];</span><br><span class="line">    UIAlertAction * cancleAction = [UIAlertAction actionWithTitle:@&quot;取消&quot; style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) &#123;</span><br><span class="line">        </span><br><span class="line">    &#125;];</span><br><span class="line">    UIAlertAction *confirAction = [UIAlertAction actionWithTitle:@&quot;确定&quot; style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) &#123;</span><br><span class="line">       </span><br><span class="line">    &#125;];</span><br><span class="line">    [alertVC addAction:cancleAction];</span><br><span class="line">    [alertVC addAction:confirAction];</span><br><span class="line">    [[self currentViewController] presentViewController:alertVC animated:YES completion:nil];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (UIViewController *)currentViewController &#123;</span><br><span class="line">    UIWindow * window = [[UIApplication sharedApplication].delegate window];</span><br><span class="line">    UIViewController * presentedVC = [[window rootViewController] presentedViewController];</span><br><span class="line">    if (presentedVC) &#123;</span><br><span class="line">        return presentedVC;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        return window.rootViewController;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+
+<ol start="4">
+<li>同理，在 <code>demoB</code> 的 <code>AppDelegate</code> 中实现一个工具类 <code>AppCommunicate</code></li>
+</ol>
+<p><strong>AppCommunicate.h 如下：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">NS_ASSUME_NONNULL_BEGIN</span><br><span class="line"></span><br><span class="line">@interface AppCommunicate : NSObject</span><br><span class="line">// 单例</span><br><span class="line">+ (instancetype)manager;</span><br><span class="line"></span><br><span class="line">/* 处理App间通讯 */</span><br><span class="line">- (void)handleAppCommunicateWithUrl:(NSURL *)url;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">NS_ASSUME_NONNULL_END</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>AppCommunicate.m 如下：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;AppCommunicate.h&quot;</span><br><span class="line"></span><br><span class="line">@interface AppCommunicate ()&lt;NSXMLParserDelegate&gt;</span><br><span class="line">@property (nonatomic,strong)NSMutableDictionary * mDic; // 保存字段</span><br><span class="line">@property (nonatomic,copy)NSString * currentElementName; // 当前元素名称</span><br><span class="line">@end</span><br><span class="line">@implementation AppCommunicate</span><br><span class="line">// 单例</span><br><span class="line">+ (instancetype)manager&#123;</span><br><span class="line">    static AppCommunicate * manager = nil;</span><br><span class="line">    static dispatch_once_t onceToken;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        manager = [[AppCommunicate alloc] init];</span><br><span class="line">    &#125;);</span><br><span class="line">    return manager;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 处理App间通讯 */</span><br><span class="line">- (void)handleAppCommunicateWithUrl:(NSURL *)url&#123;</span><br><span class="line">    // 接收并处理其他App传递过来的url</span><br><span class="line">    NSString * urlStr = url.absoluteString;</span><br><span class="line">    </span><br><span class="line">    // 如果是来自于《demoA》</span><br><span class="line">    if ([urlStr containsString:@&quot;demoB://fromAppDemoA&quot;]) &#123;</span><br><span class="line">        ZJLog(@&quot;来自于《demoA》App&quot;);</span><br><span class="line">        </span><br><span class="line">        // 处理调回《demoA》</span><br><span class="line">        [self handleBackFileSafeWithauthorizationCode:@&quot;zhangjian&quot;];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 处理调回《demoA》</span><br><span class="line">- (void)handleBackFileSafeWithauthorizationCode:(NSString *)authorizationCode&#123;</span><br><span class="line">    NSString * filesafe_url = [NSString stringWithFormat:@&quot;demoA://fromAppDemoB&quot;];</span><br><span class="line">    if ([ZJ isInstallAppWithURLSchemes:filesafe_url]) &#123;</span><br><span class="line">        ZJLog(@&quot;安装了《demoA》应用&quot;);</span><br><span class="line">        NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@&quot;%@&amp;authorizationCode=%@&quot;,filesafe_url,authorizationCode]];</span><br><span class="line">        if (@available(iOS 10.0, *)) &#123;</span><br><span class="line">            [[UIApplication sharedApplication] openURL:url</span><br><span class="line">                    options:@&#123;&#125; completionHandler:^(BOOL success) &#123;</span><br><span class="line">                if (success)&#123;</span><br><span class="line">                    NSLog(@&quot;打开《demoA》成功&quot;);</span><br><span class="line">                &#125;else &#123;</span><br><span class="line">                    NSLog(@&quot;打开《demoA》失败&quot;);</span><br><span class="line">                    [SVPManager showFailureAndStatus:@&quot;打开《demoA》失败&quot;];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;];;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            [[UIApplication sharedApplication] openURL:url];;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        [SVPManager showFailureAndStatus:@&quot;未安装《demoA》应用&quot;];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark -懒加载</span><br><span class="line">- (NSMutableDictionary *)mDic&#123;</span><br><span class="line">    if (!_mDic) &#123;</span><br><span class="line">        _mDic = @&#123;&#125;.mutableCopy;</span><br><span class="line">    &#125;</span><br><span class="line">    return _mDic;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>在 <code>demoB</code> 的 <code>AppDelegate</code> 中调用</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 处理URL</span><br><span class="line">- (BOOL)application:(UIApplication *)app</span><br><span class="line">            openURL:(NSURL *)url</span><br><span class="line">            options:(NSDictionary&lt;UIApplicationOpenURLOptionsKey, id&gt; *)options &#123;</span><br><span class="line">    // 处理App叫通讯</span><br><span class="line">    [[AppCommunicate manager] handleAppCommunicateWithUrl:url];</span><br><span class="line">    </span><br><span class="line">    return YES;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>至此，<code>demoA</code> 和 <code>demoB</code> 之间就可以通信了。</li>
+</ol>
+<h1 id="Universal-Links"><a href="#Universal-Links" class="headerlink" title="Universal Links"></a>Universal Links</h1><h2 id="什么是-Universal-Links（通用链接）"><a href="#什么是-Universal-Links（通用链接）" class="headerlink" title="什么是 Universal Links（通用链接）"></a>什么是 Universal Links（通用链接）</h2><ul>
+<li><p>Universal Links（通用链接），这是 <code>Apple</code> 在 <code>iOS9.0</code> 推出的一种能通过 <code>HTTPS</code> 链接直接启动手机 <code>App</code>（手机有安装App的情况）的链接。当你的应用支持 <code>Universal Links（通用链接）</code></p>
+</li>
+<li><p>在用户点击一个 <code>通用链接</code> 时，可以跳转到 <code>你的网站</code> 并获得无缝 <code>重定向</code> 到对应的 <code>App</code>，且 <code>不需要通过 Safari 浏览器</code> 。如果你的应用 <code>不支持</code> 的话，会 <code>在 Safari 中打开该链接</code>。</p>
+</li>
+</ul>
+<h2 id="Universal-Links（通用链接）特点"><a href="#Universal-Links（通用链接）特点" class="headerlink" title="Universal Links（通用链接）特点"></a>Universal Links（通用链接）特点</h2><ul>
+<li><p>Universal Link（通用链接）：看起来就是一条普通的 <code>https</code> 链接，当然是我们在该 <code>链接域名根目录</code> 配置过的一个链接，也可以在该链接中放置对应的H5页面。当用户的 <code>点击该链接</code>，只要手机中 <code>安装了支持该链接的APP就会直接进入到APP中</code>。如果 <code>没有安装APP则会跳转到Safari浏览器中</code>，展示H5页面。对用户来说则是一个无缝跳转的过程。</p>
+</li>
+<li><p>使用 <code>Universal Link（通用链接）</code> 可以让用户在 <code>Safari</code> 浏览器或者其他APP的 webview中拉起相应的APP，也可以在APP中使用相应的功能，从而来把用户引流到APP中。比如淘宝当在Safari浏览器中进入淘宝网页点击打开APP则会使用Universal Link（通用链接）来拉起淘宝APP。</p>
+</li>
+</ul>
+<h1 id="对比-URL-Schemes，Universal-Links（通用链接）的优点"><a href="#对比-URL-Schemes，Universal-Links（通用链接）的优点" class="headerlink" title="对比 URL Schemes，Universal Links（通用链接）的优点"></a>对比 URL Schemes，Universal Links（通用链接）的优点</h1><ul>
+<li><p>灵活性：即使未安装APP，Universal Link也可以正常使用，网页可以显示跳转AppStore下载的引导，进一步地提升用户体验。</p>
+</li>
+<li><p>安全性：开发者在自己的网站域名配置了 <code>apple-app-site-association</code>，才能通过对应的域名调起APP。另外域名必须支持 <code>HTTPS</code>。</p>
+</li>
+<li><p>隐私性：在iOS9之前，基于URL Scheme，大家可以判断手机是否安装某APP。并且可以随便根据URL Scheme打开其他APP，像以前之前可以打开微信的扫一扫等各种功能。使用Universal Link就不会被其他恶意开发者随便跳转打开你的APP具体页面。</p>
+</li>
+<li><p>通用性：一个URL对你的网站和App都通用，Universal Links 是标准的URL格式，而自定义URL Scheme可能理解为特殊URL方案，默认只有你的App能解析，浏览器无法解析。</p>
+</li>
+</ul>
+<h2 id="如何配置Universal-Link"><a href="#如何配置Universal-Link" class="headerlink" title="如何配置Universal Link"></a>如何配置Universal Link</h2><ol>
+<li>创建配置文件</li>
+</ol>
+<p>客户端桌面创建一个名叫 <code>apple-app-site-association</code> 的文件（不需要文件后缀），包含固定格式的json文件内容如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % cd Desktop </span><br><span class="line">mac@bogon Desktop % touch apple-app-site-association</span><br></pre></td></tr></table></figure></div>
+
+<p>注意：文件名必须为 <code>apple-app-site-association</code>，不能带后缀</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;applinks&quot;: &#123;</span><br><span class="line">        &quot;apps&quot;: [],</span><br><span class="line">        &quot;details&quot;: [</span><br><span class="line">            &#123;</span><br><span class="line">                &quot;appID&quot;: &quot;8LNS23U4A8.cn.epod.srsf&quot;,</span><br><span class="line">                &quot;paths&quot;: [ &quot;*&quot; ]</span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>说明：<br>1、<code>appID</code> 为 <code>teamID.BundleID</code><br>2、<code>paths</code> 为 设置哪些路径可以唤起App，可以用 “*” 表示所有路径</p>
+</blockquote>
+<ol start="2">
+<li>在项目的 <code>Capablities</code> 中开启 <code>Associated domains</code>，一定要按照 <code>applinks:域名</code> 的格式填写：</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202306191517820.png"
+                     
+                ></p>
+<ol start="3">
+<li>服务器配置</li>
+</ol>
+<p>将 <code>apple-app-site-association</code> 文件上传到服务器，这个需要 <code>后端/运维</code> 配合完成，将这个 文件放到 <code>服务器的根目录下</code> 或者放到 <code>.well-known</code> 目录下。</p>
+<ol start="4">
+<li>验证 <code>Universal Link</code> 是否配置成功</li>
+</ol>
+<ul>
+<li><p>如果已经配置过 <code>Universal Link</code>，那么在用户 <code>第一次安装App</code> 时，<code>苹果</code> 会发送一个 <code>请求</code>，请求你服务器上的 <code>apple-app-site-association</code> 文件</p>
+</li>
+<li><p>请求 <code>apple-app-site-association</code> 文件成功后，用户就可以使用 <code>Universal Link</code> 唤醒 <code>App</code> 了，测试的时候我们最好把App删了重新安装，确保苹果会发送请求 <code>apple-app-site-association</code> 文件。</p>
+</li>
+</ul>
+<ol start="5">
+<li>验证</li>
+</ol>
+<ul>
+<li><p>方式一：直接在 <code>Safari</code> 中输入 <code>https://id.epod.cn</code> 打开 </p>
+</li>
+<li><p>方式二：在 <code>备忘录</code> 中输入 <code>https://id.epod.cn</code>，然后点击打开</p>
+</li>
+</ul>
+<p>会出现两种结果，未安装App时：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202306191532777.jpeg"
+                     
+                ></p>
+<p>已安装App时：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202306191530232.jpeg"
+                     
+                ></p>
+<ol start="6">
+<li>通过 <code>Universal Link</code> 打开 <code>App</code> 之后，可以根据 <code>path</code> 去做不同的操作，比如 <code>打开某个特定页面等等</code>。</li>
+</ol>
+
             </div>
 
             
@@ -325,6 +494,14 @@
                 </div>
             
 
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">#OC-学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
             
 
             
@@ -376,7 +553,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC学习51：App之间相互跳转</div>
-        
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#URL-Schemes"><span class="nav-text">URL Schemes</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Universal-Links"><span class="nav-text">Universal Links</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Universal-Links%EF%BC%88%E9%80%9A%E7%94%A8%E9%93%BE%E6%8E%A5%EF%BC%89"><span class="nav-text">什么是 Universal Links（通用链接）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Universal-Links%EF%BC%88%E9%80%9A%E7%94%A8%E9%93%BE%E6%8E%A5%EF%BC%89%E7%89%B9%E7%82%B9"><span class="nav-text">Universal Links（通用链接）特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94-URL-Schemes%EF%BC%8CUniversal-Links%EF%BC%88%E9%80%9A%E7%94%A8%E9%93%BE%E6%8E%A5%EF%BC%89%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-text">对比 URL Schemes，Universal Links（通用链接）的优点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AEUniversal-Link"><span class="nav-text">如何配置Universal Link</span></a></li></ol></li></ol>
 
     </div>
 </div>

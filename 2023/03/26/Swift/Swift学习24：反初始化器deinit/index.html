@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-03-26 19:30:56</span>
-            <span class="mobile">2023-03-26 19:30</span>
+            <span class="pc">2023-06-21 09:41</span>
+            <span class="mobile">2023-06-21 09</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -326,9 +326,9 @@
 
             <div class="article-content markdown-body">
                 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><ul>
-<li><p>Swift 的析构过程，在类的实例被释放前，析构函数被立即调用，析构函数只使用于类的类型。</p>
+<li><p><code>Swift</code> 的析构过程，在类的实例被释放前，析构函数被立即调用，析构函数只使用于类的类型。</p>
 </li>
-<li><p><code>析构器</code> 用 <code>deinit</code> 关键字来表示，也叫反初始化器，不带任何参数</p>
+<li><p><code>析构器</code> 用 <code>deinit</code> 关键字来表示，也叫 <code>反初始化器</code>，不带任何参数</p>
 </li>
 <li><p><code>构造器</code> 用 <code>init</code> 关键字来表示，也叫 <code>初始化器</code>，可以带参数</p>
 </li>
@@ -352,7 +352,7 @@
 <p><code>Player</code> 类描述了游戏中的一个玩家。每一个玩家在任意时间都有一定数量的硬币存储在他们的钱包中。</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">class Player &#123;</span><br><span class="line">    // 玩家的钱包</span><br><span class="line">    var coinsInPurse: Int</span><br><span class="line">    </span><br><span class="line">    // 初始化从 Bank 对象获取指定数量的硬币</span><br><span class="line">    init(coins: Int) &#123;</span><br><span class="line">        coinsInPurse = Bank.distribute(coins: coins)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 从 Bank 对象 赢取 一定数量的硬币，把它们添加到玩家的钱包</span><br><span class="line">    func win(coins: Int) &#123;</span><br><span class="line">        coinsInPurse += Bank.distribute(coins: coins)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 析构器被自动调用</span><br><span class="line">    deinit &#123;</span><br><span class="line">        // 查询 Player 的硬币</span><br><span class="line">        print(&quot;Bank回收之前，Player的硬币数量：\(coinsInPurse)&quot;)</span><br><span class="line">        // 查询 Bank 的硬币</span><br><span class="line">        print(&quot;Bank回收之前，Bank的硬币数量：\(Bank.coinsInBank)&quot;)</span><br><span class="line">        </span><br><span class="line">        // 玩家钱包中的硬币返回给银行</span><br><span class="line">        Bank.receive(coins: coinsInPurse)</span><br><span class="line">        coinsInPurse = 0;</span><br><span class="line">        </span><br><span class="line">        // 查询 Player 的硬币</span><br><span class="line">        print(&quot;Bank回收之后，Player的硬币数量：\(coinsInPurse)&quot;)</span><br><span class="line">        // 查询 Bank 的硬币</span><br><span class="line">        print(&quot;Bank回收之后，Bank的硬币数量：\(Bank.coinsInBank)&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
 
-<p>假设玩家从银行初次获取 3000 硬币，后又赢取 1000 硬币</p>
+<p>假设玩家从银行初次获取 <code>3000</code> 硬币，后又赢取 <code>1000</code> 硬币</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class ViewController: UIViewController &#123;</span><br><span class="line">    </span><br><span class="line">    override func viewDidLoad() &#123;</span><br><span class="line">        super.viewDidLoad()</span><br><span class="line">        </span><br><span class="line">        // 实例化 Player 从 Bank 获取 3000 硬币</span><br><span class="line">        let player = Player(coins: 3000)</span><br><span class="line">        // Player 从 Bank 赢取 100 硬币</span><br><span class="line">        player.win(coins: 1000)</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
 
 <p>当玩家的硬币由于某些原因被回收后，查看打印结果</p>

@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/04/06/oc网络/oc网络学习02：dns原理/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC网络学习02：DNS探索">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/04/06/OC网络/OC网络学习02：DNS原理/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC网络学习02：DNS探索">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC网络学习02：DNS探索 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC网络学习02：DNS探索</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-04-06 11:22:53</span>
+        <span class="mobile">2023-04-06 11:22</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-07-13 09:31:09</span>
+            <span class="mobile">2023-07-13 09:31</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/">OC-网络学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="DNS-是什么？"><a href="#DNS-是什么？" class="headerlink" title="DNS 是什么？"></a>DNS 是什么？</h1><p><code>DNS</code>，就是 <code>Domain Name System</code> 的缩写，翻译过来就是 <code>域名系统</code>。是互联网上作为 <code>域名和IP地址相互映射的一个分布式数据库</code>。<code>DNS</code> 能够使用户更方便的访问互联网，而不用去记住能够被机器直接读取的 <code>IP</code> 数串。通过 <code>域名</code>，最终得到该域名对应的IP地址的过程叫做 <code>域名解析</code>（或主机名解析）。</p>
+<p>举例：如果你要访问域名 <code>www.bboyzj.cn</code> ，首先要通过 <code>DNS</code> 查出它的 <code>IP</code> 地址是  <code>113.31.107.233</code>。</p>
+<h1 id="查询过程"><a href="#查询过程" class="headerlink" title="查询过程"></a>查询过程</h1><p>虽然只需要返回一个 <code>IP</code> 地址，但是 <code>DNS</code> 查询过程非常复杂，分成多个步骤</p>
+<ol>
+<li>查询 <code>IP</code> 地址</li>
+</ol>
+<p>终端执行：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % dig www.bboyzj.cn</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202307130928933.png"
+                     
+                ></p>
+<ul>
+<li>第一部分：查询 参数和统计</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">; &lt;&lt;&gt;&gt; DiG 9.10.6 &lt;&lt;&gt;&gt; www.bboyzj.cn</span><br><span class="line">;; global options: +cmd</span><br><span class="line">;; Got answer:</span><br><span class="line">;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 5433</span><br><span class="line">;; flags: qr rd ra; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 1</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>第二部分：查询内容</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">;; OPT PSEUDOSECTION:</span><br><span class="line">; EDNS: version: 0, flags:; udp: 4096</span><br><span class="line">;; QUESTION SECTION:</span><br><span class="line">;www.bboyzj.cn.			IN	A</span><br></pre></td></tr></table></figure></div>
+
+<p>查询域名 <code>www.bboyzj.cn</code> 的 <code>A</code> 记录，<code>A</code> 是 <code>address</code> 的缩写</p>
+<ul>
+<li>第三部分：DNS服务器的答复</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">;; ANSWER SECTION:</span><br><span class="line">www.bboyzj.cn.		355	IN	CNAME	bboyzj.github.io.</span><br><span class="line">bboyzj.github.io.	3355	IN	A	185.199.111.153</span><br><span class="line">bboyzj.github.io.	3355	IN	A	185.199.109.153</span><br><span class="line">bboyzj.github.io.	3355	IN	A	185.199.108.153</span><br><span class="line">bboyzj.github.io.	3355	IN	A	185.199.110.153</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>注：<br><code>A</code> ：<code>地址记录（Address），返回域名指向的IP地址</code>。<br><code>CNAME</code>： 记录主要用于 <code>域名内部的跳转</code>。<br><code>NS</code>：<code>域名服务器记录</code>（Name Server），返回保存下一级域名信息的服务器地址。该记录只能设置为域名，不能设置为IP地址。</p>
+</blockquote>
+<p>上面的结果表示：</p>
+<p><code>www.bboyzj.cn</code> 内部跳转指向 <code>bboyzj.github.io</code>，也就是说，用户查询 <code>www.bboyzj.cn</code> 的时候，实际上返回的是 <code>bboyzj.github.io</code> 的 <code>IP</code> 地址。即<code>www.bboyzj.cn</code> 的 <code>CNAME</code> 记录指向 <code>bboyzj.github.io</code> 的 <code>IP</code> 地址。这样的好处是，变更服务器 <code>IP</code> 地址的时候，只需要修改 <code>bboyzj.github.io</code> 这个域名就可以了，用户的 <code>www.bboyzj.cn</code> 域名不用修改</p>
+<p><code>bboyzj.github.io</code> 有四个 <code>A</code> 记录，即四个IP地址，<code>3355</code> 是 <code>TTL</code> 值（Time to live 的缩写），表示 <code>缓存时间</code>，即 <code>3355秒</code> 之内不用重新查询。</p>
+<ul>
+<li>第四部分：DNS服务器的一些传输信息</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">;; Query time: 65 msec</span><br><span class="line">;; SERVER: 113.31.107.233#53(113.31.107.233)</span><br><span class="line">;; WHEN: Thu Apr 06 11:34:49 CST 2023</span><br><span class="line">;; MSG SIZE  rcvd: 136</span><br></pre></td></tr></table></figure></div>
+
+<p>本机的 <code>DNS</code> 服务器是 <code>113.31.107.233</code>，查询端口号是 <code>53</code>（DNS服务器默认端口），以及回应长度是 <code>136</code> 字节。</p>
+<ol start="2">
+<li>如果不想看到这么多内容，可以是用 <code>+short</code> 参数</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % dig +short www.bboyzj.cn</span><br><span class="line">bboyzj.github.io.</span><br><span class="line">185.199.110.153</span><br><span class="line">185.199.108.153</span><br><span class="line">185.199.109.153</span><br><span class="line">185.199.111.153</span><br></pre></td></tr></table></figure></div>
+
+<p>只返回 <code>www.bboyzj.cn</code> 对应的 <code>四个</code> IP地址(即 <code>A</code> 记录)</p>
+<h1 id="域名的层次"><a href="#域名的层次" class="headerlink" title="域名的层次"></a>域名的层次</h1><p><code>DNS</code> 服务器怎么知道每个域名的 <code>IP</code> 地址的呢？</p>
+<p>答：<code>分级查询</code></p>
+<ul>
+<li>根域名（.root）</li>
+</ul>
+<p>举例：<code>bboyzj.github.io</code> 显示为 <code>bboyzj.github.io.</code> ，这不是疏忽，而是所有域名的尾部，实际上都有一个 <code>根域名</code>，实际上的域名是 <code>bboyzj.github.io.root</code>，简写成 <code>bboyzj.github.io.</code>。因为，根域名 <code>.root</code> 对于所有域名都是一样的，可以省略</p>
+<ul>
+<li>顶级域名(一级)</li>
+</ul>
+<p>根域名的下一级是 <code>顶级域名（top-level domain，缩写 TLD）</code>，比如 <code>.com/.net/.cn</code></p>
+<ul>
+<li>次级域名（二级）</li>
+</ul>
+<p>顶级域名的下一级叫 <code>次级域名（second-level domain，缩写 SLD）</code>，比如 <code>www.bboyzj.cn</code> 中的 <code>.bboyzj</code></p>
+<ul>
+<li>主机（三级）</li>
+</ul>
+<p>次级域名的下一级叫 <code>主机（host）</code>，比如： <code>www.bboyzj.cn</code> 中的 <code>www</code>，又称 <code>三级域名</code></p>
+<ul>
+<li>总结</li>
+</ul>
+<p>域名的层级结构：<code>主机名.次级域名.顶级域名.根域名</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">host.sld.tld.root</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="分级查询"><a href="#分级查询" class="headerlink" title="分级查询"></a>分级查询</h1><p><code>分级查询</code> 就是从 <code>根域名</code> 依次查询每一级的 <code>NS</code> 记录，知道查到最终的 <code>IP</code> 地址。需要明确的是 <code>NS记录</code> 是 <code>域名服务器记录</code>（Name Server），返回保存下一级域名信息的服务器地址。大致过程如下：</p>
+<ol>
+<li><code>根域名服务器</code> 查到 <code>顶级域名服务器</code> 的 <code>NS记录</code> 和 <code>A记录</code></li>
+<li><code>顶级域名服务器</code> 查到 <code>次级域名服务器</code> 的 <code>NS记录</code> 和 <code>A记录</code></li>
+<li><code>次级域名服务器</code> 查到 <code>主机名</code> 的 <code>IP</code> 地址</li>
+</ol>
+<p>从上面看到没有提及 <code>根域名服务器</code> 的 <code>NS记录</code> 和 <code>A记录</code>，因为 <code>根域名服务器</code> 的 <code>NS记录</code> 和 <code>A记录</code> 地址一般是 <code>不会变化的</code>，<code>内置在DNS服务器中</code></p>
+<p>目前，世界上一共有十三组根域名服务器，<code>从 A.ROOT-SERVERS.NET</code> 到 <code>M.ROOT-SERVERS.NET</code></p>
+<ul>
+<li><code>dig</code> 命令 <code>+trace</code> 参数显示 <code>DNS</code> 的整个分级查询过程</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@MacdeMacBook-Pro ~ % dig +trace www.bboyzj.cn</span><br></pre></td></tr></table></figure></div>
+
+<p>上面的命令列出了 <code>根域名服务</code> 器的所有 <code>NS记录</code>，即 <code>所有根域名服务器</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">; &lt;&lt;&gt;&gt; DiG 9.10.6 &lt;&lt;&gt;&gt; +trace www.bboyzj.cn</span><br><span class="line">;; global options: +cmd</span><br><span class="line">.			847	IN	NS	e.root-servers.net.</span><br><span class="line">.			847	IN	NS	a.root-servers.net.</span><br><span class="line">.			847	IN	NS	k.root-servers.net.</span><br><span class="line">.			847	IN	NS	i.root-servers.net.</span><br><span class="line">.			847	IN	NS	b.root-servers.net.</span><br><span class="line">.			847	IN	NS	d.root-servers.net.</span><br><span class="line">.			847	IN	NS	m.root-servers.net.</span><br><span class="line">.			847	IN	NS	c.root-servers.net.</span><br><span class="line">.			847	IN	NS	h.root-servers.net.</span><br><span class="line">.			847	IN	NS	f.root-servers.net.</span><br><span class="line">.			847	IN	NS	j.root-servers.net.</span><br><span class="line">.			847	IN	NS	g.root-servers.net.</span><br><span class="line">.			847	IN	NS	l.root-servers.net.</span><br><span class="line">;; Received 239 bytes from 114.114.114.114#53(114.114.114.114) in 15 ms</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>然后，服务器跳转到 <code>bboyzj.github.io</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">www.bboyzj.cn.		1	IN	CNAME	bboyzj.github.io.</span><br></pre></td></tr></table></figure></div>
+
+
+<p>最后，<code>bboyzj.github.io</code> 有4条A记录，即这四个IP地址都可以访问到网站。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">www.bboyzj.cn.		1	IN	CNAME	bboyzj.github.io.</span><br><span class="line">bboyzj.github.io.	3600	IN	A	185.199.111.153</span><br><span class="line">bboyzj.github.io.	3600	IN	A	185.199.110.153</span><br><span class="line">bboyzj.github.io.	3600	IN	A	185.199.109.153</span><br><span class="line">bboyzj.github.io.	3600	IN	A	185.199.108.153</span><br><span class="line">;; Received 136 bytes from 192.5.5.241#53(f.root-servers.net) in 78 ms</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="其他-DNS-工具"><a href="#其他-DNS-工具" class="headerlink" title="其他 DNS 工具"></a>其他 DNS 工具</h1><p>除了dig，还有一些其他小工具也可以使用。</p>
+<ol>
+<li>host 命令</li>
+</ol>
+<p>host命令可以看作dig命令的简化版本，返回当前请求域名的各种记录。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % host bboyzj.cn</span><br><span class="line">bboyzj.cn has address 185.199.109.153</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>nslookup 命令</li>
+</ol>
+<p>nslookup命令用于互动式地查询域名记录。</p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC网络学习02：DNS探索</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-04-06 11:22:53</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/04/06/OC网络/OC网络学习02：DNS原理/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/">#OC-网络学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/04/08/%E9%94%80%E5%94%AE/%E9%94%80%E5%94%AE01%EF%BC%9A%E5%A4%A7%E5%AE%A2%E6%88%B7/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">销售01：大客户</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/04/03/Swift/Swift%E5%AD%A6%E4%B9%A029%EF%BC%9A%E5%8A%A8%E7%94%BB/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">Swift学习29：动画</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC网络学习02：DNS探索</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#DNS-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">DNS 是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E8%BF%87%E7%A8%8B"><span class="nav-text">查询过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E7%9A%84%E5%B1%82%E6%AC%A1"><span class="nav-text">域名的层次</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E7%BA%A7%E6%9F%A5%E8%AF%A2"><span class="nav-text">分级查询</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96-DNS-%E5%B7%A5%E5%85%B7"><span class="nav-text">其他 DNS 工具</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

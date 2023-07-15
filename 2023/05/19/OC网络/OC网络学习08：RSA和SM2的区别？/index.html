@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/05/19/oc网络/oc网络学习08：rsa和sm2的区别？/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC网络学习08：RSA和SM2的区别？">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/05/19/OC网络/OC网络学习08：RSA和SM2的区别？/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC网络学习08：RSA和SM2的区别？">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC网络学习08：RSA和SM2的区别？ -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC网络学习08：RSA和SM2的区别？</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-05-19 13:04:42</span>
+        <span class="mobile">2023-05-19 13:04</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-07-15 13:35:13</span>
+            <span class="mobile">2023-07-15 13:35</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/">OC-网络学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="PEM-和-DER"><a href="#PEM-和-DER" class="headerlink" title="PEM 和 DER"></a>PEM 和 DER</h1><ul>
+<li>PEM</li>
+</ul>
+<p><code>PEM</code> 文件只是 <code>DER</code> 编码数据的 <code>base64</code> 编码版本,为了区分外部DER编码字符串中的数据类型，数据周围存在页眉和页脚。PEM编码文件的示例是：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN PRIVATE KEY-----</span><br><span class="line">MIGHAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBG0wawIBAQQgbDojZWhRjTkpNUAb</span><br><span class="line">Kp12Zn9LpOe1u18jX5Hz5ySfRmChRANCAAS7B6RSXwuVQ1WNrJHd5oN5OOS8H1iE</span><br><span class="line">5fPqUh2IadP3SpBDpNgrRhhIicd4XaQWxHbCrgd8SEvrf9/6Kp62JCye</span><br><span class="line">-----END PRIVATE KEY-----</span><br></pre></td></tr></table></figure></div>
+
+<p>第一行和最后一行表示内部应该预期的DER格式。里面的数据是DER编码信息的base64编码版本。</p>
+<h1 id="RSA"><a href="#RSA" class="headerlink" title="RSA"></a>RSA</h1><p><code>RSA</code> 是 <code>非对称密码算法</code>，是 <code>国际上</code> 通用的 <code>非对称密码算法</code></p>
+<h1 id="SM2"><a href="#SM2" class="headerlink" title="SM2"></a>SM2</h1><p><code>SM2</code> 是 <code>非对称密码算法</code>，是 <code>我们国家</code> 自己制定的非对称密码算法标准</p>
+<h1 id="GmSSL"><a href="#GmSSL" class="headerlink" title="GmSSL"></a>GmSSL</h1><ol>
+<li>关于 GmSSL</li>
+</ol>
+<p><code>GmSSL</code> 是一个开源的密码工具箱，<code>支持SM2/SM3/SM4/SM9/ZUC等国密(国家商用密码)算法、SM2国密数字证书及基于SM2证书的SSL/TLS安全通信协议</code>，支持国密硬件密码设备，提供符合国密规范的编程接口与命令行工具，可以用于构建 <code>PKI/CA、安全通信、数据加密等</code> 符合国密标准的安全应用。<code>GmSSL</code> 项目是 <code>OpenSSL</code> 项目的 <code>分支</code>，并与 <code>OpenSSL</code> 保持接口兼容。因此<code>GmSSL</code> 可以替代应用中的 <code>OpenSSL</code> 组件，并使应用自动具备 <code>基于国密</code> 的安全能力。<code>GmSSL</code> 项目采用对商业应用友好的类 <code>BSD</code> 开源许可证，开源且可以用于闭源的商业应用。</p>
+<p>GmSSL项目由北京大学关志副研究员的密码学研究组开发维护，项目源码托管于GitHub。自2014年发布以来，GmSSL已经在多个项目和产品中获得部署与应用，并获得2015年度“一铭杯”中国Linux软件大赛二等奖(年度最高奖项)与开源中国密码类推荐项目。GmSSL项目的核心目标是通过开源的密码技术推动国内网络空间安全建设。</p>
+<p>大家都知道OpenSSL，主要是提供国际加密算法库。但是在最新的OpenSSL 1.1.1以上版本，已经对国密算法提供了支持。</p>
+<p>OpenSSL、GmSSL这俩提供的国密算法库，去看了下代码，代码实现是不一样的，属于条条大路通罗马。</p>
+<ol start="2">
+<li><code>标准的HTTPS</code> 和 <code>国密HTTPS</code> 区别？</li>
+</ol>
+<p>国密SSL能够做到在同一个端口，自适应支持HTTPS&#x2F;国密HTTPS，完美解决从标准HTTPS到国密HTTPS的平滑过渡</p>
+<h1 id="解决与系统OpenSSL冲突的问题"><a href="#解决与系统OpenSSL冲突的问题" class="headerlink" title="解决与系统OpenSSL冲突的问题"></a>解决与系统OpenSSL冲突的问题</h1><p><code>GmSSL</code> 是支持国密算法和标准的OpenSSL分支，也就是说GmSSL是在OpenSSL代码基础上添加的国密算法。</p>
+<p>因此为了兼容OpenSSL，GmSSL编译后生成的so文件名称与OpenSSL一致，都是 <code>libcrypto.so</code>。</p>
+<p><strong>可能存在的问题：</strong></p>
+<p>Linux上很多软件都依赖于系统中的 <code>OpenSSL</code> 库。若你编译安装的 <code>GmSSL</code> 版本，其基于的OpenSSL分支版本，与系统中的OpenSSL版本不一致，便会产生冲突，很容易导致这些软件不可用。</p>
+<p><strong>最简单有效的办法：将GmSSL编译为静态库。</strong></p>
+<p><code>GmSSL</code> 命令行工具，以及我们基于该静态库开发的程序，直接内部就集成了 <code>GmSSL</code> 的二进制码，不需要去查找库了，也就不会与系统中 <code>OpenSSL</code> 产生冲突。</p>
+<p>在安装GmSSL时，安装到指定的目录下，如&#x2F;usr&#x2F;local&#x2F;gmssl，与系统中OpenSSL路径保持独立。</p>
+<p>这样，即 <code>从文件路径和运行</code> 时，两方面保证了 <code>GmSSL</code> 与 <code>OpenSSL</code> 不会冲突，并保持使用上的相互独立性。这的确是最完美的解决办法。</p>
+<h1 id="GmSSL源码准备"><a href="#GmSSL源码准备" class="headerlink" title="GmSSL源码准备"></a>GmSSL源码准备</h1><p>下载 GmSSL 源码：<a class="link"   target="_blank" rel="noopener" href="https://gitcode.net/mirrors/guanzhi/gmssl?utm_source=csdn_github_accelerator" >https://github.com/guanzhi/GmSSL <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h1 id="编译与安装GmSSL"><a href="#编译与安装GmSSL" class="headerlink" title="编译与安装GmSSL"></a>编译与安装GmSSL</h1><ol>
+<li>解压并进入目录</li>
+</ol>
+<p>解压源码：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip GmSSL-master.zip</span><br></pre></td></tr></table></figure></div>
+
+<p>进入源码目录</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % cd /Users/mac/Desktop/gmssl-master</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>编译选项</li>
+</ol>
+<p>配置安装路径，编译为静态库:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % ./config --prefix=/usr/local/gmssl --openssldir=/usr/local/gmssl no-shared</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>注：<br>–prefix 表示安装路径；<br>–openssldir&#x3D;&#x2F;usr&#x2F;local&#x2F;gmssl 表示openssl 的 configure 文件路径，与系统中 openssl 的路径保持独立，在路径上避免与系统中 openssl 的冲突<br>no-shared 表示只生成静态库，在运行上避免与系统中 openssl 的冲突<br>此条命令若出错，可参考<a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43716504/article/details/126095234" >这篇文章 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>，修改 Configure、test&#x2F;build.info文件后，即可解决</p>
+</blockquote>
+<p>如下图：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16844769096294.jpg"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16844768550262.jpg"
+                     
+                ></p>
+<p>重新输入上面的命令，成功执行：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16844769546529.jpg"
+                     
+                ></p>
+<ol start="3">
+<li>编译并安装(默认编译x86_64架构的环境，即 <code>模拟器</code> 环境)</li>
+</ol>
+<ul>
+<li>编译：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon gmssl-master % make</span><br></pre></td></tr></table></figure></div>
+
+<p>编译成功如下图：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16844774798628.jpg"
+                     
+                ></p>
+<ul>
+<li>安装</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon gmssl-master % sudo make install</span><br></pre></td></tr></table></figure></div>
+
+<p>输入电脑密码即可</p>
+<p>安装成功如下图：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16844778323895.jpg"
+                     
+                ></p>
+<p>生产模拟器下运行的静态库 <code>.a（libssl.a 和 libcrypto.a）</code> 文件，</p>
+<ol start="4">
+<li>环境变量</li>
+</ol>
+<p>打开 <code>~/.bashrc</code> 文件</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon gmssl-master % vim ~/.bashrc</span><br></pre></td></tr></table></figure></div>
+
+<p>在文件末尾添加内容：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH=$PATH:/usr/local/gmssl/bin</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16844778948550.jpg"
+                     
+                ></p>
+<p>修改完成后按 <code>esc -&gt; :wq</code> 保存退出</p>
+<p>环境变量生效：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon gmssl-master % source ~/.bashrc </span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>验证是否安装成功</li>
+</ol>
+<ul>
+<li>GmSSL</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon gmssl-master % gmssl version -a</span><br><span class="line">GmSSL 3.1.0</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>OpenSSL</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon gmssl-master % openssl version -a</span><br><span class="line">LibreSSL 2.8.3</span><br><span class="line">built on: date not available</span><br><span class="line">platform: information not available</span><br><span class="line">options:  bn(64,64) rc4(16x,int) des(idx,cisc,16,int) blowfish(idx) </span><br><span class="line">compiler: information not available</span><br><span class="line">OPENSSLDIR: &quot;/private/etc/ssl&quot;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="编译ARM64的静态库文件"><a href="#编译ARM64的静态库文件" class="headerlink" title="编译ARM64的静态库文件"></a>编译ARM64的静态库文件</h1><ol>
+<li>清理</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon ~ % cd /Users/mac/Desktop/gmssl-master </span><br><span class="line">mac@bogon gmssl-master % make distclean</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>按顺序终端执行</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon gmssl-master % export CC=clang</span><br><span class="line"></span><br><span class="line">// 注意Xcode路径</span><br><span class="line">mac@bogon gmssl-master % export CROSS_TOP=/Users/mac/Desktop/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer</span><br><span class="line"></span><br><span class="line">mac@bogon gmssl-master % export CROSS_SDK=iPhoneOS.sdk</span><br><span class="line"></span><br><span class="line">mac@bogon gmssl-master % export PATH=&quot;/Users/mac/Desktop/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:$PATH&quot;</span><br><span class="line"></span><br><span class="line">mac@bogon gmssl-master % ./configure ios64-cross no-shared --prefix=/usr/local/openssl-ios64make</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="编译armv7下的静态库文件"><a href="#编译armv7下的静态库文件" class="headerlink" title="编译armv7下的静态库文件"></a>编译armv7下的静态库文件</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mac@bogon gmssl-master % export CC=clang</span><br><span class="line"></span><br><span class="line">// 注意Xcode路径</span><br><span class="line">mac@bogon gmssl-master % export CROSS_TOP=/Users/mac/Desktop/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer</span><br><span class="line"></span><br><span class="line">mac@bogon gmssl-master % export CROSS_SDK=iPhoneOS.sdk</span><br><span class="line"></span><br><span class="line">mac@bogon gmssl-master % export PATH=&quot;/Users/mac/Desktop/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:$PATH&quot;</span><br><span class="line"></span><br><span class="line">mac@bogon gmssl-master % ./configure ios-cross no-shared --prefix=/usr/local/openssl-ios</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h1><ul>
+<li>查看所有支持编译的环境:</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>合并静态库文件,使其支持真机和模拟器</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lipo -create  模拟器.a文件路径   真机.a文件路径 -output 合成的.a文件路径</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>查看静态库文件支持的编辑环境</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lipo -info  .a文件路径</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><ol>
+<li>将 <code>.a静态库文件</code> 和 <code>include头文件</code> 引入到项目中</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16844794032558.jpg"
+                     
+                ></p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC网络学习08：RSA和SM2的区别？</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-05-19 13:04:42</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/05/19/OC网络/OC网络学习08：RSA和SM2的区别？/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/">#OC-网络学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/05/19/OC%E7%BD%91%E7%BB%9C/OC%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A005%EF%BC%9A%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86%E5%92%8C%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC网络学习05：正向代理和反向代理服务器</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/05/12/OC%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/OC%E7%AE%97%E6%B3%9506%EF%BC%9A%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC算法06：快速排序</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC网络学习08：RSA和SM2的区别？</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PEM-%E5%92%8C-DER"><span class="nav-text">PEM 和 DER</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RSA"><span class="nav-text">RSA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SM2"><span class="nav-text">SM2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GmSSL"><span class="nav-text">GmSSL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E4%B8%8E%E7%B3%BB%E7%BB%9FOpenSSL%E5%86%B2%E7%AA%81%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-text">解决与系统OpenSSL冲突的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GmSSL%E6%BA%90%E7%A0%81%E5%87%86%E5%A4%87"><span class="nav-text">GmSSL源码准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E4%B8%8E%E5%AE%89%E8%A3%85GmSSL"><span class="nav-text">编译与安装GmSSL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E8%AF%91ARM64%E7%9A%84%E9%9D%99%E6%80%81%E5%BA%93%E6%96%87%E4%BB%B6"><span class="nav-text">编译ARM64的静态库文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E8%AF%91armv7%E4%B8%8B%E7%9A%84%E9%9D%99%E6%80%81%E5%BA%93%E6%96%87%E4%BB%B6"><span class="nav-text">编译armv7下的静态库文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%91%BD%E4%BB%A4"><span class="nav-text">其他命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-text">使用</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

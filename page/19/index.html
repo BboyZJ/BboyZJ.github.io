@@ -250,28 +250,25 @@
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/16/OC/OC%E5%AD%A6%E4%B9%A038.1%EF%BC%9ARunloop%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">
-                        OC学习38.1：Runloop底层原理
+                    <a href="/BboyZJ.github.io/2023/02/25/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8614-0%EF%BC%9A%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8%E7%9A%84%E6%9C%AC%E8%B4%A8objc_msgSend%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81/">
+                        OC底层原理14-0：方法调用的本质objc_msgSend消息发送
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        Runloop是什么?
-RunLoop 又叫 运行循环，内部就是一个 do-while循环，在这个循环内部不断 处理各种任务，保证程序持续运行。
-
-
-
-验证：下载源码 ，查看CFRunloop.c文件，找到CFRunLoopRun源码可知：确实是 d...
+                        前言我们先得出结论：方法调用的本质是 objc_msgSend消息发送
+本文主要目的是理解 objc_msgSend 的 方法查找 流程
+在上一篇文章中 OC底层原理13：cache-t底层原理分析 中，分析了 cache的写入流程，在写入流程之前，...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Feb 16 2023 17:18:17 GMT+0800">
+            <span class="home-article-date" data-date="Sat Feb 25 2023 16:41:30 GMT+0800">
                 
-                    2023-02-16
+                    2023-02-25
                 
             </span>
         </span>
@@ -295,7 +292,7 @@ RunLoop 又叫 运行循环，内部就是一个 do-while循环，在这个循�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -303,7 +300,7 @@ RunLoop 又叫 运行循环，内部就是一个 do-while循环，在这个循�
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/16/OC/OC%E5%AD%A6%E4%B9%A038.1%EF%BC%9ARunloop%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">Read more<span class="seo-reader-text">OC学习38.1：Runloop底层原理</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/02/25/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8614-0%EF%BC%9A%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8%E7%9A%84%E6%9C%AC%E8%B4%A8objc_msgSend%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81/">Read more<span class="seo-reader-text">OC底层原理14-0：方法调用的本质objc_msgSend消息发送</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -315,24 +312,31 @@ RunLoop 又叫 运行循环，内部就是一个 do-while循环，在这个循�
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/16/OC/OC%E5%AD%A6%E4%B9%A038.2%EF%BC%9ARunloop%E7%BA%BF%E7%A8%8B%E4%BF%9D%E6%B4%BB/">
-                        OC学习38.2：Runloop线程保活
+                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A025%EF%BC%9ASwift%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%BC%8F%E5%92%8C%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D/">
+                        Swift学习25：Swift中的模式和模式匹配
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        创建线程类.h 文件下：
-12345678910111213141516171819202122232425#import &lt;Foundation/Foundation.h&gt;NS_ASSUME_NONNULL_BEGIN@interfac...
+                        模式
+模式代表 单个值或复合值 的 结构，
+
+可以用模式来匹配各种各样的值，例如：(x,y) 匹配 元组(1,2)
+
+可以从复合值中取出部分或全部值，然后把值绑定一个常量或变量，例如：(let x,y) 提取 (1,2)
+
+
+模式分类Swift 中模...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Feb 16 2023 17:17:17 GMT+0800">
+            <span class="home-article-date" data-date="Thu Feb 23 2023 21:36:05 GMT+0800">
                 
-                    2023-02-16
+                    2023-02-23
                 
             </span>
         </span>
@@ -342,7 +346,7 @@ RunLoop 又叫 运行循环，内部就是一个 do-while循环，在这个循�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
                         </li>
                     
                     
@@ -356,7 +360,7 @@ RunLoop 又叫 运行循环，内部就是一个 do-while循环，在这个循�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -364,7 +368,7 @@ RunLoop 又叫 运行循环，内部就是一个 do-while循环，在这个循�
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/16/OC/OC%E5%AD%A6%E4%B9%A038.2%EF%BC%9ARunloop%E7%BA%BF%E7%A8%8B%E4%BF%9D%E6%B4%BB/">Read more<span class="seo-reader-text">OC学习38.2：Runloop线程保活</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A025%EF%BC%9ASwift%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%BC%8F%E5%92%8C%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D/">Read more<span class="seo-reader-text">Swift学习25：Swift中的模式和模式匹配</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -376,26 +380,39 @@ RunLoop 又叫 运行循环，内部就是一个 do-while循环，在这个循�
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/16/%E9%9D%A2%E8%AF%95%E9%A2%98/Flutter%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9A%E6%80%BB%E7%BB%93/">
-                        Flutter面试题：Flutter
+                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A024%EF%BC%9A%E5%A6%82%E4%BD%95%E5%9C%A8Swift%E9%87%8C%E9%9D%A2%E8%BF%9B%E8%A1%8C%E6%8E%A7%E5%88%B6%E8%BD%AC%E7%A7%BB/">
+                        Swift学习24：如何在Swift里面进行控制转移
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        什么是flutter？原理是什么？
-flutter 是 google 推出并 开源的移动应用开发框架，通过 dart 语言开发APP，一套代码可以同时运行在 iOS 和 Android 平台。
+                        控制转移
+continue 
 
-flutter 底层使用 skia 作为 2D渲染引擎...
+break
+
+fallthrough
+
+return
+
+throw
+
+
+continue
+continue 告诉我不再继续当前循环遍历了，再次从头开始下一次遍历
+
+break
+break 会立即结束整个控制流语句，即跳...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Feb 16 2023 01:21:00 GMT+0800">
+            <span class="home-article-date" data-date="Thu Feb 23 2023 21:35:34 GMT+0800">
                 
-                    2023-02-16
+                    2023-02-23
                 
             </span>
         </span>
@@ -405,7 +422,7 @@ flutter 底层使用 skia 作为 2D渲染引擎...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/Flutter/">Flutter</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
                         </li>
                     
                     
@@ -419,7 +436,7 @@ flutter 底层使用 skia 作为 2D渲染引擎...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/Flutter-%E9%9D%A2%E8%AF%95%E9%A2%98/">Flutter-面试题</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -427,7 +444,7 @@ flutter 底层使用 skia 作为 2D渲染引擎...
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/16/%E9%9D%A2%E8%AF%95%E9%A2%98/Flutter%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9A%E6%80%BB%E7%BB%93/">Read more<span class="seo-reader-text">Flutter面试题：Flutter</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A024%EF%BC%9A%E5%A6%82%E4%BD%95%E5%9C%A8Swift%E9%87%8C%E9%9D%A2%E8%BF%9B%E8%A1%8C%E6%8E%A7%E5%88%B6%E8%BD%AC%E7%A7%BB/">Read more<span class="seo-reader-text">Swift学习24：如何在Swift里面进行控制转移</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -439,27 +456,26 @@ flutter 底层使用 skia 作为 2D渲染引擎...
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/15/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A014%EF%BC%9A%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
-                        C语言学习14：内存管理
+                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A023%EF%BC%9A%E6%9B%B4%E5%8A%A0%E5%BC%BA%E5%A4%A7%E7%9A%84switch/">
+                        Swift学习23：更加强大的switch
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        内存管理C 语言为内存 分配和管理 提供了几个函数，这些函数都在 &lt;stdlib.h&gt; 头文件中
-动态内存分配
-全局变量 分配在内存中的 静态存储区
-局部变量 分配在内存中的 动态存储区，存放在 栈（stack） 区。
-临时数据 分配在内...
+                        swift
+switch 语句会将一个值与多个可能匹配的模式匹配，然后基于第一个成功匹配的模式来执行合适的代码块
+
+switch 语句一定得是全面的。给定类型里的每一个值都得匹配到一个 switch 的 case。你可以定义一个默认匹配的 case ...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Feb 15 2023 00:14:03 GMT+0800">
+            <span class="home-article-date" data-date="Thu Feb 23 2023 21:35:07 GMT+0800">
                 
-                    2023-02-15
+                    2023-02-23
                 
             </span>
         </span>
@@ -469,7 +485,7 @@ flutter 底层使用 skia 作为 2D渲染引擎...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/C/">C</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
                         </li>
                     
                     
@@ -483,7 +499,7 @@ flutter 底层使用 skia 作为 2D渲染引擎...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/C-%E6%8E%A2%E7%B4%A2%E7%AF%87/">C-探索篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -491,7 +507,7 @@ flutter 底层使用 skia 作为 2D渲染引擎...
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/15/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A014%EF%BC%9A%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Read more<span class="seo-reader-text">C语言学习14：内存管理</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A023%EF%BC%9A%E6%9B%B4%E5%8A%A0%E5%BC%BA%E5%A4%A7%E7%9A%84switch/">Read more<span class="seo-reader-text">Swift学习23：更加强大的switch</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -503,27 +519,29 @@ flutter 底层使用 skia 作为 2D渲染引擎...
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/15/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A013%EF%BC%9A%E6%96%87%E4%BB%B6/">
-                        C语言学习13：文件
+                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A022%EF%BC%9A%E5%A6%82%E4%BD%95%E5%9C%A8Swift%E9%87%8C%E8%BF%9B%E8%A1%8C%E5%BE%AA%E7%8E%AF%E6%8E%A7%E5%88%B6/">
+                        Swift学习22：如何在Swift里进行循环控制
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        打开文件FILE * fopen(const char * filename,const * mode);
-filename:文件名mode：样式
+                        for in 循环
+使用 for in 循环来遍历序列，比如一个范围的数字，数组中元素或者字符串中的字符
 
-关闭文件int fclose(int c,FILE *fp);
-fclose()函数返回零：关闭成功...
+如果你不需要序列的每一个值，你可以使用下划线 _ 来取代遍历名
+
+
+123456789101112131415// 遍历for i in 0....
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Feb 15 2023 00:13:49 GMT+0800">
+            <span class="home-article-date" data-date="Thu Feb 23 2023 21:34:50 GMT+0800">
                 
-                    2023-02-15
+                    2023-02-23
                 
             </span>
         </span>
@@ -533,7 +551,7 @@ fclose()函数返回零：关闭成功...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/C/">C</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
                         </li>
                     
                     
@@ -547,7 +565,7 @@ fclose()函数返回零：关闭成功...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/C-%E6%8E%A2%E7%B4%A2%E7%AF%87/">C-探索篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -555,7 +573,7 @@ fclose()函数返回零：关闭成功...
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/15/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A013%EF%BC%9A%E6%96%87%E4%BB%B6/">Read more<span class="seo-reader-text">C语言学习13：文件</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A022%EF%BC%9A%E5%A6%82%E4%BD%95%E5%9C%A8Swift%E9%87%8C%E8%BF%9B%E8%A1%8C%E5%BE%AA%E7%8E%AF%E6%8E%A7%E5%88%B6/">Read more<span class="seo-reader-text">Swift学习22：如何在Swift里进行循环控制</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -567,24 +585,26 @@ fclose()函数返回零：关闭成功...
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/15/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A012%EF%BC%9A%E9%A2%84%E5%A4%84%E7%90%86%E5%99%A8/">
-                        C语言学习12：预处理器
+                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A021%EF%BC%9A%E5%A6%82%E4%BD%95%E5%9C%A8swift%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%90%E7%AE%97%E7%AC%A6/">
+                        Swift学习21：如何在swift中自定义运算符
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        C 预处理器预处理器 不是 编译器的组成部分，是编译过程的一个单独的步骤。简言之，C预处理器是一个 文本替换工具，它会指示编译器在实际编译前完成所需的 预处理；我们把 C 预处理器(C Preprocessor) 简写成(CPP)
-所有的预处理器都是...
+                        自定义运算符
+除了实现标准的运算符，在 swift 当中还可以声明和实现自定义运算符（custom operators）
+
+新的运算符要在全局作用域内，使用 operator 关键字进行声明，同时还要指定 prefix、infix 或者 postfi...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Feb 15 2023 00:13:38 GMT+0800">
+            <span class="home-article-date" data-date="Thu Feb 23 2023 04:03:04 GMT+0800">
                 
-                    2023-02-15
+                    2023-02-23
                 
             </span>
         </span>
@@ -594,7 +614,7 @@ fclose()函数返回零：关闭成功...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/C/">C</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
                         </li>
                     
                     
@@ -608,7 +628,7 @@ fclose()函数返回零：关闭成功...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/C-%E6%8E%A2%E7%B4%A2%E7%AF%87/">C-探索篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -616,7 +636,7 @@ fclose()函数返回零：关闭成功...
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/15/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A012%EF%BC%9A%E9%A2%84%E5%A4%84%E7%90%86%E5%99%A8/">Read more<span class="seo-reader-text">C语言学习12：预处理器</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A021%EF%BC%9A%E5%A6%82%E4%BD%95%E5%9C%A8swift%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%90%E7%AE%97%E7%AC%A6/">Read more<span class="seo-reader-text">Swift学习21：如何在swift中自定义运算符</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -628,32 +648,26 @@ fclose()函数返回零：关闭成功...
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/15/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A011%EF%BC%9A%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">
-                        C语言学习11：基本语法
+                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A020%EF%BC%9A%E5%A6%82%E4%BD%95%E4%B8%BA%E7%B1%BB%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%90%E7%AE%97%E7%AC%A6/">
+                        Swift学习20：如何为类和结构体自定义运算符
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        C 的令牌（Token）C 程序由各种令牌组成，令牌可以是 关键字、常量、字符串或一个符号。
-分号;分号是语句 结束符
-注释
-单行注释
+                        运算符重载
+类和结构体 可以为现有的运算符提供自定义的实现，称为 运算符重载
 
-// 单行注释
-
-多行注释
-
-123456/* 单行注释*//*    多行注释    多行注释    ...*...
+1234567struct Vector2D &#123;    var x = 0.0,y = 0.0&#125;let vector = Vector2D(x: 1....
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Feb 15 2023 00:13:29 GMT+0800">
+            <span class="home-article-date" data-date="Thu Feb 23 2023 04:02:46 GMT+0800">
                 
-                    2023-02-15
+                    2023-02-23
                 
             </span>
         </span>
@@ -663,7 +677,7 @@ fclose()函数返回零：关闭成功...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/C/">C</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
                         </li>
                     
                     
@@ -677,7 +691,7 @@ fclose()函数返回零：关闭成功...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/C-%E6%8E%A2%E7%B4%A2%E7%AF%87/">C-探索篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -685,7 +699,7 @@ fclose()函数返回零：关闭成功...
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/15/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A011%EF%BC%9A%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">Read more<span class="seo-reader-text">C语言学习11：基本语法</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A020%EF%BC%9A%E5%A6%82%E4%BD%95%E4%B8%BA%E7%B1%BB%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%90%E7%AE%97%E7%AC%A6/">Read more<span class="seo-reader-text">Swift学习20：如何为类和结构体自定义运算符</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -697,25 +711,26 @@ fclose()函数返回零：关闭成功...
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/15/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A010%EF%BC%9A%E5%85%B1%E7%94%A8%E4%BD%93/">
-                        C语言学习10：共用体
+                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A019%EF%BC%9A%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7%E5%92%8C%E7%BB%93%E5%90%88%E6%80%A7/">
+                        Swift学习19：运算符优先级和结合性
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        共用体共用体 是一种特殊的数据类型，允许您在 相同的内存位置存储不同的数据类型。
-定义共用体必须用 union 语句，方式与结构体类型。
-12345union MyData&#123;    int i;    float j;    char k[...
+                        运算符优先级和结合性
+运算符的优先级使得一些运算符优先于其他运算符，高优先级的运算符会先被计算
+
+结合性定义了具有相同优先级的运算符是如何结合（或关联）的 一一 是左边结合为一组，还是与右边结合为一组。可以这样理解：它们是与左边的表达式结合的 或者 ...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Feb 15 2023 00:13:03 GMT+0800">
+            <span class="home-article-date" data-date="Thu Feb 23 2023 04:02:16 GMT+0800">
                 
-                    2023-02-15
+                    2023-02-23
                 
             </span>
         </span>
@@ -725,7 +740,7 @@ fclose()函数返回零：关闭成功...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/C/">C</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
                         </li>
                     
                     
@@ -739,7 +754,7 @@ fclose()函数返回零：关闭成功...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/C-%E6%8E%A2%E7%B4%A2%E7%AF%87/">C-探索篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -747,7 +762,7 @@ fclose()函数返回零：关闭成功...
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/15/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A010%EF%BC%9A%E5%85%B1%E7%94%A8%E4%BD%93/">Read more<span class="seo-reader-text">C语言学习10：共用体</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A019%EF%BC%9A%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7%E5%92%8C%E7%BB%93%E5%90%88%E6%80%A7/">Read more<span class="seo-reader-text">Swift学习19：运算符优先级和结合性</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -759,27 +774,30 @@ fclose()函数返回零：关闭成功...
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/15/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A009%EF%BC%9A%E7%BB%93%E6%9E%84%E4%BD%93/">
-                        C语言学习09：结构体
+                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A018%EF%BC%9A%E8%BF%90%E7%AE%97%E7%AC%A6%E5%BA%94%E7%94%A8%E4%B8%BE%E4%BE%8B/">
+                        Swift学习18：运算符应用举例
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        声明结构体1234struct st&#123;    int a;     char ch[4];&#125;
+                        两个数字交换
+不借助临时变量，交换两个变量的值
 
-定义结构体1234struct st&#123;    int a;     char ch[4];&#125;t1;
+1234567var a  = 1var b = 2a = a ^ bb = a ^ ba = a ^ bprint(a)print(b)
 
-注：t1：结...
+
+求无符号整数二进制中 1 的个数
+给定一个无符号整型 U...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Feb 15 2023 00:12:43 GMT+0800">
+            <span class="home-article-date" data-date="Thu Feb 23 2023 01:32:43 GMT+0800">
                 
-                    2023-02-15
+                    2023-02-23
                 
             </span>
         </span>
@@ -789,7 +807,7 @@ fclose()函数返回零：关闭成功...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/C/">C</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
                         </li>
                     
                     
@@ -803,7 +821,7 @@ fclose()函数返回零：关闭成功...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/C-%E6%8E%A2%E7%B4%A2%E7%AF%87/">C-探索篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -811,7 +829,7 @@ fclose()函数返回零：关闭成功...
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/15/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A009%EF%BC%9A%E7%BB%93%E6%9E%84%E4%BD%93/">Read more<span class="seo-reader-text">C语言学习09：结构体</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A018%EF%BC%9A%E8%BF%90%E7%AE%97%E7%AC%A6%E5%BA%94%E7%94%A8%E4%B8%BE%E4%BE%8B/">Read more<span class="seo-reader-text">Swift学习18：运算符应用举例</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -823,33 +841,31 @@ fclose()函数返回零：关闭成功...
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/15/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A008%EF%BC%9A%E5%AD%97%E7%AC%A6%E4%B8%B2/">
-                        C语言学习08：字符串
+                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A017%EF%BC%9A%E4%BD%8D%E8%BF%90%E7%AE%97%E7%AC%A6/">
+                        Swift学习17：位运算符
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        字符串的输入和输出
-scanf(格式控制,地址列表(变量前加&amp;))
-
-printf(格式控制,地址列表)
-
-gets(字符数组) puts(字符数组)
+                        位取反运算符
+位取反运算符 ~ 是对所有位的数字进行取反操作
 
 
-区别：
-gets() 和 puts() ： 只能输入或输出一个字符串
-scanf() ...
+123let n1:UInt8 = 255let n2 = ~n1print(n2)
+
+
+位与运算符
+位与运算符 &amp; 可以对两个数的比特位进行合并，它会返回一个新的数，只有当这...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Wed Feb 15 2023 00:07:57 GMT+0800">
+            <span class="home-article-date" data-date="Thu Feb 23 2023 01:32:26 GMT+0800">
                 
-                    2023-02-15
+                    2023-02-23
                 
             </span>
         </span>
@@ -859,7 +875,7 @@ scanf() ...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/C/">C</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
                         </li>
                     
                     
@@ -873,7 +889,7 @@ scanf() ...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/C-%E6%8E%A2%E7%B4%A2%E7%AF%87/">C-探索篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -881,7 +897,7 @@ scanf() ...
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/15/C%E5%AD%A6%E4%B9%A0/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A008%EF%BC%9A%E5%AD%97%E7%AC%A6%E4%B8%B2/">Read more<span class="seo-reader-text">C语言学习08：字符串</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A017%EF%BC%9A%E4%BD%8D%E8%BF%90%E7%AE%97%E7%AC%A6/">Read more<span class="seo-reader-text">Swift学习17：位运算符</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>

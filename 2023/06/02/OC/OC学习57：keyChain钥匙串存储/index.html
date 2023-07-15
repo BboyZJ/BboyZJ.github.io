@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/06/02/oc/oc学习57：keychain钥匙串存储/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC学习57：keyChain钥匙串存储">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/06/02/OC/OC学习57：keyChain钥匙串存储/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC学习57：keyChain钥匙串存储">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC学习57：keyChain钥匙串存储 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC学习57：keyChain钥匙串存储</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-06-02 11:38:45</span>
+        <span class="mobile">2023-06-02 11:38</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-06-15 13:55:10</span>
+            <span class="mobile">2023-06-15 13:55</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文将向大家介绍如何使用 <code>iOS Keychain（钥匙串）</code> 来 <code>保护用户敏感数据</code>。<code>iOS Keychain</code> 是一个安全的存储解决方案，可以将 <code>用户名、密码、证书、私钥等</code> 敏感数据存储在设备的安全存储区域中，并且只有经过身份验证的应用程序才能访问这些数据。</p>
+<h1 id="为什么不使用-NSUserDefaults-存储敏感数据？"><a href="#为什么不使用-NSUserDefaults-存储敏感数据？" class="headerlink" title="为什么不使用 NSUserDefaults 存储敏感数据？"></a>为什么不使用 NSUserDefaults 存储敏感数据？</h1><p>不安全：因为 <code>NSUserDefaults</code> 将数据以 <code>plist文件</code> 形式存储到 <code>沙盒</code> 中的 <code>Library/Preferences</code> 中，如果 <code>沙盒被破解或手机被越狱</code>，那么就能轻松拿到这个文件，就能轻松读取都存储的信息，<code>不安全</code>。</p>
+<h1 id="如何解决把-密码等敏感数据存储在-NSUserDefaults-不安全的问题？"><a href="#如何解决把-密码等敏感数据存储在-NSUserDefaults-不安全的问题？" class="headerlink" title="如何解决把 密码等敏感数据存储在 NSUserDefaults 不安全的问题？"></a>如何解决把 密码等敏感数据存储在 NSUserDefaults 不安全的问题？</h1><ol>
+<li>通过 加密算法加密，然后存储，例如 不可逆的MD5加密</li>
+</ol>
+<ul>
+<li>导入头文件</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;CommonCrypto/CommonDigest.h&gt;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>简单的 MD5 加密</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// 简单的MD5加密</span><br><span class="line">+ ( NSString *)md5String:( NSString *)str&#123;</span><br><span class="line"></span><br><span class="line">const char *myPasswd = [str UTF8String ];</span><br><span class="line"></span><br><span class="line">unsigned char mdc[ 16 ];</span><br><span class="line"></span><br><span class="line">CC_MD5 (myPasswd, ( CC_LONG ) strlen (myPasswd), mdc);</span><br><span class="line"></span><br><span class="line">NSMutableString *md5String = [ NSMutableString string ];</span><br><span class="line"></span><br><span class="line">for ( int i = 0 ; i&lt; 16 ; i++) &#123;</span><br><span class="line"></span><br><span class="line">    [md5String appendFormat : @&quot;%02x&quot; ,mdc[i]];</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">return md5String;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>复杂的MD5加密</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 复杂一些的MD5加密</span><br><span class="line">+ ( NSString *)md5String:( NSString *)str&#123;</span><br><span class="line"></span><br><span class="line"> const char *myPasswd = [str UTF8String ];</span><br><span class="line"></span><br><span class="line"> unsigned char mdc[ 16 ];</span><br><span class="line"></span><br><span class="line"> CC_MD5 (myPasswd, ( CC_LONG ) strlen (myPasswd), mdc);</span><br><span class="line"></span><br><span class="line"> NSMutableString *md5String = [ NSMutableString string ];</span><br><span class="line"></span><br><span class="line"> [md5String appendFormat : @&quot;%02x&quot; ,mdc[ 0 ]];</span><br><span class="line"></span><br><span class="line"> for ( int i = 1 ; i&lt; 16 ; i++) &#123;</span><br><span class="line"></span><br><span class="line">    [md5String appendFormat : @&quot;%02x&quot; ,mdc[i]^mdc[ 0 ]];</span><br><span class="line"> &#125;</span><br><span class="line"> return md5String;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>使用 <code>keyChain</code> 来保存密码</li>
+</ol>
+<p>更加保险的方法是把密码保存在iOS提供的 <code>keychain</code> 中，并且删除应用后，密码不会删除，下载安装还能使用</p>
+<h1 id="什么是-iOS-Keychain？"><a href="#什么是-iOS-Keychain？" class="headerlink" title="什么是 iOS Keychain？"></a>什么是 iOS Keychain？</h1><ul>
+<li><p><code>Keychain</code> 是一个存储在文件下的简单数据库。<code>Keychain</code> 有任意数量的 <code>钥匙链（item）</code>，该钥匙链中包含一组属性。该属性和钥匙链的 <code>类型</code> 相关。创建日期和label对所有的钥匙链是通用的。其他的都是根据钥匙链的类型不同而不同，比如，<code>generic password类型</code> 包含 <code>service</code> 和 <code>account</code> 属性。</p>
+</li>
+<li><p>钥匙链可以使用 <code>kSecAttrSynchronizable</code> 同步属性，被标记为该属性的值都可以被放置在<code>iCloud</code> 的钥匙链中，它会被自动同步到相同账号的设备上。</p>
+</li>
+<li><p>有些钥匙链需要保护起来，比如 <code>密码和私人key</code>，都会被加密；对于那些不需要被保护的钥匙链，比如证书，就不会被加密。</p>
+</li>
+<li><p>在iOS设备上（手机），当屏幕被解锁时，钥匙链的访问权限就会被打开。</p>
+</li>
+<li><p><code>iOS Keychain</code> 是一个安全的存储解决方案，可以将敏感数据存储在设备的安全存储区域中。这个安全存储区域被称为 <code>Keychain</code>，它是一种加密的数据库，可以存储 <code>用户名、密码、证书、私钥等</code> 敏感数据。Keychain可以防止未经授权的应用程序访问用户的敏感数据。</p>
+</li>
+<li><p>除了做 <code>数据存储</code>，它还可以做 <code>App间的数据共享</code>。</p>
+</li>
+</ul>
+<h1 id="如何在iOS应用程序中使用Keychain？"><a href="#如何在iOS应用程序中使用Keychain？" class="headerlink" title="如何在iOS应用程序中使用Keychain？"></a>如何在iOS应用程序中使用Keychain？</h1><ul>
+<li><p>使用 <code>Keychain API</code> 在iOS应用程序中 <code>存储和访问</code> 敏感数据是很容易的。</p>
+</li>
+<li><p>在 <code>Objective-C</code> 中，可以使用 <code>Security</code> 框架中的 <code>SecItem API</code> 来执行 Keychain操作。</p>
+</li>
+<li><p>在 <code>Swift</code> 中，可以使用 <code>Security</code> 框架中的 <code>Security.framework</code> 。这个框架提供了一些函数和数据结构，可以帮助我们执行Keychain操作。</p>
+</li>
+</ul>
+<h1 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h1><p><code>keychain</code> 保存的 <code>类型</code>，有5中：</p>
+<ul>
+<li><p>kSecClassGenericPassword：存储一般密码，比较常用的item</p>
+</li>
+<li><p>kSecClassInternetPasswork：存储网络密码的item</p>
+</li>
+<li><p>kSecClassCertificate：存储证书的item</p>
+</li>
+<li><p>kSecClassKey：存储私有秘钥的item</p>
+</li>
+<li><p>kSecClassIdentity：存储一个包含证书和私有秘钥的item</p>
+</li>
+</ul>
+<h1 id="使用Keychain-API来存储和访问敏感数据的基本步骤"><a href="#使用Keychain-API来存储和访问敏感数据的基本步骤" class="headerlink" title="使用Keychain API来存储和访问敏感数据的基本步骤"></a>使用Keychain API来存储和访问敏感数据的基本步骤</h1><ol>
+<li><p>创建一个 <code>字典</code>，用于 <code>描述要存储的敏感数据</code>。</p>
+</li>
+<li><p>调用 <code>SecItemAdd</code> 函数来将敏感数据添加到Keychain中。</p>
+</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OSStatus SecItemAdd(CFDictionaryRef attributes, CFTypeRef * __nullable CF_RETURNS_RETAINED result)</span><br><span class="line">    API_AVAILABLE(macos(10.6), ios(2.0));</span><br></pre></td></tr></table></figure></div>
+
+<p>attributes由四部分组成：</p>
+<ul>
+<li><p>item的类型：必选，key &#x3D; kSecClass，value &#x3D; 上面说的5种item</p>
+</li>
+<li><p>item 的存储数据</p>
+</li>
+<li><p>属性，可以用来做一些标记，用于查找或者程序之间的数据共享，但是不同的kSecClass有不同的属性</p>
+</li>
+<li><p>返回的数据类型，它的设置影响参数 result：对添加的item的引用，如果没有什么需要，可以设置为 nil</p>
+</li>
+</ul>
+<blockquote>
+<p>注：<br>1、要保证每次添加都是不同账户<br>2、注意变量内存释放<br>3、要注意数据类型要对</p>
+</blockquote>
+<ol start="3">
+<li>调用 <code>SecItemCopyMatching</code> 函数来从Keychain中检索敏感数据。</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OSStatus SecItemCopyMatching(CFDictionaryRef query, CFTypeRef * __nullable CF_RETURNS_RETAINED result)</span><br><span class="line">    API_AVAILABLE(macos(10.6), ios(2.0));</span><br></pre></td></tr></table></figure></div>
+
+<p>query的组成：</p>
+<ul>
+<li><p>item的类型：必选，key &#x3D; kSecClass，value &#x3D; 上面说的5种item</p>
+</li>
+<li><p>要查找的属性及值，这个可以用来筛选掉多余的选项，这个值越详细，最后获取的结果越精确</p>
+</li>
+<li><p>做进一步的限制，比如大小写是否敏感等等</p>
+</li>
+<li><p>返回匹配项的个数，但是注意 <code>kSecReturnData</code> 和 <code>kSecMatchLimit</code> 不能共存，更多的<code>kSecMatchLimit</code> 可以搭配 <code>kSecReturnAttributes</code> 使用</p>
+</li>
+</ul>
+<blockquote>
+<p>注：<br>注意一下返回类型</p>
+</blockquote>
+<ol start="4">
+<li><p>调用 <code>SecItemUpdate</code> 函数来更新Keychain中的敏感数据。</p>
+</li>
+<li><p>调用 <code>SecItemDelete</code> 函数来删除Keychain中的敏感数据。</p>
+</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OSStatus SecItemDelete(CFDictionaryRef query)</span><br><span class="line">    API_AVAILABLE(macos(10.6), ios(2.0));</span><br></pre></td></tr></table></figure></div>
+
+<p>在 <code>iOS</code> 中，我们可以使用 <code>Keychain API</code> 来存储和访问敏感数据，下面以 <code>OC</code> 语言为例，实现一个存储 <code>企业ID、账号、密码</code> 的例子：</p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><ol>
+<li>创建一个 ZJKeyChainManager 管理类</li>
+</ol>
+<ul>
+<li>ZJKeyChainManager.h</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">@interface ZJKeyChainManager : NSObject</span><br><span class="line"></span><br><span class="line">+ (NSMutableDictionary *)getKeychainQuery:(NSString *)service;</span><br><span class="line"></span><br><span class="line">// save enterprise account password to keychain</span><br><span class="line">+ (void)save:(NSString *)service data:(id)data;</span><br><span class="line"></span><br><span class="line">// load enterprise account password from keychain</span><br><span class="line">+ (id)load:(NSString *)service;</span><br><span class="line"></span><br><span class="line">// delete enterprise account password from keychain</span><br><span class="line">+ (void)delete:(NSString *)serviece;</span><br><span class="line"></span><br><span class="line">#pragma mark - public</span><br><span class="line">// 保存登录信息到钥匙串</span><br><span class="line">+ (void)saveLoginInfoToKeyChain;</span><br><span class="line">// 读取钥匙串登录信息</span><br><span class="line">+ (NSMutableArray *)readLoginInfoFromKeyChain;</span><br><span class="line">// 删除钥匙串缓存登录信息</span><br><span class="line">+ (void)deleteLoginInfoFromKeyChain;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>ZJKeyChainManager.m</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ZJKeyChainManager.h&quot;</span><br><span class="line">#import &lt;Security/Security.h&gt;</span><br><span class="line"></span><br><span class="line">@implementation ZJKeyChainManager</span><br><span class="line">#pragma mark - 创建一个字典，描述要存储的敏感数据</span><br><span class="line">+ (NSMutableDictionary *)getKeychainQuery:(NSString *)service &#123;</span><br><span class="line">    return [NSMutableDictionary dictionaryWithObjectsAndKeys:</span><br><span class="line">            (id)kSecClassGenericPassword,(id)kSecClass,</span><br><span class="line">            service, (id)kSecAttrService,</span><br><span class="line">            service, (id)kSecAttrAccount,</span><br><span class="line">            (id)kSecAttrAccessibleAfterFirstUnlock,(id)kSecAttrAccessible,</span><br><span class="line">            nil];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark -写入</span><br><span class="line">+ (void)save:(NSString *)service data:(id)data &#123;</span><br><span class="line">    // Get search dictionary</span><br><span class="line">    NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];</span><br><span class="line">    // Delete old item before add new item</span><br><span class="line">    SecItemDelete((CFDictionaryRef)keychainQuery);</span><br><span class="line">    // Add new object to search dictionary(Attention:the data format)</span><br><span class="line">    [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:data] forKey:(id)kSecValueData];</span><br><span class="line">    // Add item to keychain with the search dictionary</span><br><span class="line">    SecItemAdd((CFDictionaryRef)keychainQuery, NULL);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark -读取</span><br><span class="line">+ (id)load:(NSString *)service &#123;</span><br><span class="line">    id ret = nil;</span><br><span class="line">    NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];</span><br><span class="line">    // Configure the search setting</span><br><span class="line">    // Since in our simple case we are expecting only a single attribute to be returned (the password) we can set the attribute kSecReturnData to kCFBooleanTrue</span><br><span class="line">    [keychainQuery setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];</span><br><span class="line">    [keychainQuery setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];</span><br><span class="line">    CFDataRef keyData = NULL;</span><br><span class="line">    if (SecItemCopyMatching((CFDictionaryRef)keychainQuery, (CFTypeRef *)&amp;keyData) == noErr) &#123;</span><br><span class="line">        @try &#123;</span><br><span class="line">            ret = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData *)keyData];</span><br><span class="line">        &#125; @catch (NSException *e) &#123;</span><br><span class="line">            NSLog(@&quot;Unarchive of %@ failed: %@&quot;, service, e);</span><br><span class="line">        &#125; @finally &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if (keyData)</span><br><span class="line">        CFRelease(keyData);</span><br><span class="line">    return ret;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark -删除</span><br><span class="line">+ (void)delete:(NSString *)service &#123;</span><br><span class="line">    NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];</span><br><span class="line">    SecItemDelete((CFDictionaryRef)keychainQuery);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - public</span><br><span class="line">// 保存登录信息到钥匙串</span><br><span class="line">+ (void)saveLoginInfoToKeyChain&#123;</span><br><span class="line">    // 企业ID</span><br><span class="line">    NSString *enterpriseId = [NSObject getSaveDataWithKey:JITENTERPRISEID];</span><br><span class="line">    // 账号</span><br><span class="line">    NSString *account = [NSObject getSaveDataWithKey:JITACCOUNT];</span><br><span class="line">    // 密码</span><br><span class="line">    NSString *password = [NSObject getSaveDataWithKey:JITPASSWORD];</span><br><span class="line">    </span><br><span class="line">    // 需要存储的键值对</span><br><span class="line">    NSMutableDictionary * kvPair = [NSMutableDictionary dictionary];</span><br><span class="line">    [kvPair setObject:enterpriseId forKey:KEY_ENTERPRISEID];</span><br><span class="line">    [kvPair setObject:account forKey:KEY_ACCOUNT];</span><br><span class="line">    [kvPair setObject:password forKey:KEY_PASSWORD];</span><br><span class="line">    NSLog(@&quot;%@&quot;, kvPair);</span><br><span class="line">    </span><br><span class="line">    // 将存储内容写入keychain</span><br><span class="line">    [ZJKeyChainManager save:KEY_ENTERPRISEID_ACCOUNT_PASSWORD data:kvPair];</span><br><span class="line">&#125;</span><br><span class="line">// 读取钥匙串登录信息</span><br><span class="line">+ (NSMutableArray *)readLoginInfoFromKeyChain&#123;</span><br><span class="line">    NSMutableArray * mArr = @[].mutableCopy;</span><br><span class="line">    </span><br><span class="line">    // 从keychain中读取存储内容</span><br><span class="line">    NSMutableDictionary * readKvPair = (NSMutableDictionary *)[ZJKeyChainManager load:KEY_ENTERPRISEID_ACCOUNT_PASSWORD];</span><br><span class="line">    NSString *enterpriseId = [readKvPair objectForKey:KEY_ENTERPRISEID];</span><br><span class="line">    NSString *account = [readKvPair objectForKey:KEY_ACCOUNT];</span><br><span class="line">    NSString *password = [readKvPair objectForKey:KEY_PASSWORD];</span><br><span class="line">    NSLog(@&quot;enterpriseId = %@ account = %@ password = %@&quot;, enterpriseId,account,password);</span><br><span class="line">    </span><br><span class="line">    [mArr addObjectsFromArray:@[enterpriseId,account,password]];</span><br><span class="line">    </span><br><span class="line">    return mArr;</span><br><span class="line">&#125;</span><br><span class="line">// 删除钥匙串缓存登录信息</span><br><span class="line">+ (void)deleteLoginInfoFromKeyChain&#123;</span><br><span class="line">    // 将存储内容从keychain中删除</span><br><span class="line">    [ZJKeyChainManager delete:KEY_ENTERPRISEID_ACCOUNT_PASSWORD];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>外部使用</li>
+</ol>
+<ul>
+<li>声明键</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 服务</span><br><span class="line">#define KEY_ENTERPRISEID_ACCOUNT_PASSWORD @&quot;cn.com.jit.DigitalGuard.enterpriseaccountpassword&quot;</span><br><span class="line">// 企业ID</span><br><span class="line">#define KEY_ENTERPRISEID @&quot;cn.com.jit.DigitalGuard.enterpriseid&quot;</span><br><span class="line">// 账号</span><br><span class="line">#define KEY_ACCOUNT @&quot;cn.com.jit.DigitalGuard.account&quot;</span><br><span class="line">// 密码</span><br><span class="line">#define KEY_PASSWORD @&quot;cn.com.jit.DigitalGuard.password&quot;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>需要存储的键值对</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 需要存储的键值对</span><br><span class="line">NSMutableDictionary * kvPair = [NSMutableDictionary dictionary];</span><br><span class="line">[kvPair setObject:enterpriseId forKey:KEY_ENTERPRISEID];</span><br><span class="line">[kvPair setObject:account forKey:KEY_ACCOUNT];</span><br><span class="line">[kvPair setObject:password forKey:KEY_PASSWORD];</span><br><span class="line">DLogInfo(@&quot;%@&quot;, kvPair);</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>将存储内容写入keychain</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 将存储内容写入keychain</span><br><span class="line">[ZJKeyChainManager save:KEY_ENTERPRISEID_ACCOUNT_PASSWORD data:kvPair];</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>从keychain中读取存储内容</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NSMutableDictionary * readKvPair = (NSMutableDictionary *)[ZJKeyChainManager load:KEY_ENTERPRISEID_ACCOUNT_PASSWORD];</span><br><span class="line">NSString *enterpriseId = [readKvPair objectForKey:KEY_ENTERPRISEID];</span><br><span class="line">NSString *account = [readKvPair objectForKey:KEY_ACCOUNT];</span><br><span class="line">NSString *password = [readKvPair objectForKey:KEY_PASSWORD];</span><br><span class="line">NSLog(@&quot;enterpriseId = %@ account = %@ password = %@&quot;, enterpriseId,account,password);</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>将存储内容从keychain中删除</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ZJKeyChainManager delete:KEY_ENTERPRISEID_ACCOUNT_PASSWORD];</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>保护用户数据安全，我们可以考虑以下几种方案：</p>
+<ul>
+<li>使用 <code>Keychain</code> 来存储敏感数据</li>
+</ul>
+<p><code>Keychain</code> 是iOS中一种 <code>安全的存储方式</code>，可以用于存储 <code>用户名、密码、证书、密钥等</code> 敏感数据。Keychain中存储的 <code>数据是加密的</code>，<code>只能被当前应用程序访问</code>。因此，使用Keychain来存储敏感数据可以增强应用程序的安全性。</p>
+<ul>
+<li>加密敏感数据</li>
+</ul>
+<p>如果您需要在应用程序中存储敏感数据，您可以 <code>使用加密算法对数据进行加密</code>。这样可以确保即使数据被盗，攻击者也无法访问敏感信息。</p>
+<ul>
+<li>使用HTTPS协议</li>
+</ul>
+<p>当您的应用程序需要与服务器进行通信时，建议使用HTTPS协议。HTTPS使用TLS&#x2F;SSL协议来加密数据，从而确保通信安全。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文主要介绍了如何使用 <code>keyChain</code> 来存储和访问iOS应用程序中的敏感数据，同时也介绍了一些保护数据安全的一些方案，通过这些措施，我们可以保护用户的数据安全，增强应用程序的安全性。</p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC学习57：keyChain钥匙串存储</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-06-02 11:38:45</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/06/02/OC/OC学习57：keyChain钥匙串存储/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">#OC-学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/06/02/OC/OC%E5%AD%A6%E4%B9%A058%EF%BC%9ASSKeyChain%E4%B8%89%E6%96%B9%E5%BA%93%E4%BD%BF%E7%94%A8/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习58：SSKeyChain三方库使用</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/05/31/OC/OC%E5%AD%A6%E4%B9%A056%EF%BC%9A%E7%9B%B8%E6%9C%BA%E5%92%8C%E7%9B%B8%E5%86%8C%E6%9D%83%E9%99%90/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习56：iOS权限设置</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC学习57：keyChain钥匙串存储</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E4%BD%BF%E7%94%A8-NSUserDefaults-%E5%AD%98%E5%82%A8%E6%95%8F%E6%84%9F%E6%95%B0%E6%8D%AE%EF%BC%9F"><span class="nav-text">为什么不使用 NSUserDefaults 存储敏感数据？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E6%8A%8A-%E5%AF%86%E7%A0%81%E7%AD%89%E6%95%8F%E6%84%9F%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E5%9C%A8-NSUserDefaults-%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-text">如何解决把 密码等敏感数据存储在 NSUserDefaults 不安全的问题？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-iOS-Keychain%EF%BC%9F"><span class="nav-text">什么是 iOS Keychain？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%9C%A8iOS%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E4%B8%AD%E4%BD%BF%E7%94%A8Keychain%EF%BC%9F"><span class="nav-text">如何在iOS应用程序中使用Keychain？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE"><span class="nav-text">访问</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Keychain-API%E6%9D%A5%E5%AD%98%E5%82%A8%E5%92%8C%E8%AE%BF%E9%97%AE%E6%95%8F%E6%84%9F%E6%95%B0%E6%8D%AE%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%AD%A5%E9%AA%A4"><span class="nav-text">使用Keychain API来存储和访问敏感数据的基本步骤</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-text">使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-text">其他</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

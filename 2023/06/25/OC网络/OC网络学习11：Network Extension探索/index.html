@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/06/25/oc网络/oc网络学习11：network extension探索/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC网络学习11：Network Extension探索">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/06/25/OC网络/OC网络学习11：Network Extension探索/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC网络学习11：Network Extension探索">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC网络学习11：Network Extension探索 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC网络学习11：Network Extension探索</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-06-25 11:35:59</span>
+        <span class="mobile">2023-06-25 11:35</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-07-15 13:35:33</span>
+            <span class="mobile">2023-07-15 13:35</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/">OC-网络学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>苹果提供的 <code>Network Extension</code> 可以帮助我们配置VPN通道，自定义和拓展核心网络功能。</p>
+<h1 id="Network-Extension-功能类型"><a href="#Network-Extension-功能类型" class="headerlink" title="Network Extension 功能类型"></a>Network Extension 功能类型</h1><p><code>Network Extension</code> 一共提供了 <code>App Proxy、Content Filter、Packet Tunnel、DNS Proxy、DNS Settings</code> 五种功能。</p>
+<ul>
+<li>App Proxy：Proxy TCP and UDP network connections</li>
+</ul>
+<p>App 代理：代理TCP和UDP网络连接</p>
+<ul>
+<li>Content Filter：Allow or deny network connections</li>
+</ul>
+<p>内容过滤：允许或拒绝网络连接</p>
+<ul>
+<li>Packet Tunnel：Tunnel IP packets using a tunneling network protocol</li>
+</ul>
+<p>Packet隧道：可以实现本地连接并成功拦截IP数据包packets</p>
+<ul>
+<li>DNS Proxy：Proxy DNS queries</li>
+</ul>
+<p>DNS 代理：代理DNS查询</p>
+<ul>
+<li>DNS Settings：Configure settings for encrypted DNS</li>
+</ul>
+<p>DNS设置：配置加密DNS</p>
+<h1 id="VPN"><a href="#VPN" class="headerlink" title="VPN"></a>VPN</h1><ol>
+<li>核心技术</li>
+</ol>
+<ul>
+<li><p>苹果提供了 <code>Network Extension</code> 可以帮助我们配置 <code>VPN</code> 通道。</p>
+</li>
+<li><p>在iOS9中，开发者可以用 <code>NETunnelProvider</code> 扩展核心网络层，从而 <code>实现非标准化的私密VPN</code> 技术，最重要的两个类是 <code>NETunnelProviderManager</code> 和 <code>NEPacketTunnelProvider</code></p>
+</li>
+</ul>
+<ol start="2">
+<li>创建 Network Extension 步骤</li>
+</ol>
+<ul>
+<li>新建 Target</li>
+</ul>
+<p>在已经创建好的项目中新建 Target：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16886350195240.jpg"
+                     
+                ></p>
+<p>创建完成后，<code>TARGET</code> 下会增加一个名为 <code>Tunnel</code> 的扩展，左侧项目中系统会为我们自动生成对应的模板：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16886352509313.jpg"
+                     
+                ></p>
+<ol start="2">
+<li>PacketTunnelProvide 模板中的代码</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - 启动VPN时调用</span><br><span class="line">/*</span><br><span class="line"> 当一个新的通道被建立会会调用此函数。我们必须通过重写该类来完成建立连接。</span><br><span class="line"> @param : options - 在主控制调用开启VPN连接时传入的字典，可空。</span><br><span class="line"> @param : completionHandler - 在该方法彻底完成时必须调用这个Block。如果不能建立连接要将错误信息传给该block,如果成功建立连接则只需将nil传给该Block.</span><br><span class="line"> */</span><br><span class="line">- (void)startTunnelWithOptions:(NSDictionary *)options completionHandler:(void (^)(NSError *))completionHandler &#123;</span><br><span class="line">    NSLog(@&quot;=====启动VPN时调用 startTunnelWithOptions=====&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 停止VPN时调用</span><br><span class="line">- (void)stopTunnelWithReason:(NEProviderStopReason)reason completionHandler:(void (^)(void))completionHandler &#123;</span><br><span class="line">    NSLog(@&quot;=====停止VPN时调用 stopTunnelWithReason=====&quot;);</span><br><span class="line">    completionHandler();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 处理App消息时调用</span><br><span class="line">- (void)handleAppMessage:(NSData *)messageData completionHandler:(void (^)(NSData *))completionHandler &#123;</span><br><span class="line">    // Add code here to handle the message.</span><br><span class="line">    NSLog(@&quot;=====处理App消息时调用:=====\n%@&quot;,messageData);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 准备休眠时调用</span><br><span class="line">- (void)sleepWithCompletionHandler:(void (^)(void))completionHandler &#123;</span><br><span class="line">    // Add code here to get ready to sleep.</span><br><span class="line">    NSLog(@&quot;=====准备休眠时调用:=====&quot;);</span><br><span class="line">    completionHandler();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 被唤醒时调用</span><br><span class="line">- (void)wake &#123;</span><br><span class="line">    // Add code here to wake up.</span><br><span class="line">    NSLog(@&quot;=====被唤醒时调用=====&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>配置 Network Extension 信息</li>
+</ol>
+<ul>
+<li>配置 Signing</li>
+</ul>
+<p>勾选 <code>Autimatically manage signing</code></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16886360232265.jpg"
+                     
+                ></p>
+<ul>
+<li>开启权限</li>
+</ul>
+<p>主 <code>Target</code> 和 <code>VPN扩展</code> 均需要打开 <code>Person VPN</code> 和  <code>Network Extensions</code> 两个权限，开启后会新增两个 <code>.extitlements</code> 结尾的配置文件</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16886360074059.jpg"
+                     
+                ></p>
+<h1 id="实现步骤"><a href="#实现步骤" class="headerlink" title="实现步骤"></a>实现步骤</h1><ol>
+<li>实现步骤</li>
+</ol>
+<ul>
+<li>导入必须框架头文件</li>
+</ul>
+<p>在项目中导入 <code>#import &lt;NetworkExtension/NetworkExtension.h&gt; </code></p>
+<ol start="2">
+<li>初始化并配置 <code>NETunnleProviderManager</code> 对象</li>
+</ol>
+<ul>
+<li>建立 <code>VPN</code> 连接前负责配置基本参数信息保存设置到系统中（一般 <code>VPN App</code> 都会在第一次打开App时授权并保存配置参数信息到系统的VPN设置中）</li>
+</ul>
+<blockquote>
+<p>注：配置好的 <code>NETunnleProviderManager</code> 对象仅在系统中起展示作用（这里的配置并不是真正的生效），真正生效的设置在 <code>Extension Target</code> 中配置</p>
+</blockquote>
+<ul>
+<li><p><code>NETunnleProviderManager</code> 类继承了 NEVPNManager 大多数基本功能：</p>
+<ul>
+<li><code>protocolConfiguration</code> 属性只有 <code>NETunnleProviderManager</code> 类才能设置</li>
+<li><code>connection</code> 这个只读属性只能通过 <code>NETunnleProviderManager</code> 这个类设置</li>
+</ul>
+</li>
+<li><p>每个 <code>NETunnleProviderManager</code> 实例对应一个 VPN 配置，存储在 Network Extension 偏好设置中，可以创建多个 <code>NETunnleProviderManager</code> 实例来管理 <code>多个VPN配置</code>。</p>
+</li>
+<li><p><code>NETunnleProviderManager</code> 创建的 <code>VPN</code> 配置归属 <code>企业VPN</code> 配置，<code>NEVPNManager</code> 创建的 <code>VPN</code> 归属于 <code>个人VPN</code></p>
+</li>
+<li><p>一次只能在系统启用一个 VPN 配置，如果同时在系统中激活 <code>个人VPN</code> 和 <code>企业VPN</code>，优先使用 <code>企业VPN</code></p>
+</li>
+</ul>
+<ol start="3">
+<li>初始化 <code>NETunnleProviderManager</code> 的代码</li>
+</ol>
+<p>在主Target下实现：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - 保存VPN相关数据</span><br><span class="line">- (void)saveVpnData&#123;</span><br><span class="line">    /*</span><br><span class="line">     此函数异步读取调用所有app创建且先前保存在本地的 NETunnelProvider 配置信息，并将它们在回调中以一个存放 NETunnelProvider 对象的数组的形式返回</span><br><span class="line">     */</span><br><span class="line">    [NETunnelProviderManager loadAllFromPreferencesWithCompletionHandler:^(NSArray&lt;NETunnelProviderManager *&gt; * _Nullable managers, NSError * _Nullable error) &#123;</span><br><span class="line">        if (error)&#123;</span><br><span class="line">            NSLog(@&quot;LoadFromPreferences Error: %@&quot;, error.description);</span><br><span class="line">        &#125;</span><br><span class="line">        // manager</span><br><span class="line">        NETunnelProviderManager * manager;</span><br><span class="line">        if (managers.count &gt; 0) &#123;</span><br><span class="line">            manager = managers[0];</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            manager = [[NETunnelProviderManager alloc] init];</span><br><span class="line">            manager.protocolConfiguration = [[NETunnelProviderProtocol alloc] init];</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        // 配置 manager</span><br><span class="line">        [self configTunnelManagerWithManager:manager];</span><br><span class="line">        </span><br><span class="line">        // 调用此方法用来保存上述配置好的VPN到本机设备的VPN设置中</span><br><span class="line">        [self.tpManager saveToPreferencesWithCompletionHandler:^(NSError * _Nullable error) &#123;</span><br><span class="line">            if (error)&#123;</span><br><span class="line">                NSLog(@&quot;Save  To Preferences Error：%@&quot;,error.description);</span><br><span class="line">            &#125;else &#123;</span><br><span class="line">                NSLog(@&quot;Save To Preferences Success&quot;);</span><br><span class="line">                // 启动 VPN</span><br><span class="line">                [self startVPN];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;];</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line">// 配置 VPN 协议</span><br><span class="line">- (void)configTunnelManagerWithManager:(NETunnelProviderManager *)manager&#123;</span><br><span class="line">    /*</span><br><span class="line">     注：以下参数只是在系统设置中 VPN 设置里显示的参数，真正设置网络参数在 VPN Target 项目中重新设置。</span><br><span class="line">     */</span><br><span class="line">    // 协议(配置好协议后，会自动跳转到 iPhone，当你输入好密码后，VPN会自动配置好相关信息并返回到App)</span><br><span class="line">    NETunnelProviderProtocol * proto = [[NETunnelProviderProtocol alloc] init];</span><br><span class="line">    // 子项目的identifier</span><br><span class="line">    proto.providerBundleIdentifier = @&quot;com.jit.cn.MobileCertManagement.sdp.tunnel&quot;;</span><br><span class="line">    </span><br><span class="line">    // 配置</span><br><span class="line">//    NSMutableDictionary * configDic = @&#123;&#125;.mutableCopy;</span><br><span class="line">//    [configDic setObject:@&quot;5055&quot; forKey:@&quot;port&quot;]; // 随机</span><br><span class="line">//    [configDic setObject:@&quot;www.jit.com.cn&quot; forKey:@&quot;server&quot;];</span><br><span class="line">//    [configDic setObject:@&quot;10.10.10.8&quot; forKey:@&quot;ip&quot;];</span><br><span class="line">//    [configDic setObject:@&quot;255.255.255.0&quot; forKey:@&quot;subnet&quot;];</span><br><span class="line">//    [configDic setObject:@&quot;1400&quot; forKey:@&quot;mtu&quot;];</span><br><span class="line">//    [configDic setObject:@&quot;8.8.8.8,8.4.4.4&quot; forKey:@&quot;dns&quot;];</span><br><span class="line">//    proto.providerConfiguration = configDic;</span><br><span class="line">    </span><br><span class="line">    // 手机设置的vpn中显示的vpn地址（服务器）</span><br><span class="line">    proto.serverAddress = @&quot;www.jit.com.cn&quot;;</span><br><span class="line">    // 设备进入睡眠，vpn断开连接</span><br><span class="line">    proto.disconnectOnSleep = NO;</span><br><span class="line">    </span><br><span class="line">    // 协议配置</span><br><span class="line">    manager.protocolConfiguration = proto;</span><br><span class="line">    // 包含vpn描述的字符串(类型)</span><br><span class="line">    manager.localizedDescription = @&quot;零信任&quot;;</span><br><span class="line">    // 是否可以编辑</span><br><span class="line">    manager.enabled = YES;</span><br><span class="line">    </span><br><span class="line">    // 赋值</span><br><span class="line">    self.tpManager = manager;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ol start="4">
+<li>启动 VPN</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - 启动 VPN</span><br><span class="line">- (void)startVPN&#123;</span><br><span class="line">    // 此函数从调用者的VPN设置中加载当前VPN配置</span><br><span class="line">    [self.tpManager loadFromPreferencesWithCompletionHandler:^(NSError * _Nullable error) &#123;</span><br><span class="line">        if (error) &#123;</span><br><span class="line">            NSLog(@&quot;LoadFromPreferences error:%@&quot;,error.description);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            NSLog(@&quot;LoadFromPreferences success&quot;);</span><br><span class="line">            // 启动VPN</span><br><span class="line">            NSError * connectError;</span><br><span class="line">            // 调用此函数会使用 NEVPNConnection 对当前VPN配置来建立VPN连接。返回YES表示成功。</span><br><span class="line">            [self.tpManager.connection startVPNTunnelAndReturnError:&amp;connectError];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>关闭VPN连接</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - 断开连接</span><br><span class="line">- (void)disconnectVpn&#123;</span><br><span class="line">    // 此函数从调用者的VPN设置中加载当前VPN配置</span><br><span class="line">    [self.tpManager loadFromPreferencesWithCompletionHandler:^(NSError * _Nullable error) &#123;</span><br><span class="line">        if (error) &#123;</span><br><span class="line">            NSLog(@&quot;loadFromPreferences error:%@&quot;,error.localizedDescription);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            // 调用此函数会关闭当前建立的VPN连接</span><br><span class="line">            [self.tpManager.connection stopVPNTunnel];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ol start="6">
+<li>监听VPN连接状态</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - 添加VPN连接通知</span><br><span class="line">- (void)addVPNNotification&#123;</span><br><span class="line">    // 添加通知 - 连接VPN时会发送通知</span><br><span class="line">    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onVpnStateChange:) name:NEVPNStatusDidChangeNotification object:nil];</span><br><span class="line">&#125;</span><br><span class="line">// 通知的方法</span><br><span class="line">- (void)onVpnStateChange:(NSNotification *)Notification &#123;</span><br><span class="line">    // VPN连接的状态</span><br><span class="line">    NEVPNStatus status = self.tpManager.connection.status;</span><br><span class="line">    switch (status) &#123;</span><br><span class="line">        case NEVPNStatusInvalid:&#123;</span><br><span class="line">            NSLog(@&quot;VPN连接无效&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">            break;</span><br><span class="line">        case NEVPNStatusDisconnected:&#123;</span><br><span class="line">            NSLog(@&quot;VPN未连接&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">            break;</span><br><span class="line">        case NEVPNStatusConnecting:&#123;</span><br><span class="line">            NSLog(@&quot;VPN正在连接...&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">            break;</span><br><span class="line">        case NEVPNStatusConnected: &#123;</span><br><span class="line">            NSLog(@&quot;VPN已连接&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">            break;</span><br><span class="line">        case NEVPNStatusDisconnecting:&#123;</span><br><span class="line">            NSLog(@&quot;VPN断开连接中...&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">            break;</span><br><span class="line">        case NEVPNStatusReasserting:&#123;</span><br><span class="line">            NSLog(@&quot;VPN重新连接...&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">            break;</span><br><span class="line">        default:</span><br><span class="line">            break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<ol start="7">
+<li>在 PacketTunnelProvider 回调中完成剩余工作</li>
+</ol>
+<ul>
+<li>当我们在 <code>主Target</code> 中调用开启VPN连接后，会进入 <code>VPN Target</code> 项目的 <code>PacketTunnelProvider</code> 文件下述方法：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> 当一个新的通道被建立会会调用此函数。我们必须通过重写该类来完成建立连接。</span><br><span class="line"> @param : options - 在主控制调用开启VPN连接时传入的字典，可空。</span><br><span class="line"> @param : completionHandler - 在该方法彻底完成时必须调用这个Block。如果不能建立连接要将错误信息传给该block,如果成功建立连接则只需将nil传给该Block.</span><br><span class="line"> */</span><br><span class="line">- (void)startTunnelWithOptions:(NSDictionary *)options completionHandler:(void (^)(NSError *))completionHandler &#123;</span><br><span class="line">    NSLog(@&quot;=====启动VPN时调用 startTunnelWithOptions=====&quot;);</span><br><span class="line">    // 建立VPN连接</span><br><span class="line">    [self setupVpnTunnelConnect:completionHandler];</span><br><span class="line">&#125;</span><br><span class="line">#pragma mark - 建立 VPN 连接</span><br><span class="line">// 建立 VPN 连接</span><br><span class="line">- (void)setupVpnTunnelConnect:(void (^)(NSError *))completionHandler&#123;</span><br><span class="line">    </span><br><span class="line">    // 建立 VPN 网络配置</span><br><span class="line">    NEPacketTunnelNetworkSettings * settings = [self setupVpnTunnelNetworkConfig];</span><br><span class="line">    </span><br><span class="line">    //  建立 VPN 连接</span><br><span class="line">    __weak __typeof(&amp;*self)weakSelf = self;</span><br><span class="line">    [self setTunnelNetworkSettings:settings completionHandler:^(NSError * _Nullable error) &#123;</span><br><span class="line">        if (error)&#123;</span><br><span class="line">            NSLog(@&quot;=====建立 VPN 连接 Error:%@=====&quot;,error.description);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            NSLog(@&quot;=====建立 VPN 连接 Success=====&quot;);</span><br><span class="line">            // 启动并运行socks5隧道</span><br><span class="line">            [weakSelf startSockstTunnel];</span><br><span class="line">        &#125;</span><br><span class="line">        completionHandler(error);</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>这里是真正设置 <code>VPN tunnel</code> 网络参数的地方，主 <code>target</code> 中设置的仅为系统 <code>VPN</code> 设置中的展示名称</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">// VPN网络配置</span><br><span class="line">- (NEPacketTunnelNetworkSettings *)setupVpnTunnelNetworkConfig&#123;</span><br><span class="line">    // 我们要建立连接的远程服务器的地址(如果是域名，则需要解析成ip地址)</span><br><span class="line">    NSString * remoteAddress = @&quot;172.16.21.222&quot;;</span><br><span class="line">    </span><br><span class="line">    // 新建一个 NEPacketTunnelNetworkSettings 对象</span><br><span class="line">    NEPacketTunnelNetworkSettings * settings = [[NEPacketTunnelNetworkSettings alloc] initWithTunnelRemoteAddress:remoteAddress];</span><br><span class="line">    </span><br><span class="line">    // 最大传输单元,即每个packet最大的容量</span><br><span class="line">//    settings.MTU = 1400;</span><br><span class="line">    </span><br><span class="line">    /* ipv4 用于拦截流量/代理 */</span><br><span class="line">    // 虚拟ip</span><br><span class="line">    NSString * ip = @&quot;10.10.10.8&quot;;</span><br><span class="line">    NSString * subNet = @&quot;255.255.255.0&quot;;</span><br><span class="line">    NEIPv4Settings * ipv4Settings = [[NEIPv4Settings alloc] initWithAddresses:@[ip]</span><br><span class="line">                                                                  subnetMasks:@[subNet]];</span><br><span class="line">    /*</span><br><span class="line">     includedRoutes:即VPN tunnel需要拦截包的地址，如果全部拦截则设置[NEIPv4Route defaultRoute]，也可以指定部分需要拦截的地址</span><br><span class="line">     */</span><br><span class="line">    NEIPv4Route * route = [[NEIPv4Route alloc] initWithDestinationAddress:@&quot;172.16.156.243&quot;</span><br><span class="line">                                                              subnetMask:@&quot;255.255.255.255&quot;];</span><br><span class="line">    ipv4Settings.includedRoutes = @[route];</span><br><span class="line">    // 配置ipv4代理</span><br><span class="line">    settings.IPv4Settings = ipv4Settings;</span><br><span class="line">    </span><br><span class="line">    // DNS 解析器（由于 不处理 IP Package）</span><br><span class="line">    NSString * dns = @&quot;8.8.8.8,8.4.4.4&quot;;</span><br><span class="line">    NEDNSSettings * dnsSettings = [[NEDNSSettings alloc] initWithServers:[dns componentsSeparatedByString:@&quot;,&quot;]];</span><br><span class="line">    settings.DNSSettings = dnsSettings;</span><br><span class="line">    </span><br><span class="line">    return settings;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>域名转换ip</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;netinet/in.h&gt;</span><br><span class="line">#include &lt;netdb.h&gt;</span><br><span class="line">#include &lt;arpa/inet.h&gt;</span><br><span class="line"> </span><br><span class="line">// 域名转换IP</span><br><span class="line">- (NSString *)queryIpWithDomain:(NSString *)domain &#123;</span><br><span class="line">    struct hostent *hs;</span><br><span class="line">    struct sockaddr_in server;</span><br><span class="line">    if ((hs = gethostbyname([domain UTF8String])) != NULL) &#123;</span><br><span class="line">        server.sin_addr = *((struct in_addr*)hs-&gt;h_addr_list[0]);</span><br><span class="line">        return [NSString stringWithUTF8String:inet_ntoa(server.sin_addr)];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return nil;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>在 VPN Tunnel 中持续读取 packet 包</li>
+</ul>
+<p>因为我们已经成功建立了 VPN 连接，所以网络数据包我们可以在此回调中截取到，利用 <code>NEPacketTunnelProvider</code> 对象的 <code>packetFlow</code> 完成下面的方法即可。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">从流中读入可用的IP包</span><br><span class="line">- (void)readPakcets &#123;</span><br><span class="line">    __weak PacketTunnelProvider *weakSelf = self;</span><br><span class="line">    [self.packetFlow readPacketsWithCompletionHandler:^(NSArray&lt;NSData *&gt; * _Nonnull packets, NSArray&lt;NSNumber *&gt; * _Nonnull protocols) &#123;</span><br><span class="line">        for (NSData *packet in packets) &#123;</span><br><span class="line">            // log4cplus_debug(&quot;TVUVPNManager&quot;, &quot;Read Packet - %s&quot;,[NSString stringWithFormat:@&quot;%@&quot;,packet].UTF8String);</span><br><span class="line">            __typeof__(self) strongSelf = weakSelf;</span><br><span class="line">            // TODO ...</span><br><span class="line">            </span><br><span class="line">            NSLog(@&quot;XDX : read packet - %@&quot;,packet);</span><br><span class="line">        &#125;</span><br><span class="line">        [weakSelf readPakcets];</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line">    </span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>查看打印结果</li>
+</ul>
+<blockquote>
+<p>注：由于此时是处于另一个 <code>Target</code> 中，在手机中相当于另一条进程，因此我们无法直接在控制台看到任何打印的 <code>log</code> 信息，如果想要看到 <code>log</code> 信息，需要如下配置：<br>1、Debug -&gt; Attach to Process by PID or Name… </p>
+</blockquote>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202307070838025.png"
+                     
+                ></p>
+<blockquote>
+<p>2、启动台 -&gt; 控制台 -&gt; 设备（张建的 iPhone）-&gt; tunnel(进程) ：查看 <code>NSLog</code> 打印结果</p>
+</blockquote>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在 iOS 中：</p>
+<ul>
+<li><p>如果您 <code>启用</code> 此功能，您的所有流量都将 <code>被 VPN 隧道加密</code>，<code>本地流量</code> 将通过您的 <code>VPN</code>。</p>
+</li>
+<li><p>如果它被 <code>禁用</code>，并且您正在浏览互联网，它可以通过本地 WiFi 或 VPN，具体取决于 VPN 提供的路由。</p>
+</li>
+</ul>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC网络学习11：Network Extension探索</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-06-25 11:35:59</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/06/25/OC网络/OC网络学习11：Network Extension探索/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/">#OC-网络学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/06/27/OC%E7%BD%91%E7%BB%9C/OC%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A013%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%ABApp%20Groups%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC网络学习13：数据共享App Groups探索</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/06/21/OC%E7%BD%91%E7%BB%9C/OC%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A009%EF%BC%9AVPN%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC网络学习09：VPN探索</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC网络学习11：Network Extension探索</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Network-Extension-%E5%8A%9F%E8%83%BD%E7%B1%BB%E5%9E%8B"><span class="nav-text">Network Extension 功能类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VPN"><span class="nav-text">VPN</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4"><span class="nav-text">实现步骤</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

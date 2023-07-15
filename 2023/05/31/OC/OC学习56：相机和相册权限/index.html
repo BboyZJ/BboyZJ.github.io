@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/05/31/oc/oc学习56：相机和相册权限/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC学习56：iOS权限设置">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/05/31/OC/OC学习56：相机和相册权限/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC学习56：iOS权限设置">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC学习56：iOS权限设置 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC学习56：iOS权限设置</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-05-31 09:10:13</span>
+        <span class="mobile">2023-05-31 09:10</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-06-25 11:22:15</span>
+            <span class="mobile">2023-06-25 11:22</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="相册-权限"><a href="#相册-权限" class="headerlink" title="相册 权限"></a>相册 权限</h1><ul>
+<li><p>iOS11之前：<code>访问相册（读权限）</code> 和 <code>存储照片到相册（写权限）</code>，需要用户授权，需要添加<code>Privacy - Photo Library Usage Description</code>（读权限）和 <code>Privacy - Photo Library Additions Usage Description</code> (写权限)</p>
+<ul>
+<li><code>Privacy - Photo Library Usage Description</code> 读权限： App需要更换头像图片，是否允许访问您的相册？</li>
+<li><code>Privacy - Photo Library Additions Usage Description</code> 写权限： App需要添加图片到相册，是否允许访问您的相册？</li>
+</ul>
+</li>
+<li><p>iOS11之后：默认开启访问相册权限（读权限），无需用户授权，无需添加</p>
+</li>
+</ul>
+<blockquote>
+<p>注：适配iOS11之前的还是需要加的</p>
+</blockquote>
+<ul>
+<li>相册权限：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark -检查相册的权限(相册流程与相机流程相同,相册是不存在硬件问题的,只要有权限就可以直接调用)</span><br><span class="line">- (void)checkPhotoPermission&#123;</span><br><span class="line">    PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];</span><br><span class="line">    // 如果未询问会走  PHAuthorizationStatusNotDetermined</span><br><span class="line">    if (status == PHAuthorizationStatusNotDetermined) &#123; </span><br><span class="line">    // 调用 requestAuthorization 会弹窗询问是否授权</span><br><span class="line">        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) &#123;</span><br><span class="line">            dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">                if (status == PHAuthorizationStatusAuthorized) &#123;</span><br><span class="line">                    // 有权限进入调起相册方法</span><br><span class="line">                    [self selectPhoto];</span><br><span class="line">                &#125;else &#123;</span><br><span class="line">                    [SVPManager showFailureAndStatus:@&quot;没有权限打开相册&quot;];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;];</span><br><span class="line">    &#125; else if (status == PHAuthorizationStatusDenied ||</span><br><span class="line">               status == PHAuthorizationStatusRestricted) &#123; // 否决/限制</span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">            [SVPManager showFailureAndStatus:JITLocalizedString(@&quot;NoPhotoPermissions&quot;)];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // 有权限进入调起相册方法</span><br><span class="line">        [self selectPhoto];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="相机-权限"><a href="#相机-权限" class="headerlink" title="相机 权限"></a>相机 权限</h1><ul>
+<li><p>iOS11之前：访问相机，需要用户授权，需要添加 <code>Privacy - Camera Usage Description</code> </p>
+<ul>
+<li><code>Privacy - Camera Usage Description</code> : App需要扫描二维码或拍照，是否允许访问您的相机？</li>
+</ul>
+</li>
+<li><p>iOS11之后：默认开启访问相机权限，无需用户授权，无需添加</p>
+</li>
+</ul>
+<blockquote>
+<p>注：适配iOS11之前的还是需要加的</p>
+</blockquote>
+<ul>
+<li>权限判断：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark -检查相机的权限</span><br><span class="line">- (void)checkCameraPermission&#123;</span><br><span class="line">    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];</span><br><span class="line">    // 如果未询问会走  AVAuthorizationStatusNotDetermined</span><br><span class="line">    if (status == AVAuthorizationStatusNotDetermined) &#123; </span><br><span class="line">    // 调用 requestAccessForMediaType 会弹窗并询问是否开启相机权限</span><br><span class="line">        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) &#123;</span><br><span class="line">            if (granted) &#123;</span><br><span class="line">                // 有权限进入调起相机方法</span><br><span class="line">                [self takeCamera];</span><br><span class="line">            &#125;else &#123;</span><br><span class="line">                [SVPManager showFailureAndStatus:@&quot;没有权限打开相机&quot;];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;];</span><br><span class="line">    &#125; else if (status == AVAuthorizationStatusDenied ||</span><br><span class="line">               status == AVAuthorizationStatusRestricted) &#123; // 否决/限制</span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">            [JITAppTool ShowInfo:JITLocalizedString(@&quot;NoCameraPermissions&quot;) andIsSuccess:NO];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // 有权限进入调起相机方法</span><br><span class="line">        [self takeCamera];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<h1 id="麦克风-权限"><a href="#麦克风-权限" class="headerlink" title="麦克风 权限"></a>麦克风 权限</h1><p>访问 <code>麦克风</code> 需要用户授权，否则App会crash：</p>
+<p><code>Privacy - Microphone Usage Description</code> ： App需要您的同意，才能访问麦克风，以便您干什么</p>
+<p><strong>判断麦克风是否授权：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;AVFoundation/AVFoundation.h&gt;</span><br><span class="line">- (BOOL)audioAuthority &#123;</span><br><span class="line">  BOOL state = YES;</span><br><span class="line">  AVAuthorizationStatus authStatus =</span><br><span class="line">      [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];</span><br><span class="line">  switch (authStatus) &#123;</span><br><span class="line">    // 没有询问是否开启麦克风</span><br><span class="line">    case AVAuthorizationStatusNotDetermined: &#123;  </span><br><span class="line">      state = NO;</span><br><span class="line">    &#125; break;</span><br><span class="line">    // 未授权，家长限制</span><br><span class="line">    case AVAuthorizationStatusRestricted: &#123;  </span><br><span class="line">      state = NO;</span><br><span class="line">    &#125; break;</span><br><span class="line">    // 玩家未授权 提示：“亲，麦克风权限已关闭，请在系统“设置”-“隐私”-“麦克风”-“热门直播”里开启”</span><br><span class="line">    case AVAuthorizationStatusDenied: &#123;  </span><br><span class="line">      state = NO;</span><br><span class="line">    &#125; break;</span><br><span class="line">    // 玩家授权</span><br><span class="line">    case AVAuthorizationStatusAuthorized: &#123;  </span><br><span class="line">      state = YES;</span><br><span class="line">    &#125; break;</span><br><span class="line">  &#125;</span><br><span class="line">  return state;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>当 <code>authStatus == AVAuthorizationStatusNotDetermined</code> 时，代表 <code>权限从未询问过</code>，需调用 <code>requestAccessForMediaType</code> 方法进行弹框询问</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">AVAuthorizationStatus authStatus =</span><br><span class="line">    [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];</span><br><span class="line">if (authStatus == AVAuthorizationStatusNotDetermined) &#123;</span><br><span class="line">  [AVCaptureDevice</span><br><span class="line">      requestAccessForMediaType:AVMediaTypeAudio</span><br><span class="line">              completionHandler:^(BOOL granted) &#123;</span><br><span class="line">                dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">                  if (granted) &#123;</span><br><span class="line">                    Bool isOpenAudioAuth = [self audioAuthority];</span><br><span class="line">                    NSLog(@&quot;用户同意授权&quot;);</span><br><span class="line">                  &#125;else &#123;</span><br><span class="line">                    NSLog(@&quot;用户没有同意授权&quot;);</span><br><span class="line">                  &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">              &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+<h1 id="通讯录-权限"><a href="#通讯录-权限" class="headerlink" title="通讯录 权限"></a>通讯录 权限</h1><p>Privacy - Contacts Usage Description ： App需要您的同意，才能访问通讯录，以便您干什么？</p>
+<p><strong>判断是否已开启通讯录权限</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Contacts/Contacts.h&gt;</span><br><span class="line">#import &lt;ContactsUI/ContactsUI.h&gt;</span><br><span class="line">- (BOOL)addressBookAuthority &#123;</span><br><span class="line">  if ([CNContactStore authorizationStatusForEntityType:CNEntityTypeContacts] != CNAuthorizationStatusAuthorized) &#123;</span><br><span class="line">    return NO;</span><br><span class="line">  &#125;</span><br><span class="line">  return YES;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>判断是否询问开启通讯录权限</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">if ([CNContactStore</span><br><span class="line">    authorizationStatusForEntityType:CNEntityTypeContacts] == CNAuthorizationStatusNotDetermined) &#123;</span><br><span class="line">  // 未询问</span><br><span class="line">  CNContactStore* contactStore = [[CNContactStore alloc] init];</span><br><span class="line">  [contactStore</span><br><span class="line">      requestAccessForEntityType:CNEntityTypeContacts</span><br><span class="line">               completionHandler:^(BOOL granted, NSError* _Nullable error) &#123;</span><br><span class="line">                 [ISTools performCodeAtMainTheard:^&#123;</span><br><span class="line">                   if (granted) &#123; </span><br><span class="line">                     // 再次判断是否已开启通讯录权限</span><br><span class="line">                     Bool authorityPermisstion = [self addressBookAuthority];</span><br><span class="line">                     // 进行其他操作</span><br><span class="line">                     NSLog(@&quot;用户同意授权&quot;);</span><br><span class="line">                  &#125;else &#123;</span><br><span class="line">                     NSLog(@&quot;用户没有同意授权&quot;);</span><br><span class="line">                  &#125;</span><br><span class="line">         &#125;];</span><br><span class="line">   &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="蓝牙-权限"><a href="#蓝牙-权限" class="headerlink" title="蓝牙 权限"></a>蓝牙 权限</h1><p>Privacy - Bluetooth Peripheral Usage Description ： App需要您的同意，才能访问蓝牙，以便您干什么？</p>
+<h1 id="语音转文字-权限"><a href="#语音转文字-权限" class="headerlink" title="语音转文字 权限"></a>语音转文字 权限</h1><p>Privacy - Speech Recognition Usage Description ： App需要您的同意，才能访问语音转文字，以便您干什么？</p>
+<h1 id="日历-权限"><a href="#日历-权限" class="headerlink" title="日历 权限"></a>日历 权限</h1><p>Privacy - Calendars Usage Description ： App需要您的同意，才能访问日历，以便您干什么？</p>
+<h1 id="定位-权限"><a href="#定位-权限" class="headerlink" title="定位 权限"></a>定位 权限</h1><ul>
+<li><p>Privacy - Location When In Use Usage Description ： App需要您的同意，才能在使用期间访问位置，以便您干什么</p>
+</li>
+<li><p>Privacy - Location Always Usage Description ： 需要您的同意，才能始终访问位置，以便您干什么？</p>
+</li>
+</ul>
+<p><strong>判断是否已开启地理位置权限：</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;CoreLocation/CoreLocation.h&gt;</span><br><span class="line">- (BOOL)isOpenLocation &#123;</span><br><span class="line">  if ([CLLocationManager locationServicesEnabled] &amp;&amp;</span><br><span class="line">      ([CLLocationManager authorizationStatus] ==</span><br><span class="line">           kCLAuthorizationStatusAuthorizedAlways ||</span><br><span class="line">       [CLLocationManager authorizationStatus] ==</span><br><span class="line">           kCLAuthorizationStatusAuthorizedWhenInUse)) &#123;</span><br><span class="line">    return YES;</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    return NO;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>询问是否弹窗授权开启定位权限：</strong></p>
+<p>当 [CLLocationManager locationServicesEnabled] &amp;&amp; [CLLocationManager authorizationStatus] &#x3D;&#x3D; kCLAuthorizationStatusNotDetermined 时代表从未询问过位置权限，需requestWhenInUseAuthorization方法进行弹框询问</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">if ([CLLocationManager locationServicesEnabled] &amp;&amp;</span><br><span class="line">    [CLLocationManager authorizationStatus] ==</span><br><span class="line">        kCLAuthorizationStatusNotDetermined) &#123;</span><br><span class="line">  if (!self.locManager) &#123;</span><br><span class="line">    self.locManager = [[CLLocationManager alloc] init];</span><br><span class="line">    self.locManager.delegate = self;</span><br><span class="line">  &#125;</span><br><span class="line">  [self.locManager requestWhenInUseAuthorization];</span><br><span class="line">  return;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><strong>询问结果</strong></p>
+<p>弹框询问是否开启使用位置后，通过 <code>CLLocationManagerdelegate</code> 方法 <code>-- (void)locationManager:(CLLocationManager*)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status</code> 进行回调得知询问的结果 <code>status</code>。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark--CLLocationManagerdelegate</span><br><span class="line">- (void)locationManager:(CLLocationManager*)manager</span><br><span class="line">    didChangeAuthorizationStatus:(CLAuthorizationStatus)status &#123;</span><br><span class="line">  if (status == kCLAuthorizationStatusAuthorizedAlways ||</span><br><span class="line">      status == kCLAuthorizationStatusAuthorizedWhenInUse) &#123;</span><br><span class="line">//   [self pushAuthoritySetViewControllerWithTitle:@&quot;地理位置&quot;</span><br><span class="line">//                              authorityDescString:</span><br><span class="line">//                                  @&quot;若您授权地理位置权限，该权限将用于发现附近&quot;</span><br><span class="line">//                                  @&quot;的直播内容，当您开播时也会推荐给附近的人观&quot;</span><br><span class="line">//                                  @&quot;看，建议您允许以保证体验的流畅&quot;</span><br><span class="line">//                             authorityPermisstion:[self isOpenLocation]];  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Siri-权限"><a href="#Siri-权限" class="headerlink" title="Siri 权限"></a>Siri 权限</h1><p>Privacy - Siri Usage Description ：App需要您的同意，才能访问Siri</p>
+<h1 id="提醒事项-权限"><a href="#提醒事项-权限" class="headerlink" title="提醒事项 权限"></a>提醒事项 权限</h1><p>Privacy - Reminders Usage Description ： App需要您的同意，才能访问提醒事项</p>
+<h1 id="健康-权限"><a href="#健康-权限" class="headerlink" title="健康 权限"></a>健康 权限</h1><ul>
+<li><p>Privacy - Motion Usage Description ： 需要您的同意，才能访问运动与健身</p>
+</li>
+<li><p>Privacy - Health Update Usage Description ： 需要您的同意，才能访问健康更新</p>
+</li>
+<li><p>Privacy - Health Share Usage Description ： 需要您的同意，才能访问健康分享</p>
+</li>
+</ul>
+<h1 id="媒体库-权限"><a href="#媒体库-权限" class="headerlink" title="媒体库 权限"></a>媒体库 权限</h1><p>Privacy - Media Library Usage Description ： 需要您的同意，才能访问媒体库</p>
+<h1 id="音乐-权限"><a href="#音乐-权限" class="headerlink" title="音乐 权限"></a>音乐 权限</h1><p>Privacy - Music Usage Description ：App需要您的同意，才能访问音乐</p>
+<h1 id="电视供应商使用-权限"><a href="#电视供应商使用-权限" class="headerlink" title="电视供应商使用 权限"></a>电视供应商使用 权限</h1><p>Privacy - TV Provider Usage Description ：App需要您的同意，才能访问电视供应商使用</p>
+<h1 id="视频用户账号使用-权限"><a href="#视频用户账号使用-权限" class="headerlink" title="视频用户账号使用 权限"></a>视频用户账号使用 权限</h1><p>Privacy - Video Subscriber Account Usage Description ： App需要您的同意，才能访问视频用户账号使用</p>
+<h1 id="网络-权限"><a href="#网络-权限" class="headerlink" title="网络 权限"></a>网络 权限</h1><p>App Transport Security Settings — Allow Arbitrary Loads ： App需要您的同意，才能访问网络</p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC学习56：iOS权限设置</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-05-31 09:10:13</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/05/31/OC/OC学习56：相机和相册权限/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">#OC-学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/06/02/OC/OC%E5%AD%A6%E4%B9%A057%EF%BC%9AkeyChain%E9%92%A5%E5%8C%99%E4%B8%B2%E5%AD%98%E5%82%A8/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习57：keyChain钥匙串存储</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/05/30/OC/OC%E5%AD%A6%E4%B9%A055%EF%BC%9AFaceID%20&amp;%20TouchID%20&amp;%20Guesture/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习55：FaceID &amp; TouchID &amp; Guesture</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC学习56：iOS权限设置</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%B8%E5%86%8C-%E6%9D%83%E9%99%90"><span class="nav-text">相册 权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%B8%E6%9C%BA-%E6%9D%83%E9%99%90"><span class="nav-text">相机 权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%BA%A6%E5%85%8B%E9%A3%8E-%E6%9D%83%E9%99%90"><span class="nav-text">麦克风 权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E8%AE%AF%E5%BD%95-%E6%9D%83%E9%99%90"><span class="nav-text">通讯录 权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%93%9D%E7%89%99-%E6%9D%83%E9%99%90"><span class="nav-text">蓝牙 权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%AD%E9%9F%B3%E8%BD%AC%E6%96%87%E5%AD%97-%E6%9D%83%E9%99%90"><span class="nav-text">语音转文字 权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%A5%E5%8E%86-%E6%9D%83%E9%99%90"><span class="nav-text">日历 权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D-%E6%9D%83%E9%99%90"><span class="nav-text">定位 权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Siri-%E6%9D%83%E9%99%90"><span class="nav-text">Siri 权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8F%90%E9%86%92%E4%BA%8B%E9%A1%B9-%E6%9D%83%E9%99%90"><span class="nav-text">提醒事项 权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%81%A5%E5%BA%B7-%E6%9D%83%E9%99%90"><span class="nav-text">健康 权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AA%92%E4%BD%93%E5%BA%93-%E6%9D%83%E9%99%90"><span class="nav-text">媒体库 权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9F%B3%E4%B9%90-%E6%9D%83%E9%99%90"><span class="nav-text">音乐 权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%B5%E8%A7%86%E4%BE%9B%E5%BA%94%E5%95%86%E4%BD%BF%E7%94%A8-%E6%9D%83%E9%99%90"><span class="nav-text">电视供应商使用 权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E7%94%A8%E6%88%B7%E8%B4%A6%E5%8F%B7%E4%BD%BF%E7%94%A8-%E6%9D%83%E9%99%90"><span class="nav-text">视频用户账号使用 权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C-%E6%9D%83%E9%99%90"><span class="nav-text">网络 权限</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

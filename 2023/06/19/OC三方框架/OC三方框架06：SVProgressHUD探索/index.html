@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/06/19/oc三方框架/oc三方框架06：svprogresshud探索/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC三方框架06：SVProgressHUD探索">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/06/19/OC三方框架/OC三方框架06：SVProgressHUD探索/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC三方框架06：SVProgressHUD探索">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC三方框架06：SVProgressHUD探索 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC三方框架06：SVProgressHUD探索</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-06-19 17:48:07</span>
+        <span class="mobile">2023-06-19 17:48</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-06-19 18:03:09</span>
+            <span class="mobile">2023-06-19 18:03</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC-%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B6%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-三方框架探索篇</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/iOS-OC/">iOS-OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>SVProgressHUD 是对提示框的一个封装库，里面的方法都是类方法，并且对象是通过单例创建。由于方法都是通过类名调用，简单明了。</p>
+<h1 id="基本方法"><a href="#基本方法" class="headerlink" title="基本方法"></a>基本方法</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">+ (void)show;    显示:状态是一个迅速转动的圈</span><br><span class="line">+ (void)showWithMaskType:(SVProgressHUDMaskType)maskType; 显示并且带着一个状态</span><br><span class="line">+ (void)showWithStatus:(NSString*)status; 显示并且带着文字</span><br><span class="line">+ (void)showWithStatus:(NSString*)status maskType:(SVProgressHUDMaskType)maskType;</span><br><span class="line"> </span><br><span class="line">+ (void)showProgress:(float)progress;  //显示进度:状态是一个进度圈</span><br><span class="line">+ (void)showProgress:(float)progress maskType:(SVProgressHUDMaskType)maskType;</span><br><span class="line">+ (void)showProgress:(float)progress status:(NSString*)status;</span><br><span class="line">+ (void)showProgress:(float)progress status:(NSString*)status maskType:(SVProgressHUDMaskType)maskType;</span><br><span class="line"> </span><br><span class="line">+ (void)setStatus:(NSString*)string; // 改变正显示着的HUD的文字</span><br><span class="line"> </span><br><span class="line">// stops the activity indicator, shows a glyph + status, and dismisses HUD a little bit later</span><br><span class="line">+ (void)showInfoWithStatus:(NSString *)string;   //显示消息信息，其实就是中心图片更换了</span><br><span class="line">+ (void)showInfoWithStatus:(NSString *)string maskType:(SVProgressHUDMaskType)maskType;</span><br><span class="line"> </span><br><span class="line">+ (void)showSuccessWithStatus:(NSString*)string; //显示成功消息</span><br><span class="line">+ (void)showSuccessWithStatus:(NSString*)string maskType:(SVProgressHUDMaskType)maskType;</span><br><span class="line"> </span><br><span class="line">+ (void)showErrorWithStatus:(NSString *)string; //显示错误消息</span><br><span class="line">+ (void)showErrorWithStatus:(NSString *)string maskType:(SVProgressHUDMaskType)maskType;</span><br><span class="line"> </span><br><span class="line">// use 28x28 white pngs</span><br><span class="line">+ (void)showImage:(UIImage*)image status:(NSString*)status; //显示自己设置的图片,图片大小事28 * 28 px</span><br><span class="line">+ (void)showImage:(UIImage*)image status:(NSString*)status maskType:(SVProgressHUDMaskType)maskType;</span><br><span class="line"> </span><br><span class="line">+ (void)setOffsetFromCenter:(UIOffset)offset; //距离中心点的偏移量</span><br><span class="line">+ (void)resetOffsetFromCenter; //返回中心点</span><br><span class="line"> </span><br><span class="line">+ (void)popActivity; // 消除一个HUD，根据其实现方法如果前面有执行了好几次show方法，如果给定的progress == 0 或者 pregress &lt; 0那样就会让使一个参数+1，执行这个方法会使那个参数-1，如果参数==0时 执行dismiss方法。</span><br><span class="line">+ (void)dismiss; 消失</span><br><span class="line"> </span><br><span class="line">+ (BOOL)isVisible; 是否正在显示</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="关于HUD的属性配置"><a href="#关于HUD的属性配置" class="headerlink" title="关于HUD的属性配置"></a>关于HUD的属性配置</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">// 背景颜色</span><br><span class="line">+ (void)setBackgroundColor:(UIColor*)color; // default is [UIColor whiteColor]</span><br><span class="line"></span><br><span class="line">// progress 和 label颜色</span><br><span class="line">+ (void)setForegroundColor:(UIColor*)color; // default is [UIColor blackColor]</span><br><span class="line"> </span><br><span class="line">// progress 宽度</span><br><span class="line">+ (void)setRingThickness:(CGFloat)width; // default is 4 pt</span><br><span class="line"></span><br><span class="line">// 字体         </span><br><span class="line">+ (void)setFont:(UIFont*)font; // default is [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline]</span><br><span class="line"></span><br><span class="line">// 消息的图片        </span><br><span class="line">+ (void)setInfoImage:(UIImage*)image; // default is the bundled info image provided by Freepik</span><br><span class="line"></span><br><span class="line">// 成功时的图片</span><br><span class="line">+ (void)setSuccessImage:(UIImage*)image; // default is the bundled success image provided by Freepik</span><br><span class="line"></span><br><span class="line">// 失败时的图片</span><br><span class="line">+ (void)setErrorImage:(UIImage*)image; // default is the bundled error image provided by Freepik</span><br><span class="line"></span><br><span class="line">// 当HUD显示时，用户是否可以点击其他控件</span><br><span class="line">+ (void)setDefaultMaskType:(SVProgressHUDMaskType)maskType; // default is SVProgressHUDMaskTypeNone</span><br><span class="line"> </span><br><span class="line">SVProgressHUDMaskTypeNone = 1,  // 允许用户进行其他用户操作</span><br><span class="line">SVProgressHUDMaskTypeClear,     // 不允许用户进行其他用户操作</span><br><span class="line">SVProgressHUDMaskTypeBlack,     // 不允许用户进行其他用户操作，并且背景是黑色的</span><br><span class="line">SVProgressHUDMaskTypeGradient   // 允许用户进行其他用户操作，并且背景是渐变的黑色</span><br><span class="line"> </span><br><span class="line">// 可以延展一个图片必须设置</span><br><span class="line">+ (void)setViewForExtension:(UIView*)view; </span><br></pre></td></tr></table></figure></div>
+
+<h1 id="关于HUD的通知"><a href="#关于HUD的通知" class="headerlink" title="关于HUD的通知"></a>关于HUD的通知</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// 在HUD外点击</span><br><span class="line">extern NSString * const SVProgressHUDDidReceiveTouchEventNotification; </span><br><span class="line"></span><br><span class="line">// 在HUD中点击</span><br><span class="line">extern NSString * const SVProgressHUDDidTouchDownInsideNotification; </span><br><span class="line"></span><br><span class="line">// 将要显示</span><br><span class="line">extern NSString * const SVProgressHUDWillDisappearNotification;  </span><br><span class="line"></span><br><span class="line">// 已经显示</span><br><span class="line">extern NSString * const SVProgressHUDDidDisappearNotification;   </span><br><span class="line"></span><br><span class="line">// 将要消失</span><br><span class="line">extern NSString * const SVProgressHUDWillAppearNotification;    </span><br><span class="line"></span><br><span class="line">// 已经消失</span><br><span class="line">extern NSString * const SVProgressHUDDidAppearNotification;      </span><br><span class="line"></span><br><span class="line">// HUD的状态</span><br><span class="line">extern NSString * const SVProgressHUDStatusUserInfoKey; </span><br></pre></td></tr></table></figure></div>
+
+<p>在通知中 <code>userInfo</code> 字典中存储了 <code>HUD</code> 的状态，其 <code>key</code> 为 <code>SVProgressHUDStatusUserInfoKey</code></p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><ol>
+<li>在Podfile中安装</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pod &#x27;SVProgressHUD&#x27;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>导入SVProgressHUD</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;SVProgressHUD.h&quot;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>SVProgressHUD弹窗</li>
+</ol>
+<ul>
+<li>SVProgressHUD可以显示一直旋转的进度条：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 显示一直旋转的进度条</span><br><span class="line">+ (void)show;</span><br><span class="line">// 显示一直旋转的进度条和状态</span><br><span class="line">+ (void)showWithStatus:(nullable NSString*)status;</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202306191758511.png"
+                     
+                ></p>
+<ul>
+<li>SVProgressHUD可以显示具体进度的进度条。</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 显示进度条，progress为 0~1</span><br><span class="line">+ (void)showProgress:(float)progress;</span><br><span class="line">// 显示进度条和状态</span><br><span class="line">+ (void)showProgress:(float)progress status:(nullable NSString*)status;</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202306191759347.png"
+                     
+                ></p>
+<ul>
+<li>SVProgressHUD可以显示图标和状态。</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 显示消息图标和状态</span><br><span class="line">+ (void)showInfoWithStatus:(nullable NSString*)status;</span><br><span class="line">// 显示成功图标和状态</span><br><span class="line">+ (void)showSuccessWithStatus:(nullable NSString*)status;</span><br><span class="line">// 显示错误图标和状态</span><br><span class="line">+ (void)showErrorWithStatus:(nullable NSString*)status;</span><br><span class="line">// 显示自定义图标和状态</span><br><span class="line">+ (void)showImage:(nonnull UIImage*)image status:(nullable NSString*)status;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202306191759046.png"
+                     
+                ></p>
+<ul>
+<li>SVProgressHUD关闭弹窗</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 关闭弹窗</span><br><span class="line">+ (void)dismiss;</span><br><span class="line">// 关闭弹窗，并执行completion</span><br><span class="line">+ (void)dismissWithCompletion:(nullable SVProgressHUDDismissCompletion)completion;</span><br><span class="line">// 延迟关闭弹窗</span><br><span class="line">+ (void)dismissWithDelay:(NSTimeInterval)delay;</span><br><span class="line">// 延迟关闭弹窗，并执行completion</span><br><span class="line">+ (void)dismissWithDelay:(NSTimeInterval)delay completion:(nullable SVProgressHUDDismissCompletion)completion;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>主要方法</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">// 提示框背景和文字，默认是SVProgressHUDStyleLight</span><br><span class="line">+ (void)setDefaultStyle:(SVProgressHUDStyle)style;</span><br><span class="line">// 背景图层，默认SVProgressHUDMaskTypeNone</span><br><span class="line">+ (void)setDefaultMaskType:(SVProgressHUDMaskType)maskType;</span><br><span class="line">// 设置进度条样式，默认SVProgressHUDAnimationTypeFlat</span><br><span class="line">+ (void)setDefaultAnimationType:(SVProgressHUDAnimationType)type;</span><br><span class="line"></span><br><span class="line">// 提示框文字颜色，默认黑色，只在style为SVProgressHUDStyleCustom有效</span><br><span class="line">+ (void)setForegroundColor:(nonnull UIColor*)color;</span><br><span class="line">// 提示框背景颜色，默认白色，只在style为SVProgressHUDStyleCustom有效</span><br><span class="line">+ (void)setBackgroundColor:(nonnull UIColor*)color;</span><br><span class="line">// 背景图层，默认半透明，只在style为SVProgressHUDStyleCustom有效</span><br><span class="line">+ (void)setBackgroundLayerColor:(nonnull UIColor*)color;</span><br><span class="line"></span><br><span class="line">// 状态字体，默认[UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline]</span><br><span class="line">+ (void)setFont:(nonnull UIFont*)font;</span><br><span class="line">// 提示框的边角弯曲半径，默认14pt</span><br><span class="line">+ (void)setCornerRadius:(CGFloat)cornerRadius;</span><br><span class="line">// 转圈宽度，默认2pt</span><br><span class="line">+ (void)setRingThickness:(CGFloat)ringThickness;</span><br><span class="line">// 转圈半径，默认18pt</span><br><span class="line">+ (void)setRingRadius:(CGFloat)radius;</span><br><span class="line">// 没有文字时的转圈半径，默认24pt</span><br><span class="line">+ (void)setRingNoTextRadius:(CGFloat)radius;</span><br><span class="line"></span><br><span class="line">// 设置消息图片</span><br><span class="line">+ (void)setInfoImage:(nonnull UIImage*)image;</span><br><span class="line">// 设置成功图片</span><br><span class="line">+ (void)setSuccessImage:(nonnull UIImage*)image;</span><br><span class="line">// 设置错误图片</span><br><span class="line">+ (void)setErrorImage:(nonnull UIImage*)image;</span><br><span class="line">// 设置图片大小，默认28x28pt</span><br><span class="line">+ (void)setImageViewSize:(CGSize)size;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>SVProgressHUDStyle定义提示框背景和文字</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef NS_ENUM(NSInteger, SVProgressHUDStyle) &#123;</span><br><span class="line">    SVProgressHUDStyleLight,        // 默认类型，白色半透明背景，黑色字体</span><br><span class="line">    SVProgressHUDStyleDark,         // 黑色背景，白色字体</span><br><span class="line">    SVProgressHUDStyleCustom        // 白色背景，黑色字体</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202306191801823.png"
+                     
+                ></p>
+<ul>
+<li>SVProgressHUDMaskType定义背景图层</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef NS_ENUM(NSUInteger, SVProgressHUDMaskType) &#123;</span><br><span class="line">    SVProgressHUDMaskTypeNone = 1,  // 默认类型，允许与后面界面交互</span><br><span class="line">    SVProgressHUDMaskTypeClear,     // 不允许与后面界面交互</span><br><span class="line">    SVProgressHUDMaskTypeBlack,     // 不允许与后面界面交互，背景图层为半透明</span><br><span class="line">    SVProgressHUDMaskTypeGradient,  // 不允许与后面界面交互，背景图层为渐变变化</span><br><span class="line">    SVProgressHUDMaskTypeCustom     // 不允许与后面界面交互，背景图层为自定义</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>SVProgressHUDAnimationType是转圈样式</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">typedef NS_ENUM(NSUInteger, SVProgressHUDAnimationType) &#123;</span><br><span class="line">    SVProgressHUDAnimationTypeFlat,     // 默认转圈样式</span><br><span class="line">    SVProgressHUDAnimationTypeNative    // 菊花型转圈样式</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202306191802901.png"
+                     
+                ></p>
+<ol start="4">
+<li>SVProgressHUD通知</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 提示框即将出现</span><br><span class="line">NSString * const SVProgressHUDWillAppearNotification = @&quot;SVProgressHUDWillAppearNotification&quot;;</span><br><span class="line">// 提示框已经出现</span><br><span class="line">NSString * const SVProgressHUDDidAppearNotification = @&quot;SVProgressHUDDidAppearNotification&quot;;</span><br><span class="line"></span><br><span class="line">// 提示框即将消失</span><br><span class="line">NSString * const SVProgressHUDWillDisappearNotification = @&quot;SVProgressHUDWillDisappearNotification&quot;;</span><br><span class="line">// 提示框已经消失</span><br><span class="line">NSString * const SVProgressHUDDidDisappearNotification = @&quot;SVProgressHUDDidDisappearNotification&quot;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC三方框架06：SVProgressHUD探索</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-06-19 17:48:07</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/06/19/OC三方框架/OC三方框架06：SVProgressHUD探索/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/iOS-OC/">#iOS-OC</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/06/20/OC/OC%E5%AD%A6%E4%B9%A062%EF%BC%9AisKindOfClass%E5%92%8CisMemberOfClass%E5%92%8CisSubclassOfClass%E7%9A%84%E5%8C%BA%E5%88%AB/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习62：isKindOfClass和isMemberOfClass和isSubclassOfClass的区别</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/06/15/OC/OC%E5%AD%A6%E4%B9%A061%EF%BC%9AAES%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习61：AES对称加密算法</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC三方框架06：SVProgressHUD探索</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%96%B9%E6%B3%95"><span class="nav-text">基本方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EHUD%E7%9A%84%E5%B1%9E%E6%80%A7%E9%85%8D%E7%BD%AE"><span class="nav-text">关于HUD的属性配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EHUD%E7%9A%84%E9%80%9A%E7%9F%A5"><span class="nav-text">关于HUD的通知</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-text">使用</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

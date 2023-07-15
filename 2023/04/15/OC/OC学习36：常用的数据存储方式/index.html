@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-04-17 20:39:55</span>
-            <span class="mobile">2023-04-17 20:39</span>
+            <span class="pc">2023-06-05 10:13:06</span>
+            <span class="mobile">2023-06-05 10:13</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -349,7 +349,14 @@
 <p><img  
                      lazyload
                      src="/images/loading.svg"
-                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202304160057426.png"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202306051009469.png"
+                     
+                ></p>
+<p>打开plist文件可查看设置</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202306051012512.png"
                      
                 ></p>
 <blockquote>
@@ -419,6 +426,7 @@
 <li>SQLite3</li>
 <li>FMDB</li>
 <li>CoreData</li>
+<li>keyChain 钥匙串</li>
 </ul>
 <h1 id="NSUserDefaults"><a href="#NSUserDefaults" class="headerlink" title="NSUserDefaults"></a>NSUserDefaults</h1><p><code>NSUserDefaults</code> 可以存储 <code>OC基本类型（如：字符串、数组、字典等）</code>。但 <code>不能存储自定义对象</code>，如果是 <code>自定义对象，需要进行归档操作</code>。缓存数据到沙盒下 <code>Library-&gt;Preference</code>。<code>iTunes</code> 同步设备时会 <code>备份</code> </p>
 <ul>
@@ -487,7 +495,7 @@
 <blockquote>
 <p>-(BOOL)writeToURL:(NSURL *)url atomically:(BOOL)atomically;<br>writeToURL 的好处是，既可以写入本地url也可以写入远程url，苹果推荐使用此方法写入plist文件</p>
 </blockquote>
-<h1 id="手动存放沙盒"><a href="#手动存放沙盒" class="headerlink" title="手动存放沙盒"></a>手动存放沙盒</h1><p>沙盒和上面两种类似，只能存放 OC 基本数据，自定义对象不能直接存入。</p>
+<h1 id="手动存放沙盒"><a href="#手动存放沙盒" class="headerlink" title="手动存放沙盒"></a>手动存放沙盒</h1><p>沙盒和上面两种类似，只能存放 <code>OC</code> 基本数据，自定义对象不能直接存入。</p>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 假设我们需往cache 存入数据，并命名为test的txt格式文件中</span><br><span class="line">NSString *filePath = [cachesPath stringByAppendingPathComponent:@&quot;test.txt&quot;];</span><br><span class="line">NSArray *dic = [[NSArray alloc] initWithObjects:@&quot;name&quot;,@&quot;zj&quot; ,nil];</span><br><span class="line">if([dic writeToFile:filePath atomically:YES])&#123;</span><br><span class="line">    NSLog(@&quot;存入成功&quot;);</span><br><span class="line">&#125;</span><br><span class="line">// 取出数据 打印</span><br><span class="line">NSLog(@&quot;%@&quot;,[NSArray arrayWithContentsOfFile:filePath]);</span><br></pre></td></tr></table></figure></div>
 
 <h1 id="NSKeyedArchiver归档-x2F-NSKeyedUnarchiver解档"><a href="#NSKeyedArchiver归档-x2F-NSKeyedUnarchiver解档" class="headerlink" title="NSKeyedArchiver归档 &#x2F; NSKeyedUnarchiver解档"></a>NSKeyedArchiver归档 &#x2F; NSKeyedUnarchiver解档</h1><p>之前说，不管是 <code>NSUserDefaults</code> 或者是 <code>plist</code> 都不能对 <code>自定义的对象</code> 进行存储， OC提供了 <code>解归档</code> 恰好解决这个问题。 解归档针对的是一个对象，假设我们现在有一个 <code>Person 和 Student</code> 的类，需要进行归档和解档。</p>
@@ -499,7 +507,7 @@
 <ul>
 <li>对象的 <code>Person.m</code> 文件</li>
 </ul>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;Person.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation Person</span><br><span class="line"></span><br><span class="line">//实现NSCoding协议方法</span><br><span class="line">//解档</span><br><span class="line">- (id)initWithCoder:(NSCoder *)aDecoder&#123;</span><br><span class="line">    </span><br><span class="line">    if (self = [super init]) &#123;</span><br><span class="line">        </span><br><span class="line">        self.avatar = [aDecoder decodeObjectForKey:@&quot;avatar&quot;];</span><br><span class="line">        self.name = [aDecoder decodeObjectForKey:@&quot;name&quot;];</span><br><span class="line">        self.age = [aDecoder decodeIntegerForKey:@&quot;age&quot;];</span><br><span class="line">        // 嵌套模型</span><br><span class="line">        self.student = [aDecoder decodeObjectForKey:@&quot;student&quot;];</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line">//归档</span><br><span class="line">- (void)encodeWithCoder:(NSCoder *)aCoder&#123;</span><br><span class="line">    </span><br><span class="line">    [aCoder encodeObject:self.avatar forKey:@&quot;avatar&quot;];</span><br><span class="line">    [aCoder encodeObject:self.name forKey:@&quot;name&quot;];</span><br><span class="line">    [aCoder encodeInteger:self.age forKey:@&quot;age&quot;];</span><br><span class="line">    // 嵌套模型</span><br><span class="line">    [aCoder encodeObject:self.student forKey:@&quot;student&quot;];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;Person.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation Person</span><br><span class="line"></span><br><span class="line">//实现NSCoding协议方法</span><br><span class="line">//解档</span><br><span class="line">- (id)initWithCoder:(NSCoder *)aDecoder&#123;</span><br><span class="line">    </span><br><span class="line">    if (self = [super init]) &#123;</span><br><span class="line">        </span><br><span class="line">        self.avatar = [aDecoder decodeObjectForKey:@&quot;avatar&quot;];</span><br><span class="line">        self.name = [aDecoder decodeObjectForKey:@&quot;name&quot;];</span><br><span class="line">        self.age = [aDecoder decodeIntegerForKey:@&quot;age&quot;];</span><br><span class="line">        // 嵌套模型</span><br><span class="line">        self.student = [aDecoder decodeObjectForKey:@&quot;student&quot;];</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line">// 归档</span><br><span class="line">- (void)encodeWithCoder:(NSCoder *)aCoder&#123;</span><br><span class="line">    </span><br><span class="line">    [aCoder encodeObject:self.avatar forKey:@&quot;avatar&quot;];</span><br><span class="line">    [aCoder encodeObject:self.name forKey:@&quot;name&quot;];</span><br><span class="line">    [aCoder encodeInteger:self.age forKey:@&quot;age&quot;];</span><br><span class="line">    // 嵌套模型</span><br><span class="line">    [aCoder encodeObject:self.student forKey:@&quot;student&quot;];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
 
 <ul>
 <li>对象的 <code>Student.h</code> 文件</li>

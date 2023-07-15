@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-05-28 21:01:22</span>
-            <span class="mobile">2023-05-28 21:01</span>
+            <span class="pc">2023-06-02 11:36:36</span>
+            <span class="mobile">2023-06-02 11:36</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -325,8 +325,8 @@
             
 
             <div class="article-content markdown-body">
-                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>App项目所必须要设置的，允许App运行的最低iOS系统版本。</p>
-<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><ol>
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>App项目所必须要设置的，允许App运行的最低iOS系统版本。每个版本的Xcode都有自己的最低和最高iOS系统版本控制，我的 <code>Version 14.2 (14C18)</code>，默认支持调试的系统版本是在 <code>iOS 11.0 ~ iOS 16.1</code> </p>
+<h1 id="配置默认系统版本"><a href="#配置默认系统版本" class="headerlink" title="配置默认系统版本"></a>配置默认系统版本</h1><ol>
 <li>打开Xcode工程，<code>target-&gt;Build Settings -&gt; Deployment -&gt;iOS Deployment Target</code></li>
 </ol>
 <p><img  
@@ -336,6 +336,129 @@
                      
                 ></p>
 <p>由上图可知，我目前能配置的最低iOS系统是 <code>iOS 11.0</code>，明显不能满足我的开发要求，那么要怎么办呢？</p>
+<p>答：如果我点击 <code>Other</code> 手动修改，<code>iOS 8.0</code>，这样是可以的，但是由于 <code>没有相关的配置文件</code>，因此，是 <code>不允许你运行在 iPhone iOS 11.0 以下的真机</code> 进行调试的，如下图：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202305301510208.png"
+                     
+                ></p>
+<ol start="2">
+<li>iOS Deployment Target 的值设置为多少，实际上要看项目里面 两种类型库最低支持的手机系统版本：</li>
+</ol>
+<ul>
+<li>系统库：例如 WKWebView 最低支持 8.0</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#if TARGET_OS_IPHONE</span><br><span class="line">WK_EXTERN API_AVAILABLE(macos(10.10), ios(8.0))</span><br><span class="line">@interface WKWebView : UIView</span><br><span class="line">#else</span><br><span class="line">WK_EXTERN API_AVAILABLE(macos(10.10), ios(8.0))</span><br><span class="line">@interface WKWebView : NSView</span><br><span class="line">#endif</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><p>三方库：例如：个推 最低支持7.0</p>
+</li>
+<li><p>此时，如果我们适配到了 <code>iOS 7.0</code>，那么 <code>WKWebView</code> 就没办法运行在 <code>iOS 8.0</code> 上，因此还是需要配置在 <code>iOS 8.0及以上</code></p>
+</li>
+</ul>
+<h1 id="配置低版本系统"><a href="#配置低版本系统" class="headerlink" title="配置低版本系统"></a>配置低版本系统</h1><p>如果你的手机是iOS 7.0，我们App最低支持iOS 9.0系统，那么你的手机是没办法装我们的App的，可以用下面的做法来解决这个问题：</p>
+<ol>
+<li>点击下载，将下图的几个文件复制</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16854326984125.jpg"
+                     
+                ></p>
+<ol start="2">
+<li>Xcode.app -&gt; 显示包内容 -&gt; Contents -&gt; Developer -&gt; Platforms -&gt; iPhoneOS.platform -&gt; DeviceSupport，将上面复制的几个文件粘贴到 DeviceSupport 文件夹下</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16854329652103.jpg"
+                     
+                ></p>
+<ol start="3">
+<li>进入到 iPhoneOS.sdk文件夹Contents-&gt;Developer-&gt;Platforms-&gt;iPhoneOS.platform-&gt;Developer-&gt;SDKs-&gt;iPhoneOS.sdk</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16854333054682.jpg"
+                     
+                ></p>
+<ol start="4">
+<li>右键 <code>SDKSettings.plist</code> 和 <code>SDKSettings.json</code>，点击显示简介，然后将 <code>everyone</code> 的权限由默认的 <code>只读改为读与写</code></li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16854340657473.jpg"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16855366645554.jpg"
+                     
+                ></p>
+<ol start="5">
+<li>双击打开 <code>SDSettings.plist</code>，增加对应的 <code>item</code>（也就是步骤 2 下载的几个文件名）</li>
+</ol>
+<ul>
+<li>DEPLOYMENT_TARGET_SUGGESTED_VALUES</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16854343201748.jpg"
+                     
+                ></p>
+<ul>
+<li>MinimumDeploymentTarget 改为9.0</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16856769721842.jpg"
+                     
+                ></p>
+<ol start="6">
+<li>用 <code>VSCode</code> 打开 <code>SDKSetting.json</code>，并将其代码进行格式化，增加对应的版本，如下图：</li>
+</ol>
+<ul>
+<li>ValidDeploymentTargets</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16855363054719.jpg"
+                     
+                ></p>
+<ul>
+<li>DEPLOYMENT_TARGET_SUGGESTED_VALUES</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16855363733061.jpg"
+                     
+                ></p>
+<ol start="7">
+<li>将 <code>步骤 4</code> 的权限更改为 <code>只读</code>，然后一定要重启电脑，否则不生效。（重启后更改为只读也可以）</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16854346499368.jpg"
+                     
+                ><br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/BboyZJ.github.io/assets/16855367963077.jpg"
+                     
+                ></p>
+<ol start="8">
+<li>打开 Xcode，发现最低版本都可以选择 <code>9.0</code> 了，这样，手机为 <code>iOS 9.0</code> 的系统也可以安装到我们的APP了</li>
+</ol>
 
             </div>
 
@@ -417,7 +540,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">Xcode学习06：Xcode设置App允许运行的最低iOS系统版本</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-text">配置</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E9%BB%98%E8%AE%A4%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC"><span class="nav-text">配置默认系统版本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%BD%8E%E7%89%88%E6%9C%AC%E7%B3%BB%E7%BB%9F"><span class="nav-text">配置低版本系统</span></a></li></ol>
 
     </div>
 </div>
