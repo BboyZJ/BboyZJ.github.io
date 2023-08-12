@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/08/10/oc/oc学习68：本地通知usernotifications framework/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC学习68：本地通知UserNotifications Framework">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/08/10/OC/OC学习68：本地通知UserNotifications Framework/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC学习68：本地通知UserNotifications Framework">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC学习68：本地通知UserNotifications Framework -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC学习68：本地通知UserNotifications Framework</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-08-10 16:35:12</span>
+        <span class="mobile">2023-08-10 16:35</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-08-12 16:22:08</span>
+            <span class="mobile">2023-08-12 16:22</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>通知和推送</code> 是应用程序中很重要的组成部分。<code>本地通知</code> 可以为应用程序注册一些定时任务，例如闹钟、定时提醒等。<code>远程推送</code> 则更强大，提供了一种通过服务端主动推送消息到客户端的方式，服务端可以更加灵活地控制通知逻辑，例如广告的推送、定时任务的提醒、即时通信类应用离线消息的提醒等。本文先着重着介绍本地通知，由于iOS系统的不断更新，本地通知的API也需要根据设备的系统来进行选择和兼容。</p>
+<ul>
+<li><p>在 <code>iOS10</code> 之前，开发者需要使用 <code>UILocalNotification</code> 类来实现本地通知；</p>
+</li>
+<li><p>在 <code>iOS10</code> 之后，苹果为了加强对通知和推送的统一管理，提高通知界面的高可定制性，引入了<code>UserNotification</code> 框架。</p>
+</li>
+</ul>
+<blockquote>
+<p>注：本地通知不需要连接网络，一般是开发人员在合适的情况下，在App内发送通知。</p>
+</blockquote>
+<h1 id="UILocalNotification"><a href="#UILocalNotification" class="headerlink" title="UILocalNotification"></a>UILocalNotification</h1><ol>
+<li>简介</li>
+</ol>
+<p><code>ULLocalNotification</code> 是 <code>iOS8</code> 中的一个类(In iOS 8.0 and later)，用来实现本地通知功能。通知，实际上是由iOS系统管理的一个功能，比如注册了通知，则系统会在通知被触发时给应用程序发送消息。但是，ULLocalNotification仅能提供开发者去编辑消息，消息推送到app上展示的样式和交互则是固定的，开发者自定制的难度相当大。</p>
+<ol start="2">
+<li>添加步骤</li>
+</ol>
+<ul>
+<li>创建通知对象</li>
+<li>设置触发时间</li>
+<li>设置通知属性</li>
+<li>执行本地通知</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">// 推送本地通知 iOS 10.0 及以下</span><br><span class="line">- (void)pushLocalNotificationIOS10AndBelowWithTime:(int)time</span><br><span class="line">                                             title:(NSString *)title</span><br><span class="line">                                              body:(NSString *)body</span><br><span class="line">                                           repeats:(BOOL)repeats</span><br><span class="line">                                        identifier:(NSString *)identifier&#123;</span><br><span class="line">    // 1.创建通知对象</span><br><span class="line">    UILocalNotification * notification = [[UILocalNotification alloc] init];</span><br><span class="line">     </span><br><span class="line">    // 2.设置触发通知的时间(几秒后发送)</span><br><span class="line">    NSDate * fireDate = [NSDate dateWithTimeIntervalSinceNow:time];</span><br><span class="line">    notification.fireDate = fireDate;</span><br><span class="line">    </span><br><span class="line">    // 3.设置通知属性</span><br><span class="line">    // 通知标题</span><br><span class="line">    notification.alertTitle = title;</span><br><span class="line">    // 通知主体</span><br><span class="line">    notification.alertBody = body;</span><br><span class="line">    // 待机界面开启左滑按钮</span><br><span class="line">    notification.hasAction = YES;</span><br><span class="line">    // 待机界面的滑动按钮提示</span><br><span class="line">    notification.alertAction = @&quot;点击查看消息&quot;;</span><br><span class="line">    // 在收到通知时播放的声音，默认消息声音</span><br><span class="line">    notification.soundName = UILocalNotificationDefaultSoundName;</span><br><span class="line">    // 设置启动屏</span><br><span class="line">//    notification.alertLaunchImage = @&quot;&quot;;</span><br><span class="line">    // 传递的用户数据</span><br><span class="line">//    notification.userInfo = @&#123;&#125;;</span><br><span class="line">    // 图标的消息数</span><br><span class="line">//    notification.applicationIconBadgeNumber = 1;</span><br><span class="line">    // 时区</span><br><span class="line">//     notification.timeZone = [NSTimeZone defaultTimeZone];</span><br><span class="line">    // 设置重复的间隔</span><br><span class="line">//     notification.repeatInterval = kCFCalendarUnitSecond;</span><br><span class="line">    </span><br><span class="line">     // 附加操作</span><br><span class="line">//    notification.category = @&quot;choose&quot;;</span><br><span class="line">    </span><br><span class="line">    // 4.执行本地通知</span><br><span class="line">    [[UIApplication sharedApplication] scheduleLocalNotification:notification];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>立即执行本地通知用：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+<ol start="3">
+<li>处理逻辑</li>
+</ol>
+<ul>
+<li>申请通知授权</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 本地通知授权</span><br><span class="line">- (void)localNotificationAuthorizationIOS10AndBelow&#123;</span><br><span class="line">    // 如果已经得到授权，就直接添加本地通知，否则申请询问授权</span><br><span class="line">    if ([[UIApplication sharedApplication] currentUserNotificationSettings].types == UIUserNotificationTypeNone) &#123;</span><br><span class="line">        // 开始授权</span><br><span class="line">        UIUserNotificationSettings * notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeSound categories:nil];</span><br><span class="line">        [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>推送本地通知</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">// 推送本地通知 iOS 10.0 及以下</span><br><span class="line">- (void)pushLocalNotificationIOS10AndBelowWithTime:(int)time</span><br><span class="line">                                             title:(NSString *)title</span><br><span class="line">                                              body:(NSString *)body</span><br><span class="line">                                           repeats:(BOOL)repeats</span><br><span class="line">                                        identifier:(NSString *)identifier&#123;</span><br><span class="line">    if ([[UIApplication sharedApplication] currentUserNotificationSettings].types == UIUserNotificationTypeNone) &#123;</span><br><span class="line">        [SVPManager showWithStatus:@&quot;请您在前往 设置-&gt;通用-&gt;零信任-&gt;通知-&gt;开启允许通知 权限，以便为您提供本地通知服务&quot; time:2];</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 1.创建通知对象</span><br><span class="line">    UILocalNotification * notification = [[UILocalNotification alloc] init];</span><br><span class="line">     </span><br><span class="line">    // 2.设置触发通知的时间(几秒后发送)</span><br><span class="line">    NSDate * fireDate = [NSDate dateWithTimeIntervalSinceNow:time];</span><br><span class="line">    notification.fireDate = fireDate;</span><br><span class="line">    </span><br><span class="line">    // 3.设置通知属性</span><br><span class="line">    // 通知标题</span><br><span class="line">    notification.alertTitle = title;</span><br><span class="line">    // 通知主体</span><br><span class="line">    notification.alertBody = body;</span><br><span class="line">    // 待机界面开启左滑按钮</span><br><span class="line">    notification.hasAction = YES;</span><br><span class="line">    // 待机界面的滑动按钮提示</span><br><span class="line">    notification.alertAction = @&quot;点击查看消息&quot;;</span><br><span class="line">    // 在收到通知时播放的声音，默认消息声音</span><br><span class="line">    notification.soundName = UILocalNotificationDefaultSoundName;</span><br><span class="line">    // 设置启动屏</span><br><span class="line">//    notification.alertLaunchImage = @&quot;&quot;;</span><br><span class="line">    // 传递的用户数据</span><br><span class="line">//    notification.userInfo = @&#123;&#125;;</span><br><span class="line">    // 图标的消息数</span><br><span class="line">//    notification.applicationIconBadgeNumber = 1;</span><br><span class="line">    // 时区</span><br><span class="line">//     notification.timeZone = [NSTimeZone defaultTimeZone];</span><br><span class="line">    // 设置重复的间隔</span><br><span class="line">//     notification.repeatInterval = kCFCalendarUnitSecond;</span><br><span class="line">    </span><br><span class="line">    // 附加操作</span><br><span class="line">//    notification.category = @&quot;choose&quot;;</span><br><span class="line">    </span><br><span class="line">    // 4.执行本地通知</span><br><span class="line">    [[UIApplication sharedApplication] scheduleLocalNotification:notification];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>收到本地通知处理</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> App处于kill掉时，点击通知栏进入App，使用该方法接收本地（远程）通知</span><br><span class="line"> */</span><br><span class="line">- (void)receiveLocalNotificationWithLaunchOptions:(NSDictionary *)launchOptions&#123;</span><br><span class="line">    /*</span><br><span class="line">     App被kill掉，通过通知启动App</span><br><span class="line">     1.本地的 key - UIApplicationLaunchOptionsLocalNotificationKey</span><br><span class="line">     2.远程的 key - UIApplicationLaunchOptionsRemoteNotificationKey</span><br><span class="line">     */</span><br><span class="line">    if (launchOptions[UIApplicationLaunchOptionsLocalNotificationKey]) &#123;</span><br><span class="line">        UILocalNotification * notification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];</span><br><span class="line">        [self handleLocalNotificationWithWithNotification:notification userInfo:launchOptions[UIApplicationLaunchOptionsLocalNotificationKey]];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 处理本地通知</span><br><span class="line">- (void)handleLocalNotificationWithWithNotification:(UILocalNotification *)notification userInfo:(NSDictionary *)userInfo&#123;</span><br><span class="line">    NSLog(@&quot;title:%@ body:%@&quot;,notification.alertTitle,notification.alertBody);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>AppDelegate下</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - 接收本地通知</span><br><span class="line">/*</span><br><span class="line"> App处于挂起或运行时，调用该方法接收本地（远程）通知</span><br><span class="line"> 1.当App在前台状态下，点击推送通知，会调用该方法</span><br><span class="line"> 2.当App在后台状态下，点击推送通知，会调用该方法（从锁屏界面点击推送通知也会执行）</span><br><span class="line"> */</span><br><span class="line">- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification&#123;</span><br><span class="line">    NSLog(@&quot;%@&quot;,notification);</span><br><span class="line">    // 前台点击通知消息</span><br><span class="line">    if (application.applicationState == UIApplicationStateActive) &#123;</span><br><span class="line">        NSLog(@&quot;处理前台接受通知的业务&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    // 后台点击通知消息</span><br><span class="line">    else &#123;</span><br><span class="line">        NSLog(@&quot;处理后台台接受通知的业务&quot;);</span><br><span class="line">        [[LocalNotiManager sharedManager] handleLocalNotificationWithWithNotification:notification userInfo:notification.userInfo];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 当用户点击允许或者不允许时，会执行如下代理方法，我们在其中实现处理逻辑</span><br><span class="line">- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings&#123;</span><br><span class="line">    NSLog(@&quot;当用户点击允许或者不允许时，会执行如下代理方法&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="4">
+<li>附加操作</li>
+</ol>
+<p>可以添加附加操作</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">// 添加附加操作</span><br><span class="line">- (void)addCategoryAction&#123;</span><br><span class="line">    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) &#123;</span><br><span class="line">        /*</span><br><span class="line">         推送通知的附加操作，可以为nil，此时只显示消息</span><br><span class="line">         如果不为nil，可以再推送消息的后面增加几个按钮（如同意、不同意）</span><br><span class="line">         */</span><br><span class="line">        UIMutableUserNotificationCategory * category = [UIMutableUserNotificationCategory new];</span><br><span class="line">        category.identifier = @&quot;choose&quot;;</span><br><span class="line">        </span><br><span class="line">        // 同意</span><br><span class="line">        UIMutableUserNotificationAction * action1 = [UIMutableUserNotificationAction new];</span><br><span class="line">        action1.identifier = @&quot;yes&quot;;</span><br><span class="line">        action1.title = @&quot;同意&quot;;</span><br><span class="line">        // 点击按钮是否进入前台</span><br><span class="line">        action1.activationMode = UIUserNotificationActivationModeForeground;</span><br><span class="line">        action1.authenticationRequired = true;</span><br><span class="line">        action1.destructive = false;</span><br><span class="line">        </span><br><span class="line">        // 不同意</span><br><span class="line">        UIMutableUserNotificationAction * action2 = [UIMutableUserNotificationAction new];</span><br><span class="line">        action2.identifier = @&quot;no&quot;;</span><br><span class="line">        action2.title = @&quot;不同意&quot;;</span><br><span class="line">        // 后台模式</span><br><span class="line">        action2.activationMode = UIUserNotificationActivationModeBackground;</span><br><span class="line">        action2.authenticationRequired = true;</span><br><span class="line">        action2.destructive = true;</span><br><span class="line">        </span><br><span class="line">        if ([[UIDevice currentDevice].systemVersion floatValue] &gt;= 9.0) &#123;</span><br><span class="line">            action2.behavior = UIUserNotificationActionBehaviorTextInput;</span><br><span class="line">            action2.parameters = @&#123;UIUserNotificationTextInputActionButtonTitleKey:@&quot;拒绝原因&quot;&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        [category setActions:@[action1,action2] forContext:UIUserNotificationActionContextDefault];</span><br><span class="line">        </span><br><span class="line">        NSSet&lt;UIUserNotificationCategory *&gt; * categorys = [NSSet setWithObjects:category, nil];</span><br><span class="line">        </span><br><span class="line">        UIUserNotificationType type = UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound;</span><br><span class="line">        UIUserNotificationSettings * settings = [UIUserNotificationSettings settingsForTypes:type categories:categorys];</span><br><span class="line">        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308121406320.png"
+                     
+                ><br><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308121407871.png"
+                     
+                ></p>
+<h1 id="UserNotification"><a href="#UserNotification" class="headerlink" title="UserNotification"></a>UserNotification</h1><ol>
+<li>简介</li>
+</ol>
+<p><code>UserNotification</code> 是iOS10后苹果提出的一个整合的通知和推送框架，对之前的通知和推送功能进行了全面的重构和优化，功能更强大，定制更灵活。表现如下：</p>
+<ul>
+<li>通知处理代码从AppDelegate中剥离</li>
+<li>通知的注册、设置、处理更加结构化，更易于进行模块的开发</li>
+<li>支持自定义通知音效和启动图</li>
+<li>支持向通知内容中添加媒体附件，例如音效、视频</li>
+<li>支持开发者定义多套通知展示模块</li>
+<li>支持完全自定义的通知界面</li>
+<li>支持自定义通知中的用户交互按钮</li>
+<li>通知的触发更加容易管理</li>
+</ul>
+<ol start="2">
+<li>核心类结构图</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308120907777.png"
+                     
+                ></p>
+<ul>
+<li>UNNotificationCenter：通知管理中心单例设计，负责通知的注册、接收通知后的回调处理等，是UserNofitication框架的核心。</li>
+<li>UNNotification：通知对象，其中封装了通知请求</li>
+<li>UNNoticationSettings：通知相关设置</li>
+<li>UNNotificationCategory：通知模板</li>
+<li>UNNotificationAction：用于定义通知模板中的用户交互行为</li>
+<li>UNNotificationRequest：注册通知请求，其中定义了通知的内容和触发方式</li>
+<li>UNNotificationResponse：接收到通知后的回执</li>
+<li>UNNotificationContent：通知的具体内容</li>
+<li>UNNotificationAttachment：通知所携带的附件，为通知内容添加</li>
+<li>UNNotificationSound：定义通知音效, （音频文件必须位于bundle或者Library&#x2F;Sounds目录下）</li>
+<li>UNNotificationTrigger：通知触发器，由其子类具体定义</li>
+<li>UNPushNotificationTrigger：远程推送触发器，UNNotificationTrigger的子类</li>
+<li>UNTimerInrevalNotificationTrigger：计时器触发器，UNNotificationTrigger的子类</li>
+<li>UNCalendarNotificationTrigger：周期日历触发器，UNNotificationTrigger的子类</li>
+<li>UNLocationNotificationTrigger：地域触发器，UNNotificationTrigger的子类</li>
+<li>UNNotificationCenterDelegate：协议，其中方法用于监听通知状态</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>媒体附件大小</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308120910197.png"
+                     
+                ></p>
+<ul>
+<li><p>对于收到的附件通知，可以把消息下拉看到完整的附件内容（见下面的代码示例图所展示的样子）</p>
+</li>
+<li><p>内容附件实例中options配置字典键&#x2F;值作用，本示例代码中options默认置为nil</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">extern Nsstring *const UNNotificationAttachmentoptionsTypeHintkey:</span><br><span class="line">配置附件的类型的键，NSString类型的值，如果不设置，则默认从扩展名推断</span><br><span class="line"></span><br><span class="line">extern NSstring *const</span><br><span class="line">UNNotificationAttachmentoptionsThumbnailHiddenkey:</span><br><span class="line">配置是否隐藏缩路图，配置NSNumber类型的值 0或者1</span><br><span class="line"></span><br><span class="line">CGRectCreateDictionaryRepresentation(CGRect）：</span><br><span class="line">创建的矩形引用</span><br><span class="line"></span><br><span class="line">extern NSString *cost UNNotificationAttachmentOptionsThumbnailClippingRectKey:</span><br><span class="line">创建使用一个标准的矩形对缩略图进行裁剪</span><br><span class="line"></span><br><span class="line">extern NSString *const UNNotificationAttachmentoptionsThumbnailTimekey:</span><br><span class="line">使用视频中的某一帧作为缩略图，配置NSNumber类型的时间</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>附件资源放置位置Bundle目录下</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308120914033.png"
+                     
+                ></p>
+<ol start="3">
+<li>权限申请 和 附件资源包位置(Bundle目录下)</li>
+</ol>
+<ul>
+<li>权限申请</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 本地通知授权</span><br><span class="line">- (void)localNotificationAuthorizationIOS10AndAbove&#123;</span><br><span class="line">    // 使用 UNUserNotificationCenter 来管理通知</span><br><span class="line">    UNUserNotificationCenter * center = [UNUserNotificationCenter currentNotificationCenter];</span><br><span class="line">    // 设置通知中心的代理</span><br><span class="line">    center.delegate = self;</span><br><span class="line">    </span><br><span class="line">    // iOS 10.0使用以下方法注册，才能得到授权</span><br><span class="line">    [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound) completionHandler:^(BOOL granted, NSError * _Nullable error) &#123;</span><br><span class="line">        // 用户是否同意</span><br><span class="line">        if (granted) &#123;</span><br><span class="line">            NSLog(@&quot;用户同意授权&quot;);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            NSLog(@&quot;用户不同意授权&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="4">
+<li>推送本地通知</li>
+</ol>
+<ul>
+<li>普通通知</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">// 推送本地通知 iOS 10.0 及以上</span><br><span class="line">- (void)pushLocalNotificationIOS10AndAboveWithTime:(int)time</span><br><span class="line">                                             title:(NSString *)title</span><br><span class="line">                                              body:(NSString *)body</span><br><span class="line">                                           repeats:(BOOL)repeats</span><br><span class="line">                                        identifier:(NSString *)identifier&#123;</span><br><span class="line">    // 1.创建通知管理类</span><br><span class="line">    UNUserNotificationCenter * center = [UNUserNotificationCenter currentNotificationCenter];</span><br><span class="line">   </span><br><span class="line">    // 2.设置通知内容</span><br><span class="line">    UNMutableNotificationContent * content = [[UNMutableNotificationContent alloc] init];</span><br><span class="line">    // 设置通知请求发送时App图标上显示的数字</span><br><span class="line">//    content.badge = @1;</span><br><span class="line">    // 设置通知的标题</span><br><span class="line">    content.title = [NSString localizedUserNotificationStringForKey:title arguments:nil];</span><br><span class="line">    // 设置通知的副标题</span><br><span class="line">//    content.subtitle = @&quot;&quot;;</span><br><span class="line">    // 设置通知的主体</span><br><span class="line">    content.body = [NSString localizedUserNotificationStringForKey:body arguments:nil];</span><br><span class="line">    // 设置通知的提示音</span><br><span class="line">    content.sound = [UNNotificationSound defaultSound];</span><br><span class="line">    // 设置从通知激活App时的launchImage图片</span><br><span class="line">//    content.launchImageName = @&quot;&quot;;</span><br><span class="line">    </span><br><span class="line">    /* 3.设置触发器: 计时器触发</span><br><span class="line">     1.TimeInterval：时间间隔</span><br><span class="line">     2.repeats：是否重复*/</span><br><span class="line">    UNTimeIntervalNotificationTrigger * trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:time repeats:repeats];</span><br><span class="line">    </span><br><span class="line">    /* 设置触发器: 周期日历触发 */</span><br><span class="line">//    NSDateComponents * components = [[NSDateComponents alloc] init];</span><br><span class="line">//    components.year = 2023;</span><br><span class="line">//    components.month = 11;</span><br><span class="line">//    components.day = 2;</span><br><span class="line">//    UNCalendarNotificationTrigger * trigger = [UNCalendarNotificationTrigger triggerWithDateMatchingComponents:components repeats:repeats];</span><br><span class="line">    </span><br><span class="line">    /* 设置触发器：地域触发 */</span><br><span class="line">//    CLRegion * region = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(33.0, 11.0) radius:100 identifier:@&quot;region&quot;];</span><br><span class="line">//    UNLocationNotificationTrigger * trigger = [UNLocationNotificationTrigger triggerWithRegion:region repeats:repeats];</span><br><span class="line">    </span><br><span class="line">    /*</span><br><span class="line">     4.设置通知请求</span><br><span class="line">     1.Identifier：通知标识</span><br><span class="line">     2.content：通知内容</span><br><span class="line">     3.trigger：触发器</span><br><span class="line">     */</span><br><span class="line">    UNNotificationRequest * request = [UNNotificationRequest requestWithIdentifier:identifier content:content trigger:trigger];</span><br><span class="line">    </span><br><span class="line">    // 5.添加通知请求</span><br><span class="line">    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) &#123;</span><br><span class="line">        if (error) &#123;</span><br><span class="line">            NSLog(@&quot;添加推送通知失败&quot;);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            NSLog(@&quot;添加推送通知成功&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>图片通知</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">// 推送本地通知 iOS 10.0 及以上（图片）</span><br><span class="line">- (void)pushLocalNotificationIOS10AndAboveWithTime:(int)time</span><br><span class="line">                                           imgName:(NSString *)imgName</span><br><span class="line">                                             title:(NSString *)title</span><br><span class="line">                                              body:(NSString *)body</span><br><span class="line">                                           repeats:(BOOL)repeats</span><br><span class="line">                                        identifier:(NSString *)identifier&#123;</span><br><span class="line">    // 1.创建通知管理类</span><br><span class="line">    UNUserNotificationCenter * center = [UNUserNotificationCenter currentNotificationCenter];</span><br><span class="line">    </span><br><span class="line">    // 2.通知内容</span><br><span class="line">    UNMutableNotificationContent * content = [UNMutableNotificationContent new];</span><br><span class="line">    </span><br><span class="line">    /* 设置图片附件</span><br><span class="line">     attachments：数组，但系统的通知模板只能展示其中一个附件，设置多个附件也不会有额外的效果</span><br><span class="line">     但是如果开发者自定义通知模板UI，此数组就派上用场了</span><br><span class="line">     */</span><br><span class="line">    NSString * path = [[NSBundle mainBundle] pathForResource:imgName ofType:nil];</span><br><span class="line">    NSURL * url = [NSURL fileURLWithPath:path];</span><br><span class="line">    UNNotificationAttachment * attachment = [UNNotificationAttachment attachmentWithIdentifier:identifier URL:url options:nil error:nil];</span><br><span class="line">    content.attachments = @[attachment];</span><br><span class="line">    </span><br><span class="line">    // 设置通知的标题</span><br><span class="line">    content.title = [NSString localizedUserNotificationStringForKey:title arguments:nil];</span><br><span class="line">    // 设置通知的副标题</span><br><span class="line">//    content.subtitle = @&quot;&quot;;</span><br><span class="line">    // 设置通知请求时发送时App图标上显示的数字</span><br><span class="line">//    content.badge = @1;</span><br><span class="line">    // 设置通知的主体</span><br><span class="line">    content.body = body;</span><br><span class="line">    // 设置通知提示音</span><br><span class="line">    content.sound = [UNNotificationSound defaultSound];</span><br><span class="line">    // 设置从通知激活App时的launchImage图片</span><br><span class="line">//    content.launchImageName = @&quot;&quot;;</span><br><span class="line">    </span><br><span class="line">    /* 4.设置触发器: 计时器触发</span><br><span class="line">     1.TimeInterval：时间间隔</span><br><span class="line">     2.repeats：是否重复*/</span><br><span class="line">    UNTimeIntervalNotificationTrigger * trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:time repeats:repeats];</span><br><span class="line">    </span><br><span class="line">    /*</span><br><span class="line">     4.设置通知请求</span><br><span class="line">     1.Identifier：通知标识</span><br><span class="line">     2.content：通知内容</span><br><span class="line">     3.trigger：触发器</span><br><span class="line">     */</span><br><span class="line">    UNNotificationRequest * request = [UNNotificationRequest requestWithIdentifier:identifier content:content trigger:trigger];</span><br><span class="line">    </span><br><span class="line">    // 5.添加通知请求</span><br><span class="line">    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) &#123;</span><br><span class="line">        if (error) &#123;</span><br><span class="line">            NSLog(@&quot;添加推送通知失败&quot;);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            NSLog(@&quot;添加推送通知成功&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>音频通知</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">// 推送本地通知 iOS 10.0 及以上（音频）</span><br><span class="line">- (void)pushLocalNotificationIOS10AndAboveWithAudioName:(NSString *)audioName</span><br><span class="line">                                                   time:(int)time</span><br><span class="line">                                                  title:(NSString *)title</span><br><span class="line">                                                   body:(NSString *)body</span><br><span class="line">                                                repeats:(BOOL)repeats</span><br><span class="line">                                             identifier:(NSString *)identifier&#123;</span><br><span class="line">    // 1.创建通知管理类</span><br><span class="line">    UNUserNotificationCenter * center = [UNUserNotificationCenter currentNotificationCenter];</span><br><span class="line">    </span><br><span class="line">    // 2.通知内容</span><br><span class="line">    UNMutableNotificationContent * content = [UNMutableNotificationContent new];</span><br><span class="line">    </span><br><span class="line">    /* 设置音频附件</span><br><span class="line">     attachments：数组，但系统的通知模板只能展示其中一个附件，设置多个附件也不会有额外的效果</span><br><span class="line">     但是如果开发者自定义通知模板UI，此数组就派上用场了</span><br><span class="line">     */</span><br><span class="line">    NSString * path = [[NSBundle mainBundle] pathForResource:audioName ofType:nil];</span><br><span class="line">    NSURL * url = [NSURL fileURLWithPath:path];</span><br><span class="line">    UNNotificationAttachment * attachment = [UNNotificationAttachment attachmentWithIdentifier:identifier URL:url options:nil error:nil];</span><br><span class="line">    content.attachments = @[attachment];</span><br><span class="line">    </span><br><span class="line">    // 设置通知的标题</span><br><span class="line">    content.title = [NSString localizedUserNotificationStringForKey:title arguments:nil];</span><br><span class="line">    // 设置通知的副标题</span><br><span class="line">//    content.subtitle = @&quot;&quot;;</span><br><span class="line">    // 设置通知请求时发送时App图标上显示的数字</span><br><span class="line">//    content.badge = @1;</span><br><span class="line">    // 设置通知的主体</span><br><span class="line">    content.body = body;</span><br><span class="line">    // 设置通知提示音</span><br><span class="line">    content.sound = [UNNotificationSound defaultSound];</span><br><span class="line">    // 设置从通知激活App时的launchImage图片</span><br><span class="line">//    content.launchImageName = @&quot;&quot;;</span><br><span class="line">    </span><br><span class="line">    /* 4.设置触发器: 计时器触发</span><br><span class="line">     1.TimeInterval：时间间隔</span><br><span class="line">     2.repeats：是否重复*/</span><br><span class="line">    UNTimeIntervalNotificationTrigger * trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:time repeats:repeats];</span><br><span class="line">    </span><br><span class="line">    /*</span><br><span class="line">     4.设置通知请求</span><br><span class="line">     1.Identifier：通知标识</span><br><span class="line">     2.content：通知内容</span><br><span class="line">     3.trigger：触发器</span><br><span class="line">     */</span><br><span class="line">    UNNotificationRequest * request = [UNNotificationRequest requestWithIdentifier:identifier content:content trigger:trigger];</span><br><span class="line">    </span><br><span class="line">    // 5.添加通知请求</span><br><span class="line">    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) &#123;</span><br><span class="line">        if (error) &#123;</span><br><span class="line">            NSLog(@&quot;添加推送通知失败&quot;);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            NSLog(@&quot;添加推送通知成功&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>视频通知</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">// 推送本地通知 iOS 10.0 及以上（视频）</span><br><span class="line">- (void)pushLocalNotificationIOS10AndAboveWithVideoName:(NSString *)videoName</span><br><span class="line">                                                   time:(int)time</span><br><span class="line">                                                  title:(NSString *)title</span><br><span class="line">                                                   body:(NSString *)body</span><br><span class="line">                                                repeats:(BOOL)repeats</span><br><span class="line">                                             identifier:(NSString *)identifier&#123;</span><br><span class="line">    // 1.创建通知管理类</span><br><span class="line">    UNUserNotificationCenter * center = [UNUserNotificationCenter currentNotificationCenter];</span><br><span class="line">    </span><br><span class="line">    // 2.通知内容</span><br><span class="line">    UNMutableNotificationContent * content = [UNMutableNotificationContent new];</span><br><span class="line">    </span><br><span class="line">    /* 设置音频附件</span><br><span class="line">     attachments：数组，但系统的通知模板只能展示其中一个附件，设置多个附件也不会有额外的效果</span><br><span class="line">     但是如果开发者自定义通知模板UI，此数组就派上用场了</span><br><span class="line">     */</span><br><span class="line">    NSString * path = [[NSBundle mainBundle] pathForResource:videoName ofType:nil];</span><br><span class="line">    NSURL * url = [NSURL fileURLWithPath:path];</span><br><span class="line">    UNNotificationAttachment * attachment = [UNNotificationAttachment attachmentWithIdentifier:identifier URL:url options:nil error:nil];</span><br><span class="line">    content.attachments = @[attachment];</span><br><span class="line">    </span><br><span class="line">    // 设置通知的标题</span><br><span class="line">    content.title = [NSString localizedUserNotificationStringForKey:title arguments:nil];</span><br><span class="line">    // 设置通知的副标题</span><br><span class="line">//    content.subtitle = @&quot;&quot;;</span><br><span class="line">    // 设置通知请求时发送时App图标上显示的数字</span><br><span class="line">//    content.badge = @1;</span><br><span class="line">    // 设置通知的主体</span><br><span class="line">    content.body = body;</span><br><span class="line">    // 设置通知提示音</span><br><span class="line">    content.sound = [UNNotificationSound defaultSound];</span><br><span class="line">    // 设置从通知激活App时的launchImage图片</span><br><span class="line">//    content.launchImageName = @&quot;&quot;;</span><br><span class="line">    </span><br><span class="line">    /* 4.设置触发器: 计时器触发</span><br><span class="line">     1.TimeInterval：时间间隔</span><br><span class="line">     2.repeats：是否重复*/</span><br><span class="line">    UNTimeIntervalNotificationTrigger * trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:time repeats:repeats];</span><br><span class="line">    </span><br><span class="line">    /*</span><br><span class="line">     4.设置通知请求</span><br><span class="line">     1.Identifier：通知标识</span><br><span class="line">     2.content：通知内容</span><br><span class="line">     3.trigger：触发器</span><br><span class="line">     */</span><br><span class="line">    UNNotificationRequest * request = [UNNotificationRequest requestWithIdentifier:identifier content:content trigger:trigger];</span><br><span class="line">    </span><br><span class="line">    // 5.添加通知请求</span><br><span class="line">    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) &#123;</span><br><span class="line">        if (error) &#123;</span><br><span class="line">            NSLog(@&quot;添加推送通知失败&quot;);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            NSLog(@&quot;添加推送通知成功&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>效果</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308120950788.png"
+                     
+                ></p>
+<ol start="6">
+<li>使用模板</li>
+</ol>
+<p>除了上面介绍的强大的附件通知外，我们还可以把 <code>UserNotification</code> 提供的模板功能和用户行为利用起来。在iOS系统中，聊天类软件常常采用后台推送的方式推送消息，用户可以在不进入应用程序的情况下，直接在桌面回复通过通知推送过来的消息，这种功能就是通过 <code>UNNotificationCategory</code> 和 <code>UNNotificationAction</code> 用户行为来实现的。对于文本回复框，<code>UserNotification</code> 框架提供了 <code>UNTextInputNotificationAction</code> 类，也即 <code>UNNotificationAction</code> 的子类。</p>
+<ul>
+<li><code>UNTextInputNotificationAction</code> 创建文本回复框</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">// 在桌面对本地通知进行回复</span><br><span class="line">- (void)replyLocalNotificationAtDesktopWithInputIdentifier:(NSString *)inputIdentifier</span><br><span class="line">                                                inputTitle:(NSString *)inputTitle</span><br><span class="line">                                             inputBtnTitle:(NSString *)inputBtnTitle</span><br><span class="line">                                          inputPlaceholder:(NSString *)inputPlaceholder</span><br><span class="line">                                        categoryIdentifier:(NSString *)categoryIdentifier</span><br><span class="line">                                                     title:(NSString *)title</span><br><span class="line">                                                      body:(NSString *)body</span><br><span class="line">                                                      time:(int)time</span><br><span class="line">                                                   repeats:(BOOL)repeats</span><br><span class="line">                                                inentifier:(NSString *)identifier</span><br><span class="line">&#123;</span><br><span class="line">    // 创建管理类</span><br><span class="line">    UNUserNotificationCenter * center = [UNUserNotificationCenter currentNotificationCenter];</span><br><span class="line">    </span><br><span class="line">    // 创建回复框</span><br><span class="line">    UNTextInputNotificationAction * inputAction = [UNTextInputNotificationAction actionWithIdentifier:inputIdentifier title:inputIdentifier options:UNNotificationActionOptionAuthenticationRequired textInputButtonTitle:inputBtnTitle textInputPlaceholder:inputPlaceholder];</span><br><span class="line">    </span><br><span class="line">    // 创建通知模板</span><br><span class="line">    UNNotificationCategory * category = [UNNotificationCategory categoryWithIdentifier:categoryIdentifier actions:@[inputAction] intentIdentifiers:@[] options:UNNotificationCategoryOptionCustomDismissAction];</span><br><span class="line">    </span><br><span class="line">    // 设置通知内容</span><br><span class="line">    UNMutableNotificationContent * content = [[UNMutableNotificationContent alloc] init];</span><br><span class="line">    // 设置通知请求发送时App图标上显示的数字</span><br><span class="line">//    content.badge = @1;</span><br><span class="line">    // 设置通知的标题</span><br><span class="line">    content.title = [NSString localizedUserNotificationStringForKey:title arguments:nil];</span><br><span class="line">    // 设置通知的副标题</span><br><span class="line">//    content.subtitle = @&quot;&quot;;</span><br><span class="line">    // 设置通知的主体</span><br><span class="line">    content.body = [NSString localizedUserNotificationStringForKey:body arguments:nil];</span><br><span class="line">    // 设置通知的提示音</span><br><span class="line">    content.sound = [UNNotificationSound defaultSound];</span><br><span class="line">    // 设置从通知激活App时的launchImage图片</span><br><span class="line">//    content.launchImageName = @&quot;&quot;;</span><br><span class="line">    </span><br><span class="line">    // 设置通知模板(categoryIdentifier和上面的保持一致)</span><br><span class="line">    content.categoryIdentifier = categoryIdentifier;</span><br><span class="line">    [center setNotificationCategories:[NSSet setWithObjects:category, nil]];</span><br><span class="line">    </span><br><span class="line">    /* 设置触发器: 计时器触发</span><br><span class="line">     1.TimeInterval：时间间隔</span><br><span class="line">     2.repeats：是否重复*/</span><br><span class="line">    UNTimeIntervalNotificationTrigger * trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:time repeats:repeats];</span><br><span class="line">    </span><br><span class="line">    /*</span><br><span class="line">     设置通知请求</span><br><span class="line">     1.Identifier：通知标识</span><br><span class="line">     2.content：通知内容</span><br><span class="line">     3.trigger：触发器</span><br><span class="line">     */</span><br><span class="line">    UNNotificationRequest * request = [UNNotificationRequest requestWithIdentifier:identifier content:content trigger:trigger];</span><br><span class="line">    </span><br><span class="line">    // 添加通知请求</span><br><span class="line">    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) &#123;</span><br><span class="line">        if (error) &#123;</span><br><span class="line">            NSLog(@&quot;添加推送通知失败&quot;);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            NSLog(@&quot;添加推送通知成功&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>UNNotificationAction创建用户交互按钮</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">// 在桌面对本地通知进行按钮交互</span><br><span class="line">// 在桌面对本地通知进行按钮交互</span><br><span class="line">- (void)supportLocationNotificationUserInterfaceButton&#123;</span><br><span class="line"></span><br><span class="line">    // 创建通知管理类</span><br><span class="line">    UNUserNotificationCenter * center = [UNUserNotificationCenter currentNotificationCenter];</span><br><span class="line">    </span><br><span class="line">    /*</span><br><span class="line">     创建交互按钮（系统模板最多支持添加4个交互按钮）</span><br><span class="line">     UNNotificationActionOptionNone: 无设置</span><br><span class="line">     */</span><br><span class="line">    UNNotificationAction * action1 = [UNNotificationAction actionWithIdentifier:@&quot;action&quot; title:@&quot;用户交互按钮1&quot; options:UNNotificationActionOptionNone];</span><br><span class="line">    UNNotificationAction * action2 = [UNNotificationAction actionWithIdentifier:@&quot;action&quot; title:@&quot;用户交互按钮2&quot; options:UNNotificationActionOptionNone];</span><br><span class="line">    UNNotificationAction * action3 = [UNNotificationAction actionWithIdentifier:@&quot;action&quot; title:@&quot;用户交互按钮3&quot; options:UNNotificationActionOptionNone];</span><br><span class="line">    UNNotificationAction * action4 = [UNNotificationAction actionWithIdentifier:@&quot;action&quot; title:@&quot;用户交互按钮4&quot; options:UNNotificationActionOptionNone];</span><br><span class="line"></span><br><span class="line">    // 创建通知模板</span><br><span class="line">    UNNotificationCategory * category = [UNNotificationCategory categoryWithIdentifier:@&quot;myNotificationCategoryButton&quot; actions:@[action1,action2,action3,action4] intentIdentifiers:@[] options:UNNotificationCategoryOptionCustomDismissAction];</span><br><span class="line"></span><br><span class="line">    // 通知内容</span><br><span class="line">    UNMutableNotificationContent * content = [[UNMutableNotificationContent alloc] init];</span><br><span class="line">    // 设置通知请求发送时App图标上显示的数字</span><br><span class="line">//    content.badge = @1;</span><br><span class="line">    // 设置通知的标题</span><br><span class="line">    content.title = [NSString localizedUserNotificationStringForKey:title arguments:nil];</span><br><span class="line">    // 设置通知的副标题</span><br><span class="line">//    content.subtitle = @&quot;&quot;;</span><br><span class="line">    // 设置通知的主体</span><br><span class="line">    content.body = [NSString localizedUserNotificationStringForKey:body arguments:nil];</span><br><span class="line">    // 设置通知的提示音</span><br><span class="line">    content.sound = [UNNotificationSound defaultSound];</span><br><span class="line">    // 设置从通知激活App时的launchImage图片</span><br><span class="line">//    content.launchImageName = @&quot;&quot;;</span><br><span class="line">    </span><br><span class="line">    // 设置通知模板(categoryIdentifier和上面的保持一致)</span><br><span class="line">    content.categoryIdentifier = categoryIdentifier;</span><br><span class="line">    [center setNotificationCategories:[NSSet setWithObjects:category, nil]];</span><br><span class="line">        </span><br><span class="line">    /* 设置触发器: 计时器触发</span><br><span class="line">     1.TimeInterval：时间间隔</span><br><span class="line">     2.repeats：是否重复*/</span><br><span class="line">    UNTimeIntervalNotificationTrigger * trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:time repeats:repeats];</span><br><span class="line">    </span><br><span class="line">    /*</span><br><span class="line">     设置通知请求</span><br><span class="line">     1.Identifier：通知标识</span><br><span class="line">     2.content：通知内容</span><br><span class="line">     3.trigger：触发器</span><br><span class="line">     */</span><br><span class="line">    UNNotificationRequest * request = [UNNotificationRequest requestWithIdentifier:identifier content:content trigger:trigger];</span><br><span class="line">    </span><br><span class="line">    // 添加通知请求</span><br><span class="line">    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) &#123;</span><br><span class="line">        if (error) &#123;</span><br><span class="line">            NSLog(@&quot;添加推送通知失败&quot;);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            NSLog(@&quot;添加推送通知成功&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308121015640.png"
+                     
+                ></p>
+<ol start="7">
+<li>通知扩展</li>
+</ol>
+<p>通过 <code>UserNotification</code> 框架，开发者已经可以完成从前很难实现的效果。然后这都不是这个框架最强大的地方，它的最强大的功能是通过扩展实现 <code>完全自定义的通过UI界面</code>。也即 <code>Notification Content Extension</code>。在项目新建一个 <code>Target</code> 后，然后选择 <code>Notification Content Extension</code> 扩展文件并创建，此时这个扩展文件自带了一个故事板 <code>storyBoard</code> 和一个 <code>NotificationViewCenter</code> 类，开发者可以在 <code>storyBoard</code> 中或者 <code>NotificationViewCenter</code> 中直接定制需要的UI界面即可，具体方法可以去看API。需要注意的是，<code>NotificationViewCenter</code> 类自动遵守了 <code>UNNotificationContentExtension</code> 协议，这个协议专门用来处理自定义的通知UI的内容展示。</p>
+<p>注意：</p>
+<p>在自定义的的通知界面上，虽然可以放置按钮或者任何UI控件，但其不能进行用户交互，唯一可以进行交互的方式是通过协议中的媒体按钮及其回调方法。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// 当用户点击通知中的用户交互按钮时会调用，开发者可以从notification对象中拿到附件等内容进行UI刷新</span><br><span class="line">- (void)didReceiveNotification:(UNNotification *)notification;</span><br><span class="line">- (void)didReceiveNotificationResponse:(UNNotificationResponse *)response completionHandler:(void (^)(UNNotificationContentExtensionResponseOption option))completion;</span><br><span class="line"></span><br><span class="line">// 返回媒体按钮位置</span><br><span class="line">@property (nonatomic, readonly, assign) CGRect mediaPlayPauseButtonFrame;</span><br><span class="line"></span><br><span class="line">// 返回媒体按钮颜色</span><br><span class="line">@property (nonatomic, readonly, copy) UIColor *mediaPlayPauseButtonTintColor;</span><br><span class="line"></span><br><span class="line">// 点击播放和暂停播放按钮的回调</span><br><span class="line">- (void)mediaPlay;</span><br><span class="line">- (void)mediaPause;</span><br><span class="line"></span><br><span class="line">// 打开和关闭通知的回调</span><br><span class="line">- (void)performNotificationDefaultAction;</span><br><span class="line">- (void)dismissNotificationContentExtension</span><br><span class="line"></span><br><span class="line">// 媒体开始播放和暂停的回调</span><br><span class="line">- (void)mediaPlayingStarted;</span><br><span class="line">- (void)mediaPlayingPaused .</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>创建扩展</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308121018724.png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308121336924.png"
+                     
+                ></p>
+<ul>
+<li>配置plist</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308121336332.png"
+                     
+                ></p>
+<p>在这个 NSExtensionAttributes 字典下，我们有三个属性可以添加</p>
+<p>（1）UNNotificationExtensionCategory（必须要有，系统已经创建好）</p>
+<p>解释：对应这个key的值，可以是字符串，也可以是一个数组，每一个字符串都是一个identifier，这个identifier对应着每一个 <code>UNMutableNotificationContent</code> 的 <code>categoryIdentifier</code> 的属性。</p>
+<p>简单来说，就是在收到通知的时候，我们可以让服务器把这个通知的 <code>categoryIdentifier</code> 带上，作用是，我们可以根据视频、音乐、图片，来分别自定义我们的通知内容。不同的分类标识符，也会在我们讲到 <code>UNNotificationAction</code> 的时候，帮助我们区分是什么类型的通知，方便我们对不同类型的通知做出不同的操作行为。上面的截图中，我是一个字符串的形式。下图为数组形式：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308121342383.png"
+                     
+                ></p>
+<p>这里设置categoryIdentifier，最好让服务器的推送内容带上这个，然后我们好更加的定制化。不建议本地写死。</p>
+<p>（2）UNNotificationExtensionInitialContentSizeRatio(必须要有，系统已经创建好)</p>
+<p>解释：这个值的类型是一个浮点类型，代表的是 <code>高度与宽度的比值</code>。系统会使用这个比值，作为初始化view的大小。举个简单的例子来说，如果该值为 <code>1</code>，则该视图为 <code>正方形</code>。如果为 <code>0.5</code>，则代表 <code>高度是宽度的一半</code>。</p>
+<p>注意：这个值只是初始化的一个值，在这个扩展添加后，可以重写frame，展示的时候，在我们还没打开这个视图预览时，背景是个类似图片占位的灰色，那个灰色的高度宽度之比，就是通过这个值来设定。</p>
+<p>（3）UNNotificationExtensionDefaultContentHidden(可选)</p>
+<p>解释：这个值是一个BOOL值，当为YES时，会隐藏上方原本推送的内容视图，只会显示我们自定义的视图。（因为在自定义视图的时候，我们可以取得推送内容，然后按照我们想要的布局，展示出来）如果为NO时（默认为NO），推送视图就会既有我们的自定义视图，也会有系统原本的推送内容视图（这里附件是不会显示的，只会显示body里面的文字哟）</p>
+<p>（4）至于 <code>NSExtensionMainStoryboard</code> 以及 <code>NSExtensionPointIdentifier</code>，系统默认生成，大家直接用就好，如果需要更改的，只能更改使用的 <code>storyboard</code> 的名字（不过应该没人会把系统的删除在建立一个吧 </p>
+<p>MainInterface.storyboard：</p>
+<p>这个就是个简单的storyboard文件，内部有一个View，这个View就是在上面的图层中的自定义View视图了。它与NotificationViewController所绑定。</p>
+<p>NotificationViewController：</p>
+<p>这是是系统帮我们默认创建了一个控制器，继承UIViewController，其实就是一个控制器啦。</p>
+<ul>
+<li>定制界面</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308121018848.png"
+                     
+                ></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">//  NotificationViewController.m</span><br><span class="line"></span><br><span class="line">//  MyNotificationContentExtension</span><br><span class="line"></span><br><span class="line">#import &quot;NotificationViewController.h&quot;</span><br><span class="line"></span><br><span class="line">#import &lt;UserNotifications/UserNotifications.h&gt;</span><br><span class="line"></span><br><span class="line">#import &lt;UserNotificationsUI/UserNotificationsUI.h&gt;</span><br><span class="line"></span><br><span class="line">@interface NotificationViewController () &lt;UNNotificationContentExtension&gt;</span><br><span class="line"></span><br><span class="line">@property (nonatomic, strong) UILabel      *customTitleLabel1;</span><br><span class="line"></span><br><span class="line">@property (nonatomic, strong) UILabel      *customTitleLabel2;</span><br><span class="line"></span><br><span class="line">@property (nonatomic, strong) UIImageView  *customImageView1;</span><br><span class="line"></span><br><span class="line">@property (nonatomic, strong) UIImageView  *customImageView2;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation NotificationViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line"></span><br><span class="line">    [super viewDidLoad];</span><br><span class="line"></span><br><span class="line">    //屏幕宽</span><br><span class="line"></span><br><span class="line">    CGFloat screen_width = [UIScreen mainScreen].bounds.size.width;</span><br><span class="line"></span><br><span class="line">    self.view.backgroundColor = [UIColor redColor];</span><br><span class="line"></span><br><span class="line">    //自定义Label</span><br><span class="line"></span><br><span class="line">    self.customTitleLabel1 = [[UILabel alloc] initWithFrame:CGRectMake(, , screen_width, )];</span><br><span class="line"></span><br><span class="line">    self.customTitleLabel1.textColor = [UIColor whiteColor];</span><br><span class="line"></span><br><span class="line">    self.customTitleLabel1.textAlignment = NSTextAlignmentCenter;</span><br><span class="line"></span><br><span class="line">    self.customTitleLabel1.backgroundColor = [UIColor greenColor];</span><br><span class="line"></span><br><span class="line">    //自定义UIImageView</span><br><span class="line"></span><br><span class="line">    self.customImageView1 = [[UIImageView alloc] initWithFrame:CGRectMake(, , screen_width/, )];</span><br><span class="line"></span><br><span class="line">    self.customImageView2 = [[UIImageView alloc] initWithFrame:CGRectMake(screen_width/, , screen_width/, )];</span><br><span class="line"></span><br><span class="line">    self.customImageView1.backgroundColor = [UIColor purpleColor];</span><br><span class="line"></span><br><span class="line">    self.customImageView2.backgroundColor = [UIColor blueColor];</span><br><span class="line"></span><br><span class="line">    //自定义Label</span><br><span class="line"></span><br><span class="line">    self.customTitleLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(, CGRectGetMaxY(self.customImageView1.frame)+, screen_width, )];</span><br><span class="line"></span><br><span class="line">    self.customTitleLabel2.textColor = [UIColor whiteColor];</span><br><span class="line"></span><br><span class="line">    self.customTitleLabel2.textAlignment = NSTextAlignmentCenter;</span><br><span class="line"></span><br><span class="line">    self.customTitleLabel2.backgroundColor = [UIColor orangeColor];</span><br><span class="line"></span><br><span class="line">    //添加控件</span><br><span class="line"></span><br><span class="line">    [self.view addSubview:self.customTitleLabel1];</span><br><span class="line"></span><br><span class="line">    [self.view addSubview:self.customTitleLabel2];</span><br><span class="line"></span><br><span class="line">    [self.view addSubview:self.customImageView1];</span><br><span class="line"></span><br><span class="line">    [self.view addSubview:self.customImageView2];</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">收到通知时触发，但是这个是退出进程之后才使用，只适用于远程推送（所以本地推送，这两个方法是不会执行的）</span><br><span class="line">拿到推送通知内容，刷新自定义的UI</span><br><span class="line">*/</span><br><span class="line">- (void)didReceiveNotification:(UNNotification *)notification &#123;</span><br><span class="line">    NSLog(@&quot;notification---------%@&quot;,notification);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 用户交互时触发</span><br><span class="line">- (void)didReceiveNotificationResponse:(UNNotificationResponse *)response completionHandler:(void (^)(UNNotificationContentExtensionResponseOption option))completion &#123;</span><br><span class="line">    NSLog(@&quot;response----------%@&quot;,response);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>模板使用</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">// 支持完全自定义UI的通知</span><br><span class="line">- (void)supportCustomUILocationNotification &#123;</span><br><span class="line"></span><br><span class="line">    // 创建交互按钮</span><br><span class="line">    UNNotificationAction * action = [UNNotificationAction actionWithIdentifier:@&quot;action&quot; title:@&quot;自定义的Action&quot; options:UNNotificationActionOptionNone];</span><br><span class="line"></span><br><span class="line">    // 创建通知模板</span><br><span class="line">    // &quot;myNotificationCategory&quot; 要与 plist 中配置的保持一样</span><br><span class="line">    UNNotificationCategory * category = [UNNotificationCategory categoryWithIdentifier:@&quot;myNotificationCategory&quot; actions:@[action] intentIdentifiers:@[] options:UNNotificationCategoryOptionCustomDismissAction];</span><br><span class="line"></span><br><span class="line">    // 通知内容类</span><br><span class="line">    UNMutableNotificationContent * content = [UNMutableNotificationContent new];</span><br><span class="line">    // 设置通知请求发送时APP图标上显示的数字</span><br><span class="line">    content.badge = @1;</span><br><span class="line">    // 设置通知的内容</span><br><span class="line">    content.body = @&quot;iOS10新通知内容，普通通知，欢迎哥来了&quot;;</span><br><span class="line">    // 设置通知提示音</span><br><span class="line">    content.sound = [UNNotificationSound defaultSound];</span><br><span class="line">    // 设置通知的副标题</span><br><span class="line">    content.subtitle = @&quot;这是通知副标题&quot;;</span><br><span class="line">    // 设置通知的标题</span><br><span class="line">    content.title = @&quot;这是通知标题&quot;;</span><br><span class="line">    // 设置从通知激活App时的lanunchImage图片</span><br><span class="line">    content.launchImageName = @&quot;lun&quot;;</span><br><span class="line"></span><br><span class="line">    // 设置通知模板</span><br><span class="line">    // categoryIdentifier要与上面创建category的标识保持一致</span><br><span class="line">    content.categoryIdentifier = @&quot;myNotificationCategory&quot;;</span><br><span class="line">    [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:[NSSet setWithObjects:category, nil]];</span><br><span class="line"></span><br><span class="line">    // 设置触发器</span><br><span class="line">    // 计时器触发器</span><br><span class="line">    UNTimeIntervalNotificationTrigger * timrTrigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval: repeats:NO];</span><br><span class="line"></span><br><span class="line">    // 设置通知请求</span><br><span class="line">    UNNotificationRequest * request = [UNNotificationRequest requestWithIdentifier:@&quot;UNNotificationCustomUIH&quot; content:content trigger:timrTrigger];</span><br><span class="line"></span><br><span class="line">    // 添加通知请求</span><br><span class="line">    [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) &#123;</span><br><span class="line">        if (!error) &#123;</span><br><span class="line">            NSLog(@&quot;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308121022228.png"
+                     
+                ></p>
+<ol start="8">
+<li>重写媒体按钮</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - 重写媒体按钮</span><br><span class="line">// 重写媒体按钮的frame</span><br><span class="line">- (CGRect)mediaPlayPauseButtonFrame &#123;</span><br><span class="line">    return CGRectMake(, , , );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 重写媒体按钮的颜色</span><br><span class="line">- (UIColor *)mediaPlayPauseButtonTintColor &#123;</span><br><span class="line">    return [UIColor yellowColor];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 重写媒体按钮类型</span><br><span class="line">- (UNNotificationContentExtensionMediaPlayPauseButtonType)mediaPlayPauseButtonType &#123;</span><br><span class="line">    return UNNotificationContentExtensionMediaPlayPauseButtonTypeDefault;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 接收媒体按钮播放事件</span><br><span class="line">- (void)mediaPlay &#123;</span><br><span class="line">    NSLog(@&quot;mediaPlay---------------开始播放&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 接收媒体按钮暂停事件</span><br><span class="line">- (void)mediaPause &#123;</span><br><span class="line">    NSLog(@&quot;mediaPause---------------暂停播放&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308121024973.png"
+                     
+                ></p>
+<ol start="10">
+<li>通知的代理方法</li>
+</ol>
+<p>UserNotification框架对于通知的回调处理，是通过UNNotificationCenterDelegate协议来实现的。代理方法如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - UNUserNotificationCenterDelegate</span><br><span class="line">/*</span><br><span class="line"> App在前台时，才会调用此方法：</span><br><span class="line"> 如果未实现该方法或未及时调用该处理程序，则不会显示该通知。</span><br><span class="line"> 应用程序可以选择将通知显示为声音，徽章，警报和/或显示在通知列表中。</span><br><span class="line"> 该决定应基于通知中的信息是否对用户可见。</span><br><span class="line"> */</span><br><span class="line">-(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler&#123;</span><br><span class="line">    NSLog(@&quot;App在前台，收到了通知&quot;);</span><br><span class="line">    // 处理通知</span><br><span class="line">    UNNotificationContent * content = notification.request.content;</span><br><span class="line">    if (content) &#123;</span><br><span class="line">        NSLog(@&quot;title:%@ body:%@&quot;,content.title,content.body);</span><br><span class="line">    &#125;</span><br><span class="line">    /* 处理完成后，调用 completionHandler，用于指示在前台显示通知的形式</span><br><span class="line">     UNNotificationPresentationOptionNone：不在前台显示</span><br><span class="line">     UNNotificationPresentationOptionAlert：在前台显示</span><br><span class="line">     ...</span><br><span class="line">     */</span><br><span class="line">    completionHandler(UNNotificationPresentationOptionNone);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">当接收到通知后，在用户点击通知激活应用程序时调用这个方法，无论是在前台还是后台</span><br><span class="line">*/</span><br><span class="line">- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler &#123;</span><br><span class="line">    NSLog(@&quot;App无论是在前台还是后台，收到了通知，用户点击该通知&quot;);</span><br><span class="line">    // 如果有内容</span><br><span class="line">    UNNotificationContent * content = response.notification.request.content;</span><br><span class="line">    if (content) &#123;</span><br><span class="line">        NSLog(@&quot;title:%@ body:%@&quot;,content.title,content.body);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li>将上述代码封装到一个管理类 LocalNofiManager 中</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br></pre></td><td class="code"><pre><span class="line">/</span><br><span class="line">//  LocalNotificationManager.m</span><br><span class="line">//  JiAnBaoStandard</span><br><span class="line">//</span><br><span class="line">//  Created by Mac on 2023/8/10.</span><br><span class="line">//  Copyright © 2023 JITPlatform. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &quot;LocalNotiManager.h&quot;</span><br><span class="line"></span><br><span class="line">@interface LocalNotiManager ()&lt;UNUserNotificationCenterDelegate&gt;</span><br><span class="line">@end</span><br><span class="line">@implementation LocalNotiManager</span><br><span class="line">// 单例</span><br><span class="line">+ (instancetype)sharedManager&#123;</span><br><span class="line">    static LocalNotiManager * manager = nil;</span><br><span class="line">    static dispatch_once_t onceToken;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        manager = [[self alloc] init];</span><br><span class="line">    &#125;);</span><br><span class="line">    return manager;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 本地通知授权</span><br><span class="line">- (void)localNotificationAuthorization&#123;</span><br><span class="line">    if (@available(iOS 10.0, *)) &#123;</span><br><span class="line">        [self localNotificationAuthorizationIOS10AndAbove];</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        [self localNotificationAuthorizationIOS10AndBelow];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 推送本地通知</span><br><span class="line">- (void)pushLocalNotificationWithTime:(int)time</span><br><span class="line">                                title:(NSString *)title</span><br><span class="line">                                 body:(NSString *)body</span><br><span class="line">                              repeats:(BOOL)repeats</span><br><span class="line">                           identifier:(NSString *)identifier&#123;</span><br><span class="line">    if (@available(iOS 10.0, *)) &#123;</span><br><span class="line">        [self pushLocalNotificationIOS10AndAboveWithTime:time</span><br><span class="line">                                                   title:title</span><br><span class="line">                                                    body:body</span><br><span class="line">                                                 repeats:repeats</span><br><span class="line">                                              identifier:identifier];</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        [self pushLocalNotificationIOS10AndBelowWithTime:time</span><br><span class="line">                                                   title:title</span><br><span class="line">                                                    body:body</span><br><span class="line">                                                 repeats:repeats</span><br><span class="line">                                              identifier:identifier];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - iOS 10.0 及以上</span><br><span class="line">// 本地通知授权</span><br><span class="line">- (void)localNotificationAuthorizationIOS10AndAbove&#123;</span><br><span class="line">    // 使用 UNUserNotificationCenter 来管理通知</span><br><span class="line">    UNUserNotificationCenter * center = [UNUserNotificationCenter currentNotificationCenter];</span><br><span class="line">    // 设置通知中心的代理</span><br><span class="line">    center.delegate = self;</span><br><span class="line">    </span><br><span class="line">    // iOS 10.0使用以下方法注册，才能得到授权</span><br><span class="line">    [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionBadge + UNAuthorizationOptionSound) completionHandler:^(BOOL granted, NSError * _Nullable error) &#123;</span><br><span class="line">        // 用户是否同意</span><br><span class="line">        if (granted) &#123;</span><br><span class="line">            NSLog(@&quot;用户同意授权&quot;);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            NSLog(@&quot;用户不同意授权&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 推送本地通知 iOS 10.0 及以上（普通）</span><br><span class="line">- (void)pushLocalNotificationIOS10AndAboveWithTime:(int)time</span><br><span class="line">                                             title:(NSString *)title</span><br><span class="line">                                              body:(NSString *)body</span><br><span class="line">                                           repeats:(BOOL)repeats</span><br><span class="line">                                        identifier:(NSString *)identifier&#123;</span><br><span class="line">    [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionBadge + UNAuthorizationOptionSound) completionHandler:^(BOOL granted, NSError * _Nullable error) &#123;</span><br><span class="line">        if (!granted) &#123;</span><br><span class="line">            dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">                [SVPManager showWithStatus:@&quot;请您在前往 设置-&gt;通用-&gt;零信任-&gt;通知-&gt;开启允许通知 权限，以便为您提供本地通知服务&quot; time:2.5];</span><br><span class="line">            &#125;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;];</span><br><span class="line">    </span><br><span class="line">    // 1.创建通知管理类</span><br><span class="line">    UNUserNotificationCenter * center = [UNUserNotificationCenter currentNotificationCenter];</span><br><span class="line">   </span><br><span class="line">    // 2.设置通知内容</span><br><span class="line">    UNMutableNotificationContent * content = [[UNMutableNotificationContent alloc] init];</span><br><span class="line">    // 设置通知请求发送时App图标上显示的数字</span><br><span class="line">//    content.badge = @1;</span><br><span class="line">    // 设置通知的标题</span><br><span class="line">    content.title = [NSString localizedUserNotificationStringForKey:title arguments:nil];</span><br><span class="line">    // 设置通知的副标题</span><br><span class="line">//    content.subtitle = @&quot;&quot;;</span><br><span class="line">    // 设置通知的主体</span><br><span class="line">    content.body = [NSString localizedUserNotificationStringForKey:body arguments:nil];</span><br><span class="line">    // 设置通知的提示音</span><br><span class="line">    content.sound = [UNNotificationSound defaultSound];</span><br><span class="line">    // 设置从通知激活App时的launchImage图片</span><br><span class="line">//    content.launchImageName = @&quot;&quot;;</span><br><span class="line">    </span><br><span class="line">    /* 3.设置触发器: 计时器触发</span><br><span class="line">     1.TimeInterval：时间间隔</span><br><span class="line">     2.repeats：是否重复*/</span><br><span class="line">    UNTimeIntervalNotificationTrigger * trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:time repeats:repeats];</span><br><span class="line">    </span><br><span class="line">    /* 设置触发器: 周期日历触发 */</span><br><span class="line">//    NSDateComponents * components = [[NSDateComponents alloc] init];</span><br><span class="line">//    components.year = 2023;</span><br><span class="line">//    components.month = 11;</span><br><span class="line">//    components.day = 2;</span><br><span class="line">//    UNCalendarNotificationTrigger * trigger = [UNCalendarNotificationTrigger triggerWithDateMatchingComponents:components repeats:repeats];</span><br><span class="line">    </span><br><span class="line">    /* 设置触发器：地域触发 */</span><br><span class="line">//    CLRegion * region = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(33.0, 11.0) radius:100 identifier:@&quot;region&quot;];</span><br><span class="line">//    UNLocationNotificationTrigger * trigger = [UNLocationNotificationTrigger triggerWithRegion:region repeats:repeats];</span><br><span class="line">    </span><br><span class="line">    /*</span><br><span class="line">     4.设置通知请求</span><br><span class="line">     1.Identifier：通知标识</span><br><span class="line">     2.content：通知内容</span><br><span class="line">     3.trigger：触发器</span><br><span class="line">     */</span><br><span class="line">    UNNotificationRequest * request = [UNNotificationRequest requestWithIdentifier:identifier content:content trigger:trigger];</span><br><span class="line">    </span><br><span class="line">    // 5.添加通知请求</span><br><span class="line">    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) &#123;</span><br><span class="line">        if (error) &#123;</span><br><span class="line">            NSLog(@&quot;添加推送通知请求失败&quot;);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            NSLog(@&quot;添加推送通知请求成功&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - UNUserNotificationCenterDelegate</span><br><span class="line">/*</span><br><span class="line"> App在前台时，才会调用此方法：</span><br><span class="line"> 1.如果未实现该方法或未及时调用该处理程序，则不会显示该通知。</span><br><span class="line"> 2.应用程序可以选择将通知显示为声音，徽章，警报和/或显示在通知列表中。</span><br><span class="line"> 3.该决定应基于通知中的信息是否对用户可见。</span><br><span class="line"> */</span><br><span class="line">-(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler&#123;</span><br><span class="line">    NSLog(@&quot;App在前台，收到了通知&quot;);</span><br><span class="line">    // 处理通知</span><br><span class="line">    UNNotificationContent * content = notification.request.content;</span><br><span class="line">    if (content) &#123;</span><br><span class="line">        NSLog(@&quot;title:%@ body:%@&quot;,content.title,content.body);</span><br><span class="line">    &#125;</span><br><span class="line">    /* 处理完成后，调用 completionHandler，用于指示在前台显示通知的形式</span><br><span class="line">     UNNotificationPresentationOptionNone：不在前台显示</span><br><span class="line">     UNNotificationPresentationOptionAlert：在前台显示</span><br><span class="line">     ...</span><br><span class="line">     */</span><br><span class="line">    completionHandler(UNNotificationPresentationOptionNone);</span><br><span class="line">&#125;</span><br><span class="line">/*</span><br><span class="line"> 当接收到通知后，在用户点击通知激活App时调用这个方法（无论是在前台还是后台）</span><br><span class="line"> */</span><br><span class="line">- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler&#123;</span><br><span class="line">    NSLog(@&quot;App无论是在前台还是后台，收到了通知，用户点击该通知&quot;);</span><br><span class="line">    // 如果有内容</span><br><span class="line">    UNNotificationContent * content = response.notification.request.content;</span><br><span class="line">    if (content) &#123;</span><br><span class="line">        NSLog(@&quot;title:%@ body:%@&quot;,content.title,content.body);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - iOS 10.0 及以下</span><br><span class="line">// 本地通知授权</span><br><span class="line">- (void)localNotificationAuthorizationIOS10AndBelow&#123;</span><br><span class="line">    // 如果没有授权，则申请授权</span><br><span class="line">    if ([[UIApplication sharedApplication] currentUserNotificationSettings].types == UIUserNotificationTypeNone) &#123;</span><br><span class="line">        // 开始授权</span><br><span class="line">        UIUserNotificationSettings * notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeSound | UIUserNotificationTypeBadge categories:nil];</span><br><span class="line">        [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 推送本地通知 iOS 10.0 及以下</span><br><span class="line">- (void)pushLocalNotificationIOS10AndBelowWithTime:(int)time</span><br><span class="line">                                             title:(NSString *)title</span><br><span class="line">                                              body:(NSString *)body</span><br><span class="line">                                           repeats:(BOOL)repeats</span><br><span class="line">                                        identifier:(NSString *)identifier&#123;</span><br><span class="line">    if ([[UIApplication sharedApplication] currentUserNotificationSettings].types == UIUserNotificationTypeNone) &#123;</span><br><span class="line">        [SVPManager showWithStatus:@&quot;请您在前往 设置-&gt;通用-&gt;零信任-&gt;通知-&gt;开启允许通知 权限，以便为您提供本地通知服务&quot; time:2];</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 1.创建通知对象</span><br><span class="line">    UILocalNotification * notification = [[UILocalNotification alloc] init];</span><br><span class="line">     </span><br><span class="line">    // 2.设置触发通知的时间(几秒后发送)</span><br><span class="line">    NSDate * fireDate = [NSDate dateWithTimeIntervalSinceNow:time];</span><br><span class="line">    notification.fireDate = fireDate;</span><br><span class="line">    </span><br><span class="line">    // 3.设置通知属性</span><br><span class="line">    // 通知标题</span><br><span class="line">    notification.alertTitle = title;</span><br><span class="line">    // 通知主体</span><br><span class="line">    notification.alertBody = body;</span><br><span class="line">    // 待机界面开启左滑按钮</span><br><span class="line">    notification.hasAction = YES;</span><br><span class="line">    // 待机界面的滑动按钮提示</span><br><span class="line">    notification.alertAction = @&quot;点击查看消息&quot;;</span><br><span class="line">    // 在收到通知时播放的声音，默认消息声音</span><br><span class="line">    notification.soundName = UILocalNotificationDefaultSoundName;</span><br><span class="line">    // 设置启动屏</span><br><span class="line">//    notification.alertLaunchImage = @&quot;&quot;;</span><br><span class="line">    // 传递的用户数据</span><br><span class="line">//    notification.userInfo = @&#123;&#125;;</span><br><span class="line">    // 图标的消息数</span><br><span class="line">//    notification.applicationIconBadgeNumber = 1;</span><br><span class="line">    // 时区</span><br><span class="line">//     notification.timeZone = [NSTimeZone defaultTimeZone];</span><br><span class="line">    // 设置重复的间隔</span><br><span class="line">//     notification.repeatInterval = kCFCalendarUnitSecond;</span><br><span class="line">    </span><br><span class="line">    // 附加操作</span><br><span class="line">//    notification.category = @&quot;choose&quot;;</span><br><span class="line">    </span><br><span class="line">    // 4.执行本地通知</span><br><span class="line">    [[UIApplication sharedApplication] scheduleLocalNotification:notification];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line"> App处于kill掉时，点击通知栏进入App，使用该方法接收本地（远程）通知</span><br><span class="line"> */</span><br><span class="line">- (void)receiveLocalNotificationWithLaunchOptions:(NSDictionary *)launchOptions&#123;</span><br><span class="line">    /*</span><br><span class="line">     App被kill掉，通过通知启动App</span><br><span class="line">     1.本地的 key - UIApplicationLaunchOptionsLocalNotificationKey</span><br><span class="line">     2.远程的 key - UIApplicationLaunchOptionsRemoteNotificationKey</span><br><span class="line">     */</span><br><span class="line">    if (launchOptions[UIApplicationLaunchOptionsLocalNotificationKey]) &#123;</span><br><span class="line">        UILocalNotification * notification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];</span><br><span class="line">        [self handleLocalNotificationWithWithNotification:notification userInfo:launchOptions[UIApplicationLaunchOptionsLocalNotificationKey]];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 处理本地通知</span><br><span class="line">- (void)handleLocalNotificationWithWithNotification:(UILocalNotification *)notification userInfo:(NSDictionary *)userInfo&#123;</span><br><span class="line">    NSLog(@&quot;title:%@ body:%@&quot;,notification.alertTitle,notification.alertBody);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>AppDelegate 中实现</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 本地通知授权</span><br><span class="line">    [[LocalNotiManager sharedManager] localNotificationAuthorization];</span><br><span class="line">    // 接收本地通知</span><br><span class="line">    [[LocalNotiManager sharedManager] receiveLocalNotificationWithLaunchOptions:launchOptions];</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>AppDelegate 中回调</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - 接收本地通知</span><br><span class="line">/*</span><br><span class="line"> App处于挂起或运行时，调用该方法接收本地（远程）通知</span><br><span class="line"> 1.当App在前台状态下，点击推送通知，会调用该方法</span><br><span class="line"> 2.当App在后台状态下，点击推送通知，会调用该方法（从锁屏界面点击推送通知也会执行）</span><br><span class="line"> */</span><br><span class="line">- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification&#123;</span><br><span class="line">    NSLog(@&quot;%@&quot;,notification);</span><br><span class="line">    // 前台点击通知消息</span><br><span class="line">    if (application.applicationState == UIApplicationStateActive) &#123;</span><br><span class="line">        NSLog(@&quot;处理前台接受通知的业务&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    // 后台点击通知消息</span><br><span class="line">    else &#123;</span><br><span class="line">        NSLog(@&quot;处理后台台接受通知的业务&quot;);</span><br><span class="line">        [[LocalNotiManager sharedManager] handleLocalNotificationWithWithNotification:notification userInfo:notification.userInfo];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 当用户点击允许或者不允许时，会执行如下代理方法，我们在其中实现处理逻辑</span><br><span class="line">- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings&#123;</span><br><span class="line">    NSLog(@&quot;当用户点击允许或者不允许时，会执行如下代理方法&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC学习68：本地通知UserNotifications Framework</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-08-10 16:35:12</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/08/10/OC/OC学习68：本地通知UserNotifications Framework/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">#OC-学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/08/12/OC/OC%E5%AD%A6%E4%B9%A069%EF%BC%9A%E8%BF%9C%E7%A8%8B%E6%8E%A8%E9%80%81APNs/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC学习69：远程推送APNs</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/08/09/OC%E7%BD%91%E7%BB%9C/OC%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A027%EF%BC%9A%E5%86%85%E7%BD%91%E5%92%8C%E5%A4%96%E7%BD%91%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC网络学习27：内网和外网探索</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC学习68：本地通知UserNotifications Framework</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UILocalNotification"><span class="nav-text">UILocalNotification</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UserNotification"><span class="nav-text">UserNotification</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

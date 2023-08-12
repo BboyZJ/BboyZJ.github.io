@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/08/03/oc网络/oc网络学习25：openssl探索/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC网络学习25：OpenSSL探索">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/08/03/OC网络/OC网络学习25：OpenSSL探索/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC网络学习25：OpenSSL探索">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC网络学习25：OpenSSL探索 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC网络学习25：OpenSSL探索</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-08-03 16:34:02</span>
+        <span class="mobile">2023-08-03 16:34</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-08-12 16:48:01</span>
+            <span class="mobile">2023-08-12 16:48</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/">OC-网络学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="Openssl-之-SSL"><a href="#Openssl-之-SSL" class="headerlink" title="Openssl 之 SSL"></a>Openssl 之 SSL</h1><ol>
+<li>什么是SSL</li>
+</ol>
+<ul>
+<li><p><code>SSL(Secure Sockets Layer 安全套接字协议)</code>，及其继任者 <code>安全传输层协议（Transport Layer Security，TLS）</code> 是为网络通信提供安全及数据完整性的一种安全协议。TLS与SSL在传输层与应用层之间对网络连接进行加密，它最早为Netscape所研发，用以保障在Internet上数据传输的安全，利用数据加密(Encryption)技术，可确保数据在网络上的传输过程中不会被截取及窃听。</p>
+</li>
+<li><p>SSL协议位于TCP&#x2F;IP协议与各种应用层协议之间，为数据通讯提供安全支持。</p>
+</li>
+</ul>
+<ol start="2">
+<li>SSL协议分层</li>
+</ol>
+<p>SSL协议可分为两层：</p>
+<ul>
+<li><p>SSL记录协议（SSL Record Protocol）—— 它建立在可靠的传输协议（如TCP）之上，为高层协议提供数据封装、压缩、加密等基本功能的支持。</p>
+</li>
+<li><p>SSL握手协议（SSL Handshake Protocol）—— 它建立在SSL记录协议之上，用于在实际的数据传输开始前，通讯双方进行身份认证、协商加密算法、交换加密密钥等。</p>
+</li>
+</ul>
+<ol start="3">
+<li>SSL提供的服务</li>
+</ol>
+<p>SSL提供的服务：</p>
+<ul>
+<li>认证用户和服务器，确保数据发送到正确的客户机和服务器；</li>
+<li>加密数据以防止数据中途被窃取；</li>
+<li>维护数据的完整性，确保数据在传输过程中不被改变。</li>
+</ul>
+<h1 id="SSL开发流程"><a href="#SSL开发流程" class="headerlink" title="SSL开发流程"></a>SSL开发流程</h1><ol>
+<li>开发流程图</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308031634123.png"
+                     
+                ></p>
+<p>由图可知：</p>
+<p>无论是服务端还是客户端，进行一次完整的SSL通讯，大致可以抽像为以下几个步骤：</p>
+<p>1）初使化SSL环境。<br>2）创建SSL上下文。<br>3）配置SSL上下文证书及公钥信息。<br>4）创建SSL上下文。<br>5）创建TCP通讯端口。<br>6）建立SSL和TCP通讯端口的关联。<br>7）执行SSL握手。<br>8）执行SSL数据读写交互。<br>9）关闭SSL连接。<br>10）关闭TCP通讯端口。<br>11）释放SSL上下文。</p>
+<ol start="2">
+<li>SSL服务端接口调用流程图</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308031636264.png"
+                     
+                ></p>
+<ol start="3">
+<li>SSL客户端接口调用流程图</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308031639532.png"
+                     
+                ></p>
+<h1 id="主要接口："><a href="#主要接口：" class="headerlink" title="主要接口："></a>主要接口：</h1><p>SSL接口的主要头文件在ssl中。我们根据SSL通讯的流程摘录如下：</p>
+<ol>
+<li>初使化SSL环境。</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">通常用得比较多的是这三个函数：</span><br><span class="line">// 初始化SSL库</span><br><span class="line">SSL_library_init()</span><br><span class="line">// 加载所有SSL算法</span><br><span class="line">OpenSSL_add_ssl_algorithms()</span><br><span class="line">// 载入所有SSL错误消息</span><br><span class="line">SSL_load_error_strings()</span><br></pre></td></tr></table></figure></div>
+
+<p>在1.1.1版本的定义中是这样的：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># if OPENSSL_API_COMPAT &lt; 0x10100000L</span><br><span class="line">#  define SSL_library_init() OPENSSL_init_ssl(0, NULL)</span><br><span class="line"># endif</span><br><span class="line"></span><br><span class="line"># if OPENSSL_API_COMPAT &lt; 0x10100000L</span><br><span class="line">#  define SSL_load_error_strings() \</span><br><span class="line">    OPENSSL_init_ssl(OPENSSL_INIT_LOAD_SSL_STRINGS \</span><br><span class="line">                     | OPENSSL_INIT_LOAD_CRYPTO_STRINGS, NULL)</span><br><span class="line"># endif</span><br><span class="line"></span><br><span class="line"># if OPENSSL_API_COMPAT &lt; 0x10100000L</span><br><span class="line">#  define OpenSSL_add_ssl_algorithms()   SSL_library_init()</span><br><span class="line">#  define SSLeay_add_ssl_algorithms()    SSL_library_init()</span><br><span class="line"># endif</span><br><span class="line"></span><br><span class="line">int OPENSSL_init_ssl(uint64_t opts, const OPENSSL_INIT_SETTINGS *settings);</span><br></pre></td></tr></table></figure></div>
+
+<p>可以看到，上面图示中的 <code>OpenSSL_add_ssl_algorithms()</code> 这一步是多余的，通常初使化只需要调用这两个就可以了：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SSL_library_init()</span><br><span class="line">SSL_load_error_strings()</span><br></pre></td></tr></table></figure></div>
+
+<p>在初使化过程中，<code>SSL_library_init()</code> 注册了所有在SSL APIs中的 <code>加密算法和哈希算法</code>，<code>SSL_load_error_strings()</code> 则加载了所有的 <code>错误描述字符串</code>。</p>
+<ol start="2">
+<li>创建SSL上下文</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SSL_CTX *SSL_CTX_new(const SSL_METHOD *meth);</span><br></pre></td></tr></table></figure></div>
+
+<p>这个函数用于 <code>创建SSL上下文</code>，其参数 <code>SSL_METHOD</code> 用于传入SSL的抽象方法集合。</p>
+<p>对于每个 <code>SSL/TSL</code> 来说，有三种APIs可以用来创建一个 <code>SSL_METHOD</code>：</p>
+<p>一个可以用于服务端和客户端，一个只能用于服务端，另外一个只能由于客户端。定义如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">const SSL_METHOD *TLS_method(void);</span><br><span class="line">const SSL_METHOD *TLS_server_method(void);</span><br><span class="line">const SSL_METHOD *TLS_client_method(void);</span><br><span class="line"></span><br><span class="line">#define SSLv23_method           TLS_method</span><br><span class="line">#define SSLv23_server_method    TLS_server_method</span><br><span class="line">#define SSLv23_client_method    TLS_client_method</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>设置SSL上下文的算法套件信息</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int SSL_CTX_set_cipher_list(SSL_CTX *, const char *str);</span><br></pre></td></tr></table></figure></div>
+
+<p>成功返回1，失败返回0。</p>
+<p>可用的算法如:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">EDH-RSA-DES-CBC3-SHA</span><br><span class="line">EDH-DSS-DES-CBC3-SHA</span><br><span class="line">DES-CBC3-SHA</span><br><span class="line">DHE-DSS-RC4-SHA</span><br><span class="line">IDEA-CBC-SHA</span><br><span class="line">RC4-SHA</span><br><span class="line">RC4-MD5</span><br><span class="line">EXP1024-DHE-DSS-RC4-SHA</span><br><span class="line">EXP1024-RC4-SHA</span><br><span class="line">EXP1024-DHE-DSS-DES-CBC-SHA</span><br><span class="line">EXP1024-DES-CBC-SHA</span><br><span class="line">EXP1024-RC2-CBC-MD5</span><br><span class="line">EXP1024-RC4-MD5</span><br><span class="line">EDH-RSA-DES-CBC-SHA</span><br><span class="line">EDH-DSS-DES-CBC-SHA</span><br><span class="line">DES-CBC-SHA</span><br><span class="line">EXP-EDH-RSA-DES-CBC-SHA</span><br><span class="line">EXP-EDH-DSS-DES-CBC-SHA</span><br><span class="line">EXP-DES-CBC-SHA</span><br><span class="line">EXP-RC2-CBC-MD5</span><br><span class="line">EXP-RC4-MD5</span><br></pre></td></tr></table></figure></div>
+
+<p>这些算法按一定 <code>优先级排列</code>,如果不作任何指定，将选用 <code>DES-CBC3-SHA</code>，用<code>SSL_CTX_set_cipher_list</code> 可以指定自己希望用的算法(实际上只是 提高其优先级,是否能使用还要看对方是否支持)。</p>
+<ol start="4">
+<li>配置SSL上下文证书及公钥信息。</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int SSL_CTX_use_PrivateKey_file(SSL_CTX *ctx, const char *file, int type);</span><br><span class="line"></span><br><span class="line">int SSL_CTX_use_certificate_file(SSL_CTX *ctx, const char *file, int type);</span><br></pre></td></tr></table></figure></div>
+
+<p>这两个函数用于 <code>加载私钥和证书文件</code>。</p>
+<p>成功返回1，失败返回0。</p>
+<p>其中，type的取值：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># define SSL_FILETYPE_ASN1       X509_FILETYPE_ASN1</span><br><span class="line"># define SSL_FILETYPE_PEM        X509_FILETYPE_PEM</span><br><span class="line">即</span><br><span class="line"># define X509_FILETYPE_PEM       1</span><br><span class="line"># define X509_FILETYPE_ASN1      2</span><br></pre></td></tr></table></figure></div>
+
+<p>也可以直接使用 <code>二进制结构和ASN1序列化</code> 的内存数据：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int SSL_CTX_use_RSAPrivateKey(SSL_CTX *ctx, RSA *rsa);</span><br><span class="line">int SSL_CTX_use_RSAPrivateKey_ASN1(SSL_CTX *ctx, const unsigned char *d, long len);</span><br><span class="line">int SSL_CTX_use_certificate(SSL_CTX *ctx, X509 *x);</span><br><span class="line">int SSL_CTX_use_certificate_ASN1(SSL_CTX *ctx, int len, const unsigned char *d);</span><br></pre></td></tr></table></figure></div>
+
+<p><code>int SSL_CTX_check_private_key(const SSL_CTX *ctx);</code> 在完成 <code>私钥和证书</code> 加载后，这个函数由于检查二者是否匹配。成功返回1，失败返回0。</p>
+<ol start="5">
+<li>创建SSL上下文</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SSL *SSL_new(SSL_CTX *ctx);</span><br></pre></td></tr></table></figure></div>
+
+<p>创建SSL结构，SSL的连接信息都保存在SSL结构中。</p>
+<p>新的SSL结构会从SSL_CTX结构中继承包括，连接类型、选项、验证方式以及超时。</p>
+<ol start="6">
+<li>创建TCP通讯端口。</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark -- Socket连接服务端</span><br><span class="line">- (void)connectToHost:(NSString *)host onPort:(int)port &#123;</span><br><span class="line">    _host = host;</span><br><span class="line">    _port = port;</span><br><span class="line">    </span><br><span class="line">    if (!host || !port) &#123;</span><br><span class="line">        [self closeWithError:[self otherError:@&quot;host/port error&quot;]];</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    /*</span><br><span class="line">      1.初始化socket</span><br><span class="line">     a.参数domain指明通信域，如PF_UNIX(unix域)，PF_INET(IPv4)，PF_INET6(IPv6)等</span><br><span class="line">     b.type 指明通信类型，最常用的如SOCK_STREAM(面向连接可靠方式，  比如TCP)、</span><br><span class="line">        SOCK_DGRAM(非面向连接的非可靠方式，比如UDP)等。  SOCK_STREAM 是数据流,一般是tcp/ip协议的编程,SOCK_DGRAM分是数据抱,是udp协议网络编程。</span><br><span class="line">     c.参数protocol指定需要使用的协议。虽然可以对同一个协议  家族(protocol family)</span><br><span class="line">        (或者说通信域(domain))指定不同的协议  参数，</span><br><span class="line">        但是通常只有一个。对于TCP参数可指定为IPPROTO_TCP,对于  UDP可以用IPPROTO_UDP。你不必显式制定这个参数，使用0则根据前两个参数使用默认的协议</span><br><span class="line">     */</span><br><span class="line">    _socketFD = socket(PF_INET, SOCK_STREAM, 0);</span><br><span class="line">    if (_socketFD == -1) &#123;</span><br><span class="line">        [self closeWithError:[self otherError:@&quot;socket error&quot;]];</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    /* 2.向服务器发送socket连接请求 */</span><br><span class="line">    struct sockaddr_in connectAddr;</span><br><span class="line">    unsigned long ulIPV4 = [self DnsToIP:[host UTF8String]];</span><br><span class="line">    connectAddr.sin_family       = PF_INET;</span><br><span class="line">    connectAddr.sin_port         = htons(port);</span><br><span class="line">    connectAddr.sin_addr.s_addr  = (in_addr_t)(ulIPV4);</span><br><span class="line">    memset(&amp;(connectAddr.sin_zero),&#x27;\0&#x27;,8);</span><br><span class="line">    // 连接（0 连接成功，-1 连接失败）</span><br><span class="line">    int result = connect(_socketFD, (struct sockaddr*)&amp;connectAddr, sizeof(connectAddr));</span><br><span class="line">    if (result == 0) &#123; // 连接成功</span><br><span class="line">        [self didConnect];</span><br><span class="line">    &#125; else &#123; // 连接失败</span><br><span class="line">        [self closeWithError:[self otherError:@&quot;connect error&quot;]];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="7">
+<li>建立SSL和TCP通讯端口的关联</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 成功返回1，失败返回0。</span><br><span class="line">int SSL_set_fd(SSL *s, int fd);</span><br></pre></td></tr></table></figure></div>
+
+<p>或：也可以直接使用BIO代替:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BIO* bio = BIO_new_socket(socket, BIO_NOCLOSE);</span><br><span class="line">SSL_set_bio(ssl, bio, bio);</span><br></pre></td></tr></table></figure></div>
+
+<ol start="8">
+<li>执行SSL握手</li>
+</ol>
+<p>SSL握手过程是一个复杂过程，涉及到重要的 <code>加密秘钥交换</code>。</p>
+<p>但是握手过程可以通过 <code>服务端调用SSL_accept()</code> 和 <code>客户端调用SSL_connect()</code> 完成。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 成功返回1，失败返回 &lt;=0</span><br><span class="line">int SSL_accept(SSL *ssl);</span><br><span class="line"></span><br><span class="line">// 成功返回1，失败返回 &lt;=0</span><br><span class="line">int SSL_connect(SSL *ssl);</span><br></pre></td></tr></table></figure></div>
+
+<p>这两个函数是可以重复调用的，这个特性在非阻塞模式下尤为明显。</p>
+<p>此外，在 <code>握手完成</code> 后，可通过调用 <code>SSL_get_peer_certificate</code> 来 <code>获取对端的证书</code>:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X509 *SSL_get_peer_certificate(const SSL *s);</span><br></pre></td></tr></table></figure></div>
+
+<p>如果对方存在证书，就可以调用X509的相关函数提取证书的身份信息，比如：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X509_NAME *X509_get_subject_name(X509 *a);</span><br></pre></td></tr></table></figure></div>
+
+<ol start="9">
+<li>执行SSL数据读写交互</li>
+</ol>
+<p>在SSL握手完成后，数据就可以通过已经建立好的连接安全的发送了。</p>
+<p>不要再使用send、recv函数，而是要使用 <code>SSL_write</code> 和 <code>SSL_read</code> 。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int SSL_read(SSL *ssl, void *buf, int num);</span><br><span class="line">int SSL_write(SSL *ssl, const void *buf, int num);</span><br></pre></td></tr></table></figure></div>
+
+<p>与send、recv用法相似。</p>
+<p>成功返回发送或接收的字节数，失败返回 &lt;&#x3D;0。</p>
+<p>当返回值 &lt;0（通常为-1）时，应检查错误码，尤其是在非阻塞模式时。</p>
+<ul>
+<li>错误码可使用 <code>SSL_get_error()</code> 函数获取，其定义为：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int SSL_get_error(const SSL *s, int ret_code);</span><br></pre></td></tr></table></figure></div>
+
+<ol start="10">
+<li>关闭SSL连接。</li>
+</ol>
+<p>当关闭SSL连接时，SSL客户端和服务端需要发送 <code>close_notify</code> 消息，通知对端SSL将要关闭了，调用 <code>SSL_shutdown</code> 函数来发送 <code>close_notify</code> 消息。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 成功返回1，失败返回 &lt;=0</span><br><span class="line">int SSL_shutdown(SSL *s);</span><br></pre></td></tr></table></figure></div>
+
+<p>关闭过包含以下两个步骤：</p>
+<p>1）发送一个 <code>close_notify</code> 关闭告警。<br>2）从对端接收一个 <code>close_notify</code> 的关闭消息。</p>
+<ul>
+<li>发起关闭的客户端或者服务端可以调用 <code>SSL_shutdown</code> 一次或者两次。</li>
+<li>如果调用了两次，一次调用用于发送 <code>close_notify</code> 消息，另外一次用于响应对端的。</li>
+<li>如果只调用一次，发起关闭一端将不会等待对端的响应(发起关闭的一端不需要等待对端的关闭响应，一旦收到对端关闭消息就要马上发送关闭响应。</li>
+</ul>
+<ol start="11">
+<li>关于TCP通讯端口。</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if(_socketFD &gt; 0)&#123;</span><br><span class="line">    close(_socketFD);</span><br><span class="line">    _socketFD = 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="12">
+<li>释放SSL上下文。</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">void SSL_free(SSL *ssl);</span><br><span class="line">void SSL_CTX_free(SSL_CTX *);</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="使用举例"><a href="#使用举例" class="headerlink" title="使用举例"></a>使用举例</h1><ol>
+<li>阻塞模式用法</li>
+</ol>
+<ul>
+<li>服务端代码</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line"></span><br><span class="line">#include &lt;openssl/ssl.h&gt;</span><br><span class="line">#include &lt;openssl/err.h&gt;</span><br><span class="line"></span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">#include &lt;arpa/inet.h&gt;</span><br><span class="line">#include &lt;netinet/in.h&gt;</span><br><span class="line"></span><br><span class="line">#define SSL_print_error_and_freectx() \</span><br><span class="line">    ERR_print_errors_fp(stdout); \</span><br><span class="line">    SSL_CTX_free(ctx);</span><br><span class="line"></span><br><span class="line">int listenLocal(unsigned short uPort)</span><br><span class="line">&#123;</span><br><span class="line">    int sockS = socket(AF_INET, SOCK_STREAM, 0);</span><br><span class="line">    if (sockS &lt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;socket() error! \n&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    struct sockaddr_in sin;</span><br><span class="line">    sin.sin_family = AF_INET;</span><br><span class="line">    sin.sin_addr.s_addr = INADDR_ANY;</span><br><span class="line">    sin.sin_port = htons(uPort);</span><br><span class="line"></span><br><span class="line">    int ret = bind(sockS, (struct sockaddr*)&amp;sin, sizeof(sin));</span><br><span class="line">    if (ret &lt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;bind() error! \n&quot;);</span><br><span class="line">        close(sockS);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    listen(sockS, 50);</span><br><span class="line"></span><br><span class="line">    return sockS;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, char* argv[])</span><br><span class="line">&#123;</span><br><span class="line">    SSL_library_init();</span><br><span class="line">    SSL_load_error_strings();</span><br><span class="line"></span><br><span class="line">    SSL_CTX* ctx = SSL_CTX_new( SSLv23_server_method() );</span><br><span class="line">    if (ctx == NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        ERR_print_errors_fp(stdout);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int ret = SSL_CTX_use_certificate_file(ctx, &quot;test.crt&quot;, SSL_FILETYPE_PEM);</span><br><span class="line">    if (ret != 1)</span><br><span class="line">    &#123;</span><br><span class="line">        SSL_print_error_and_freectx();</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ret = SSL_CTX_use_PrivateKey_file(ctx, &quot;test.key&quot;, SSL_FILETYPE_PEM);</span><br><span class="line">    if (ret != 1)</span><br><span class="line">    &#123;</span><br><span class="line">        SSL_print_error_and_freectx();</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ret = SSL_CTX_check_private_key(ctx);</span><br><span class="line">    if (ret != 1)</span><br><span class="line">    &#123;</span><br><span class="line">        SSL_print_error_and_freectx();</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int sockS = listenLocal(9999);</span><br><span class="line">    if (sockS &lt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        SSL_CTX_free(ctx);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    while (true)</span><br><span class="line">    &#123;</span><br><span class="line">        struct sockaddr_in sinfrom;</span><br><span class="line">        socklen_t sinfromlen = sizeof(sinfrom);</span><br><span class="line">        int sockC = accept(sockS, (struct sockaddr*)&amp;sinfrom, &amp;sinfromlen);</span><br><span class="line">        if (sockC &lt; 0)</span><br><span class="line">        &#123;</span><br><span class="line">            printf(&quot;accept() error! \n&quot;);</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        printf(&quot;accpet connect:[%d - %s:%d] \n&quot;, sockC, inet_ntoa(sinfrom.sin_addr), ntohs(sinfrom.sin_port));</span><br><span class="line"></span><br><span class="line">        SSL* ssl = SSL_new(ctx);</span><br><span class="line">        SSL_set_fd(ssl, sockC);</span><br><span class="line"></span><br><span class="line">        do</span><br><span class="line">        &#123;</span><br><span class="line">            ret = SSL_accept(ssl);</span><br><span class="line">            if (ret != 1)</span><br><span class="line">            &#123;</span><br><span class="line">                printf(&quot;SSL handshake failed! \n&quot;);</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">            printf(&quot;SSL handshake success! \n&quot;);</span><br><span class="line"></span><br><span class="line">            SSL_write(ssl, &quot;hello&quot;, 5);</span><br><span class="line"></span><br><span class="line">            while (true)</span><br><span class="line">            &#123;</span><br><span class="line">                char sBuf[1024] = &#123;0&#125;;</span><br><span class="line">                int bytesin = SSL_read(ssl, sBuf, sizeof(sBuf)-1);</span><br><span class="line">                if (bytesin &lt;= 0)</span><br><span class="line">                &#123;</span><br><span class="line">                    printf(&quot;error or disconnect! \n&quot;);</span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                printf(&quot;read:[%s] \n&quot;, sBuf);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            SSL_shutdown(ssl);</span><br><span class="line">        &#125; while(0);</span><br><span class="line"></span><br><span class="line">        SSL_free(ssl);</span><br><span class="line">        close(sockC);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    close(sockS);</span><br><span class="line">    SSL_CTX_free(ctx);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>客户端代码</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line"></span><br><span class="line">#include &lt;openssl/ssl.h&gt;</span><br><span class="line">#include &lt;openssl/err.h&gt;</span><br><span class="line"></span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">#include &lt;arpa/inet.h&gt;</span><br><span class="line">#include &lt;netinet/in.h&gt;</span><br><span class="line"></span><br><span class="line">int connectPeer(const char* sIp, unsigned short uPort)</span><br><span class="line">&#123;</span><br><span class="line">    int sockC = socket(AF_INET, SOCK_STREAM, 0);</span><br><span class="line">    if (sockC &lt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;socket() errror! \n&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    struct sockaddr_in sin;</span><br><span class="line">    sin.sin_family = AF_INET;</span><br><span class="line">    sin.sin_addr.s_addr = inet_addr(sIp);</span><br><span class="line">    sin.sin_port = htons(uPort);</span><br><span class="line"></span><br><span class="line">    int ret = connect(sockC, (struct sockaddr*)&amp;sin, sizeof(sin));</span><br><span class="line">    if (ret &lt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;connect() failed! \n&quot;);</span><br><span class="line">        close(sockC);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return sockC;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void showCert(SSL* ssl)</span><br><span class="line">&#123;</span><br><span class="line">    X509* x509 = SSL_get_peer_certificate(ssl);</span><br><span class="line"></span><br><span class="line">    if (x509)</span><br><span class="line">    &#123;</span><br><span class="line">        const char* subjectname = X509_NAME_oneline(X509_get_subject_name(x509), 0, 0);</span><br><span class="line">        printf(&quot;subject name:[%s] \n&quot;, subjectname);</span><br><span class="line"></span><br><span class="line">        const char* issuername = X509_NAME_oneline(X509_get_issuer_name(x509), 0, 0);</span><br><span class="line">        printf(&quot;issuer name:[%s] \n&quot;, issuername);</span><br><span class="line">        </span><br><span class="line">        X509_free(x509);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, char* argv[])</span><br><span class="line">&#123;</span><br><span class="line">    SSL_library_init();</span><br><span class="line">    SSL_load_error_strings();</span><br><span class="line"></span><br><span class="line">    SSL_CTX* ctx = SSL_CTX_new( SSLv23_client_method() );</span><br><span class="line">    if (ctx == NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        ERR_print_errors_fp(stdout);</span><br><span class="line">        SSL_CTX_free(ctx);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int sockC = connectPeer(&quot;127.0.0.1&quot;, 9999);</span><br><span class="line">    if (sockC &lt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        SSL_CTX_free(ctx);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    SSL* ssl = SSL_new(ctx);</span><br><span class="line">    SSL_set_fd(ssl, sockC);</span><br><span class="line"></span><br><span class="line">    do</span><br><span class="line">    &#123;</span><br><span class="line">        int ret = SSL_connect(ssl);</span><br><span class="line">        if (ret != 1)</span><br><span class="line">        &#123;</span><br><span class="line">            printf(&quot;SSL handshake failed! \n&quot;);</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">        printf(&quot;SSL handshake success! \n&quot;);</span><br><span class="line"></span><br><span class="line">        showCert(ssl);</span><br><span class="line"></span><br><span class="line">        char sBuf[1024] = &#123;0&#125;;</span><br><span class="line">        int bytesin = SSL_read(ssl, sBuf, sizeof(sBuf)-1);</span><br><span class="line">        if (bytesin &lt;= 0)</span><br><span class="line">        &#123;</span><br><span class="line">            printf(&quot;disconnect! \n&quot;);</span><br><span class="line">            SSL_shutdown(ssl);</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        printf(&quot;read:[%s] \n&quot;, sBuf);</span><br><span class="line"></span><br><span class="line">        for (int i = 0; i &lt; 3; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            SSL_write(ssl, &quot;hello&quot;, 5);</span><br><span class="line">            sleep(1);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        SSL_shutdown(ssl);</span><br><span class="line">    &#125; while (0);</span><br><span class="line"></span><br><span class="line">    SSL_free(ssl);</span><br><span class="line">    close(sockC);</span><br><span class="line"></span><br><span class="line">    SSL_CTX_free(ctx);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>非阻塞模式用法：</li>
+</ol>
+<p>对非阻塞套接字来说，<code>SSL_read()</code> 和 <code>SSL_write()</code> 的调用通常会返回-1，这并不是真正表示收发失败了，大多可能的原因是套接字的缓冲不可用，我们需要稍后进行尝试。只不过，在非阻塞模式下，采用主动尝试的方法通常都不可取，正式的场合应该使用异步事件模型。</p>
+<p>下面的代码出于简单性，暂时采用稍后尝试的方法。代码示例如下：</p>
+<ul>
+<li>服务端代码</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line"></span><br><span class="line">#include &lt;openssl/ssl.h&gt;</span><br><span class="line">#include &lt;openssl/err.h&gt;</span><br><span class="line"></span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">#include &lt;arpa/inet.h&gt;</span><br><span class="line">#include &lt;netinet/in.h&gt;</span><br><span class="line"></span><br><span class="line">#define SSL_print_error_and_freectx() \</span><br><span class="line">    ERR_print_errors_fp(stdout); \</span><br><span class="line">    SSL_CTX_free(ctx);</span><br><span class="line"></span><br><span class="line">int listenLocal(unsigned short uPort)</span><br><span class="line">&#123;</span><br><span class="line">    int sockS = socket(AF_INET, SOCK_STREAM, 0);</span><br><span class="line">    if (sockS &lt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;socket() error! \n&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    struct sockaddr_in sin;</span><br><span class="line">    sin.sin_family = AF_INET;</span><br><span class="line">    sin.sin_addr.s_addr = INADDR_ANY;</span><br><span class="line">    sin.sin_port = htons(uPort);</span><br><span class="line"></span><br><span class="line">    int ret = bind(sockS, (struct sockaddr*)&amp;sin, sizeof(sin));</span><br><span class="line">    if (ret &lt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;bind() error! \n&quot;);</span><br><span class="line">        close(sockS);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    listen(sockS, 50);</span><br><span class="line"></span><br><span class="line">    return sockS;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, char* argv[])</span><br><span class="line">&#123;</span><br><span class="line">    SSL_library_init();</span><br><span class="line">    SSL_load_error_strings();</span><br><span class="line"></span><br><span class="line">    SSL_CTX* ctx = SSL_CTX_new( SSLv23_server_method() );</span><br><span class="line">    if (ctx == NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        ERR_print_errors_fp(stdout);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int ret = SSL_CTX_use_certificate_file(ctx, &quot;test.crt&quot;, SSL_FILETYPE_PEM);</span><br><span class="line">    if (ret != 1)</span><br><span class="line">    &#123;</span><br><span class="line">        SSL_print_error_and_freectx();</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ret = SSL_CTX_use_PrivateKey_file(ctx, &quot;test.key&quot;, SSL_FILETYPE_PEM);</span><br><span class="line">    if (ret != 1)</span><br><span class="line">    &#123;</span><br><span class="line">        SSL_print_error_and_freectx();</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ret = SSL_CTX_check_private_key(ctx);</span><br><span class="line">    if (ret != 1)</span><br><span class="line">    &#123;</span><br><span class="line">        SSL_print_error_and_freectx();</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int sockS = listenLocal(9999);</span><br><span class="line">    if (sockS &lt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        SSL_CTX_free(ctx);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    while (true)</span><br><span class="line">    &#123;</span><br><span class="line">        struct sockaddr_in sinfrom;</span><br><span class="line">        socklen_t sinfromlen = sizeof(sinfrom);</span><br><span class="line">        int sockC = accept(sockS, (struct sockaddr*)&amp;sinfrom, &amp;sinfromlen);</span><br><span class="line">        if (sockC &lt; 0)</span><br><span class="line">        &#123;</span><br><span class="line">            printf(&quot;accept() error! \n&quot;);</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        printf(&quot;accpet connect:[%d - %s:%d] \n&quot;, sockC, inet_ntoa(sinfrom.sin_addr), ntohs(sinfrom.sin_port));</span><br><span class="line"></span><br><span class="line">        fcntl(sockC, F_SETFL, fcntl(sockC, F_GETFL) | O_NONBLOCK);</span><br><span class="line"></span><br><span class="line">        SSL* ssl = SSL_new(ctx);</span><br><span class="line">        SSL_set_fd(ssl, sockC);</span><br><span class="line"></span><br><span class="line">        do</span><br><span class="line">        &#123;</span><br><span class="line">            bool bHandShake = false;</span><br><span class="line">            while (true)</span><br><span class="line">            &#123;</span><br><span class="line">                ret = SSL_accept(ssl);</span><br><span class="line">                printf(&quot;SSL_accept() ret:[%d] \n&quot;, ret);</span><br><span class="line">                if (ret != 1)</span><br><span class="line">                &#123;</span><br><span class="line">                    int err = SSL_get_error(ssl, ret);</span><br><span class="line">                    if (err == SSL_ERROR_WANT_READ || err == SSL_ERROR_WANT_WRITE)</span><br><span class="line">                    &#123;</span><br><span class="line">                        printf(&quot;want read or write... \n&quot;);</span><br><span class="line">                        usleep(1000);</span><br><span class="line">                        continue;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                bHandShake = true;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (!bHandShake)</span><br><span class="line">            &#123;</span><br><span class="line">                printf(&quot;SSL handshake failed! \n&quot;);</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            printf(&quot;SSL handshake success! \n&quot;);</span><br><span class="line"></span><br><span class="line">            SSL_write(ssl, &quot;hello&quot;, 5);</span><br><span class="line"></span><br><span class="line">            while (true)</span><br><span class="line">            &#123;</span><br><span class="line">                char sBuf[1024] = &#123;0&#125;;</span><br><span class="line">                int bytesin = SSL_read(ssl, sBuf, sizeof(sBuf)-1);</span><br><span class="line">                if (bytesin &lt; 0)</span><br><span class="line">                &#123;</span><br><span class="line">                    int err = SSL_get_error(ssl, -1);</span><br><span class="line">                    if (err == SSL_ERROR_WANT_READ)</span><br><span class="line">                    &#123;</span><br><span class="line">                        printf(&quot;want read... \n&quot;);</span><br><span class="line">                        usleep(100000);</span><br><span class="line">                        continue;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    printf(&quot;read error! \n&quot;);</span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                if (bytesin == 0)</span><br><span class="line">                &#123;</span><br><span class="line">                    printf(&quot;disconnect! \n&quot;);</span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                printf(&quot;read:[%s] \n&quot;, sBuf);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            SSL_shutdown(ssl);</span><br><span class="line">        &#125; while(0);</span><br><span class="line"></span><br><span class="line">        SSL_free(ssl);</span><br><span class="line">        close(sockC);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    close(sockS);</span><br><span class="line">    SSL_CTX_free(ctx);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<ul>
+<li>客户端代码</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;stdint.h&gt;</span><br><span class="line"></span><br><span class="line">#include &lt;openssl/ssl.h&gt;</span><br><span class="line">#include &lt;openssl/err.h&gt;</span><br><span class="line"></span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">#include &lt;arpa/inet.h&gt;</span><br><span class="line">#include &lt;netinet/in.h&gt;</span><br><span class="line"></span><br><span class="line">int connectPeer(const char* sIp, unsigned short uPort)</span><br><span class="line">&#123;</span><br><span class="line">    int sockC = socket(AF_INET, SOCK_STREAM, 0);</span><br><span class="line">    if (sockC &lt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;socket() errror! \n&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    struct sockaddr_in sin;</span><br><span class="line">    sin.sin_family = AF_INET;</span><br><span class="line">    sin.sin_addr.s_addr = inet_addr(sIp);</span><br><span class="line">    sin.sin_port = htons(uPort);</span><br><span class="line"></span><br><span class="line">    int ret = connect(sockC, (struct sockaddr*)&amp;sin, sizeof(sin));</span><br><span class="line">    if (ret &lt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;connect() failed! \n&quot;);</span><br><span class="line">        close(sockC);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return sockC;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void showCert(SSL* ssl)</span><br><span class="line">&#123;</span><br><span class="line">    X509* x509 = SSL_get_peer_certificate(ssl);</span><br><span class="line"></span><br><span class="line">    if (x509)</span><br><span class="line">    &#123;</span><br><span class="line">        const char* subjectname = X509_NAME_oneline(X509_get_subject_name(x509), 0, 0);</span><br><span class="line">        printf(&quot;subject name:[%s] \n&quot;, subjectname);</span><br><span class="line"></span><br><span class="line">        const char* issuername = X509_NAME_oneline(X509_get_issuer_name(x509), 0, 0);</span><br><span class="line">        printf(&quot;issuer name:[%s] \n&quot;, issuername);</span><br><span class="line"></span><br><span class="line">        X509_free(x509);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, char* argv[])</span><br><span class="line">&#123;</span><br><span class="line">    SSL_library_init();</span><br><span class="line">    SSL_load_error_strings();</span><br><span class="line"></span><br><span class="line">    SSL_CTX* ctx = SSL_CTX_new( SSLv23_client_method() );</span><br><span class="line">    if (ctx == NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        ERR_print_errors_fp(stdout);</span><br><span class="line">        SSL_CTX_free(ctx);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int sockC = connectPeer(&quot;127.0.0.1&quot;, 9999);</span><br><span class="line">    if (sockC &lt; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        SSL_CTX_free(ctx);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fcntl(sockC, F_SETFL, fcntl(sockC, F_GETFL) | O_NONBLOCK);</span><br><span class="line"></span><br><span class="line">    SSL* ssl = SSL_new(ctx);</span><br><span class="line">    SSL_set_fd(ssl, sockC);</span><br><span class="line"></span><br><span class="line">    do</span><br><span class="line">    &#123;</span><br><span class="line">        bool bHandShake = false;</span><br><span class="line">        while (true)</span><br><span class="line">        &#123;</span><br><span class="line">            int ret = SSL_connect(ssl);</span><br><span class="line">            printf(&quot;SSL_connect() ret:[%d] \n&quot;, ret);</span><br><span class="line">            if (ret != 1)</span><br><span class="line">            &#123;</span><br><span class="line">                int err = SSL_get_error(ssl, -1);</span><br><span class="line">                if (err == SSL_ERROR_WANT_READ || err == SSL_ERROR_WANT_WRITE)</span><br><span class="line">                &#123;</span><br><span class="line">                    printf(&quot;want read or write... \n&quot;);</span><br><span class="line">                    usleep(1000);</span><br><span class="line">                    continue;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            bHandShake = true;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (!bHandShake)</span><br><span class="line">        &#123;</span><br><span class="line">            printf(&quot;SSL handshake failed! \n&quot;);</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        printf(&quot;SSL handshake success! \n&quot;);</span><br><span class="line"></span><br><span class="line">        showCert(ssl);</span><br><span class="line"></span><br><span class="line">        bool bShutDown = false;</span><br><span class="line">        while (true)</span><br><span class="line">        &#123;</span><br><span class="line">            char sBuf[1024] = &#123;0&#125;;</span><br><span class="line">            int bytesin = SSL_read(ssl, sBuf, sizeof(sBuf)-1);</span><br><span class="line">            if (bytesin &lt; 0)</span><br><span class="line">            &#123;</span><br><span class="line">                int err = SSL_get_error(ssl, -1);</span><br><span class="line">                if (err == SSL_ERROR_WANT_READ)</span><br><span class="line">                &#123;</span><br><span class="line">                    printf(&quot;want read... \n&quot;);</span><br><span class="line">                    usleep(100000);</span><br><span class="line">                    continue;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                printf(&quot;read error! \n&quot;);</span><br><span class="line">                SSL_shutdown(ssl);</span><br><span class="line">                bShutDown = true;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (bytesin == 0)</span><br><span class="line">            &#123;</span><br><span class="line">                printf(&quot;disconnect! \n&quot;);</span><br><span class="line">                SSL_shutdown(ssl);</span><br><span class="line">                bShutDown = true;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            printf(&quot;read:[%s] \n&quot;, sBuf);</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (bShutDown)</span><br><span class="line">            break;</span><br><span class="line"></span><br><span class="line">        for (int i = 0; i &lt; 3; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            SSL_write(ssl, &quot;hello&quot;, 5);</span><br><span class="line">            sleep(1);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        SSL_shutdown(ssl);</span><br><span class="line">    &#125; while (0);</span><br><span class="line"></span><br><span class="line">    SSL_free(ssl);</span><br><span class="line">    close(sockC);</span><br><span class="line"></span><br><span class="line">    SSL_CTX_free(ctx);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="实际项目中的应用封装"><a href="#实际项目中的应用封装" class="headerlink" title="实际项目中的应用封装"></a>实际项目中的应用封装</h1><p>我在做国密双向认证的时候使用了：</p>
+<ol>
+<li>GMSocket.h</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  JITGMSocket.h</span><br><span class="line">//  GMTest</span><br><span class="line">//</span><br><span class="line">//  Created by JITPlatform001 on 2021/10/29.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">NS_ASSUME_NONNULL_BEGIN</span><br><span class="line"></span><br><span class="line">@class JITPrivCertInfo;</span><br><span class="line">@class JITSSLInfo;</span><br><span class="line"></span><br><span class="line">@protocol JITSocketDelegate;</span><br><span class="line"></span><br><span class="line">@interface JITGMSocket : NSObject</span><br><span class="line"></span><br><span class="line">+ (instancetype)new NS_UNAVAILABLE;</span><br><span class="line">- (instancetype)init NS_UNAVAILABLE;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> 【delegate：必传】</span><br><span class="line"> */</span><br><span class="line">- (instancetype)initWithDelegate:(id&lt;JITSocketDelegate&gt;)delegate;</span><br><span class="line"></span><br><span class="line">- (void)connectToHost:(NSString *)host onPort:(int)port;</span><br><span class="line">/**</span><br><span class="line"> beOneWay：是否为单向认证</span><br><span class="line"> sslInfo：双向认证用到的证书</span><br><span class="line"> */</span><br><span class="line">- (void)startSSL:(BOOL)beOneWay</span><br><span class="line">      andSSLInfo:(JITSSLInfo *)sslInfo;</span><br><span class="line">- (void)disconnect;</span><br><span class="line"></span><br><span class="line">- (int)writeData:(char *)buff</span><br><span class="line">          andLen:(int)len</span><br><span class="line">      andTimeOut:(int)timeout;</span><br><span class="line"></span><br><span class="line">- (int)readData:(char *)buff</span><br><span class="line">         andLen:(int)len</span><br><span class="line">     andTimeOut:(int)timeout;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@protocol JITSocketDelegate &lt;NSObject&gt;</span><br><span class="line"></span><br><span class="line">@required</span><br><span class="line">- (void)didConnectSocket:(JITGMSocket *)socket host:(NSString *)host port:(int)port;</span><br><span class="line">- (void)didDisconnectSocket:(JITGMSocket *)socket error:(NSError *)error;</span><br><span class="line"></span><br><span class="line">- (void)didWriteData:(JITGMSocket *)socket;</span><br><span class="line">- (void)didReadSocket:(JITGMSocket *)socket data:(NSData *)data;</span><br><span class="line">- (void)didWriteOrRead:(JITGMSocket *)socket</span><br><span class="line">                 error:(NSError *)error;</span><br><span class="line"></span><br><span class="line">- (void)didSecure:(JITGMSocket *)socket error:(NSError *)error;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@interface JITSSLInfo : NSObject</span><br><span class="line">@property (assign, nonatomic) int ciperSuite;   // 加密套件 0:ECC-SM4-SM3 非0:ECDHE-SM4-SM3</span><br><span class="line">@property (strong, nonatomic) JITPrivCertInfo *privCertInfo;    // 签名加密私钥</span><br><span class="line">@property (strong, nonatomic) NSArray *caInfo;  // 根证</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface JITPrivCertInfo : NSObject</span><br><span class="line">@property (strong, nonatomic) NSString *signCertPath;   // 签名证书</span><br><span class="line">@property (strong, nonatomic) NSString *signPrivPath;   // 签名私钥</span><br><span class="line">@property (strong, nonatomic) NSString *encCertPath;    // 加密证书</span><br><span class="line">@property (strong, nonatomic) NSString *encPrivPath;    // 加密私钥</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">NS_ASSUME_NONNULL_END</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>GMSocket.m</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br><span class="line">509</span><br><span class="line">510</span><br><span class="line">511</span><br><span class="line">512</span><br><span class="line">513</span><br><span class="line">514</span><br><span class="line">515</span><br><span class="line">516</span><br><span class="line">517</span><br><span class="line">518</span><br><span class="line">519</span><br><span class="line">520</span><br><span class="line">521</span><br><span class="line">522</span><br><span class="line">523</span><br><span class="line">524</span><br><span class="line">525</span><br><span class="line">526</span><br><span class="line">527</span><br><span class="line">528</span><br><span class="line">529</span><br><span class="line">530</span><br><span class="line">531</span><br><span class="line">532</span><br><span class="line">533</span><br><span class="line">534</span><br><span class="line">535</span><br><span class="line">536</span><br><span class="line">537</span><br><span class="line">538</span><br><span class="line">539</span><br><span class="line">540</span><br><span class="line">541</span><br><span class="line">542</span><br><span class="line">543</span><br><span class="line">544</span><br><span class="line">545</span><br><span class="line">546</span><br><span class="line">547</span><br><span class="line">548</span><br><span class="line">549</span><br><span class="line">550</span><br><span class="line">551</span><br><span class="line">552</span><br><span class="line">553</span><br><span class="line">554</span><br><span class="line">555</span><br><span class="line">556</span><br><span class="line">557</span><br><span class="line">558</span><br><span class="line">559</span><br><span class="line">560</span><br><span class="line">561</span><br><span class="line">562</span><br><span class="line">563</span><br><span class="line">564</span><br><span class="line">565</span><br><span class="line">566</span><br><span class="line">567</span><br><span class="line">568</span><br><span class="line">569</span><br><span class="line">570</span><br><span class="line">571</span><br><span class="line">572</span><br><span class="line">573</span><br><span class="line">574</span><br><span class="line">575</span><br><span class="line">576</span><br><span class="line">577</span><br><span class="line">578</span><br><span class="line">579</span><br><span class="line">580</span><br><span class="line">581</span><br><span class="line">582</span><br><span class="line">583</span><br><span class="line">584</span><br><span class="line">585</span><br><span class="line">586</span><br><span class="line">587</span><br><span class="line">588</span><br><span class="line">589</span><br><span class="line">590</span><br><span class="line">591</span><br><span class="line">592</span><br><span class="line">593</span><br><span class="line">594</span><br><span class="line">595</span><br><span class="line">596</span><br><span class="line">597</span><br><span class="line">598</span><br><span class="line">599</span><br><span class="line">600</span><br><span class="line">601</span><br><span class="line">602</span><br><span class="line">603</span><br><span class="line">604</span><br><span class="line">605</span><br><span class="line">606</span><br><span class="line">607</span><br><span class="line">608</span><br><span class="line">609</span><br><span class="line">610</span><br><span class="line">611</span><br><span class="line">612</span><br><span class="line">613</span><br><span class="line">614</span><br><span class="line">615</span><br><span class="line">616</span><br><span class="line">617</span><br><span class="line">618</span><br><span class="line">619</span><br><span class="line">620</span><br><span class="line">621</span><br><span class="line">622</span><br><span class="line">623</span><br><span class="line">624</span><br><span class="line">625</span><br><span class="line">626</span><br><span class="line">627</span><br><span class="line">628</span><br><span class="line">629</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  JITGMSocket.m</span><br><span class="line">//  GMTest</span><br><span class="line">//</span><br><span class="line">//  Created by JITPlatform001 on 2021/10/29.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &quot;JITGMSocket.h&quot;</span><br><span class="line"></span><br><span class="line">#include &lt;netdb.h&gt;</span><br><span class="line">#include &lt;arpa/inet.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;sys/time.h&gt;</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/select.h&gt;</span><br><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">#include &lt;netinet/in.h&gt;</span><br><span class="line"></span><br><span class="line">#include &lt;openssl/ossl_typ.h&gt;</span><br><span class="line">#include &lt;openssl/ssl.h&gt;</span><br><span class="line">#include &lt;openssl/err.h&gt;</span><br><span class="line"></span><br><span class="line">#define SSL_ERROR_WANT_HSM_RESULT 10</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> 是否单向认证</span><br><span class="line"> */</span><br><span class="line">BOOL G_beOneWay = YES;</span><br><span class="line"></span><br><span class="line">@interface JITGMSocket()</span><br><span class="line">&#123;</span><br><span class="line">    __weak id&lt;JITSocketDelegate&gt; _delegate;</span><br><span class="line">    </span><br><span class="line">    int _socketFD;</span><br><span class="line">    NSString *_host;</span><br><span class="line">    int _port;</span><br><span class="line">    </span><br><span class="line">    SSL *m_ssl;</span><br><span class="line">    SSL_CTX *m_ctx;</span><br><span class="line">    </span><br><span class="line">    BOOL _isSecure;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@property (retain, readonly) NSMutableData *sslWriteData;</span><br><span class="line">@property (retain, readonly) NSMutableData *sslReadData;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation JITGMSocket</span><br><span class="line"></span><br><span class="line">#pragma mark -- Life Cycle</span><br><span class="line">- (instancetype)initWithDelegate:(id&lt;JITSocketDelegate&gt;)aDelegate &#123;</span><br><span class="line">    </span><br><span class="line">    if (!aDelegate)</span><br><span class="line">        return nil;</span><br><span class="line">    </span><br><span class="line">    self = [super init];</span><br><span class="line">    if(self) &#123;</span><br><span class="line">        _delegate = aDelegate;</span><br><span class="line">        </span><br><span class="line">        _sslWriteData = [[NSMutableData alloc] init];</span><br><span class="line">        _sslReadData = [[NSMutableData alloc] init];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)dealloc &#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">    </span><br><span class="line">    [self disconnect];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark -- Socket连接服务端</span><br><span class="line">- (void)connectToHost:(NSString *)host onPort:(int)port &#123;</span><br><span class="line">    _host = host;</span><br><span class="line">    _port = port;</span><br><span class="line">    </span><br><span class="line">    if (!host || !port) &#123;</span><br><span class="line">        [self closeWithError:[self otherError:@&quot;host/port error&quot;]];</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    /*</span><br><span class="line">      1.初始化socket</span><br><span class="line">     a.参数domain指明通信域，如PF_UNIX(unix域)，PF_INET(IPv4)，PF_INET6(IPv6)等</span><br><span class="line">     b.type 指明通信类型，最常用的如SOCK_STREAM(面向连接可靠方式，  比如TCP)、</span><br><span class="line">        SOCK_DGRAM(非面向连接的非可靠方式，比如UDP)等。  SOCK_STREAM 是数据流,一般是tcp/ip协议的编程,SOCK_DGRAM分是数据抱,是udp协议网络编程。</span><br><span class="line">     c.参数protocol指定需要使用的协议。虽然可以对同一个协议  家族(protocol family)</span><br><span class="line">        (或者说通信域(domain))指定不同的协议  参数，</span><br><span class="line">        但是通常只有一个。对于TCP参数可指定为IPPROTO_TCP,对于  UDP可以用IPPROTO_UDP。你不必显式制定这个参数，使用0则根据前两个参数使用默认的协议</span><br><span class="line">     */</span><br><span class="line">    _socketFD = socket(PF_INET, SOCK_STREAM, 0);</span><br><span class="line">    if (_socketFD == -1) &#123;</span><br><span class="line">        [self closeWithError:[self otherError:@&quot;socket error&quot;]];</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    /* 2.向服务器发送socket连接请求 */</span><br><span class="line">    struct sockaddr_in connectAddr;</span><br><span class="line">    unsigned long ulIPV4 = [self DnsToIP:[host UTF8String]];</span><br><span class="line">    connectAddr.sin_family       = PF_INET;</span><br><span class="line">    connectAddr.sin_port         = htons(port);</span><br><span class="line">    connectAddr.sin_addr.s_addr  = (in_addr_t)(ulIPV4);</span><br><span class="line">    memset(&amp;(connectAddr.sin_zero),&#x27;\0&#x27;,8);</span><br><span class="line">    // 连接（0 连接成功，-1 连接失败）</span><br><span class="line">    int result = connect(_socketFD, (struct sockaddr*)&amp;connectAddr, sizeof(connectAddr));</span><br><span class="line">    if (result == 0) &#123; // 连接成功</span><br><span class="line">        [self didConnect];</span><br><span class="line">    &#125; else &#123; // 连接失败</span><br><span class="line">        [self closeWithError:[self otherError:@&quot;connect error&quot;]];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 域名转ip地址</span><br><span class="line">- (unsigned long)DnsToIP:(const char *)pszDomainName&#123;</span><br><span class="line">    unsigned long dwIP = 0;</span><br><span class="line">    int nAdapter = 0;</span><br><span class="line">    struct sockaddr_in sAddr;</span><br><span class="line">    unsigned long  dwError = -1;</span><br><span class="line"></span><br><span class="line">    dwIP = inet_addr(pszDomainName);</span><br><span class="line">    if( dwIP!=INADDR_NONE &amp;&amp; dwIP!=INADDR_ANY )</span><br><span class="line">    &#123;</span><br><span class="line">        return dwIP;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    struct hostent *pHostEnt = gethostbyname(pszDomainName);</span><br><span class="line">    if( pHostEnt!=NULL )</span><br><span class="line">    &#123;</span><br><span class="line">        while (pHostEnt-&gt;h_addr_list[nAdapter] )</span><br><span class="line">        &#123;</span><br><span class="line">            memcpy(&amp;sAddr.sin_addr.s_addr, pHostEnt-&gt;h_addr_list[nAdapter], pHostEnt-&gt;h_length);</span><br><span class="line">            dwIP = sAddr.sin_addr.s_addr;</span><br><span class="line">            nAdapter++;</span><br><span class="line">            return dwIP;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    struct addrinfo* pstAddrInfo = NULL;</span><br><span class="line">    struct addrinfo* ptr = NULL;</span><br><span class="line">    struct addrinfo stHints ;</span><br><span class="line">    memset(&amp;stHints, 0, sizeof(stHints));</span><br><span class="line"></span><br><span class="line">    stHints.ai_family = AF_INET;</span><br><span class="line">    stHints.ai_socktype = SOCK_STREAM;</span><br><span class="line">    stHints.ai_protocol = IPPROTO_TCP;</span><br><span class="line">    getaddrinfo(pszDomainName, NULL, &amp;stHints, &amp;pstAddrInfo);</span><br><span class="line">    dwError = 0;</span><br><span class="line">    if (0 == dwError)</span><br><span class="line">    &#123;</span><br><span class="line">        for (ptr = pstAddrInfo; ptr != NULL ;ptr = ptr-&gt;ai_next)</span><br><span class="line">        &#123;</span><br><span class="line">            if (AF_INET == ptr-&gt;ai_family &amp;&amp; SOCK_STREAM == ptr-&gt;ai_socktype &amp;&amp; IPPROTO_TCP == ptr-&gt;ai_protocol)</span><br><span class="line">            &#123;</span><br><span class="line">                struct sockaddr_in *pstAddr_in = (struct sockaddr_in *)ptr-&gt;ai_addr;</span><br><span class="line">                dwIP = pstAddr_in-&gt;sin_addr.s_addr;</span><br><span class="line">                dwError = 0;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    freeaddrinfo(pstAddrInfo);</span><br><span class="line"></span><br><span class="line">    if (dwError == 0) &#123;</span><br><span class="line">        return dwIP;</span><br><span class="line">    &#125;</span><br><span class="line">    return -1;</span><br><span class="line">&#125;</span><br><span class="line">// 已经连接</span><br><span class="line">- (void)didConnect &#123;</span><br><span class="line">    if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didConnectSocket:host:port:)]) &#123;</span><br><span class="line">        NSLog(@&quot;didSecure&quot;);</span><br><span class="line">        [_delegate didConnectSocket:self host:_host port:_port];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 显示证书</span><br><span class="line">- (void)showCert&#123;</span><br><span class="line">    X509 * cert;</span><br><span class="line">    char * line;</span><br><span class="line">    </span><br><span class="line">    cert = SSL_get_peer_certificate(m_ssl);</span><br><span class="line">    // 如果验证不通过，那么程序抛出异常终止连接</span><br><span class="line">    if (SSL_get_verify_result(m_ssl) == X509_V_OK) &#123;</span><br><span class="line">        NSLog(@&quot;证书验证通过\n&quot;);</span><br><span class="line">        if (cert != NULL) &#123;</span><br><span class="line">            NSLog(@&quot;数字证书信息:\n&quot;);</span><br><span class="line">            line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);</span><br><span class="line">            NSLog(@&quot;证书:%s\n&quot;,line);</span><br><span class="line">            free(line);</span><br><span class="line">            </span><br><span class="line">            // 颁发者</span><br><span class="line">            line = X509_NAME_oneline(X509_get_issuer_name(cert), 0, 0);</span><br><span class="line">            NSLog(@&quot;颁发者:%s\n&quot;,line);</span><br><span class="line">            free(line);</span><br><span class="line">            </span><br><span class="line">            // 释放</span><br><span class="line">            X509_free(cert);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            NSLog(@&quot;无证书信息!\n&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        NSLog(@&quot;证书验证不通过\n&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark -- STL/SSL 加密通信</span><br><span class="line">- (void)startSSL:(BOOL)beOneWay andSSLInfo:(JITSSLInfo *)sslInfo&#123;</span><br><span class="line">    if (!_delegate) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 1.SSL初始化</span><br><span class="line">    // SSL 库初始化</span><br><span class="line">    SSL_library_init();</span><br><span class="line">    // 载入所有 SSL 算法</span><br><span class="line">    OpenSSL_add_ssl_algorithms();</span><br><span class="line">    // 载入所有 SSL 错误消息</span><br><span class="line">    SSL_load_error_strings();</span><br><span class="line">    </span><br><span class="line">    /* 2.初始化SSL上下文环境(调用成功返回SSL_CTX结构体指针， 否则返回NULL)</span><br><span class="line">     a.SSL_METHOD:代表使用的协议</span><br><span class="line">     SSLv2_server_method()：V2标准</span><br><span class="line">     SSLv3_server_method()：V3标准</span><br><span class="line">     SSLv23_server_method(): V2和V3标准</span><br><span class="line">     CNTLS_client_method(): 国密标准</span><br><span class="line">     */</span><br><span class="line">    if (!m_ctx) &#123;</span><br><span class="line">        m_ctx = SSL_CTX_new((const SSL_METHOD *)CNTLS_client_method());</span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">    /* 3.设置SSL通信方式 */</span><br><span class="line">    G_beOneWay = beOneWay;</span><br><span class="line">    // 如果是 单向认证(只需要验证SSL服务器身份，不需要验证SSL客户端身份。)</span><br><span class="line">    if (G_beOneWay) &#123;</span><br><span class="line">        // 配置启不启用双向认证（SSL_VERIFY_NONE 不启用,SSL_VERIFY_PEER 启用）</span><br><span class="line">        SSL_CTX_set_verify(m_ctx, SSL_VERIFY_NONE, NULL);</span><br><span class="line">    &#125;</span><br><span class="line">    // 如果是 双向认证(要求服务器和客户端双方都有证书，客户端需要校验服务端，服务端也需要校验客户端。)</span><br><span class="line">    else &#123;</span><br><span class="line">        if (!sslInfo || !sslInfo.privCertInfo || !sslInfo.caInfo) &#123;</span><br><span class="line">            if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didSecure:error:)]) &#123;</span><br><span class="line">                [_delegate didSecure:self</span><br><span class="line">                               error:[self sslError:@&quot;sslInfo is null&quot;]];</span><br><span class="line">            &#125;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        /* 如果传输被阻塞，永远不要用重试来打扰应用程序:</span><br><span class="line">           SSL_CTX_set_mode(ctx, SSL_MODE_AUTO_RETRY);</span><br><span class="line">         */</span><br><span class="line"></span><br><span class="line">        /* 4.设置信任根证书，加载CA证书 */</span><br><span class="line">        NSArray *caArray = sslInfo.caInfo;</span><br><span class="line">        for (NSString *path in caArray) &#123;</span><br><span class="line">            if (!path) &#123;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">            NSLog(@&quot;SSL_CTX_load_verify_locations start!&quot;);</span><br><span class="line"></span><br><span class="line">            // SSL_CTX_load_verify_locations:加载信任的根证书</span><br><span class="line">            if (!SSL_CTX_load_verify_locations(m_ctx, (const char *)[path UTF8String], NULL))&#123;</span><br><span class="line">                NSLog(@&quot;SSL_CTX_load_verify_locations error!&quot;);</span><br><span class="line">                ERR_print_errors_fp(stderr);</span><br><span class="line">                if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didSecure:error:)]) &#123;</span><br><span class="line">                    [_delegate didSecure:self</span><br><span class="line">                                   error:[self sslError:@&quot;SSL_CTX_load_verify_locations Error&quot;]];</span><br><span class="line">                &#125;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            NSLog(@&quot;SSL_CTX_load_verify_locations ok!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        JITPrivCertInfo *privCertInfo = sslInfo.privCertInfo;</span><br><span class="line"></span><br><span class="line">        /* 5.加载自己的 证书 */</span><br><span class="line">        if (privCertInfo.signCertPath) &#123;</span><br><span class="line">            NSString *strUserCertPath = privCertInfo.signCertPath;</span><br><span class="line">            NSLog(@&quot;SSL_CTX_use_Key_sign_cert start!&quot;);</span><br><span class="line">            if (SSL_CTX_use_certificate_file(m_ctx, (const char *)[strUserCertPath UTF8String], SSL_FILETYPE_PEM) &lt;= 0)&#123;</span><br><span class="line">                NSLog(@&quot;SSL_CTX_use_Key_sign_cert error!&quot;);</span><br><span class="line">                ERR_print_errors_fp(stderr);</span><br><span class="line">                if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didSecure:error:)]) &#123;</span><br><span class="line">                    [_delegate didSecure:self</span><br><span class="line">                                   error:[self sslError:@&quot;SSL_CTX_use_Key_sign_cert Error&quot;]];</span><br><span class="line">                &#125;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            NSLog(@&quot;SSL_CTX_use_Key_sign_cert ok!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        /* 6.加载自己的 私钥 */</span><br><span class="line">        if (privCertInfo.signPrivPath) &#123;</span><br><span class="line">            NSString *strUserKeyPath = privCertInfo.signPrivPath;</span><br><span class="line">            NSLog(@&quot;SSL_CTX_use_Key_sign_key start!&quot;);</span><br><span class="line">            if (SSL_CTX_use_PrivateKey_file(m_ctx, (const char *)[strUserKeyPath UTF8String], SSL_FILETYPE_PEM) &lt;= 0)&#123;</span><br><span class="line">                NSLog(@&quot;SSL_CTX_use_Key_sign_key error!&quot;);</span><br><span class="line">                ERR_print_errors_fp(stderr);</span><br><span class="line">                if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didSecure:error:)]) &#123;</span><br><span class="line">                    [_delegate didSecure:self</span><br><span class="line">                                   error:[self sslError:@&quot;SSL_CTX_use_Key_sign_key Error&quot;]];</span><br><span class="line">                &#125;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            NSLog(@&quot;SSL_CTX_use_Key_sign_key ok!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        /* 7.加载自己 加密证书 */</span><br><span class="line">        if (privCertInfo.encCertPath) &#123;</span><br><span class="line">            NSString *strUserCertPath = privCertInfo.encCertPath;</span><br><span class="line">            NSLog(@&quot;SSL_CTX_use_Key_enc_cert start!&quot;);</span><br><span class="line">            if (SSL_CTX_use_enc_certificate_file(m_ctx, (const char *)[strUserCertPath UTF8String], SSL_FILETYPE_PEM) &lt;= 0)&#123;</span><br><span class="line">                NSLog(@&quot;SSL_CTX_use_Key_enc_cert error!&quot;);</span><br><span class="line">                ERR_print_errors_fp(stderr);</span><br><span class="line">                if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didSecure:error:)]) &#123;</span><br><span class="line">                    [_delegate didSecure:self</span><br><span class="line">                                   error:[self sslError:@&quot;SSL_CTX_use_Key_enc_cert Error&quot;]];</span><br><span class="line">                &#125;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            NSLog(@&quot;SSL_CTX_use_Key_enc_cert ok!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        /* 8.加载自己的 加密证书私钥 */</span><br><span class="line">        if (privCertInfo.encPrivPath) &#123;</span><br><span class="line">            NSString *strUserKeyPath = privCertInfo.encPrivPath;</span><br><span class="line">            NSLog(@&quot;SSL_CTX_use_Key_enc_key start!&quot;);</span><br><span class="line">            if (SSL_CTX_use_enc_PrivateKey_file(m_ctx, (const char *)[strUserKeyPath UTF8String], SSL_FILETYPE_PEM) &lt;= 0)&#123;</span><br><span class="line">                NSLog(@&quot;SSL_CTX_use_Key_enc_key error!&quot;);</span><br><span class="line">                ERR_print_errors_fp(stderr);</span><br><span class="line">                if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didSecure:error:)]) &#123;</span><br><span class="line">                    [_delegate didSecure:self</span><br><span class="line">                                   error:[self sslError:@&quot;SSL_CTX_use_Key_enc_key Error&quot;]];</span><br><span class="line">                &#125;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">            NSLog(@&quot;SSL_CTX_use_Key_enc_key ok!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        /*</span><br><span class="line">         9.客户端验证 证书和私钥 是否一致(成功返回1)</span><br><span class="line">         验证导致握手失败?</span><br><span class="line">         */</span><br><span class="line">        NSLog(@&quot;SSL_CTX_check_private_key start!&quot;);</span><br><span class="line">        if (SSL_CTX_check_private_key(m_ctx) != 1) &#123;</span><br><span class="line">            ERR_print_errors_fp(stderr);</span><br><span class="line">            NSLog(@&quot;SSL_CTX_use_Key_sign_key error!&quot;);</span><br><span class="line">            if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didSecure:error:)]) &#123;</span><br><span class="line">                    [_delegate didSecure:self error:[self sslError:@&quot;SSL_CTX_check_private_key Error&quot;]];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        NSLog(@&quot;SSL_CTX_check_private_key ok!&quot;);</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        /* 10.检查用户私钥是否正确</span><br><span class="line">         真正进行验证，一定要调用这个函数不然前面四个光配置而已并不会进行双向验证）</span><br><span class="line">         */</span><br><span class="line">        NSLog(@&quot;SSL_CTX_check_private_key start!&quot;);</span><br><span class="line">        if (!SSL_CTX_check_private_key(m_ctx))</span><br><span class="line">        &#123;</span><br><span class="line">           NSLog(@&quot;SSL_CTX_check_private_key error!&quot;);</span><br><span class="line">           ERR_print_errors_fp(stderr);</span><br><span class="line">           if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didSecure:error:)]) &#123;</span><br><span class="line">               [_delegate didSecure:self</span><br><span class="line">                              error:[self sslError:@&quot;SSL_CTX_check_private_key Error&quot;]];</span><br><span class="line">           &#125;</span><br><span class="line">           return;</span><br><span class="line">        &#125;</span><br><span class="line">        NSLog(@&quot;SSL_CTX_check_private_key ok!&quot;);</span><br><span class="line"></span><br><span class="line">        // 11.初始化SSL安全通信的对象(为一个新SSL链接建立SSL*结构体变量。)</span><br><span class="line">        if (!m_ssl) &#123;</span><br><span class="line">            m_ssl = SSL_new(m_ctx);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        // 12.将SSL对象和文件描述符关联起来</span><br><span class="line">        int result = SSL_set_fd(m_ssl, _socketFD);</span><br><span class="line">        if (result == -1) &#123;</span><br><span class="line">            if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didSecure:error:)]) &#123;</span><br><span class="line">                [_delegate didSecure:self error:[self sslError:@&quot;SSL_set_fd Error&quot;]];</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        /*</span><br><span class="line">         13.SSL_CTX_set_verify:配置启用双向认证</span><br><span class="line">         1、SSL_VERIFY_PEER:要求对证书进行认证，表示需要验证服务器端，没有证书也会放行，若不需要验证则使用  SSL_VERIFY_NONE</span><br><span class="line">         2、SSL_VERIFY_FAIL_IF_NO_PEER_CERT:要求客户端需要提供证书，但验证发现单独使用没有证书也会放行</span><br><span class="line">         */</span><br><span class="line">        SSL_CTX_set_verify(m_ctx, SSL_VERIFY_PEER, NULL);</span><br><span class="line">        SSL_set_verify(m_ssl, SSL_VERIFY_PEER, NULL);</span><br><span class="line">        </span><br><span class="line">        /* 14.设置加密套件 */</span><br><span class="line">        if (sslInfo.ciperSuite == 0) &#123;</span><br><span class="line">            SSL_set_cipher_list(m_ssl,&quot;ECC-SM4-SM3&quot;);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            SSL_set_cipher_list(m_ssl,&quot;ECDHE-SM4-SM3&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    /* 15.SSL握手 */</span><br><span class="line">    [self sslHandshake];</span><br><span class="line">&#125;</span><br><span class="line">// SSL握手</span><br><span class="line">- (void)sslHandshake &#123;</span><br><span class="line">    </span><br><span class="line">    int ret = 0;</span><br><span class="line">    // 初始化SSL协商处理</span><br><span class="line">    SSL_set_connect_state(m_ssl);</span><br><span class="line">    while (1)&#123;</span><br><span class="line">        // 实现握手</span><br><span class="line">        ret = SSL_do_handshake(m_ssl);</span><br><span class="line">        if (ret &gt; 0) &#123;</span><br><span class="line">            break;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            ERR_print_errors_fp(stderr);</span><br><span class="line">            // SSL_get_error:获取错误码</span><br><span class="line">            if (SSL_get_error(m_ssl, ret) == SSL_ERROR_WANT_HSM_RESULT) &#123;</span><br><span class="line">                continue;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                NSLog(@&quot;error of ssl do handshake&quot;);</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    // 握手失败</span><br><span class="line">    if(ret &lt;= 0) &#123;</span><br><span class="line">        NSLog(@&quot;handshake failed&quot;);</span><br><span class="line">        if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didSecure:error:)]) &#123;</span><br><span class="line">            [_delegate didSecure:self</span><br><span class="line">                           error:[self sslError:@&quot;handshake failed&quot;]];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    // 握手成功</span><br><span class="line">    else &#123;</span><br><span class="line">        NSLog(@&quot;ssl connect ok&quot;);</span><br><span class="line">        // 握手成功的回调</span><br><span class="line">        [self didSSLHandshake];</span><br><span class="line">        </span><br><span class="line">        // 显示证书</span><br><span class="line">        [self showCert];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 关闭连接</span><br><span class="line">- (void)disconnect&#123;</span><br><span class="line">    if(_socketFD &gt; 0)&#123;</span><br><span class="line">        close(_socketFD);</span><br><span class="line">        _socketFD = 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if(m_ssl != NULL)&#123;</span><br><span class="line">        SSL_shutdown(m_ssl);</span><br><span class="line">        SSL_free(m_ssl);</span><br><span class="line">        m_ssl = NULL;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (m_ctx != NULL) &#123;</span><br><span class="line">        SSL_CTX_free(m_ctx);</span><br><span class="line">        m_ctx = NULL;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 已经SSL握手</span><br><span class="line">- (void)didSSLHandshake &#123;</span><br><span class="line">    _isSecure = YES;</span><br><span class="line">    NSError * error = nil;</span><br><span class="line">    if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didSecure:error:)]) &#123;</span><br><span class="line">        [_delegate didSecure:self error:error];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark -- 向网关写数据</span><br><span class="line">- (int)writeData:(char *)buff andLen:(int)len andTimeOut:(int)timeout&#123;</span><br><span class="line">    int ret = -100;</span><br><span class="line">    </span><br><span class="line">    if (!buff || !len) &#123;</span><br><span class="line">        [self didWriteOrReadError:[self wOrRError:@&quot;parameter error&quot;]];</span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    struct timeval sendtimeout = &#123;0,0&#125;;</span><br><span class="line">    if (timeout &gt; 0) &#123;</span><br><span class="line">        sendtimeout.tv_sec = timeout/1000;</span><br><span class="line">        sendtimeout.tv_usec=(timeout%1000)*1000;</span><br><span class="line">        setsockopt(_socketFD,</span><br><span class="line">                   SOL_SOCKET,</span><br><span class="line">                   SO_SNDTIMEO,</span><br><span class="line">                   (const void *)(&amp;sendtimeout),</span><br><span class="line">                   sizeof(struct timeval));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (m_ssl) &#123;</span><br><span class="line">        ret = SSL_write(m_ssl, (const void *)buff, len);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        ret = (int)send(_socketFD, buff, (size_t)len, 0);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (ret &gt; 0) &#123;</span><br><span class="line">        [self _didWrite];</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        [self didWriteOrReadError:[self wOrRError:@&quot;write failed&quot;]];</span><br><span class="line">    &#125;</span><br><span class="line">    return ret;</span><br><span class="line">&#125;</span><br><span class="line">// 写成功的代理回调</span><br><span class="line">- (void)_didWrite &#123;</span><br><span class="line">    if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didWriteData:)]) &#123;</span><br><span class="line">        [_delegate didWriteData:self];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 从网关读数据</span><br><span class="line">- (int)readData:(char *)buff andLen:(int)len andTimeOut:(int)timeout&#123;</span><br><span class="line">    int ret = -100;</span><br><span class="line">    </span><br><span class="line">    if (!buff || !len) &#123;</span><br><span class="line">        [self didWriteOrReadError:[self wOrRError:@&quot;parameter error&quot;]];</span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 设置超时时间</span><br><span class="line">    struct timeval receiveTimeout = &#123;0,0&#125;;</span><br><span class="line">    if (timeout &gt; 0) &#123;</span><br><span class="line">        receiveTimeout.tv_sec = timeout/1000;</span><br><span class="line">        receiveTimeout.tv_usec=(timeout%1000)*1000;</span><br><span class="line">        setsockopt(_socketFD,</span><br><span class="line">                   SOL_SOCKET,</span><br><span class="line">                   SO_RCVTIMEO,</span><br><span class="line">                   (const void *)(&amp;receiveTimeout),</span><br><span class="line">                   sizeof(struct timeval));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (m_ssl) &#123;</span><br><span class="line">        ret = SSL_read(m_ssl, buff, len);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        ret = (int)recv(_socketFD, buff, len, 0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (ret == -1) &#123;</span><br><span class="line">        NSString *strErr = [NSString stringWithFormat:@&quot;read failed, ssl code = [%d]&quot;, SSL_get_error(m_ssl, ret)];</span><br><span class="line">        [self didWriteOrReadError:[self wOrRError:strErr]];</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        int err = SSL_get_error(m_ssl, ret);</span><br><span class="line">        NSLog(@&quot;err:%d&quot;,err);</span><br><span class="line">        /*</span><br><span class="line">         ret:0 表示被关闭了 ret:大于0 表示接收到数据</span><br><span class="line">         */</span><br><span class="line">        NSData *data = [NSData dataWithBytes:buff length:ret];</span><br><span class="line">        [self _didRead:data];</span><br><span class="line">    &#125;</span><br><span class="line">    return ret;</span><br><span class="line">&#125;</span><br><span class="line">// 从网关读数据成功的代理回调</span><br><span class="line">- (void)_didRead:(NSData *)data &#123;</span><br><span class="line">    if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didReadSocket:data:)]) &#123;</span><br><span class="line">        [_delegate didReadSocket:self data:data];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 读/写错误的代理回调</span><br><span class="line">- (void)didWriteOrReadError:(NSError *)error &#123;</span><br><span class="line">    if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didWriteOrRead:error:)]) &#123;</span><br><span class="line">        [_delegate didWriteOrRead:self error:error];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark -- 关闭socket连接</span><br><span class="line">- (void)closeWithError:(NSError *)error &#123;</span><br><span class="line">    close(_socketFD);</span><br><span class="line">    _socketFD = -1;</span><br><span class="line">    </span><br><span class="line">    if (_delegate &amp;&amp; [_delegate respondsToSelector:@selector(didDisconnectSocket:error:)]) &#123;</span><br><span class="line">        [_delegate didDisconnectSocket:self error:error];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#pragma mark -- Error</span><br><span class="line">- (NSError *)otherError:(NSString *)errMsg &#123;</span><br><span class="line">    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg</span><br><span class="line">                                                         forKey:NSLocalizedDescriptionKey];</span><br><span class="line">    return [NSError errorWithDomain:@&quot;SocketErrorDomain&quot; code:5 userInfo:userInfo];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (NSError *)wOrRError:(NSString *)errMsg &#123;</span><br><span class="line">    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg</span><br><span class="line">                                                         forKey:NSLocalizedDescriptionKey];</span><br><span class="line">    return [NSError errorWithDomain:@&quot;SSLWriteOrReadErrorDomain&quot; code:6 userInfo:userInfo];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (NSError *)sslError:(NSString *)errMsg &#123;</span><br><span class="line">    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg</span><br><span class="line">                                                         forKey:NSLocalizedDescriptionKey];</span><br><span class="line">    return [NSError errorWithDomain:@&quot;SSLErrorDomain&quot; code:7 userInfo:userInfo];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation JITSSLInfo</span><br><span class="line"></span><br><span class="line">- (instancetype)init</span><br><span class="line">&#123;</span><br><span class="line">    self = [super init];</span><br><span class="line">    if (self) &#123;</span><br><span class="line">        _ciperSuite = 0;</span><br><span class="line">        _caInfo = @[];</span><br><span class="line">        _privCertInfo = [[JITPrivCertInfo alloc] init];</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation JITPrivCertInfo</span><br><span class="line"></span><br><span class="line">- (instancetype)init</span><br><span class="line">&#123;</span><br><span class="line">    self = [super init];</span><br><span class="line">    if (self) &#123;</span><br><span class="line">        _signCertPath = nil;</span><br><span class="line">        _signPrivPath = nil;</span><br><span class="line">        _encCertPath = nil;</span><br><span class="line">        _encPrivPath = nil;</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>GmsslManager.h</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  GmsslManager.h</span><br><span class="line">//  JiAnBaoStandard</span><br><span class="line">//</span><br><span class="line">//  Created by Mac on 2023/7/31.</span><br><span class="line">//  Copyright © 2023 JITPlatform. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">NS_ASSUME_NONNULL_BEGIN</span><br><span class="line"></span><br><span class="line">@interface GmsslManager : NSObject</span><br><span class="line">// 读取数据成功的block回调</span><br><span class="line">@property (nonatomic,copy)void(^readDataSuccessBlock)(NSData * data);</span><br><span class="line"></span><br><span class="line">// 单例</span><br><span class="line">+ (instancetype)sharedManager;</span><br><span class="line"></span><br><span class="line">// 连接国密</span><br><span class="line">- (void)connectGmsslWithData:(NSData *)data;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">NS_ASSUME_NONNULL_END</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<ol start="4">
+<li>GmsslManager.m</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  GmsslManager.m</span><br><span class="line">//  JiAnBaoStandard</span><br><span class="line">//</span><br><span class="line">//  Created by Mac on 2023/7/31.</span><br><span class="line">//  Copyright © 2023 JITPlatform. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &quot;GmsslManager.h&quot;</span><br><span class="line">#import &quot;JITGMSocket.h&quot;</span><br><span class="line"></span><br><span class="line">@interface GmsslManager ()&lt;JITSocketDelegate&gt;</span><br><span class="line">// 国密socket</span><br><span class="line">@property (nonatomic,strong)JITGMSocket * gmSocket;</span><br><span class="line">// 当前要发送的数据</span><br><span class="line">@property (nonatomic,strong)NSData * currentSendData;</span><br><span class="line">@end</span><br><span class="line">@implementation GmsslManager</span><br><span class="line">// 单例</span><br><span class="line">+ (instancetype)sharedManager&#123;</span><br><span class="line">    static GmsslManager * manager = nil;</span><br><span class="line">    static dispatch_once_t onceToken;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        manager = [[self alloc] init];</span><br><span class="line">    &#125;);</span><br><span class="line">    return manager;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 连接国密</span><br><span class="line">- (void)connectGmsslWithData:(NSData *)data&#123;</span><br><span class="line">    // 获取缓存网关地址</span><br><span class="line">    NSString * gwAddr = [NSUserDefaults cacheGetObjectForKey:kGwAddress];</span><br><span class="line">    NSArray * arr = [gwAddr componentsSeparatedByString:@&quot;:&quot;];</span><br><span class="line">    NSString * ip = [arr objectAtIndex:0];</span><br><span class="line">    NSString * port = [arr objectAtIndex:1];</span><br><span class="line">    </span><br><span class="line">    // 赋值当前发送数据</span><br><span class="line">    self.currentSendData = data;</span><br><span class="line">    </span><br><span class="line">    // 初始化socket</span><br><span class="line">    self.gmSocket = [[JITGMSocket alloc] initWithDelegate:self];</span><br><span class="line">    </span><br><span class="line">    // 连接到网关服务器</span><br><span class="line">    [self.gmSocket connectToHost:ip onPort:[port intValue]];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 国密双向认证</span><br><span class="line">- (void)startSSL&#123;</span><br><span class="line">    // 双向认证信息</span><br><span class="line">    JITSSLInfo * sslInfo = [[JITSSLInfo alloc] init];</span><br><span class="line">    // 加密套件 0:ECC-SM4-SM3 非0:ECDHE-SM4-SM3</span><br><span class="line">    sslInfo.ciperSuite = 0;</span><br><span class="line">    // 根证</span><br><span class="line">    sslInfo.caInfo = @[[self getCertPathWithFileName:@&quot;ca&quot;]];</span><br><span class="line">    // 证书信息</span><br><span class="line">    JITPrivCertInfo * certInfo = [[JITPrivCertInfo alloc] init];</span><br><span class="line">    // 签名证书</span><br><span class="line">    certInfo.signCertPath = [self getCertPathWithFileName:@&quot;cli.cert.sig&quot;];</span><br><span class="line">    // 签名私钥</span><br><span class="line">    certInfo.signPrivPath =  [self getCertPathWithFileName:@&quot;cli.key.sig&quot;];</span><br><span class="line">    // 加密证书</span><br><span class="line">    certInfo.encCertPath =  [self getCertPathWithFileName:@&quot;cli.cert.enc&quot;];</span><br><span class="line">    // 加密私钥</span><br><span class="line">    certInfo.encPrivPath =  [self getCertPathWithFileName:@&quot;cli.key.enc&quot;];</span><br><span class="line">    // 设置私证信息</span><br><span class="line">    sslInfo.privCertInfo = certInfo;</span><br><span class="line">    </span><br><span class="line">    // 开始双向认证(NO：双向 YES：单向)</span><br><span class="line">    [self.gmSocket startSSL:NO andSSLInfo:sslInfo];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 获取证书信息</span><br><span class="line">- (NSString *)getCertPathWithFileName:(NSString *)fileName&#123;</span><br><span class="line">    // 证书路径</span><br><span class="line">    NSString * certsPath = [[NSBundle mainBundle] pathForResource:fileName ofType:@&quot;pem&quot;];</span><br><span class="line">    </span><br><span class="line">//    // 打印证书内容</span><br><span class="line">//    NSError * error;</span><br><span class="line">//    NSString * contentInUTF8 = [NSString stringWithContentsOfFile:certsPath</span><br><span class="line">//                                                         encoding:NSUTF8StringEncoding</span><br><span class="line">//                                                            error:&amp;error];</span><br><span class="line">//    NSLog(@&quot;content:%@&quot;,contentInUTF8);</span><br><span class="line">    // 返回</span><br><span class="line">    return certsPath;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 国密socketDelegate</span><br><span class="line">// socket连接成功</span><br><span class="line">- (void)didConnectSocket:(JITGMSocket *)socket host:(NSString *)host port:(int)port &#123;</span><br><span class="line">    NSLog(@&quot;连接成功%@:%d 可以进行国密SSL认证&quot;,host,port);</span><br><span class="line">    // 开始SSL认证</span><br><span class="line">    [self startSSL];</span><br><span class="line">&#125;</span><br><span class="line">// socket连接失败</span><br><span class="line">- (void)didDisconnectSocket:(JITGMSocket *)socket error:(NSError *)error&#123;</span><br><span class="line">    NSLog(@&quot;连接失败, %@&quot;,error);</span><br><span class="line">&#125;</span><br><span class="line">// 已经写/读数据</span><br><span class="line">- (void)didWriteOrRead:(JITGMSocket *)socket error:(NSError *)error &#123;</span><br><span class="line">    NSLog(@&quot;已经写或读&quot;);</span><br><span class="line">&#125;</span><br><span class="line">// 已经写数据</span><br><span class="line">- (void)didWriteData:(nonnull JITGMSocket *)socket &#123;</span><br><span class="line">    NSLog(@&quot;已经写数据&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 已经读取到socket返回的数据</span><br><span class="line">- (void)didReadSocket:(JITGMSocket *)socket data:(NSData *)data&#123;</span><br><span class="line">    if (data.length &gt; 0) &#123;</span><br><span class="line">        if (self.readDataSuccessBlock) &#123;</span><br><span class="line">            self.readDataSuccessBlock(data);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - SSL握手结果</span><br><span class="line">- (void)didSecure:(JITGMSocket *)socket error:(NSError *)error &#123;</span><br><span class="line">    if (error) &#123;</span><br><span class="line">        NSLog(@&quot;握手失败, error:%@&quot;,error.localizedDescription);</span><br><span class="line">    &#125;else &#123;</span><br><span class="line">        NSLog(@&quot;握手成功&quot;);</span><br><span class="line">        // 写数据（unicode编码，是一个字符 \U00000005\U00000001\X90）</span><br><span class="line">        char * write_buff = (char *)[self.currentSendData bytes];</span><br><span class="line">        // 长度计算不对会导致读取不到想要的结果(3 而不是 8)</span><br><span class="line">        NSInteger write_len = self.currentSendData.length;</span><br><span class="line">        int write_result = [socket writeData:write_buff andLen:(int)write_len andTimeOut:5];</span><br><span class="line">        NSLog(@&quot;write_result:%d&quot;,write_result);</span><br><span class="line">        </span><br><span class="line">        // 读取数据（\U00000005\X90）</span><br><span class="line">        char read_buff[1024] = &#123;0&#125;;</span><br><span class="line">        int read_len = sizeof(read_buff);</span><br><span class="line">        int read_result = [socket readData:read_buff andLen:read_len andTimeOut:10];</span><br><span class="line">        NSLog(@&quot;read_result:%d&quot;,read_result);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - dealloc</span><br><span class="line">- (void)dealloc&#123;</span><br><span class="line">    NSLog(@&quot;%s&quot;,__func__);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC网络学习25：OpenSSL探索</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-08-03 16:34:02</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/08/03/OC网络/OC网络学习25：OpenSSL探索/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/">#OC-网络学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/08/09/OC%E7%BD%91%E7%BB%9C/OC%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A026%EF%BC%9A%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81ASCII%E3%80%81Unicode%E3%80%81UTF-8%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC网络学习26：字符编码ASCII、Unicode、UTF-8探索</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/08/02/MacOS/MacOS%E5%AD%A6%E4%B9%A003%EF%BC%9AiOS%E3%80%81MacOS%E8%BD%AF%E4%BB%B6%E6%96%87%E4%BB%B6%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">MacOS学习03：iOS、MacOS软件文件探索</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC网络学习25：OpenSSL探索</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Openssl-%E4%B9%8B-SSL"><span class="nav-text">Openssl 之 SSL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SSL%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B"><span class="nav-text">SSL开发流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E6%8E%A5%E5%8F%A3%EF%BC%9A"><span class="nav-text">主要接口：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E4%B8%BE%E4%BE%8B"><span class="nav-text">使用举例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8%E5%B0%81%E8%A3%85"><span class="nav-text">实际项目中的应用封装</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

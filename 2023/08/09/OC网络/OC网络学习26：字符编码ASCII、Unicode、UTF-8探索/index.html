@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/08/09/oc网络/oc网络学习26：字符编码ascii、unicode、utf-8探索/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC网络学习26：字符编码ASCII、Unicode、UTF-8探索">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/08/09/OC网络/OC网络学习26：字符编码ASCII、Unicode、UTF-8探索/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC网络学习26：字符编码ASCII、Unicode、UTF-8探索">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC网络学习26：字符编码ASCII、Unicode、UTF-8探索 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC网络学习26：字符编码ASCII、Unicode、UTF-8探索</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-08-09 08:39:53</span>
+        <span class="mobile">2023-08-09 08:39</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-08-09 09:54:01</span>
+            <span class="mobile">2023-08-09 09:54</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/">OC-网络学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="编码历史"><a href="#编码历史" class="headerlink" title="编码历史"></a>编码历史</h1><p>最早只有 <code>128</code> 个字符被编码到计算机里，也就是 <code>大小写英文字母、数字和一些符号</code>，这个编码表被称为 <code>ASCII</code> 编码。例如：大写字母A的编码是65，小写字母z的编码是122。</p>
+<p>但是要处理中文显然1个字节是不够的，至少需要2个字节，而且还不能和ASCII编码冲突，所以，中国制定了 <code>GB2312</code> 编码，用来把 <code>中文</code> 编进去，随着发展，又发现了一些局限，所以就有了 <code>GBK</code>，再继续往后增加了一些字符（如少数名族字体），GBK扩成了 <code>GB18030</code>。。你可以想得到的是，全世界有上百种语言，日本把日文编到Shift_JIS里，韩国把韩文编到Euc-kr里，各国有各国的标准，就会不可避免地出现冲突，结果就是，在多语言混合的文本中，显示出来会有乱码。</p>
+<p>因此，<code>Unicode</code> 应运而生。<code>Unicode</code> 把所有语言都统一到 <code>一套编码</code> 里，这样就不会再有乱码问题了。</p>
+<p>Unicode标准也在不断发展，但最常用的是用2个字节表示1个字符（如果要用到非常偏僻的字符，就需要4个字节）。现代操作系统和大多数编程语言都直接支持Unicode。</p>
+<p>新的问题又出现了：如果统一成Unicode编码，乱码问题从此消失了。但是，如果你写的文本基本上全部是英文的话，用Unicode编码比ASCII编码需要多一倍的存储空间，在存储和传输上就得不偿失。</p>
+<p>所以，本着节约的精神，又出现了把Unicode编码转化为 <code>可变长度编码的UTF-8编码</code>。<code>UTF-8编码 把一个Unicode字符根据不同的数字大小编码成1-6个字节</code>，常用的 <code>英文字母</code> 被编码成 <code>1个字节</code>，<code>汉字</code> 通常是 <code>3个字节</code>，只有 <code>很生僻的字符才会被编码成4-6个字节</code>。如果你要传输的文本包含大量英文字符，用UTF-8编码就能节省空间。</p>
+<p><code>UTF-8编码</code> 有一个额外的好处，就是ASCII编码实际上可以被看成是UTF-8编码的一部分。所以，大量只支持ASCII编码的历史遗留软件可以在UTF-8编码下继续工作。</p>
+<h1 id="Charset"><a href="#Charset" class="headerlink" title="Charset"></a>Charset</h1><p>Charset（Character set）字符集：是对字符抽象表示的集合。包括世界上各种文字、符号和字符</p>
+<p><code>字符集</code> 只是一个规则集合的名字，对应到真实生活中，字符集就是对某种语言的称呼。例如：<code>汉语、英语、日语</code> 等</p>
+<h1 id="字符编码"><a href="#字符编码" class="headerlink" title="字符编码"></a>字符编码</h1><p>对于一个字符集来说，要正确编码一个字符需要三个元素：</p>
+<ol>
+<li>字库表（character repertoire）</li>
+</ol>
+<p>字库表：是一个相当于所有可读或者可显示字符的数据库。字库表决定了整个字符集能展现表示的所有字符范文</p>
+<ol start="2">
+<li>编码字符集（coded character set）</li>
+</ol>
+<p>编码字符集：即用一个编码值code point来表示一个字符在字库中的位置</p>
+<ol start="3">
+<li>字符编码（character encoing）</li>
+</ol>
+<p>字符编码：将编码字符集和实际存储数值之间的转换关系</p>
+<h1 id="ASCII"><a href="#ASCII" class="headerlink" title="ASCII"></a>ASCII</h1><p>ASCII：American Standard Code for Information Interchange，美国信息互换标准代码。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">英文：1个英文字母（不分大小写）占1个字节空间</span><br><span class="line"></span><br><span class="line">中文：1个中文汉字占2个字节空间</span><br></pre></td></tr></table></figure></div>
+
+<p><code>ASCII</code> 只有 <code>128</code> 个字符，<code>表示英文字母的大小写、数字和一些符号</code>，但由于其他语言用 <code>ASCII</code> 编码表示字节不够。例如：常用中文需要 <code>2</code> 个字节，且不能和ASCII冲突，中国制定了 <code>GB2312</code> 编码格式，相同的，其他国家的语言也有属于自己的编码格式。</p>
+<h1 id="Unicode"><a href="#Unicode" class="headerlink" title="Unicode"></a>Unicode</h1><p><code>Unicode</code>：<code>统一码</code>，它将世界各种语言里的每一个字符都定义了一个 <code>唯一的编码</code>。这意味着世界上所有的语言都可以使用它，而不会出现冲突。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">英文：1个英文字母占2个字节空间</span><br><span class="line">中文：1个中文汉字（含繁体）占2个字节空间</span><br><span class="line">符号：英文标点占1个字节，中文标点占2个字节。例如：英文句号 `.` 占1个字节，中文句号 。占2个字节</span><br></pre></td></tr></table></figure></div>
+
+<ol>
+<li>虽然Unicode编码了所有字符，但是在很多情况却不能直接使用它，为什么？</li>
+</ol>
+<p>因为在Unicode中有些字符占一个字节，如：英文字符，有些字符则占两个字节，如：常用汉字。但是当我解码一串中英字符混合的Unicode编码时，我是一次解码一个字节呢还是两个字节呢？UTF-8，UTF-16，UTF-32解决了这个问题。</p>
+<ol start="2">
+<li>转义字符，反斜杠 \</li>
+</ol>
+<ul>
+<li><p><code>\U</code> 后跟 <code>8位16进制数</code></p>
+</li>
+<li><p><code>\u</code> 后跟 <code>4位16进制数</code></p>
+</li>
+</ul>
+<h1 id="UTF"><a href="#UTF" class="headerlink" title="UTF"></a>UTF</h1><ol>
+<li>UTF-8</li>
+</ol>
+<p>UTF-8：(8-bit Unicode Transformation Format，Unicode转换格式)，它是一种Unicode编码的实现，即 <code>可变长度字符编码</code>。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">英文：1个英文字母占1个字节空间</span><br><span class="line">中文：1个中文汉字（含繁体）占3个字节空间</span><br></pre></td></tr></table></figure></div>
+
+<p>为了解决上述问题，又出现了 <code>把Unicode编码转化为可变长度编码UTF-8编码</code>，<code>UTF-8编码将Unicode字符按数字大小编码为1-6个字节，英文字母被编码成1个字节，常用汉字被编码成3个字节</code>，如果你编译的文本是纯英文的，那么用UTF-8就会非常节省空间，并且ASCII码也是UTF-8的一部分。</p>
+<ol start="2">
+<li>进一步理解</li>
+</ol>
+<p><code>UTF-8编码</code> 为 <code>变长编码</code>。最小编码单位（code unit）为一个字节。一个字节的前1-3个bit为描述性部分，后面为实际序号部分。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308090916608.png"
+                     
+                ></p>
+<ul>
+<li><p><code>0xxxxxxx</code>：如果是这样的格式，表示在 <code>UTF-8</code> 中这个 <code>字符</code> 用这 <code>一个字节</code> 即可表示，读取这一个字节即可解码成一个字符。因为第一位已经规定为 <code>0</code>，所以只有 <code>7</code> 位能用来放置Unicode编码。</p>
+</li>
+<li><p><code>110xxxxx 10xxxxxx</code>：如果是这样的格式，则表示在 <code>UTF-8</code> 种这个 <code>字符</code> 用 <code>两个字节</code> 可以表示，读取两个字节可以解码成一个字符。<code>110</code> 表示此字节为开头字节，<code>10</code> 表示此字节不是开头字节。因为第有5位已经固定，所以仅有11位可以用于存放Unicode编码。</p>
+</li>
+<li><p><code>1110xxxx 10xxxxxx 10xxxxxx</code>：如果一个字节以 <code>1110</code> 开头，那么代表当前 <code>字符</code> 为 <code>三字节字符</code>，占用3个字节的空间。<code>110</code> 之后的所有部分（5个bit）加上后两个字节的除 <code>10</code> 外的部分（12个bit）代表在Unicode中的序号。且第二、第三个字节以10开头。</p>
+</li>
+</ul>
+<p>来看一个UTF-8的例子：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308090920510.png"
+                     
+                ></p>
+<p>发现其中规律：</p>
+<ul>
+<li><p>1个字节的UTF-8十六进制编码是以比8小的数字开头的</p>
+</li>
+<li><p>2个字节的UTF-8十六进制编码是以C或D开头的</p>
+</li>
+<li><p>3个字节的UTF-8十六进制编码是以E开头的</p>
+</li>
+</ul>
+<h1 id="UTF-8、UTF-16和UTF-32区别"><a href="#UTF-8、UTF-16和UTF-32区别" class="headerlink" title="UTF-8、UTF-16和UTF-32区别"></a>UTF-8、UTF-16和UTF-32区别</h1><ul>
+<li><p><code>utf-32</code> 是采用每个字符 使用 <code>4个字节</code> 进行存储。</p>
+</li>
+<li><p><code>utf-16</code> 是采用每个字符 使用 <code>2或4个字节</code> 进行存储。</p>
+<ul>
+<li><p>U+0000 ~ U+FFFF：使用两个字节表示。</p>
+</li>
+<li><p>U+10000 ~ U+10FFFF：使用四个字节表示</p>
+</li>
+</ul>
+</li>
+<li><p>utf-8 比较特殊，它是 <code>变化的</code>，根据字符的长度来动态变化，来表示实现编码。</p>
+<ul>
+<li>utf-8 遇到纯英文，就用1个字节，8bit位变化来实现，</li>
+<li>utf-8 遇到中文，用2个字节，16bit位变化来实现。</li>
+<li>utf-8 遇到韩文，用3个字节，24bit位变化来实现。</li>
+</ul>
+</li>
+</ul>
+<h1 id="Unicode-和-UTF-8"><a href="#Unicode-和-UTF-8" class="headerlink" title="Unicode 和 UTF-8"></a>Unicode 和 UTF-8</h1><p><code>Unicode</code> 就是上文中提到的 <code>编码字符集</code>，而 <code>UTF-8就是字符编码</code>，即Unicode规则字库的一种实现形式。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308090915116.png"
+                     
+                ></p>
+<h1 id="三种编码之间的联系"><a href="#三种编码之间的联系" class="headerlink" title="三种编码之间的联系"></a>三种编码之间的联系</h1><p>在计算机系统通用的字符编码工作方式：</p>
+<ol>
+<li>在计算机内存中，统一使用Unicode编码，当需要保存到硬盘或者需要传输的时候，就转换成UTF-8编码</li>
+<li>用记事本编辑的时候，从文件读取的UTF-8字符被转换成Unicode字符到内存中，编辑完成后，保存的时候把Unicode转换为UTF-8保存到文件，如下图：</li>
+</ol>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202308090857948.png"
+                     
+                ></p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC网络学习26：字符编码ASCII、Unicode、UTF-8探索</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-08-09 08:39:53</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/08/09/OC网络/OC网络学习26：字符编码ASCII、Unicode、UTF-8探索/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/">#OC-网络学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/08/09/OC%E7%BD%91%E7%BB%9C/OC%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A027%EF%BC%9A%E5%86%85%E7%BD%91%E5%92%8C%E5%A4%96%E7%BD%91%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC网络学习27：内网和外网探索</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/08/03/OC%E7%BD%91%E7%BB%9C/OC%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A025%EF%BC%9AOpenSSL%E6%8E%A2%E7%B4%A2/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC网络学习25：OpenSSL探索</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC网络学习26：字符编码ASCII、Unicode、UTF-8探索</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%8E%86%E5%8F%B2"><span class="nav-text">编码历史</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Charset"><span class="nav-text">Charset</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81"><span class="nav-text">字符编码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ASCII"><span class="nav-text">ASCII</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Unicode"><span class="nav-text">Unicode</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UTF"><span class="nav-text">UTF</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UTF-8%E3%80%81UTF-16%E5%92%8CUTF-32%E5%8C%BA%E5%88%AB"><span class="nav-text">UTF-8、UTF-16和UTF-32区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Unicode-%E5%92%8C-UTF-8"><span class="nav-text">Unicode 和 UTF-8</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E7%A7%8D%E7%BC%96%E7%A0%81%E4%B9%8B%E9%97%B4%E7%9A%84%E8%81%94%E7%B3%BB"><span class="nav-text">三种编码之间的联系</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

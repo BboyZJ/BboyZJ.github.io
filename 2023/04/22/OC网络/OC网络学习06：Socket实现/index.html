@@ -278,8 +278,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="pc">2023-07-15 14:28:16</span>
-            <span class="mobile">2023-07-15 14:28</span>
+            <span class="pc">2023-08-09 17:23:42</span>
+            <span class="mobile">2023-08-09 17:23</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -325,8 +325,369 @@
             
 
             <div class="article-content markdown-body">
-                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文主要介绍使用 <code>GCDAsyncSocket</code> 实现iOS端 <code>Socket</code></p>
-<h1 id="什么是Socket？"><a href="#什么是Socket？" class="headerlink" title="什么是Socket？"></a>什么是Socket？</h1><p>Socket 俗称 <code>套接字</code>，是网络通信的基石。它可以通过 <code>IP地址、端口号、TCP/UDP协议</code> 实现客户端和服务端的双向通信。</p>
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><code>Socket</code> 起源于 <code>Unix</code>，而Unix基本哲学之一就是 <code>一切皆文件</code>，都可以用 <code>打开open –&gt; 读写write/read –&gt; 关闭close</code> 模式来操作。<code>Socket</code> 就是该模式的一个实现，网络的 <code>Socket</code> 数据传输是一种特殊的 <code>I/O</code>，<code>Socket</code> 也是一种 <code>文件描述符</code>。</p>
+<h1 id="什么是Socket？"><a href="#什么是Socket？" class="headerlink" title="什么是Socket？"></a>什么是Socket？</h1><p><code>Socket</code> 俗称 <code>套接字</code>，是网络通信的基石。它可以通过 <code>IP地址、端口号、TCP/UDP协议</code> 实现客户端和服务端的双向通信。</p>
+<h1 id="Socket-属性"><a href="#Socket-属性" class="headerlink" title="Socket 属性"></a>Socket 属性</h1><p>套接字的特性由3个属性确定，它们分别是：<code>域、类型和协议</code>。</p>
+<ul>
+<li><p>套接字的 <code>域</code>：它指定套接字通信中使用的网络介质，最常见的套接字域是 <code>AF_INET</code>，它指的是<code>Internet网络</code>。当客户使用套接字进行跨网络的连接时，它就需要用到服务器计算机的 <code>IP地址和端口</code> 来指定一台联网机器上的某个特定服务，所以在使用socket作为通信的终点，服务器应用程序必须在开始通信之前绑定一个端口，服务器在指定的端口等待客户的连接。另一个域 <code>AF_UNIX</code> 表示 <code>UNIX</code> 文件系统，它就是 <code>文件输入/输出</code>，而它的 <code>地址就是文件名</code>。</p>
+</li>
+<li><p>套接字 <code>类型</code>：因特网提供了两种通信机制：<code>流（stream）和数据报（datagram）</code>，因而套接字的类型也就分为 <code>流套接字</code> 和 <code>数据报套接字</code>。</p>
+</li>
+<li><p><code>流套接字</code> 由类型 <code>SOCK_STREAM</code> 指定，它们是在 <code>AF_INET</code> 域中通过 <code>TCP/IP</code> 连接实现，同时也是 <code>AF_UNIX</code> 中常用的套接字类型。流套接字提供的是一个 <code>有序、可靠、双向字节流</code> 的连接，因此发送的数据可以 <code>确保不会丢失、重复或乱序</code> 到达，而且它还有一定的 <code>出错后重新发送</code> 的机制。</p>
+</li>
+<li><p>与流套接字相对的是由类型 <code>SOCK_DGRAM</code> 指定的 <code>数据报套接字</code>，它 <code>不需要建立连接和维持一个连接</code>，它们在 <code>AF_INET</code> 中通常是通过 <code>UDP/IP</code> 协议实现的。它对可以发送的数据的长度有限制，数据报作为一个单独的网络消息被传输，它 <code>可能会丢失、复制或错乱到达</code>，UDP不是一个可靠的协议，但是它的速度比较高，因为它并非需要总是要建立和维持一个连接。</p>
+</li>
+<li><p>套接字 <code>协议</code>：只要底层的传输机制允许不止一个协议来提供要求的套接字类型，我们就可以为套接字选择一个特定的协议。通常只需要使用默认值。</p>
+</li>
+</ul>
+<h1 id="Socket-接口函数"><a href="#Socket-接口函数" class="headerlink" title="Socket 接口函数"></a>Socket 接口函数</h1><p>既然 <code>socket</code> 是 <code>open—&gt;write/read—&gt;close</code> 模式的一种实现，那么 <code>socket</code> 就提供了这些操作对应的函数接口。下面以 <code>TCP</code> 为例，介绍几个基本的socket接口函数。</p>
+<p>socket函数：使用给定的 <code>协议族、套接字类型、协议编号（默认为0）</code> 来创建套接字。</p>
+<p>socket函数对应于普通文件的打开操作。普通文件的打开操作返回一个文件描述字，而 <code>socket()</code> 用于创建一个 <code>socket描述符（socket descriptor）</code>，它唯一标识一个 <code>socket</code>。这个socket描述字跟文件描述字一样，后续的操作都有用到它，把它作为参数，通过它来进行一些读写操作。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int socket(int domain, int type, int protocol);</span><br></pre></td></tr></table></figure></div>
+
+<p>socket函数的三个参数分别为：</p>
+<ul>
+<li><p>domain：<code>协议域</code>。常用的协议族有 <code>AF_INET、AF_INET6</code> 等。协议族决定了socket的地址类型，在通信中必须采用对应的地址，如 <code>AF_INET</code> 决定了要用 <code>ipv4地址（32位的）与端口号（16位的）</code> 的组合。</p>
+</li>
+<li><p>type：<code>socket类型</code>。常用的socket类型有，<code>SOCK_STREAM、SOCK_DGRAM、SOCK_RAW、SOCK_PACKET、SOCK_SEQPACKET</code> 等等。</p>
+</li>
+<li><p>protocol：指定协议。常用的协议有，<code>IPPROTO_TCP、IPPTOTO_UDP</code> 等，它们分别对应 <code>TCP传输协议、UDP传输协议</code>。</p>
+</li>
+</ul>
+<p>注意：<code>type</code> 和 <code>protocol</code> 不可以随意组合的，如 <code>SOCK_STREAM</code> 不可以跟 <code>IPPROTO_UDP</code> 组合。当 <code>protocol</code> 为 <code>0</code> 时，会自动选择type类型对应的默认协议。</p>
+<p>我们调用socket创建一个socket后，返回的socket描述符存在于协议族空间中，但没有一个具体的地址。如果想要给它赋值一个地址，就必须调用 <code>bind()</code> 函数，否则就当调用 <code>connect()、listen()</code> 时系统会自动随机分配一个端口。</p>
+<h1 id="Socket原理"><a href="#Socket原理" class="headerlink" title="Socket原理"></a>Socket原理</h1><ol>
+<li>Socket原理</li>
+</ol>
+<p>1.1 概念</p>
+<p>套接字（Socket）是通信的基石，是支持 <code>TCP/IP</code> 或者 <code>UDP/IP</code> 协议的网络通信的基本操作单元／编程接口（如下图）。它是网络通信过程中端点的抽象表示，包含进行网络通信必须的五种信息：<code>连接使用的协议，本地主机的IP地址，本地进程的协议端口，远地主机的IP地址，远地进程的协议端口</code>。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202307261311044.png"
+                     
+                ></p>
+<p>1.2、给套接字赋予地址</p>
+<ul>
+<li><p>依照建立套接字的目的不同，赋予套接字地址的方式有两种：<code>服务端</code> 使用 <code>bind</code>，<code>客户端</code> 使用 <code>connect</code>。</p>
+</li>
+<li><p><code>bind</code> : 给服务器端中的套接字赋予通信的 <code>地址和端口</code>，IP和Port便可以区分一个 <code>TCP/IP</code> 链接通道，如果要区分特定的主机间链接，还需要提供Hostname。</p>
+</li>
+<li><p><code>connect</code> : 客户端向特定网络地址的服务器发送连接请求。</p>
+</li>
+</ul>
+<p>1.3、建立Socket连接</p>
+<ul>
+<li><p>建立Socket连接至少需要一对套接字，其中一个运行于客户端，称为 <code>ClientSocket</code>，另一个运行于服务器端，称为 <code>ServerSocket</code>。</p>
+</li>
+<li><p>套接字之间的连接过程分为三个步骤：服务器监听（bind、listen），客户端请求（connect），连接确认（accept）。</p>
+</li>
+</ul>
+<p>1.4 TCP连接</p>
+<p>创建Socket链接时，可以制定不同的传输层协议（TCP或UDP），当使用TCP协议进行链接时，该Socket链接便是TCP链接。</p>
+<ul>
+<li>TCP连接建立（三次握手）—-客户端执行connect触发</li>
+</ul>
+<p>（1）第一次握手：Client将标志位SYN置为1，随机产生一个值seq&#x3D;J，并将该数据包发送给Server，<br>Client进入 <code>SYN_SENT</code> 状态，等待Server确认。</p>
+<p>（2）第二次握手：Server收到数据包后由标志位SYN&#x3D;1知道Client请求建立连接，Server将标志位SYN和ACK都置为1，ack&#x3D;J+1，随机产生一个值seq&#x3D;K，并将该数据包发送给Client以确认连接请求，Server进入 <code>SYN_RCVD</code> 状态。</p>
+<p>（3）第三次握手：Client收到确认后，检查ack是否为J+1，ACK是否为1，如果正确则将标志位ACK置为1，ack&#x3D;K+1，并将该数据包发送给Server，Server检查ack是否为K+1，ACK是否为1，如果正确则连接建立成功，Client和Server进入 <code>ESTABLISHED</code> 状态，完成三次握手，随后Client与Server之间可以开始传输数据了。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202307261313306.png"
+                     
+                ></p>
+<ul>
+<li>TCP连接终止（四次挥手）—- 客户端或服务端执行close触发</li>
+</ul>
+<p>（1）第一次挥手：Client发送一个 <code>FIN</code>，用来关闭Client到Server的数据传送，Client进入<code>FIN_WAIT_1</code> 状态。<br>（2）第二次挥手：Server收到 <code>FIN</code> 后，发送一个 <code>ACK</code> 给Client，确认序号为收到序号+1（与SYN相同，一个FIN占用一个序号），Server进入 <code>CLOSE_WAIT</code> 状态。<br>（3）第三次挥手：Server发送一个 <code>FIN</code>，用来关闭Server到Client的数据传送，Server进入 <code>LAST_ACK</code> 状态。<br>（4）第四次挥手：Client收到 <code>FIN</code> 后，Client进入 <code>TIME_WAIT</code> 状态，接着发送一个ACK给Server，确认序号为收到序号+1，Server进入 <code>CLOSED</code> 状态，完成四次挥手。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202307261314600.png"
+                     
+                ></p>
+<p>2、客户端／服务器端模式的理解</p>
+<p>首先服务器先启动对端口的监听，等待客户端的链接请求。</p>
+<p>服务器端：</p>
+<p>（1）服务器调用 <code>socket</code> 创建 <code>Socket</code>；<br> (2) 服务器调用 <code>bind</code> 与特定 主机地址 与 端口号 绑定<br>（3）服务器调用 <code>listen</code> 让服务器监听客户端的请求；<br>（4）服务器通过 <code>accept</code> 接受客户端请求建立连接；<br>（5）服务器与客户端建立连接之后，就可以通过 <code>send/recv</code> 向客户端发送或从客户端接收数据；<br>（6）服务器调用 <code>close</code> 关闭 <code>Socket</code>；</p>
+<p>客户端：</p>
+<p>（1）客户端调用 <code>socket</code> 创建 Socket；<br>（2）客户端调用 <code>connect</code> 向服务器发起连接请求以建立连接；<br>（3）客户端与服务器建立连接之后，就可以通过 <code>send/recv</code> 向客户端发送或从客户端接收数据；<br>（4）客户端调用 <code>close</code> 关闭 Socket；</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202307261316602.png"
+                     
+                ></p>
+<h1 id="接口介绍"><a href="#接口介绍" class="headerlink" title="接口介绍"></a>接口介绍</h1><ul>
+<li>通用接口</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// socket 创建并初始化 socket，返回该 socket 的 文件描述符，如果描述符为 -1 表示创建失败。</span><br><span class="line">int socket(int addressFamily, int type,int protocol)</span><br><span class="line"></span><br><span class="line">// 关闭socket连接</span><br><span class="line">int close(int socketFileDescriptor)</span><br><span class="line"></span><br><span class="line">// 将 socket 与特定 主机地址与端口号 绑定，成功绑定返回 0，失败返回 -1。</span><br><span class="line">int bind(int socketFileDescriptor,sockaddr *addressToBind,int addressStructLength)</span><br><span class="line"></span><br><span class="line">// 接受客户端连接请求并将客户端的网络地址信息保存到 clientAddress 中。</span><br><span class="line">int accept(int socketFileDescriptor,sockaddr *clientAddress, int clientAddressStructLength)</span><br><span class="line"></span><br><span class="line">// 客户端向特定网络地址的服务器发送连接请求，连接成功返回 0，失败返回 -1。</span><br><span class="line">int connect(int socketFileDescriptor,sockaddr *serverAddress, int serverAddressLength)</span><br><span class="line"></span><br><span class="line">// 使用 DNS 查找特定主机名字对应的 IP 地址。如果找不到对应的 IP 地址则返回 NULL。</span><br><span class="line">hostent* gethostbyname(char *hostname)</span><br><span class="line"></span><br><span class="line">// 通过 socket 发送数据，发送成功返回成功发送的字节数，否则返回 -1。</span><br><span class="line">int send(int socketFileDescriptor, char *buffer, int bufferLength, int flags)</span><br><span class="line"></span><br><span class="line">// 从 socket 中读取数据，读取成功返回成功读取的字节数，否则返回 -1。</span><br><span class="line">ssize_t recv(int, void *, size_t, int) __DARWIN_ALIAS_C(recv);</span><br><span class="line"></span><br><span class="line">// 通过 UDP socket 发送数据到特定的网络地址，发送成功返回成功发送的字节数，否则返回 -1。</span><br><span class="line">int sendto(int socketFileDescriptor,char *buffer, int bufferLength, int flags, sockaddr *destinationAddress, int destinationAddressLength)</span><br><span class="line"></span><br><span class="line">// 从 UDP socket 中读取数据，并保存发送者的网络地址信息，读取成功返回成功读取的字节数，否则返回 -1 。</span><br><span class="line">int recvfrom(int socketFileDescriptor,char *buffer, int bufferLength, int flags, sockaddr *fromAddress, int *fromAddressLength)</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="setsockopt-函数"><a href="#setsockopt-函数" class="headerlink" title="setsockopt 函数"></a><code>setsockopt</code> 函数</h1><ol>
+<li>设置套接字描述符的属性</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int setsockopt(int, int, int, const void *, socklen_t);</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>参数：<br>sockfd：要设置的 <code>套接字文件描述符</code>。<br>level：选项定义的层次。或为特定协议的代码（如IPv4，IPv6，TCP，SCTP），或为通用套接字代码（SOL_SOCKET）。<br>optname：选项名。level对应的选项，一个level对应多个选项，不同选项对应不同功能。<br>optval：指向某个变量的指针，该变量是要设置新值的缓冲区。可以是一个结构体，也可以是普通变量<br>optlen：optval的长度。</p>
+</blockquote>
+<ul>
+<li>当 <code>level</code> 为 <code>SOL_SOCKET</code> 时，<code>optname</code> 可以有以下选项（一部分）：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">SO_BROADCAST　　　　　 允许发送广播数据　　　　　　　　　　　　int</span><br><span class="line">SO_DEBUG　　　　　　　  允许调试　　　　　　　　　　　　　　　　int</span><br><span class="line">SO_LINGER　　　　　　　 延迟关闭连接　　　　　　　　　　struct linger</span><br><span class="line">SO_OOBINLINE　　　　　 带外数据放入正常数据流　　　　　　　　　int</span><br><span class="line">SO_RCVBUF　　　　　　　 接收缓冲区大小　　　　　　　　　　　　　int</span><br><span class="line">SO_SNDBUF　　　　　　　 发送缓冲区大小　　　　　　　　　　　　　int</span><br><span class="line">SO_RCVLOWAT　　　　　  接收缓冲区下限　　　　　　　　　　　　　int</span><br><span class="line">SO_SNDLOWAT　　　　　  发送缓冲区下限　　　　　　　　　　　　　int</span><br><span class="line">SO_RCVTIMEO　　　　　　 接收超时　　　　　　　　　　　struct timeval</span><br><span class="line">SO_SNDTIMEO　　　　　　 发送超时　　　　　　　　　　　struct timeval</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>当 <code>level</code> 为 <code>IPPROTO_IP</code> 时，<code>optname</code> 可以有以下选项（一部分）：</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">IP_HDRINCL　　　　　　　在数据包中包含IP首部　　　　　　　　　　int</span><br><span class="line">IP_OPTINOS　　　　　　　IP首部选项　　　　　　　　　　　　　　　int</span><br><span class="line">IP_TTL　　　　　　　　　 生存时间　　　　　　　　　　　　　　　　int</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>当 <code>level</code> 为 <code>IPPRO_TCP</code> 时，<code>optname</code> 可以有以下选项（一部分）</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TCP_MAXSEG　　　　　　　TCP最大数据段的大小　　　　　　　　　　int</span><br><span class="line">TCP_NODELAY　　　　　　 不使用Nagle算法　　　　　　　　　　　 int</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>返回值：</li>
+</ul>
+<p>成功时返回0，失败时返回-1。</p>
+<ol start="2">
+<li>在 <code>send(),recv()</code> 过程中有时 <code>由于网络状况等原因</code>，发收不能预期进行,而设置收发时限：</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 1000毫秒</span><br><span class="line">int timeout = 1000;</span><br><span class="line">// 发送时限</span><br><span class="line">setsockopt(self.server_socket, SOL_SOCKET, SO_SNDTIMEO, &amp;timeout, sizeof(timeout));</span><br><span class="line">// 接收时限</span><br><span class="line">setsockopt(self.server_socket, SOL_SOCKET, SO_RCVTIMEO, &amp;timeout, sizeof(timeout));</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>在 <code>send(),recv()</code> 过程中，返回的是实际发送出去的字节(同步)或发送到socket缓冲区的字节(异步); <code>系统默认的状态发送和接收一次为8688字节(约为8.5K)</code>；在实际的过程中发送数据<br>和接收数据量比较大，<code>可以设置socket缓冲区</code>，而避免了 <code>send(),recv()</code> 不断的循环收发：</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 缓冲区大小</span><br><span class="line">int buf = 321024;</span><br><span class="line">// 接收缓冲区</span><br><span class="line">setsockopt(self.server_socket, SOL_SOCKET, SO_RCVBUF, &amp;buf, sizeof(buf));</span><br><span class="line">// 发送缓冲区</span><br><span class="line">setsockopt(self.server_socket, SOL_SOCKET, SO_SNDBUF, &amp;buf, sizeof(buf));</span><br></pre></td></tr></table></figure></div>
+
+<ol start="4">
+<li>在 <code>send(),recv()</code> 过程中，希望不经历由系统缓冲区到socket缓冲区的拷贝而影响程序的性能：</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 缓冲区大小</span><br><span class="line">int buf = 0;</span><br><span class="line">// 接收缓冲区</span><br><span class="line">setsockopt(self.server_socket, SOL_SOCKET, SO_RCVBUF, &amp;buf, sizeof(buf));</span><br><span class="line">// 发送缓冲区</span><br><span class="line">setsockopt(self.server_socket, SOL_SOCKET, SO_SNDBUF, &amp;buf, sizeof(buf));   </span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>程序退出可以解除端口占用</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 程序退出后可以解除端口占用</span><br><span class="line">int time = 1;</span><br><span class="line">int result = setsockopt(self.server_socket, SOL_SOCKET, SO_REUSEADDR, &amp;time, sizeof(time));</span><br></pre></td></tr></table></figure></div>
+
+<ol start="6">
+<li>忽略 <code>SIGPIPE</code> 信号</li>
+</ol>
+<p>SIGPIPE 信号会导致程序crash，其原因：</p>
+<p>a.连接建立，若某一端关闭连接，而另一端仍然向它写数据，第一次写数据后会收到RST响应<br>b.此后再写数据，内核将向进程发出SIGPIPE信号，通知进程此连接已经断开。<br>c.而SIGPIPE信号的默认处理是终止程序，导致上述问题的发生。 为避免这种情况</p>
+<p><strong>处理方式一:直接忽略SIGPIPE信号</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">signal(SIGPIPE, SIG_IGN);</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>处理方式二：设置系统忽略SIGPIPIE消息</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int optval = 1;</span><br><span class="line">setsockopt(self.server_socket, SOL_SOCKET, SO_NOSIGPIPE, &amp;optval, sizeof(optval));</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="shutdown-函数"><a href="#shutdown-函数" class="headerlink" title="shutdown() 函数"></a>shutdown() 函数</h1><p>由于 <code>socket</code> 是 <code>双向</code> 的，<code>client</code> 和 <code>server</code> 都可以进行 <code>读 和 写</code>，因此，有时候我们需要数据在 <code>socket</code> 上实现单向传输，即数据 <code>shutdown()</code> 函数，单向的 socket 为 <code>半开放socket</code>，要实现半开放socket，需要用到 shutdown() 函数：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/* Shut down all or part of the connection open on socket FD.</span><br><span class="line">   HOW determines what to shut down:</span><br><span class="line">     SHUT_RD   = No more receptions;</span><br><span class="line">     SHUT_WR   = No more transmissions;</span><br><span class="line">     SHUT_RDWR = No more receptions or transmissions.</span><br><span class="line">   Returns 0 on success, -1 for errors.  */</span><br><span class="line">extern int shutdown (int __fd, int __how) __THROW;</span><br></pre></td></tr></table></figure></div>
+
+<p>a. SHUT_RD：断开输入流。套接字无法接收数据（即使缓冲区数据也会被清除），无法调用输入相关函数</p>
+<p>b. SHUT_WD：断开输出流。套接字无法发送数据，但如果输出缓冲区中还有未传输的数据，则将传递到目标主机</p>
+<p>c. SHUT_RDWR：同时断开 <code>I/O</code> 流，相当于分两次调用 <code>shutdown()</code>，其中一次以 <code>SHUT_RD</code> 为参数，另一次以 <code>SHUT_WD</code> 为参数</p>
+<p><strong>总结：shutdown() 用来关闭连接，而不是套接字</strong></p>
+<h1 id="close-函数"><a href="#close-函数" class="headerlink" title="close() 函数"></a>close() 函数</h1><p>关闭文件描述符，即破坏当前进程所引用的 socket标识符，使其不再引用任何文件并且可以重用。</p>
+<p><strong>总结：close()用来关闭套接字</strong></p>
+<h1 id="exit（）-函数"><a href="#exit（）-函数" class="headerlink" title="exit（） 函数"></a>exit（） 函数</h1><p><code>EXIT_FAILURE</code> 和 <code>EXIT_SUCESS</code> 是C语言头文件库中定义的一个符号常量</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#define EXIT_FIALURE 1</span><br><span class="line"></span><br><span class="line">#difine EXIT_SUCCESS 0</span><br></pre></td></tr></table></figure></div>
+
+<p>exit（1）表示异常退出，在退出前给出一点提示信息，或在调查程序中看出错因</p>
+<p>exit（0）表示正常退出</p>
+<p>exit是系统调用级别，是一个函数，表示一个 <code>进程的结束</code>，exit实在调用处强制退出程序，运行一次程序就结束，这个状态标识了应用程序的一些运行信息，这个信息和机器和操作系统有关。</p>
+<h1 id="retun-函数"><a href="#retun-函数" class="headerlink" title="retun 函数"></a>retun 函数</h1><p><code>return</code> 是 <code>关键字</code>，表示了调用堆栈的返回，return用于结束一个函数的执行，将函数的执行信息传出供其他调用函数使用，如果返回的main函数，则为退出程序。</p>
+<h1 id="阻塞-和-非阻塞"><a href="#阻塞-和-非阻塞" class="headerlink" title="阻塞 和 非阻塞"></a>阻塞 和 非阻塞</h1><ol>
+<li>定义</li>
+</ol>
+<ul>
+<li><p>阻塞：是指调用结果返回之前，调用者会进入阻塞状态等待。只有在得到结果之后才会返回。</p>
+</li>
+<li><p>非阻塞：是指在不能立刻得到结果之前，该函数不会阻塞当前线程，而会立刻返回。</p>
+</li>
+</ul>
+<ol start="2">
+<li>调用</li>
+</ol>
+<ul>
+<li><p>阻塞调用：比如 <code>socket</code> 的 <code>recv()</code>，调用这个函数的线程如果没有数据返回，它会一直阻塞着，也就是 <code>recv()</code> 后面的代码都不会执行了，程序就停在 <code>recv()</code> 这里等待，所以一般把 <code>recv()</code> 放在单独的线程里调用。</p>
+</li>
+<li><p>非阻塞调用：比如非阻塞 <code>socket</code> 的 <code>send()</code>，调用这个函数，它只是把待发送的数据复制到TCP输出缓冲区中，就立刻返回了，线程并不会阻塞，数据有没有发出去 <code>send()</code> 是不知道的，不会等待它发出去才返回的。</p>
+</li>
+</ul>
+<h1 id="服务器端函数"><a href="#服务器端函数" class="headerlink" title="服务器端函数"></a>服务器端函数</h1><ol>
+<li>bind函数：将套接字绑定到地址。</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int bind(int sockfd, struct sockaddr * my_addr, int addrlen);</span><br></pre></td></tr></table></figure></div>
+
+<p>三个参数分别为：</p>
+<ul>
+<li><p>sockfd : 即socket文件描述符，通过 <code>socket()</code> 函数创建，唯一标识一个socket。</p>
+</li>
+<li><p>my_addr : 结构体指针变量，指向要绑定给sockfd的协议地址。这个地址结构根据地址创建socket时的地址协议族的不同而不同。</p>
+</li>
+<li><p>addrlen : 对应的是地址的长度。</p>
+</li>
+</ul>
+<p>通常服务器在启动的时候都会绑定一个地址（如ip地址+端口号），用于提供服务，客户就可以通过它来接连服务器；而客户端就不用指定，系统自动分配一个端口号和自身的ip地址组合。这就是为什么通常服务器端在listen之前会调用bind()，而客户端就不会调用，而是在connect()时由系统随机生成一个。</p>
+<ol start="2">
+<li>listen函数：使服务器的这个端口和IP处于监听状态，等待网络中某一客户机的连接请求。如果客户端有连接请求，端口就会接受这个连接。</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int listen(int sockfd, int backlog);</span><br></pre></td></tr></table></figure></div>
+
+<p>两个参数分别为：</p>
+<ul>
+<li><p>sockfd: socket文件描述符。</p>
+</li>
+<li><p>backlog: 指定 <code>同时能处理的最大连接要求</code>，通常为10或者5。最大值可设至128。参见 Socket_Listen 的详细说明。</p>
+</li>
+</ul>
+<ol start="3">
+<li>accept函数：接收监听套接字中保存的套接字连接，它提取监听套接字 <code>sockfd</code> 的挂起连接队列上的第一个连接请求，<code>创建一个新的已连接套接字</code>，并返回引用该套接字的新文件描述符。<code>accept()执行的系统调用并不会对原始的监听套接字产生任何其他影响</code>。接受远程计算机的连接请求，建立起与客户机之间的通信连接。服务器处于监听状态时，如果某时刻获得客户机的连接请求，此时并不是立即处理这个请求，而是将这个请求放在等待队列中，当系统空闲时再处理客户机的连接请求。</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int accept(int sockfd, struct sockaddr * addr,int * addrlen);</span><br></pre></td></tr></table></figure></div>
+
+<p>三个参数分别为：</p>
+<ul>
+<li><p>sockfd : socket文件描述符。</p>
+</li>
+<li><p>addr: 为结构体指针变量，和bind的结构体是同种类型的，系统会把远程主机的信息（远程主机的地址和端口号信息）保存到这个指针所指的结构体中。需要注意的是，该地址返回的是 <code>客户端的外网IP</code>，而客户端使用的IP一般均为内网IP，所以我们根据这个地址返回的IP是访问不到客户端主机的。</p>
+</li>
+<li><p>addrlen : 表示结构体的长度</p>
+</li>
+</ul>
+<p>accept的第一个参数为服务器的 <code>socket文件描述符</code>，是服务器开始调用 <code>socket()</code> 函数生成的，称为监听socket文件描述符；而accept函数返回的是已连接的socket文件描述符。一个服务器通常通常仅仅只创建一个监听socket文件描述符，它在该服务器的生命周期内一直存在。内核为每个由服务器进程接受的客户连接创建了一个已连接socket文件描述符，当服务器完成了对某个客户的服务，相应的已连接socket文件描述符就被关闭。</p>
+<h1 id="客户端函数"><a href="#客户端函数" class="headerlink" title="客户端函数"></a>客户端函数</h1><p><code>connect函数</code> 用来请求连接远程服务器.</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int connect (int sockfd,struct sockaddr * serv_addr,int addrlen);</span><br></pre></td></tr></table></figure></div>
+
+<p>三个参数分别为：</p>
+<ul>
+<li><p>sockfd : socket文件描述符，前面socket的返回值；</p>
+</li>
+<li><p>serv_addr : 存储着远程服务器的IP与端口号信息；</p>
+</li>
+<li><p>addrlen : 表示结构体变量的长度。</p>
+</li>
+</ul>
+<h1 id="通用函数"><a href="#通用函数" class="headerlink" title="通用函数"></a>通用函数</h1><ol>
+<li>recv函数：负责 <code>从缓冲区中读取内容</code>。当读成功时，read返回实际所读的字节数，如果返回的值是 <code>0</code> 表示已经读到文件的结束了，<code>小于0</code> 表示出现了错误。</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int recv(int sockfd,void *buf,int len,unsigned int flags);</span><br></pre></td></tr></table></figure></div>
+
+<p>四个参数分别为：</p>
+<ul>
+<li>sockfd : 为前面accept的返回值.也就是新的套接字。</li>
+<li>buf : 表示缓冲区</li>
+<li>len : 表示缓冲区的长度</li>
+<li>flags : 通常为0</li>
+</ul>
+<ol start="2">
+<li>send函数：将buf中的 n bytes 字节内容写入socket描述字。成功时返回写的字节数。失败时返回 <code>-1</code>，并设置 <code>errno</code> 变量。</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int send(int sockfd,const void * msg,int len,unsigned int flags);</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>sockfd : 为前面socket的返回值.</li>
+<li>msg : 一般为常量字符串</li>
+<li>len : 表示长度</li>
+<li>flags : 通常为0</li>
+</ul>
+<p>flags参数可选值</p>
+<ul>
+<li>MSG_NOSIGNAL：往读端关闭的管道或者socket连接中 写数据 时，不引发 SIGPIPE 信号</li>
+<li>MSG_OOB：发送或接收紧急数据</li>
+<li>MSG_PEEK：窥探读缓存中的数据，此次读操作不会导致这些数据被清除</li>
+<li>MSG_WAITALL：读操作仅在读取到指定数量的字节后才返回</li>
+<li>MSG_WAITSTREAM：读操作仅用在读取 <code>TCP</code> 协议的 SOCK_STREAM 指定数据才返回</li>
+<li>MSG_MORE：告诉内核应用程序还有更多数据要发送，内核将超时等待新数据写入 TCP 发送缓冲区后一并发送。这样可防止 <code>TCP</code> 发送过多小的报文段，从而提高传输效率</li>
+<li>MSG_DONTWAIT：对 <code>socket</code> 的此处操作是非阻塞的</li>
+<li>MSG_DONTROUTE：不查看路由表，直接将数据发送给本地局域网内的主机。这表示发送者确切地知道目标主机救灾本地网络上</li>
+<li>MSG_CONFIRM：指示数据链路层协议持续监听对应的回应，直到得到答复。它仅用于 SOCK_DGRAM 和 <code>SOCK_RAW</code> 类型的 <code>socket</code></li>
+</ul>
+<ol start="3">
+<li>close函数：关闭套接字。若顺利关闭则返回 <code>0</code>，发生错误时返回 <code>-1</code>。</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int close(int sockfd);</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="TCP-通信"><a href="#TCP-通信" class="headerlink" title="TCP 通信"></a>TCP 通信</h1><p>TCP中 Socket 通信的基本步骤如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202307241846533.png"
+                     
+                ></p>
+<p>一个简单的 <code>C/S</code> 程序如下（客户端发出的数据, 服务器会回显到客户端的终端上。只是一个简单的模型, 没考虑错误处理等问题。）</p>
+<h1 id="编码原生客户端socket"><a href="#编码原生客户端socket" class="headerlink" title="编码原生客户端socket"></a>编码原生客户端socket</h1><ol>
+<li>导入头文件</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;sys/socket.h&gt;</span><br><span class="line">#import &lt;netinet/in.h&gt;</span><br><span class="line">#import &lt;arpa/inet.h&gt;</span><br><span class="line"></span><br><span class="line">// htons : 将一个无符号短整型的主机数值转换为网络字节顺序，不同cpu 是不同的顺序 (big-endian大尾顺序 , little-endian小尾顺序)</span><br><span class="line">#define SocketPort htons(8040)</span><br><span class="line">// inet_addr是一个计算机函数，功能是将一个点分十进制的IP转换成一个长整数型数</span><br><span class="line">#define SocketIP inet_addr(&quot;127.0.0.1&quot;)</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>创建socket</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> 函数原型：</span><br><span class="line"> int socket(int domain, int type, int protocol);</span><br><span class="line"> </span><br><span class="line"> domain：协议域，又称协议族（family）。常用的协议族有AF_INET(ipv4)、AF_INET6(ipv6)、AF_LOCAL（或称AF_UNIX，Unix域Socket）、AF_ROUTE等。协议族决定了socket的地址类型，在通信中必须采用对应的地址，如AF_INET决定了要用ipv4地址（32位的）与端口号（16位的）的组合、AF_UNIX决定了要用一个绝对路径名作为地址。</span><br><span class="line"></span><br><span class="line"> type：指定Socket类型。常用的socket类型有SOCK_STREAM、SOCK_DGRAM、SOCK_RAW、SOCK_PACKET、SOCK_SEQPACKET等。流式Socket（SOCK_STREAM）是一种面向连接的Socket，针对于面向连接的TCP服务应用。数据报式Socket（SOCK_DGRAM）是一种无连接的Socket，对应于无连接的UDP服务应用。</span><br><span class="line"></span><br><span class="line"> protocol：指定协议。常用协议有IPPROTO_TCP、IPPROTO_UDP、IPPROTO_STCP、IPPROTO_TIPC等，分别对应TCP传输协议、UDP传输协议、STCP传输协议、TIPC传输协议。</span><br><span class="line"> 注意：type和protocol不可以随意组合，如SOCK_STREAM不可以跟IPPROTO_UDP组合。当第三个参数为0时，会自动选择第二个参数类型对应的默认协议。</span><br><span class="line"></span><br><span class="line"> 返回值：如果调用成功就返回新创建的套接字的描述符，如果失败就返回INVALID_SOCKET（Linux下失败返回-1）。套接字描述符是一个整数类型的值。</span><br><span class="line"> */</span><br><span class="line">// 1.创建socket</span><br><span class="line">// IPv4</span><br><span class="line">//    self.clientId = socket(AF_INET, SOCK_STREAM, 0);</span><br><span class="line">// IPv6</span><br><span class="line">self.clientId = socket(AF_INET6, SOCK_STREAM, 0);</span><br><span class="line">if (self.clientId == -1) &#123;</span><br><span class="line">    NSLog(@&quot;创建socket失败&quot;);</span><br><span class="line">    return;</span><br><span class="line">&#125;else &#123;</span><br><span class="line">    NSLog(@&quot;创建socket成功&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>连接socket</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"> // 2.连接socket</span><br><span class="line">    // IPv4</span><br><span class="line">//    struct sockaddr_in socketAddr;</span><br><span class="line">//    socketAddr.sin_family = AF_INET;</span><br><span class="line">//    socketAddr.sin_port = socketPort;</span><br><span class="line">//</span><br><span class="line">//    struct in_addr socketIn_addr;</span><br><span class="line">//    socketIn_addr.s_addr = socketIp;</span><br><span class="line">//</span><br><span class="line">//    socketAddr.sin_addr = socketIn_addr;</span><br><span class="line">    </span><br><span class="line">// IPv6</span><br><span class="line">struct sockaddr_in6 socketAddr;</span><br><span class="line">socketAddr.sin6_family = AF_INET6;</span><br><span class="line">socketAddr.sin6_port = socketPort;</span><br><span class="line">socketAddr.sin6_addr = in6addr_loopback;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line"> 函数原型：</span><br><span class="line"> int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);</span><br><span class="line"> </span><br><span class="line"> 参数说明：</span><br><span class="line"> sockfd：标识一个已连接套接口的描述字，就是我们刚刚创建的那个_clinenId。</span><br><span class="line"> addr：指针，指向目的套接字的地址。</span><br><span class="line"> addrlen：接收返回地址的缓冲区长度。</span><br><span class="line"> 返回值：成功则返回0，失败返回非0，错误码GetLastError()。</span><br><span class="line"> */</span><br><span class="line">// 2. 连接socket</span><br><span class="line">int result = connect(self.clientId, (const struct sockaddr *)&amp;socketAddr, sizeof(socketAddr));</span><br><span class="line">if (result != 0) &#123;</span><br><span class="line">    NSLog(@&quot;连接socket失败&quot;);</span><br><span class="line">    return;</span><br><span class="line">&#125;else &#123;</span><br><span class="line">    NSLog(@&quot;连接socket成功&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+<ol start="4">
+<li>收到消息</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark -接收消息</span><br><span class="line">- (void)receiveMsg&#123;</span><br><span class="line">    // 4. 接收数据</span><br><span class="line">    while (1) &#123;</span><br><span class="line">        uint8_t buffer[1024];</span><br><span class="line">        ssize_t recvLen = recv(self.clientId, buffer, sizeof(buffer), 0);</span><br><span class="line">        NSLog(@&quot;接收了%@字节&quot;,@(recvLen));</span><br><span class="line">        </span><br><span class="line">        if (recvLen == 0) &#123;</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        // buffer -&gt; data -&gt; string</span><br><span class="line">        NSData * data = [NSData dataWithBytes:buffer length:recvLen];</span><br><span class="line">        NSString * str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];</span><br><span class="line">        NSLog(@&quot;接收到的字符串:%@&quot;,str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>发送消息</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - 发送消息</span><br><span class="line">- (void)sendMsg&#123;</span><br><span class="line">    const char * msg = &quot;50&quot;;</span><br><span class="line">    ssize_t sendLen = send(self.clientId, msg, strlen(msg), 0);</span><br><span class="line">    NSLog(@&quot;发送了%@字节&quot;,@(sendLen));</span><br><span class="line">    NSLog(@&quot;发送了字符串:%@&quot;,[NSString stringWithUTF8String:msg]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="编码原生服务端socket"><a href="#编码原生服务端socket" class="headerlink" title="编码原生服务端socket"></a>编码原生服务端socket</h1><p>相比客户端socket，服务端socket多了三步<br>bind(),listen(),accept()</p>
+<ol>
+<li>头文件导入</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;sys/socket.h&gt;</span><br><span class="line">#import &lt;netinet/in.h&gt;</span><br><span class="line">#import &lt;arpa/inet.h&gt;</span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line"> 服务器可以使用终端命令：nc -lk SocketPort</span><br><span class="line"> 也可以自己自己写一个本地socket服务端</span><br><span class="line"> */</span><br><span class="line">// htons : 将一个无符号短整型的主机数值转换为网络字节顺序，不同cpu 是不同的顺序 (big-endian大尾顺序 , little-endian小尾顺序)</span><br><span class="line">#define SocketPort htons(8040)</span><br><span class="line">// inet_addr是一个计算机函数，功能是将一个点分十进制的IP转换成一个长整数型数</span><br><span class="line">#define SocketIP inet_addr(&quot;127.0.0.1&quot;)</span><br><span class="line">// 最大连接次数</span><br><span class="line">#define maxConnectCount 5</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>创建socket</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 1. 创建socket</span><br><span class="line"></span><br><span class="line">// Ipv4</span><br><span class="line">self.serverID = socket(AF_INET, SOCK_STREAM, 0);</span><br><span class="line">if (self.serverID == -1) &#123;</span><br><span class="line">    NSLog(@&quot;创建socket失败&quot;);</span><br><span class="line">    return;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    NSLog(@&quot;创建socket成功&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// IPv6</span><br><span class="line">self.serverId = socket(AF_INET6, SOCK_STREAM, 0);</span><br><span class="line">if (self.serverId == -1) &#123;</span><br><span class="line">    NSLog(@&quot;创建socket失败&quot;);</span><br><span class="line">    return;</span><br><span class="line">&#125;else &#123;</span><br><span class="line">    NSLog(@&quot;创建socket成功&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="3">
+<li>绑定socket</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">// 2.绑定socket到本地地址</span><br><span class="line">// IPv4</span><br><span class="line">//    struct sockaddr_in socketAddr;</span><br><span class="line">//    socketAddr.sin_family = AF_INET;</span><br><span class="line">//    socketAddr.sin_port = socketPort;</span><br><span class="line">//</span><br><span class="line">//    /* 服务端是等待别人来连，不需要找谁的ip</span><br><span class="line">//      这里写一个长量 INADDR_ANY 表示 server 上所有ip，</span><br><span class="line">//      这个一个server可能有多个ip地址，因为可能有多块网卡</span><br><span class="line">//    */</span><br><span class="line">//    struct in_addr socketIn_addr;</span><br><span class="line">//    socketIn_addr.s_addr = htonl(INADDR_ANY);</span><br><span class="line">//</span><br><span class="line">//    socketAddr.sin_addr = socketIn_addr;</span><br><span class="line"></span><br><span class="line">// IPv6</span><br><span class="line">struct sockaddr_in6 socketAddr;</span><br><span class="line">socketAddr.sin6_family = AF_INET6;</span><br><span class="line">socketAddr.sin6_port = socketPort;</span><br><span class="line">socketAddr.sin6_addr = in6addr_loopback;</span><br><span class="line">    </span><br><span class="line">if (bind(self.serverID, (const struct sockaddr *)&amp;socketAddr, sizeof(socketAddr)) == -1) &#123;</span><br><span class="line">    NSLog(@&quot;绑定Socket失败&quot;);</span><br><span class="line">    return;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    NSLog(@&quot;绑定socket成功&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<ol start="4">
+<li>添加socket监听</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 3. 添加socket监听,让服务器监听客户端的请求</span><br><span class="line">if (listen(self.serverID, maxConnectCount) == -1) &#123;</span><br><span class="line">    NSLog(@&quot;监听失败&quot;);</span><br><span class="line">    return;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    NSLog(@&quot;监听成功&quot;);</span><br><span class="line">&#125;</span><br><span class="line">    </span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>接收客户端请求</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line">// 4. accept , 当客户端发送请求时，程序为serverSocket创建一个新套接字 ConnectionSocket，用于clientSocket和serverSocket之间创建一个TCP连接</span><br><span class="line">dispatch_async(dispatch_get_global_queue(0, 0), ^&#123;</span><br><span class="line">    [self acceptSocket];</span><br><span class="line">&#125;);</span><br><span class="line">    </span><br><span class="line">// 接收请求</span><br><span class="line">- (void)acceptSocket&#123;</span><br><span class="line">    </span><br><span class="line">    while (1) &#123;</span><br><span class="line">        // 4.接收客户端请求，当客户端发送请求时，程序为serverSocket创建一个新套接字</span><br><span class="line">        // IPv4</span><br><span class="line">    //    struct sockaddr_in client_socketAddress;</span><br><span class="line">    //    socklen_t address_len;</span><br><span class="line">    //    // 打印客户端的请求地址</span><br><span class="line">    //    NSLog(@&quot;client socket is %d ip address is %s:%d\n&quot;,client_socketAddr,inet_ntoa(client_socketAddr),ntohs(client_address.sin_port));</span><br><span class="line">        </span><br><span class="line">        // IPv6</span><br><span class="line">        struct sockaddr_in6 client_addr;</span><br><span class="line">        socklen_t client_addr_len = sizeof(client_addr);</span><br><span class="line">        // 接受客户端连接 accept()能够返回的前提是正常完成三次握手</span><br><span class="line">        self.client_socket = accept(self.server_socket, (struct sockaddr *)&amp;client_addr, &amp;client_addr_len);</span><br><span class="line">        NSLog(@&quot;client socket ip address is %@ port is %hu\n&quot;,[self hostFromSockaddr6:&amp;client_addr],[self portFromSockaddr6:&amp;client_addr]);</span><br><span class="line">        if (self.client_socket &gt; 0) &#123;</span><br><span class="line">            NSLog(@&quot;%@\n 连接socks5成功,socketId is %d&quot;,self,self.client_socket);</span><br><span class="line">        &#125;else if (self.client_socket == 0) &#123;</span><br><span class="line">            NSLog(@&quot;%@\n 连接socks5关闭&quot;,self);</span><br><span class="line">            close(self.client_socket);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            NSLog(@&quot;%@\n 连接socks5错误 error:%s&quot;,self,strerror(errno));</span><br><span class="line">            close(self.client_socket);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        // 5. 接收VPN转发的数据</span><br><span class="line">        char resdata[1024] = &#123;0&#125;;</span><br><span class="line">        long readLen = recv(self.client_socket, resdata, 1024, 0);</span><br><span class="line">        if (readLen &gt; 0)&#123;</span><br><span class="line">            NSLog(@&quot;%@\n 收到VPN转发的数据成功 %ld字节&quot;,self,readLen);</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            NSLog(@&quot;%@\n 收到VPN转发的数据报错 %s&quot;,self,strerror(errno));</span><br><span class="line">            close(self.client_socket);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        // 6.向VPN发送50</span><br><span class="line">        // 50</span><br><span class="line">        unsigned char welcome_message[] = &#123;5,0&#125;;</span><br><span class="line">        /*</span><br><span class="line">         注意发送时的套接字是连接套接字，而不是服务器的套接字</span><br><span class="line">         发送成功返回发送成功的字节数</span><br><span class="line">         */</span><br><span class="line">        long sendDataLen = send(self.client_socket, welcome_message, 2, 0);</span><br><span class="line">        if (sendDataLen &gt; 0) &#123;</span><br><span class="line">            NSLog(@&quot;%@\n 发送了50成功 %ld字节&quot;,self,sendDataLen);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            NSLog(@&quot;%@\n 发送了50失败&quot;,self);</span><br><span class="line">            close(self.client_socket);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        // 7.继续从VPN接收数据</span><br><span class="line">        // 用于存放接收数据的缓冲区</span><br><span class="line">        char buf[1024] = &#123;0&#125;;</span><br><span class="line">        /*</span><br><span class="line">         读取数据，读取成功返回成功读取的字节数</span><br><span class="line">         */</span><br><span class="line">        readLen = recv(self.client_socket, buf, sizeof(buf), 0);</span><br><span class="line">        if (readLen &gt; 0) &#123;</span><br><span class="line">            // 消息（为啥会调用3次，每次结果一样）</span><br><span class="line">            NSData * recvData = [[NSData alloc] initWithBytes:buf length:readLen];</span><br><span class="line">            NSString * recvStr = [[NSString alloc] initWithData:recvData encoding:NSASCIIStringEncoding];</span><br><span class="line">            NSLog(@&quot;%@\n 收到VPN消息成功:%@ %ld字节&quot;,self,recvStr,readLen);</span><br><span class="line">            </span><br><span class="line">            // 发送消息到网关服务器</span><br><span class="line">            [self sendMsgToGwServerWithData:recvData];</span><br><span class="line">        &#125;else if (readLen == 0) &#123;</span><br><span class="line">            NSLog(@&quot;%@\n 客户端已关闭&quot;,self);</span><br><span class="line">            close(self.client_socket);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            /* strerror(errno) 打印报错信息</span><br><span class="line">             报错：Connection reset by peer 是连接断开后的读和写操作引起的。</span><br><span class="line">             1、一端socket被关闭，另一端发送数据，发送的第一个数据包引发该异常（socket默认连接60秒，60秒内没有进行心跳交互，即读写数据，就会自动关闭连接）</span><br><span class="line">             2、一端退出，但退出未关闭该连接，另一端如果在从连接中读数据，则抛出该异常</span><br><span class="line">             */</span><br><span class="line">            NSLog(@&quot;%@\n 收到VPN消息失败 %s&quot;,self,strerror(errno));</span><br><span class="line">            close(self.client_socket);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+
+<h1 id="UDP-Socket函数"><a href="#UDP-Socket函数" class="headerlink" title="UDP Socket函数"></a>UDP Socket函数</h1><ul>
+<li><code>sendto()</code> 函数：发送 <code>UDP</code> 数据，将数据发送到套接字。返回实际发送的数据字节长度或在出现发送错误时返回 <code>-1</code>。</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int sendto(int sockfd, const void *msg,int len,unsigned int flags,const struct sockaddr *to, int tolen);</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li><code>recvfrom()</code> 函数：接受 <code>UDP</code> 套接字的数据, 与 <code>recv()</code> 类似。返回接收到的字节数或当出现错误时返回 <code>-1</code>，并置相应的 <code>errno</code>。</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int recvfrom(int sockfd,void *buf,int len,unsigned int flags,struct sockaddr *from,int *fromlen);</span><br></pre></td></tr></table></figure></div>
+
+<p>UDP通信流程图如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202307241826905.png"
+                     
+                ></p>
 <h1 id="长链接-和-短链接"><a href="#长链接-和-短链接" class="headerlink" title="长链接 和 短链接"></a>长链接 和 短链接</h1><ul>
 <li><p>长链接：连上就一直聊，通常用于 <code>及时通讯</code>，效率高。（一对一：）</p>
 </li>
@@ -346,9 +707,57 @@
 </li>
 </ul>
 <ol start="2">
-<li>TCP 的 KeepAlive 保活机制</li>
+<li><code>TCP</code> 的 <code>KeepAlive</code> 保活机制</li>
 </ol>
 <p>考虑到一个服务器通常会连接多个客户端，因此由用户在应用层自己实现心跳包，<code>代码较多且稍显复杂</code>，而利用 <code>TCP／IP协议层</code> 为内置的 <code>KeepAlive</code> 功能来实现心跳功能则简单得多。 不论是服务端还是客户端，一方开启 <code>KeepAlive</code> 功能后，就会自动在规定时间内向对方发送心跳包， 而另一方在收到心跳包后就会自动回复，以告诉对方我仍然在线。</p>
+<h1 id="粘包、分包-拆包"><a href="#粘包、分包-拆包" class="headerlink" title="粘包、分包(拆包)"></a>粘包、分包(拆包)</h1><ol>
+<li>概念</li>
+</ol>
+<p>Socket通信时会对发送的字节数据进行 <code>分包</code> 和 <code>粘包</code> 处理，属于一种Socket内部的优化机制。</p>
+<ol start="2">
+<li>粘包：</li>
+</ol>
+<p>当发送的 <code>字节数据包比较小且频繁</code> 发送时，Socket内部会将字节数据进行 <code>粘包处理</code>，既将频繁发送的小字节数据打包成 <code>一个整包进行发送</code>，降低内存的消耗。</p>
+<ol start="3">
+<li>分包：</li>
+</ol>
+<p>当发送的 <code>字节数据包比较大</code> 时，Socket内部会将发送的字节数据进行 <code>分包处理</code>，降低内存和性能的消耗。</p>
+<ol start="4">
+<li>例子解释</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">当前发送方发送了两个包，两个包的内容如下：</span><br><span class="line">123456789</span><br><span class="line">ABCDEFGH</span><br></pre></td></tr></table></figure></div>
+
+<p>我们希望接收方的情况是：收到两个包，第一个包为：123456789，第二个包为：ABCDEFGH。<br>但是在粘包和分包出现的情况就达不到预期情况。</p>
+<ul>
+<li>粘包情况:</li>
+</ul>
+<p>两个包在很短的时间间隔内发送，比如在0.1秒内发送了这两个包，如果包长度足够的话，那么接收方只会接收到一个包，如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">123456789ABCDEFGH</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>分包情况</li>
+</ul>
+<p>假设包的长度最长设置为5字节（较极端的假设，一般长度设置为1000到1500之间），那么在没有粘包的情况下，接收方就会收到4个包,如下：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">12345</span><br><span class="line">6789</span><br><span class="line">ABCDE</span><br><span class="line">FGH</span><br></pre></td></tr></table></figure></div>
+
+<ol start="5">
+<li>处理方式</li>
+</ol>
+<p>因为存在粘包和分包的情况，所以接收方需要对接收的数据进行一定的处理，主要解决的问题有两个：</p>
+<ul>
+<li>在粘包产生时，要可以在同一个包内获取出多个包的内容。</li>
+<li>在分包产生时，要保留上一个包的部分内容，与下一个包的部分内容组合。</li>
+</ul>
+<p>处理方式：</p>
+<ul>
+<li><code>在数据包头部加上内容长度以及数据类型</code></li>
+</ul>
+<p>发送数据:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - 发送数据格式化</span><br><span class="line">- (void)sendData:(NSData *)data dataType:(unsigned int)dataType&#123;</span><br><span class="line">    NSMutableData *mData = [NSMutableData data];</span><br><span class="line">    // 1.计算数据总长度 data</span><br><span class="line">    unsigned int dataLength = 4+4+(int)data.length;</span><br><span class="line">    // 将长度转成data</span><br><span class="line">    NSData *lengthData = [NSData dataWithBytes:&amp;dataLength length:4];</span><br><span class="line">    // mData 拼接长度data</span><br><span class="line">    [mData appendData:lengthData];</span><br><span class="line">    </span><br><span class="line">    // 数据类型 data</span><br><span class="line">    // 2.拼接指令类型(4~7:指令)</span><br><span class="line">    NSData *typeData = [NSData dataWithBytes:&amp;dataType length:4];</span><br><span class="line">    // mData 拼接数据类型data</span><br><span class="line">    [mData appendData:typeData];</span><br><span class="line">    </span><br><span class="line">    // 3.最后拼接真正的数据data</span><br><span class="line">    [mData appendData:data];</span><br><span class="line">    NSLog(@&quot;发送数据的总字节大小:%ld&quot;,mData.length);</span><br><span class="line">    </span><br><span class="line">    // 发数据</span><br><span class="line">    [self.socket writeData:mData withTimeout:-1 tag:10086];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>接收数据:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">- (void)recvData:(NSData *)data&#123;</span><br><span class="line">    // 直接就给他缓存起来</span><br><span class="line">    [self.cacheData appendData:data];</span><br><span class="line">    // 获取总的数据包大小</span><br><span class="line">    // 整段数据长度(不包含长度跟类型)</span><br><span class="line">    NSData *totalSizeData = [data subdataWithRange:NSMakeRange(0, 4)];</span><br><span class="line">    unsigned int totalSize = 0;</span><br><span class="line">    [totalSizeData getBytes:&amp;totalSize length:4];</span><br><span class="line">    //包含长度跟类型的数据长度</span><br><span class="line">    unsigned int completeSize = totalSize  + 8;</span><br><span class="line">    //必须要大于8 才会进这个循环</span><br><span class="line">    while (self.cacheData.length&gt;8) &#123;</span><br><span class="line">        if (self.cacheData.length &lt; completeSize) &#123;</span><br><span class="line">            //如果缓存的长度 还不如 我们传过来的数据长度，就让socket继续接收数据</span><br><span class="line">            [self.socket readDataWithTimeout:-1 tag:10086];</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">        //取出数据</span><br><span class="line">        NSData *resultData = [self.cacheData subdataWithRange:NSMakeRange(8, completeSize)];</span><br><span class="line">        //处理数据</span><br><span class="line">        [self handleRecvData:resultData];</span><br><span class="line">        //清空刚刚缓存的data</span><br><span class="line">        [self.cacheData replaceBytesInRange:NSMakeRange(0, completeSize) withBytes:nil length:0];</span><br><span class="line">        //如果缓存的数据长度还是大于8，再执行一次方法</span><br><span class="line">        if (self.cacheData.length &gt; 8) &#123;</span><br><span class="line">            [self recvData:nil];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
 <h1 id="iOS端实现-Socket"><a href="#iOS端实现-Socket" class="headerlink" title="iOS端实现 Socket"></a>iOS端实现 Socket</h1><p>用 <code>GCDAsyncSocket</code> 框架</p>
 <ol>
 <li>创建GCDAsyncSocket对象，并且使之成为成员属性</li>
@@ -388,6 +797,20 @@
 <li>需要注意的是异步socket工作在子线程，如果要更新UI，必然会在socket的代理方法中调用更新UI的方法，这时更新UI的代码运行于子线程，不能立即刷新UI界面，因此应该把更新UI的函数放在主线程中执行：</li>
 </ul>
 <div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">    // 更新UI的代码</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="错误码-errno"><a href="#错误码-errno" class="headerlink" title="错误码 errno"></a>错误码 errno</h1><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br></pre></td><td class="code"><pre><span class="line">#define EPERM 1 /* Operation not permitted */</span><br><span class="line">#define ENOENT 2 /* No such file or directory */</span><br><span class="line">#define ESRCH 3 /* No such process */</span><br><span class="line">#define EINTR 4 /* Interrupted system call */</span><br><span class="line">#define EIO 5 /* I/O error */</span><br><span class="line">#define ENXIO 6 /* No such device or address */</span><br><span class="line">#define E2BIG 7 /* Argument list too long */</span><br><span class="line">#define ENOEXEC 8 /* Exec format error */</span><br><span class="line">#define EBADF 9 /* Bad file number */</span><br><span class="line">#define ECHILD 10 /* No child processes */</span><br><span class="line">#define EAGAIN 11 /* Try again */</span><br><span class="line">#define ENOMEM 12 /* Out of memory */</span><br><span class="line">#define EACCES 13 /* Permission denied */</span><br><span class="line">#define EFAULT 14 /* Bad address */</span><br><span class="line">#define ENOTBLK 15 /* Block device required */</span><br><span class="line">#define EBUSY 16 /* Device or resource busy */</span><br><span class="line">#define EEXIST 17 /* File exists */</span><br><span class="line">#define EXDEV 18 /* Cross-device link */</span><br><span class="line">#define ENODEV 19 /* No such device */</span><br><span class="line">#define ENOTDIR 20 /* Not a directory */</span><br><span class="line">#define EISDIR 21 /* Is a directory */</span><br><span class="line">#define EINVAL 22 /* Invalid argument */</span><br><span class="line">#define ENFILE 23 /* File table overflow */</span><br><span class="line">#define EMFILE 24 /* Too many open files */</span><br><span class="line">#define ENOTTY 25 /* Not a typewriter */</span><br><span class="line">#define ETXTBSY 26 /* Text file busy */</span><br><span class="line">#define EFBIG 27 /* File too large */</span><br><span class="line">#define ENOSPC 28 /* No space left on device */</span><br><span class="line">#define ESPIPE 29 /* Illegal seek */</span><br><span class="line">#define EROFS 30 /* Read-only file system */</span><br><span class="line">#define EMLINK 31 /* Too many links */</span><br><span class="line">#define EPIPE 32 /* Broken pipe */</span><br><span class="line">#define EDOM 33 /* Math argument out of domain of func */</span><br><span class="line">#define ERANGE 34 /* Math result not representable */</span><br><span class="line">#define EDEADLK 35 /* Resource deadlock would occur */</span><br><span class="line">#define ENAMETOOLONG 36 /* File name too long */</span><br><span class="line">#define ENOLCK 37 /* No record locks available */</span><br><span class="line">#define ENOSYS 38 /* Function not implemented */</span><br><span class="line">#define ENOTEMPTY 39 /* Directory not empty */</span><br><span class="line">#define ELOOP 40 /* Too many symbolic links encountered */</span><br><span class="line">#define EWOULDBLOCK EAGAIN /* Operation would block */</span><br><span class="line">#define ENOMSG 42 /* No message of desired type */</span><br><span class="line">#define EIDRM 43 /* Identifier removed */</span><br><span class="line">#define ECHRNG 44 /* Channel number out of range */</span><br><span class="line">#define EL2NSYNC 45 /* Level 2 not synchronized */</span><br><span class="line">#define EL3HLT 46 /* Level 3 halted */</span><br><span class="line">#define EL3RST 47 /* Level 3 reset */</span><br><span class="line">#define ELNRNG 48 /* Link number out of range */</span><br><span class="line">#define EUNATCH 49 /* Protocol driver not attached */</span><br><span class="line">#define ENOCSI 50 /* No CSI structure available */</span><br><span class="line">#define EL2HLT 51 /* Level 2 halted */</span><br><span class="line">#define EBADE 52 /* Invalid exchange */</span><br><span class="line">#define EBADR 53 /* Invalid request descriptor */</span><br><span class="line">#define EXFULL 54 /* Exchange full */</span><br><span class="line">#define ENOANO 55 /* No anode */</span><br><span class="line">#define EBADRQC 56 /* Invalid request code */</span><br><span class="line">#define EBADSLT 57 /* Invalid slot */</span><br><span class="line">#define EDEADLOCK EDEADLK</span><br><span class="line">#define EBFONT 59 /* Bad font file format */</span><br><span class="line">#define ENOSTR 60 /* Device not a stream */</span><br><span class="line">#define ENODATA 61 /* No data available */</span><br><span class="line">#define ETIME 62 /* Timer expired */</span><br><span class="line">#define ENOSR 63 /* Out of streams resources */</span><br><span class="line">#define ENONET 64 /* Machine is not on the network */</span><br><span class="line">#define ENOPKG 65 /* Package not installed */</span><br><span class="line">#define EREMOTE 66 /* Object is remote */</span><br><span class="line">#define ENOLINK 67 /* Link has been severed */</span><br><span class="line">#define EADV 68 /* Advertise error */</span><br><span class="line">#define ESRMNT 69 /* Srmount error */</span><br><span class="line">#define ECOMM 70 /* Communication error on send */</span><br><span class="line">#define EPROTO 71 /* Protocol error */</span><br><span class="line">#define EMULTIHOP 72 /* Multihop attempted */</span><br><span class="line">#define EDOTDOT 73 /* RFS specific error */</span><br><span class="line">#define EBADMSG 74 /* Not a data message */</span><br><span class="line">#define EOVERFLOW 75 /* Value too large for defined data type */</span><br><span class="line">#define ENOTUNIQ 76 /* Name not unique on network */</span><br><span class="line">#define EBADFD 77 /* File descriptor in bad state */</span><br><span class="line">#define EREMCHG 78 /* Remote address changed */</span><br><span class="line">#define ELIBACC 79 /* Can not access a needed shared library */</span><br><span class="line">#define ELIBBAD 80 /* Accessing a corrupted shared library */</span><br><span class="line">#define ELIBSCN 81 /* .lib section in a.out corrupted */</span><br><span class="line">#define ELIBMAX 82 /* Attempting to link in too many shared libraries */</span><br><span class="line">#define ELIBEXEC 83 /* Cannot exec a shared library directly */</span><br><span class="line">#define EILSEQ 84 /* Illegal byte sequence */</span><br><span class="line">#define ERESTART 85 /* Interrupted system call should be restarted */</span><br><span class="line">#define ESTRPIPE 86 /* Streams pipe error */</span><br><span class="line">#define EUSERS 87 /* Too many users */</span><br><span class="line">#define ENOTSOCK 88 /* Socket operation on non-socket */</span><br><span class="line">#define EDESTADDRREQ 89 /* Destination address required */</span><br><span class="line">#define EMSGSIZE 90 /* Message too long */</span><br><span class="line">#define EPROTOTYPE 91 /* Protocol wrong type for socket */</span><br><span class="line">#define ENOPROTOOPT 92 /* Protocol not available */</span><br><span class="line">#define EPROTONOSUPPORT 93 /* Protocol not supported */</span><br><span class="line">#define ESOCKTNOSUPPORT 94 /* Socket type not supported */</span><br><span class="line">#define EOPNOTSUPP 95 /* Operation not supported on transport endpoint */</span><br><span class="line">#define EPFNOSUPPORT 96 /* Protocol family not supported */</span><br><span class="line">#define EAFNOSUPPORT 97 /* Address family not supported by protocol */</span><br><span class="line">#define EADDRINUSE 98 /* Address already in use */</span><br><span class="line">#define EADDRNOTAVAIL 99 /* Cannot assign requested address */</span><br><span class="line">#define ENETDOWN 100 /* Network is down */</span><br><span class="line">#define ENETUNREACH 101 /* Network is unreachable */</span><br><span class="line">#define ENETRESET 102 /* Network dropped connection because of reset */</span><br><span class="line">#define ECONNABORTED 103 /* Software caused connection abort */</span><br><span class="line">#define ECONNRESET 104 /* Connection reset by peer */</span><br><span class="line">#define ENOBUFS 105 /* No buffer space available */</span><br><span class="line">#define EISCONN 106 /* Transport endpoint is already connected */</span><br><span class="line">#define ENOTCONN 107 /* Transport endpoint is not connected */</span><br><span class="line">#define ESHUTDOWN 108 /* Cannot send after transport endpoint shutdown */</span><br><span class="line">#define ETOOMANYREFS 109 /* Too many references: cannot splice */</span><br><span class="line">#define ETIMEDOUT 110 /* Connection timed out */</span><br><span class="line">#define ECONNREFUSED 111 /* Connection refused */</span><br><span class="line">#define EHOSTDOWN 112 /* Host is down */</span><br><span class="line">#define EHOSTUNREACH 113 /* No route to host */</span><br><span class="line">#define EALREADY 114 /* Operation already in progress */</span><br><span class="line">#define EINPROGRESS 115 /* Operation now in progress */</span><br><span class="line">#define ESTALE 116 /* Stale NFS file handle */</span><br><span class="line">#define EUCLEAN 117 /* Structure needs cleaning */</span><br><span class="line">#define ENOTNAM 118 /* Not a XENIX named type file */</span><br><span class="line">#define ENAVAIL 119 /* No XENIX semaphores available */</span><br><span class="line">#define EISNAM 120 /* Is a named type file */</span><br><span class="line">#define EREMOTEIO 121 /* Remote I/O error */</span><br><span class="line">#define EDQUOT 122 /* Quota exceeded */</span><br><span class="line">#define ENOMEDIUM 123 /* Nomedium found */</span><br><span class="line">#define EMEDIUMTYEP 124 /*Wrongmedium found */</span><br><span class="line">#define ECANCELED 125 /* Operation Canceled */</span><br><span class="line">#define ENOKEY 126 /* Required key not available */</span><br><span class="line">#define EKEYEXPIRED 127 /* Key has expired */</span><br><span class="line">#define EKEYREVOKED 128 /* Key has been revoked */</span><br><span class="line">#define EKEYREJECTED 129 /* Key was rejected by service */</span><br><span class="line">#define EOWNERDEAD 130 /* Owner died */</span><br><span class="line">#define ENOTRECOVERABLE 131 /* State not recoverable */</span><br><span class="line">#define ERFKILL 132 /* Operation not possible due to RF-kill */</span><br><span class="line">#define EHWPOISON 133 /* Memory page has hardware error */</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="Broken-pipe"><a href="#Broken-pipe" class="headerlink" title="Broken pipe"></a>Broken pipe</h1><ul>
+<li><p><code>Broken pipe</code> 的字面意思是 <code>管道破裂</code> 。<code>Broken pipe</code> 的原因是该管道的读端被关闭。</p>
+</li>
+<li><p><code>Broken pipe</code> 经常发生socket关闭之后（或者其他的描述符关闭之后）的write操作中</p>
+</li>
+<li><p>发生 <code>Broken pipe</code> 错误时，进程收到 <code>SIGPIPE</code> 信号，默认动作是进程终止。</p>
+</li>
+<li><p><code>Broken pipe</code> 最直接的意思是：写入端出现的时候，另一端却休息或退出了，因此造成没有及时取走管道中的数据，从而系统异常退出；</p>
+</li>
+</ul>
+
             </div>
 
             
@@ -468,7 +891,7 @@
     <div class="post-toc">
         <div class="toc-title">On this page</div>
         <div class="page-title">OC网络学习06：Socket实现</div>
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFSocket%EF%BC%9F"><span class="nav-text">什么是Socket？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%95%BF%E9%93%BE%E6%8E%A5-%E5%92%8C-%E7%9F%AD%E9%93%BE%E6%8E%A5"><span class="nav-text">长链接 和 短链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Socket%E5%A6%82%E4%BD%95%E4%BF%9D%E6%8C%81%E9%95%BF%E9%93%BE%E6%8E%A5"><span class="nav-text">Socket如何保持长链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iOS%E7%AB%AF%E5%AE%9E%E7%8E%B0-Socket"><span class="nav-text">iOS端实现 Socket</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFSocket%EF%BC%9F"><span class="nav-text">什么是Socket？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Socket-%E5%B1%9E%E6%80%A7"><span class="nav-text">Socket 属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Socket-%E6%8E%A5%E5%8F%A3%E5%87%BD%E6%95%B0"><span class="nav-text">Socket 接口函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Socket%E5%8E%9F%E7%90%86"><span class="nav-text">Socket原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E4%BB%8B%E7%BB%8D"><span class="nav-text">接口介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#setsockopt-%E5%87%BD%E6%95%B0"><span class="nav-text">setsockopt 函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shutdown-%E5%87%BD%E6%95%B0"><span class="nav-text">shutdown() 函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#close-%E5%87%BD%E6%95%B0"><span class="nav-text">close() 函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#exit%EF%BC%88%EF%BC%89-%E5%87%BD%E6%95%B0"><span class="nav-text">exit（） 函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#retun-%E5%87%BD%E6%95%B0"><span class="nav-text">retun 函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%98%BB%E5%A1%9E-%E5%92%8C-%E9%9D%9E%E9%98%BB%E5%A1%9E"><span class="nav-text">阻塞 和 非阻塞</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E5%87%BD%E6%95%B0"><span class="nav-text">服务器端函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%87%BD%E6%95%B0"><span class="nav-text">客户端函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E5%87%BD%E6%95%B0"><span class="nav-text">通用函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP-%E9%80%9A%E4%BF%A1"><span class="nav-text">TCP 通信</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%8E%9F%E7%94%9F%E5%AE%A2%E6%88%B7%E7%AB%AFsocket"><span class="nav-text">编码原生客户端socket</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%8E%9F%E7%94%9F%E6%9C%8D%E5%8A%A1%E7%AB%AFsocket"><span class="nav-text">编码原生服务端socket</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UDP-Socket%E5%87%BD%E6%95%B0"><span class="nav-text">UDP Socket函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%95%BF%E9%93%BE%E6%8E%A5-%E5%92%8C-%E7%9F%AD%E9%93%BE%E6%8E%A5"><span class="nav-text">长链接 和 短链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Socket%E5%A6%82%E4%BD%95%E4%BF%9D%E6%8C%81%E9%95%BF%E9%93%BE%E6%8E%A5"><span class="nav-text">Socket如何保持长链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B2%98%E5%8C%85%E3%80%81%E5%88%86%E5%8C%85-%E6%8B%86%E5%8C%85"><span class="nav-text">粘包、分包(拆包)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iOS%E7%AB%AF%E5%AE%9E%E7%8E%B0-Socket"><span class="nav-text">iOS端实现 Socket</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E7%A0%81-errno"><span class="nav-text">错误码 errno</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Broken-pipe"><span class="nav-text">Broken pipe</span></a></li></ol>
 
     </div>
 </div>

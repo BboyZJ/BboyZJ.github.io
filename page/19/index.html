@@ -250,25 +250,26 @@
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/25/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8614-0%EF%BC%9A%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8%E7%9A%84%E6%9C%AC%E8%B4%A8objc_msgSend%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81/">
-                        OC底层原理14-0：方法调用的本质objc_msgSend消息发送
+                    <a href="/BboyZJ.github.io/2023/03/01/OC/OC%E5%AD%A6%E4%B9%A001%EF%BC%9A%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E9%93%BE%E5%92%8C%E5%93%8D%E5%BA%94%E9%93%BE/">
+                        OC学习01：事件传递链和响应链
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        前言我们先得出结论：方法调用的本质是 objc_msgSend消息发送
-本文主要目的是理解 objc_msgSend 的 方法查找 流程
-在上一篇文章中 OC底层原理13：cache-t底层原理分析 中，分析了 cache的写入流程，在写入流程之前，...
+                        前言在 iOS 中只有继承 UIResponder 的 对象 才能够 接收并处理事件，UIResponder 是所有响应对象的 基类。继承关系如下：
+
+UIApplication -&gt; UIResponder -&gt; NSObject
+UI...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Sat Feb 25 2023 16:41:30 GMT+0800">
+            <span class="home-article-date" data-date="Wed Mar 01 2023 17:30:34 GMT+0800">
                 
-                    2023-02-25
+                    2023-03-01
                 
             </span>
         </span>
@@ -292,7 +293,7 @@
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/OC-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2%E7%AF%87/">OC-底层原理探索篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -300,7 +301,7 @@
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/25/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/OC%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%8614-0%EF%BC%9A%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8%E7%9A%84%E6%9C%AC%E8%B4%A8objc_msgSend%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81/">Read more<span class="seo-reader-text">OC底层原理14-0：方法调用的本质objc_msgSend消息发送</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/03/01/OC/OC%E5%AD%A6%E4%B9%A001%EF%BC%9A%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E9%93%BE%E5%92%8C%E5%93%8D%E5%BA%94%E9%93%BE/">Read more<span class="seo-reader-text">OC学习01：事件传递链和响应链</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -312,31 +313,27 @@
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A025%EF%BC%9ASwift%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%BC%8F%E5%92%8C%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D/">
-                        Swift学习25：Swift中的模式和模式匹配
+                    <a href="/BboyZJ.github.io/2023/03/01/%E9%9D%A2%E8%AF%95%E9%A2%98/Swift%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9A%E6%80%BB%E7%BB%93/">
+                        iOS面试题：Swift
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        模式
-模式代表 单个值或复合值 的 结构，
-
-可以用模式来匹配各种各样的值，例如：(x,y) 匹配 元组(1,2)
-
-可以从复合值中取出部分或全部值，然后把值绑定一个常量或变量，例如：(let x,y) 提取 (1,2)
-
-
-模式分类Swift 中模...
+                        swift 和 oc 的区别？重点
+swift 是 静态语言，有 类型判断。OC 是 动态语言。
+Swift 是 类型安全 的语言。OC 类型不安全的语言。
+swift 可以面向 函数、协议、对象 编程。OC 以 面向对象 编程为主。
+Swift 注...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Feb 23 2023 21:36:05 GMT+0800">
+            <span class="home-article-date" data-date="Wed Mar 01 2023 16:57:50 GMT+0800">
                 
-                    2023-02-23
+                    2023-03-01
                 
             </span>
         </span>
@@ -360,7 +357,7 @@
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/Swift-%E9%9D%A2%E8%AF%95%E9%A2%98/">Swift-面试题</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -368,7 +365,7 @@
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A025%EF%BC%9ASwift%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%BC%8F%E5%92%8C%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D/">Read more<span class="seo-reader-text">Swift学习25：Swift中的模式和模式匹配</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/03/01/%E9%9D%A2%E8%AF%95%E9%A2%98/Swift%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9A%E6%80%BB%E7%BB%93/">Read more<span class="seo-reader-text">iOS面试题：Swift</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -380,39 +377,25 @@
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A024%EF%BC%9A%E5%A6%82%E4%BD%95%E5%9C%A8Swift%E9%87%8C%E9%9D%A2%E8%BF%9B%E8%A1%8C%E6%8E%A7%E5%88%B6%E8%BD%AC%E7%A7%BB/">
-                        Swift学习24：如何在Swift里面进行控制转移
+                    <a href="/BboyZJ.github.io/2023/03/01/%E9%9D%A2%E8%AF%95%E9%A2%98/OC%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9A%E6%80%BB%E7%BB%93/">
+                        OC面试题：总结
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        控制转移
-continue 
-
-break
-
-fallthrough
-
-return
-
-throw
-
-
-continue
-continue 告诉我不再继续当前循环遍历了，再次从头开始下一次遍历
-
-break
-break 会立即结束整个控制流语句，即跳...
+                        iOS 面试自我介绍面试官您好：
+我叫张建，来自辽宁省大石桥市，毕业于辽宁工业大学，有7年iOS开发工作经验，先后经历了3家互联网公司：
+第一家公司是 “北京文字度量科技有限公司” 是一家互联网创业公司，做的项目叫 “榜样” 的 App，是一款直播、...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Feb 23 2023 21:35:34 GMT+0800">
+            <span class="home-article-date" data-date="Wed Mar 01 2023 16:57:33 GMT+0800">
                 
-                    2023-02-23
+                    2023-03-01
                 
             </span>
         </span>
@@ -422,7 +405,7 @@ break 会立即结束整个控制流语句，即跳...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
                         </li>
                     
                     
@@ -436,7 +419,7 @@ break 会立即结束整个控制流语句，即跳...
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/OC-%E9%9D%A2%E8%AF%95%E9%A2%98/">OC-面试题</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -444,7 +427,7 @@ break 会立即结束整个控制流语句，即跳...
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A024%EF%BC%9A%E5%A6%82%E4%BD%95%E5%9C%A8Swift%E9%87%8C%E9%9D%A2%E8%BF%9B%E8%A1%8C%E6%8E%A7%E5%88%B6%E8%BD%AC%E7%A7%BB/">Read more<span class="seo-reader-text">Swift学习24：如何在Swift里面进行控制转移</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/03/01/%E9%9D%A2%E8%AF%95%E9%A2%98/OC%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%9A%E6%80%BB%E7%BB%93/">Read more<span class="seo-reader-text">OC面试题：总结</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -456,26 +439,24 @@ break 会立即结束整个控制流语句，即跳...
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A023%EF%BC%9A%E6%9B%B4%E5%8A%A0%E5%BC%BA%E5%A4%A7%E7%9A%84switch/">
-                        Swift学习23：更加强大的switch
+                    <a href="/BboyZJ.github.io/2023/03/01/Blog%E6%90%AD%E5%BB%BA/Blog-04%EF%BC%9A%E4%B8%BB%E9%A2%98%E5%AE%8C%E5%96%84/">
+                        Blog-04：主题完善
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        swift
-switch 语句会将一个值与多个可能匹配的模式匹配，然后基于第一个成功匹配的模式来执行合适的代码块
-
-switch 语句一定得是全面的。给定类型里的每一个值都得匹配到一个 switch 的 case。你可以定义一个默认匹配的 case ...
+                        前言我们以 Snippet  主题问例
+下载安装1mac@bogon Blog % $ git clone git://github.com/shenliyang/hexo-theme-snippet.git themes/hexo-theme-sn...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Feb 23 2023 21:35:07 GMT+0800">
+            <span class="home-article-date" data-date="Wed Mar 01 2023 10:54:01 GMT+0800">
                 
-                    2023-02-23
+                    2023-03-01
                 
             </span>
         </span>
@@ -485,7 +466,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/Blog/">Blog</a>&nbsp;
                         </li>
                     
                     
@@ -499,7 +480,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -507,7 +488,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A023%EF%BC%9A%E6%9B%B4%E5%8A%A0%E5%BC%BA%E5%A4%A7%E7%9A%84switch/">Read more<span class="seo-reader-text">Swift学习23：更加强大的switch</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/03/01/Blog%E6%90%AD%E5%BB%BA/Blog-04%EF%BC%9A%E4%B8%BB%E9%A2%98%E5%AE%8C%E5%96%84/">Read more<span class="seo-reader-text">Blog-04：主题完善</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -519,29 +500,27 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A022%EF%BC%9A%E5%A6%82%E4%BD%95%E5%9C%A8Swift%E9%87%8C%E8%BF%9B%E8%A1%8C%E5%BE%AA%E7%8E%AF%E6%8E%A7%E5%88%B6/">
-                        Swift学习22：如何在Swift里进行循环控制
+                    <a href="/BboyZJ.github.io/2023/03/01/Blog%E6%90%AD%E5%BB%BA/Blog-03%EF%BC%9AGithub%E5%9F%9F%E5%90%8D%E7%BB%91%E5%AE%9A%E9%98%BF%E9%87%8C%E4%BA%91%E5%9F%9F%E5%90%8D/">
+                        Blog-03：Github域名绑定阿里云域名
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        for in 循环
-使用 for in 循环来遍历序列，比如一个范围的数字，数组中元素或者字符串中的字符
+                        注册域名去 阿里云  注册账号、并购买域名，具体流程这里就不一一介绍了
+域名解析
+在终端 ping 一下之前配置的静态页面地址,可以获取到对应的ip地址:
 
-如果你不需要序列的每一个值，你可以使用下划线 _ 来取代遍历名
-
-
-123456789101112131415// 遍历for i in 0....
+123456mac@bogon ~ % ping BboyZJ.github.ioPING ...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Feb 23 2023 21:34:50 GMT+0800">
+            <span class="home-article-date" data-date="Wed Mar 01 2023 10:17:25 GMT+0800">
                 
-                    2023-02-23
+                    2023-03-01
                 
             </span>
         </span>
@@ -551,7 +530,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/Blog/">Blog</a>&nbsp;
                         </li>
                     
                     
@@ -565,7 +544,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -573,7 +552,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A022%EF%BC%9A%E5%A6%82%E4%BD%95%E5%9C%A8Swift%E9%87%8C%E8%BF%9B%E8%A1%8C%E5%BE%AA%E7%8E%AF%E6%8E%A7%E5%88%B6/">Read more<span class="seo-reader-text">Swift学习22：如何在Swift里进行循环控制</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/03/01/Blog%E6%90%AD%E5%BB%BA/Blog-03%EF%BC%9AGithub%E5%9F%9F%E5%90%8D%E7%BB%91%E5%AE%9A%E9%98%BF%E9%87%8C%E4%BA%91%E5%9F%9F%E5%90%8D/">Read more<span class="seo-reader-text">Blog-03：Github域名绑定阿里云域名</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -585,26 +564,27 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A021%EF%BC%9A%E5%A6%82%E4%BD%95%E5%9C%A8swift%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%90%E7%AE%97%E7%AC%A6/">
-                        Swift学习21：如何在swift中自定义运算符
+                    <a href="/BboyZJ.github.io/2023/03/01/Blog%E6%90%AD%E5%BB%BA/Blog-03%EF%BC%9AGithub%E5%9F%9F%E5%90%8D%E7%BB%91%E5%AE%9A%E9%98%BF%E9%87%8C%E4%BA%91%E5%9F%9F%E5%90%8D%202/">
+                        Blog-03：Github域名绑定阿里云域名
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        自定义运算符
-除了实现标准的运算符，在 swift 当中还可以声明和实现自定义运算符（custom operators）
+                        注册域名去 阿里云  注册账号、并购买域名，具体流程这里就不一一介绍了
+域名解析
+在终端 ping 一下之前配置的静态页面地址,可以获取到对应的ip地址:
 
-新的运算符要在全局作用域内，使用 operator 关键字进行声明，同时还要指定 prefix、infix 或者 postfi...
+123456mac@bogon ~ % ping BboyZJ.github.ioPING ...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Feb 23 2023 04:03:04 GMT+0800">
+            <span class="home-article-date" data-date="Wed Mar 01 2023 10:17:25 GMT+0800">
                 
-                    2023-02-23
+                    2023-03-01
                 
             </span>
         </span>
@@ -614,7 +594,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/Blog/">Blog</a>&nbsp;
                         </li>
                     
                     
@@ -628,7 +608,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -636,7 +616,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A021%EF%BC%9A%E5%A6%82%E4%BD%95%E5%9C%A8swift%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%90%E7%AE%97%E7%AC%A6/">Read more<span class="seo-reader-text">Swift学习21：如何在swift中自定义运算符</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/03/01/Blog%E6%90%AD%E5%BB%BA/Blog-03%EF%BC%9AGithub%E5%9F%9F%E5%90%8D%E7%BB%91%E5%AE%9A%E9%98%BF%E9%87%8C%E4%BA%91%E5%9F%9F%E5%90%8D%202/">Read more<span class="seo-reader-text">Blog-03：Github域名绑定阿里云域名</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -648,26 +628,28 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A020%EF%BC%9A%E5%A6%82%E4%BD%95%E4%B8%BA%E7%B1%BB%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%90%E7%AE%97%E7%AC%A6/">
-                        Swift学习20：如何为类和结构体自定义运算符
+                    <a href="/BboyZJ.github.io/2023/03/01/Blog%E6%90%AD%E5%BB%BA/Blog-02%EF%BC%9A%E9%83%A8%E7%BD%B2%E5%8D%9A%E5%AE%A2%E5%88%B0GitHub%202/">
+                        Blog-02：部署博客到GitHub
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        运算符重载
-类和结构体 可以为现有的运算符提供自定义的实现，称为 运算符重载
+                        注册GitHub账号前往 Github  网站，注册一个新用户。用邮箱注册的一定前往邮箱去验证邮件。
+部署到 GitHub 上
+新建 reponsity 仓库
 
-1234567struct Vector2D &#123;    var x = 0.0,y = 0.0&#125;let vector = Vector2D(x: 1....
+
+仓库名设置成 用户名.github.io ，比如我的是 BboyZJ.github.i...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Feb 23 2023 04:02:46 GMT+0800">
+            <span class="home-article-date" data-date="Wed Mar 01 2023 09:12:01 GMT+0800">
                 
-                    2023-02-23
+                    2023-03-01
                 
             </span>
         </span>
@@ -677,7 +659,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/Blog/">Blog</a>&nbsp;
                         </li>
                     
                     
@@ -691,7 +673,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -699,7 +681,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A020%EF%BC%9A%E5%A6%82%E4%BD%95%E4%B8%BA%E7%B1%BB%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%90%E7%AE%97%E7%AC%A6/">Read more<span class="seo-reader-text">Swift学习20：如何为类和结构体自定义运算符</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/03/01/Blog%E6%90%AD%E5%BB%BA/Blog-02%EF%BC%9A%E9%83%A8%E7%BD%B2%E5%8D%9A%E5%AE%A2%E5%88%B0GitHub%202/">Read more<span class="seo-reader-text">Blog-02：部署博客到GitHub</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -711,26 +693,28 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A019%EF%BC%9A%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7%E5%92%8C%E7%BB%93%E5%90%88%E6%80%A7/">
-                        Swift学习19：运算符优先级和结合性
+                    <a href="/BboyZJ.github.io/2023/03/01/Blog%E6%90%AD%E5%BB%BA/Blog-02%EF%BC%9A%E9%83%A8%E7%BD%B2%E5%8D%9A%E5%AE%A2%E5%88%B0GitHub/">
+                        Blog-02：部署博客到GitHub
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        运算符优先级和结合性
-运算符的优先级使得一些运算符优先于其他运算符，高优先级的运算符会先被计算
+                        注册GitHub账号前往 Github  网站，注册一个新用户。用邮箱注册的一定前往邮箱去验证邮件。
+部署到 GitHub 上
+新建 reponsity 仓库
 
-结合性定义了具有相同优先级的运算符是如何结合（或关联）的 一一 是左边结合为一组，还是与右边结合为一组。可以这样理解：它们是与左边的表达式结合的 或者 ...
+
+仓库名设置成 用户名.github.io ，比如我的是 BboyZJ.github.i...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Feb 23 2023 04:02:16 GMT+0800">
+            <span class="home-article-date" data-date="Wed Mar 01 2023 09:12:01 GMT+0800">
                 
-                    2023-02-23
+                    2023-03-01
                 
             </span>
         </span>
@@ -740,7 +724,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/Blog/">Blog</a>&nbsp;
                         </li>
                     
                     
@@ -754,7 +738,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -762,7 +746,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A019%EF%BC%9A%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7%E5%92%8C%E7%BB%93%E5%90%88%E6%80%A7/">Read more<span class="seo-reader-text">Swift学习19：运算符优先级和结合性</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/03/01/Blog%E6%90%AD%E5%BB%BA/Blog-02%EF%BC%9A%E9%83%A8%E7%BD%B2%E5%8D%9A%E5%AE%A2%E5%88%B0GitHub/">Read more<span class="seo-reader-text">Blog-02：部署博客到GitHub</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -774,30 +758,28 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A018%EF%BC%9A%E8%BF%90%E7%AE%97%E7%AC%A6%E5%BA%94%E7%94%A8%E4%B8%BE%E4%BE%8B/">
-                        Swift学习18：运算符应用举例
+                    <a href="/BboyZJ.github.io/2023/03/01/Blog%E6%90%AD%E5%BB%BA/Blog-01%EF%BC%9AHexo%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">
+                        Blog-01：Hexo个人博客搭建
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        两个数字交换
-不借助临时变量，交换两个变量的值
+                        Hexo
+什么是Hexo？
 
-1234567var a  = 1var b = 2a = a ^ bb = a ^ ba = a ^ bprint(a)print(b)
-
-
-求无符号整数二进制中 1 的个数
-给定一个无符号整型 U...
+简介：Hexo 是一个快速、简洁且高效的博客框架。想要详细的了解 Hexo ，去官网学习。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。
+安装前提
+检查是否安装 h...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Feb 23 2023 01:32:43 GMT+0800">
+            <span class="home-article-date" data-date="Wed Mar 01 2023 07:39:40 GMT+0800">
                 
-                    2023-02-23
+                    2023-03-01
                 
             </span>
         </span>
@@ -807,7 +789,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/Blog/">Blog</a>&nbsp;
                         </li>
                     
                     
@@ -821,7 +803,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -829,7 +811,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A018%EF%BC%9A%E8%BF%90%E7%AE%97%E7%AC%A6%E5%BA%94%E7%94%A8%E4%B8%BE%E4%BE%8B/">Read more<span class="seo-reader-text">Swift学习18：运算符应用举例</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/03/01/Blog%E6%90%AD%E5%BB%BA/Blog-01%EF%BC%9AHexo%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">Read more<span class="seo-reader-text">Blog-01：Hexo个人博客搭建</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>
@@ -841,31 +823,29 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                 
 
                 <h3 class="home-article-title">
-                    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A017%EF%BC%9A%E4%BD%8D%E8%BF%90%E7%AE%97%E7%AC%A6/">
-                        Swift学习17：位运算符
+                    <a href="/BboyZJ.github.io/2023/02/27/OC/OC%E5%AD%A6%E4%B9%A000%EF%BC%9AMVVM%E5%8F%8C%E5%90%91%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A/">
+                        OC架构00：MVVM双向数据绑定
                     </a>
                 </h3>
 
                 <div class="home-article-content markdown-body">
                     
-                        位取反运算符
-位取反运算符 ~ 是对所有位的数字进行取反操作
+                        MVVM 是什么？MVVM 包含三部分：
 
+Model：模型层，主要是存放数据
 
-123let n1:UInt8 = 255let n2 = ~n1print(n2)
+View：视图层，UI绘制
 
-
-位与运算符
-位与运算符 &amp; 可以对两个数的比特位进行合并，它会返回一个新的数，只有当这...
+ViewModel：业务逻辑处理层，将 Model 和 View 分开，可以取出 Model 的数据，同时处理 View 要展示的内容涉及...
                     
                 </div>
 
                 <div class="home-article-meta-info-container">
     <div class="home-article-meta-info">
         <span><i class="fa-solid fa-calendars"></i>&nbsp;
-            <span class="home-article-date" data-date="Thu Feb 23 2023 01:32:26 GMT+0800">
+            <span class="home-article-date" data-date="Mon Feb 27 2023 21:57:46 GMT+0800">
                 
-                    2023-02-23
+                    2023-02-27
                 
             </span>
         </span>
@@ -875,7 +855,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/categories/Swift/">Swift</a>&nbsp;
+                            <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
                         </li>
                     
                     
@@ -889,7 +869,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
                     
                         <li>
                             
-                            <a href="/BboyZJ.github.io/tags/Swift-%E8%AF%BE%E7%A8%8B%E7%AF%87/">Swift-课程篇</a>&nbsp;
+                            <a href="/BboyZJ.github.io/tags/OC-%E5%AD%A6%E4%B9%A0/">OC-学习</a>&nbsp;
                         </li>
                     
                 </ul>
@@ -897,7 +877,7 @@ switch 语句一定得是全面的。给定类型里的每一个值都得匹配�
         
     </div>
 
-    <a href="/BboyZJ.github.io/2023/02/23/Swift%E8%AF%BE%E7%A8%8B/Swift%E5%AD%A6%E4%B9%A017%EF%BC%9A%E4%BD%8D%E8%BF%90%E7%AE%97%E7%AC%A6/">Read more<span class="seo-reader-text">Swift学习17：位运算符</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
+    <a href="/BboyZJ.github.io/2023/02/27/OC/OC%E5%AD%A6%E4%B9%A000%EF%BC%9AMVVM%E5%8F%8C%E5%90%91%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A/">Read more<span class="seo-reader-text">OC架构00：MVVM双向数据绑定</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
             </li>

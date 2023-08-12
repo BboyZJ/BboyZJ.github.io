@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="description" content="我是小J，关注我">
+    <meta name="author" content="张建">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-redefine.png">
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://www.bboyzj.cn/2023/07/17/oc网络/oc网络学习15：无限加密标准wep-wpa探索/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="OC网络学习15：无限加密标准WEP/WPA/WPA2/WPA3探索">
+    <meta property="og:description" content="我是小J，关注我">
+    <meta property="og:url" content="https://www.bboyzj.cn2023/07/17/OC网络/OC网络学习15：无限加密标准WEP-WPA探索/">
+    <meta property="og:image" content="/images/redefine-logo.svg">
+    <meta property="og:site_name" content="BboyZJ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OC网络学习15：无限加密标准WEP/WPA/WPA2/WPA3探索">
+    <meta name="twitter:description" content="我是小J，关注我">
+    <meta name="twitter:image" content="/images/redefine-logo.svg">
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/redefine-logo.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/redefine-logo.svg">
+    <meta name="theme-color" content="#005080">
+    <link rel="shortcut icon" href="/BboyZJ.github.io/images/redefine-logo.svg">
+    
+    <title>
+        
+            OC网络学习15：无限加密标准WEP/WPA/WPA2/WPA3探索 -
+        
+        BboyZJ
+    </title>
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/css/style.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/fonts.css">
+
+    
+    
+    
+    
+    <script id="hexo-configurations">
+    let REDEFINE = window.REDEFINE || {};
+    REDEFINE.hexo_config = {"hostname":"www.bboyzj.cn","root":"/BboyZJ.github.io/","language":"en","path":"search.xml"};
+    REDEFINE.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#005080","avatar":"/images/head_img.svg","favicon":"/images/redefine-logo.svg","article_img_align":"center","right_side_width":"210px","content_max_width":"1000px","nav_color":{"left":"#f78736","right":"#367df7","transparency":35},"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_image":{"light":"https://evan.beee.top/img/wallhaven-wqery6-light.webp","dark":"https://evan.beee.top/img/wallhaven-wqery6-dark.webp"},"title_color":{"light":"#fff","dark":"#d1d1b6"},"description":"学无止境 学而不思则罔 思而不学则殆","custom_font":{"enable":false,"font_family":null,"font_url":null}},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_block":{"copy":true,"style":"mac","custom_font":{"enable":false,"font_family":null,"font_url":null}},"pjax":{"enable":true},"lazyload":{"enable":true},"version":"1.1.5","friend_links":{"columns":2},"home_article":{"date_format":"auto","category":{"enable":true,"limit":3},"tag":{"enable":true,"limit":3}},"plugins":{"aplayer":{"enable":false,"audio":[{"name":null,"artist":null,"url":null,"cover":null},{"name":null,"artist":null,"url":null,"cover":null}]}}};
+    REDEFINE.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+    
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/fontawesome/regular.min.css">
+
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/BboyZJ.github.io/atom.xml" title="张建的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="menu-wrapper">
+    
+    <div class="menu-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                BboyZJ
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        首页
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/tags/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-tags"></i>
+                                        
+                                        标签
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="menu-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/BboyZJ.github.io/categories/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-categories"></i>
+                                        
+                                        分类
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="menu-drawer">
+        <ul class="drawer-menu-list">
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                首页
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/tags/"  >
+                             
+                                
+                                    <i class="fa-regular fa-tags"></i>
+                                
+                                标签
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-menu-item flex-center">
+                        <a class="" 
+                        href="/BboyZJ.github.io/categories/"  >
+                             
+                                
+                                    <i class="fa-regular fa-categories"></i>
+                                
+                                分类
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            
+            
+                <div class="article-title">
+                    <h1 class="article-title-regular">OC网络学习15：无限加密标准WEP/WPA/WPA2/WPA3探索</h1>
+                </div>
+            
+                
+            
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="/BboyZJ.github.io/images/head_img.svg">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">张建</span>
+                            
+                                <span class="author-label">lol</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="pc">2023-07-17 13:49:59</span>
+        <span class="mobile">2023-07-17 13:49</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="pc">2023-07-17 14:23:43</span>
+            <span class="mobile">2023-07-17 14:23</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/categories/OC/">OC</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/BboyZJ.github.io/tags/OC-%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/">OC-网络学习</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content markdown-body">
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>无线WIFI网络是通过 <code>不安全的链路或网络</code> 连接到互联网的，存在安全风险，可能会 <code>导致数据丢失、账户凭据泄漏</code>，必须使用适当的 <code>WIFI安全措施</code>，因此，必须了解 <code>不同的无线加密标准</code>，包括 WEP、WPA、WPA2和WPA3 和它们的差异</p>
+<h1 id="什么是-WEP"><a href="#什么是-WEP" class="headerlink" title="什么是 WEP"></a>什么是 WEP</h1><p>由于 <code>无线网络</code> 通过 <code>无线电波</code> 传输数据，除非采取安全措施，否则数据很容易被截获。<code>有线等效保密 (WEP)</code> 于 1997 年推出，是人们首次就保护无线网络安全而尝试采取的措施。其目的是通过 <code>加密数据</code> 来增加无线网络的安全性。即便无线数据被拦截，拦截者也无法识别数据，因为这些数据均经过加密处理。但是，在网络上获得授权的系统将能够识别和解密数据。这是因为网络上的设备使用相同的加密算法。</p>
+<p><code>WEP</code> 使用 <code>64</code> 位或 <code>128</code> 位十六进制密钥 <code>对流量进行加密</code>。这是一个 <code>静态密钥</code>，这意味着，所有流量（无论设备如何）都使用单个密钥进行加密。<code>WEP</code> 密钥允许网络上的计算机交换编码消息，同时对入侵者隐藏消息的内容。此密钥用于连接到启用无线安全功能的网络。</p>
+<p><code>WEP</code> 的主要目标之一是 <code>防止中间人攻击</code>，而且也曾经在一段时间里成功实现了这一目标。但随着时间的推移，尽管协议进行了修订、其密钥大小得到了提升，<code>WEP</code> 标准还是显露出各种安全漏洞。随着计算性能的提高，犯罪分子更容易利用这些漏洞。由于存在漏洞，Wi-Fi 联盟于 2004 年正式停用 WEP。如今，<code>WEP</code> 安全功能已被视为一种过时的技术，不过有些时候还是会用到它 - 可能是因为网络管理员没有更改其无线路由器的默认安全设置，也可能是因为设备过于陈旧，无法支持 <code>WPA</code> 等较新的加密方法。</p>
+<h1 id="什么是-WPA？"><a href="#什么是-WPA？" class="headerlink" title="什么是 WPA？"></a>什么是 WPA？</h1><p><code>WPA</code>，即 <code>Wi-Fi 保护访问</code>。该协议于 2003 年推出，它是 <code>Wi-Fi</code> 联盟对 <code>WEP</code> 的替代协议。它与 <code>WEP</code> 有相似之处，但在处理安全密钥的方式和用户授权方式上进行了改进。<code>WEP</code> 为每个授权系统提供相同的密钥，而 <code>WPA</code> 使用临时密钥完整性协议 (<code>TKIP</code>)，该协议可动态更改系统使用的密钥。这可以防止入侵者创建自己的加密密钥以匹配安全网络使用的密钥。<code>TKIP</code> 加密标准后来被高级加密标准 (<code>AES</code>) 所取代。</p>
+<p>此外，<code>WPA</code> 包括消息完整性检查，以确定攻击者是否已捕获或更改数据包。<code>WPA</code> 使用的密钥为 <code>256</code> 位，相比 <code>WEP</code> 系统中使用的 <code>64</code> 位和 <code>128</code> 位密钥有了显著提升。但是，尽管存在这些改进，<code>WPA</code> 的元素还是遭到利用 - 这导致 <code>WPA2</code> 诞生。</p>
+<p>您有时会听到与 <code>WPA</code> 相关的术语 <code>WPA 密钥</code> 。<code>WPA</code> 密钥是 <code>用于连接到无线网络的密码</code>。您可以从运行网络的任何人那里获取 <code>WPA</code> 密码。在某些情况下，无线路由器上可能会印有默认的 <code>WPA</code> 密码。如果您无法确定路由器密码，也可以重置它</p>
+<h1 id="什么是-WPA2"><a href="#什么是-WPA2" class="headerlink" title="什么是 WPA2"></a>什么是 WPA2</h1><p><code>WPA2</code> 于 2004 年推出，它是 <code>WPA</code> 的升级版本。<code>WPA2</code> 基于强大的安全网络 (<code>RSN</code>) 机制，并在两种模式下运行：</p>
+<ul>
+<li><p>个人模式或预共享密钥 (WPA2-PSK) - 依赖共享密码进行访问，通常用于家庭环境。</p>
+</li>
+<li><p>企业模式 (WPA2-EAP) - 顾名思义，更适合组织或企业使用。</p>
+</li>
+</ul>
+<p>两种模式都使用 <code>CCMP</code> - 它代表 <code>计数器模式密码区块链消息身份验证代码协议</code>。<code>CCMP</code> 协议基于高级加密标准 (<code>AES</code>) 算法，该算法提供消息真实性和完整性验证。<code>CCMP</code> 比 <code>WPA</code> 最初的临时密钥完整性协议 (<code>TKIP</code>) 更强大、更可靠，使攻击者更难发现模式。</p>
+<p>但是，<code>WPA2</code> 仍然有缺点。例如，它容易遭受密钥重新安装攻击 (<code>KRACK</code>)。<code>KRACK</code> 利用了 <code>WPA2</code> 中的一个弱点，该弱点允许攻击者伪装成克隆网络并强制受害者连接到恶意网络。这使黑客能够解密一小段数据，这些数据可能被聚合以破解加密密钥。但是，设备可以打补丁，<code>WPA2</code> 仍然被认为比 WEP 或 WPA 更安全。</p>
+<h1 id="什么是-WPA3"><a href="#什么是-WPA3" class="headerlink" title="什么是 WPA3"></a>什么是 WPA3</h1><p><code>WPA3</code> 是 <code>Wi-Fi</code> 保护访问协议的第三次迭代。Wi-Fi 联盟于 2018 年推出了 WPA3。WPA3 引入了供个人和企业使用的新功能，包括：</p>
+<ul>
+<li><p>个性化数据加密：在登录公共网络时，<code>WPA3</code> 通过一个并非共享密码的流程注册新设备。WPA3 使用 Wi-Fi 设备调配协议 (DPP) 系统，该系统允许用户使用近场通信 (NFC) 标签或二维码来允许网络上的设备。此外，<code>WPA3</code> 安全功能使用 <code>GCMP-256</code> 加密，而不是以前使用的 128 位加密。</p>
+</li>
+<li><p>Equals 协议的同步身份验证：这用于创建安全握手，其中，网络设备将连接到无线接入点，并且两个设备进行通信以验证身份和连接。即使用户的密码强度很低，<code>WPA3</code> 也可使用 <code>Wi-Fi DPP</code> 提供更安全的握手。</p>
+</li>
+<li><p>更强的暴力破解攻击防护：<code>WPA3</code> 只允许一名用户猜测一次，从而防止离线密码猜测，迫使用户直接与 <code>Wi-Fi</code> 设备交互，这意味着他们每次想猜测密码时都必须亲自到场。WPA2 在公共开放网络中缺乏内置的加密和隐私功能，使得暴力破解攻击成为重大威胁。</p>
+</li>
+</ul>
+<p><code>WPA3</code> 设备在 <code>2019</code> 年开始广泛使用，并且向后兼容使用 <code>WPA2</code> 协议的设备。</p>
+<h1 id="我的-Wi-Fi-网络采用哪种类型的安全机制？"><a href="#我的-Wi-Fi-网络采用哪种类型的安全机制？" class="headerlink" title="我的 Wi-Fi 网络采用哪种类型的安全机制？"></a>我的 Wi-Fi 网络采用哪种类型的安全机制？</h1><p>了解您的 <code>Wi-Fi</code> 加密类型 对您的网络安全十分重要。旧协议比新协议更容易受到攻击，因此更有可能成为黑客攻击的受害者。这是因为，旧协议是在完全了解黑客如何攻击路由器之前设计的。最新的协议修复了这些漏洞，因此被认为提供了最好的 <code>Wi-Fi</code> 安全性。</p>
+<h1 id="如何识别您的-Wi-Fi-网络安全机制类型"><a href="#如何识别您的-Wi-Fi-网络安全机制类型" class="headerlink" title="如何识别您的 Wi-Fi 网络安全机制类型"></a>如何识别您的 Wi-Fi 网络安全机制类型</h1><ol>
+<li>在 <code>macOS</code> 中：</li>
+</ol>
+<ul>
+<li>按住 Option 键</li>
+<li>单击工具栏中的 Wi-Fi 图标</li>
+<li>这将显示您的网络详细信息，包括您的 Wi-Fi 安全类型</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://bboy-blog.oss-cn-beijing.aliyuncs.com/img/202307171411217.png"
+                     
+                ></p>
+<ol start="2">
+<li>在 iPhone 上：</li>
+</ol>
+<p>遗憾的是，<code>iOS</code> 中无法检查您的 <code>Wi-Fi</code> 安全性。如果您想检查您的 <code>Wi-Fi</code> 网络安全强度，您可以使用计算机或通过手机登录路由器。每款路由器的具体方法可能有所不同，因此您可能需要参考设备随附的文档。或者，如果您的互联网服务提供商设置了路由器，您可以联系他们寻求帮助。</p>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    <div class="article-copyright-info-container">
+    <ul>
+        <li>Post title：OC网络学习15：无限加密标准WEP/WPA/WPA2/WPA3探索</li>
+        <li>Post author：张建</li>
+        <li>Create time：2023-07-17 13:49:59</li>
+        <li>
+            Post link：https://redefine.ohevan.com/2023/07/17/OC网络/OC网络学习15：无限加密标准WEP-WPA探索/
+        </li>
+        <li>
+            Copyright Notice：All articles in this blog are licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> unless stating additionally.
+        </li>
+    </ul>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/BboyZJ.github.io/tags/OC-%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0/">#OC-网络学习</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                            rel="prev"
+                            href="/BboyZJ.github.io/2023/07/17/OC%E7%BD%91%E7%BB%9C/OC%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A016%EF%BC%9A%E6%9C%8D%E5%8A%A1%E9%9B%86%E6%A0%87%E8%AF%86SSID/"
+                            >
+                                <span class="left arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC网络学习16：服务集标识SSID</span>
+                                    <span class="post-nav-item">Prev posts</span>
+                                </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                            rel="next"
+                            href="/BboyZJ.github.io/2023/07/15/OC%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B6/OC%E4%B8%89%E6%96%B9%E6%A1%86%E6%9E%B607%EF%BC%9AReactiveCocoa%E4%BD%BF%E7%94%A8/"
+                            >
+                                <span class="title flex-center">
+                                    <span class="post-nav-title-item">OC三方框架07：ReactiveCocoa使用</span>
+                                    <span class="post-nav-item">Next posts</span>
+                                </span>
+                                <span class="right arrow-icon flex-center">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">OC网络学习15：无限加密标准WEP/WPA/WPA2/WPA3探索</div>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-WEP"><span class="nav-text">什么是 WEP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-WPA%EF%BC%9F"><span class="nav-text">什么是 WPA？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-WPA2"><span class="nav-text">什么是 WPA2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-WPA3"><span class="nav-text">什么是 WPA3</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%88%91%E7%9A%84-Wi-Fi-%E7%BD%91%E7%BB%9C%E9%87%87%E7%94%A8%E5%93%AA%E7%A7%8D%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="nav-text">我的 Wi-Fi 网络采用哪种类型的安全机制？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%AF%86%E5%88%AB%E6%82%A8%E7%9A%84-Wi-Fi-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6%E7%B1%BB%E5%9E%8B"><span class="nav-text">如何识别您的 Wi-Fi 网络安全机制类型</span></a></li></ol>
+
+    </div>
+</div>
+            </div>
+        
+    </div>
+</div>
+
+
+                
+
+            </div>
+
+
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info">
+            &copy;
+            
+              <span>2019</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-regular fa-computer-classic"></i>&nbsp;&nbsp;<a href="/">张建</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv" class="busuanzi_container_site_uv">
+                        VISITOR COUNT&nbsp;<span id="busuanzi_value_site_uv" class="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="busuanzi_container_site_pv">
+                        TOTAL PAGE VIEWS&nbsp;<span id="busuanzi_value_site_pv" class="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            <span class="powered-by-container">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" href="https://hexo.io">Hexo</a></span>
+                <br> 
+            <span class="theme-version-container">THEME&nbsp;<a class="theme-version" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v1.1.5</a>
+        </div>
+        
+        
+        
+            <div id="start_time_div" style="display:none">
+                2019/8/17 11:45:14
+            </div>
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+        
+            <script async data-pjax>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="unfolded-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-expand-width flex-center">
+            <i class="fa-regular fa-expand"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex-center">
+                <i class="fa-regular fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="folded-tools-list">
+        <li class="right-bottom-tools tool-toggle-show flex-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+
+</main>
+
+
+
+
+<script src="/BboyZJ.github.io/js/utils.js"></script>
+
+<script src="/BboyZJ.github.io/js/main.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/menu-shrink.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/go-top-bottom.js"></script>
+
+<script src="/BboyZJ.github.io/js/tools/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/local-search.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/code-block.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/layouts/lazyload.js"></script>
+
+
+
+
+    
+<script src="/BboyZJ.github.io/js/tools/runtime.js"></script>
+
+    
+<script src="/BboyZJ.github.io/js/layouts/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/BboyZJ.github.io/assets/odometer-theme-minimal.css">
+
+
+
+
+
+<div class="post-scripts pjax">
+    
+        
+<script src="/BboyZJ.github.io/js/tools/toc-toggle.js"></script>
+
+<script src="/BboyZJ.github.io/js/libs/anime.min.js"></script>
+
+<script src="/BboyZJ.github.io/js/layouts/toc.js"></script>
+
+<script src="/BboyZJ.github.io/js/plugins/tabs.js"></script>
+
+    
+    
+</div>
+
+
+    
+<script src="/BboyZJ.github.io/js/libs/pjax.min.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        window.pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            REDEFINE.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            REDEFINE.utils.pjaxProgressBarEnd();
+            window.pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            REDEFINE.refresh();
+        });
+    });
+</script>
+
+
+
+
+<script src="/BboyZJ.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
